@@ -1,0 +1,216 @@
+openapi: 3.0.0
+info:
+  description: Your own tournament planner
+  version: 1.0.0
+  title: Tournament Planner
+paths:
+  /api/players:
+    post:
+      summary: Add a player
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Player'
+      responses:
+        '200':
+          description: Player added successfully
+    get:
+      summary: Get a list of all players
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Filter players by name
+      responses:
+        '200':
+          description: List of players
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Player'
+
+  /api/matches/open:
+    get:
+      summary: Get a list of all matches that do not have a winner yet
+      responses:
+        '200':
+          description: List of open matches
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Match'
+
+  /api/matches/generate:
+    post:
+      summary: Generate match records for next round
+      responses:
+        '200':
+          description: Match records generated successfully
+  /api/matches/{roundId}:
+    get:
+      summary: Get all matches in a round
+      parameters:
+        - in: path
+          name: roundId
+          required: true
+          schema:
+            type: integer
+            format: int32
+          description: ID of the round
+        - in: query
+          name: played
+          schema:
+            type: boolean
+          description: Filter matches based on whether they have been played or not
+      responses:
+        '200':
+          description: List of matches
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Match'
+
+  /api/matches/{matchId}/winner:
+    get:
+      summary: Get the winner of a match
+      parameters:
+        - in: path
+          name: matchId
+          required: true
+          schema:
+            type: integer
+            format: int32
+          description: ID of the match
+      responses:
+        '200':
+          description: The winner of the match
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+  /api/rounds/{roundId}/winners:
+    get:
+      summary: Get all the winners of a round
+      parameters:
+        - in: path
+          name: roundId
+          required: true
+          schema:
+            type: integer
+            format: int32
+          description: ID of the round
+      responses:
+        '200':
+          description: List of winners
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Player'
+  /api/matches/{matchId}/reschedule:
+    put:
+      summary: Reschedule a match
+      parameters:
+        - in: path
+          name: matchId
+          required: true
+          schema:
+            type: integer
+            format: int32
+          description: ID of the match
+        - in: query
+          name: newGameScheduled
+          required: true
+          schema:
+            type: string
+            format: date
+          description: New scheduled date for the match
+      responses:
+        '200':
+          description: Match rescheduled successfully
+
+components:
+  schemas:
+    Player:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        phoneNumber:
+          type: integer
+        email:
+          type: string
+    Match:
+      type: object
+      required:
+        - firstPlayer
+        - secondPlayer
+        - isComplete
+      properties:
+        id:
+          type: integer
+          format: int32
+        firstPlayer:
+          $ref: "#/components/schemas/Player"
+        secondPlayer:
+          $ref: "#/components/schemas/Player"
+        isComplete:
+          type: boolean
+        winner:
+          $ref: "#/components/schemas/Player"
+        gameScheduled: 
+          type: string
+          format: date
+        gamePlayed:
+          type: string
+          format: date
+    Round:
+      type: object
+      required:
+        - roundNumber
+      properties:
+        id:
+          type: integer
+          format: int32
+        roundNumber:
+         type: integer
+        matches:
+          type: array
+          items:
+            $ref: "#/components/schemas/Match"
+    Tournament:
+      type: object
+      required:
+       - name
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate: 
+          type: string
+          format: date
+        rounds:
+          type: array
+          items:
+            $ref: "#/components/schemas/Round"
