@@ -13,7 +13,6 @@ namespace TournamentPlanner.Application.UseCases.AddPlayer
     public interface IPlayerUseCase
     {
         Task<Player> AddPlayerAsync(PlayerDto player);
-        Task<IEnumerable<Player>> GetAllPlayerAsync();
         Task<IEnumerable<Player>> GetAllPlayerWhoseMatchNotStillPlayedAsync();
         Task<IEnumerable<Player>> GetPlayersAsync(string? playerName);
     }

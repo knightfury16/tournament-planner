@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using TournamentPlanner.Application.Common.Interfaces;
@@ -19,14 +21,17 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
             _playerRepository = playerRepository;
         }
 
-        public Task<Player> AddPlayerAsync(PlayerDto player)
+        public async Task<Player> AddPlayerAsync(PlayerDto playerDto)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Player>> GetAllPlayerAsync()
-        {
-            throw new NotImplementedException();
+            if (PlayerValidation(playerDto))
+            {
+                var player = await _playerRepository.AddAsync(playerDto);
+                return player;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid parameter");
+            }
         }
 
         public Task<IEnumerable<Player>> GetAllPlayerWhoseMatchNotStillPlayedAsync()
@@ -34,9 +39,39 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Player>> GetPlayersAsync(string? playerName)
+        public async Task<IEnumerable<Player>> GetPlayersAsync(string? playerName)
         {
-            throw new NotImplementedException();
+            var allPlayer = await _playerRepository.GetAllAsync();
+
+            if (playerName != null)
+            {
+                allPlayer = allPlayer.Where(p => p.Name.Contains(playerName));
+            }
+
+            return allPlayer;
+        }
+
+        private bool PlayerValidation(PlayerDto playerDto)
+        {
+            //mock validation
+            try
+            {
+                if(playerDto == null)
+                {
+                    return false;
+                }
+                if(string.IsNullOrEmpty(playerDto.Name)) {
+                    return false;
+                }
+                var mailAddress = new MailAddress(playerDto.Email);
+
+                return true;
+
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
