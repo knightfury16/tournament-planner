@@ -8,12 +8,12 @@ namespace TournamentPlanner.Domain.Entities
 {
     public class Match: BaseEntity
     {
-        public Player FirstPlayer { get; set; }
-        public Player SecondPlayer { get; set; }
+        public Player FirstPlayer { get; set; } = new();
+        public Player SecondPlayer { get; set; } = new();
 
         public bool IsComplete { get; set; }
 
-        public Player? Winner { get; set; }
+        public Player? Winner { get; set; } 
 
         public DateOnly? GameScheduled { get; set; }
 

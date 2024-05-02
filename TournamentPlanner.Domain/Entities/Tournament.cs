@@ -8,13 +8,13 @@ namespace TournamentPlanner.Domain.Entities
 {
     public class Tournament: BaseEntity
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public DateTime? StartDate { get; set; }
 
         public DateTime? EndDate { get; set; }
 
-        public List<Round> Rounds { get; set; }
+        public List<Round> Rounds { get; set; } = new();
         
     }
 }

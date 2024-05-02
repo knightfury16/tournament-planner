@@ -8,10 +8,10 @@ namespace TournamentPlanner.Domain.Entities
 {
     public class Player: BaseEntity
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         public int PhoneNumber { get; set; }
 
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
         
     }
 }
