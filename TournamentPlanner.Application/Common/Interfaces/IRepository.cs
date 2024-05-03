@@ -11,6 +11,7 @@ namespace TournamentPlanner.Application.Common.Interfaces
         Task<TResult> AddAsync(T obj);
         Task<IEnumerable<TResult>> GetAllAsync();
         Task<TResult> GetByIdAsync(int id);
+        Task<IEnumerable<TResult>> GetByNameAsync(string? name);
         Task<TResult> UpdateAsync(T obj);
         Task<TResult> UpdateByIdAsync(int id, T obj);
     }
