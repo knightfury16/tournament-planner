@@ -18,6 +18,8 @@
   <ItemGroup>
     <ProjectReference
       Include="..\TournamentPlanner.Infrastructure\TournamentPlanner.Infrastructure.csproj" />
+    <ProjectReference
+      Include="..\TournamentPlanner.Application\TournamentPlanner.Application.csproj" />
   </ItemGroup>
 
 </Project>
