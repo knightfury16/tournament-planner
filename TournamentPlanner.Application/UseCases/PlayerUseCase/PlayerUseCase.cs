@@ -41,14 +41,9 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
 
         public async Task<IEnumerable<Player>> GetPlayersAsync(string? playerName)
         {
-            var allPlayer = await _playerRepository.GetAllAsync();
+            var player = await _playerRepository.GetByNameAsync(playerName);
 
-            if (playerName != null)
-            {
-                allPlayer = allPlayer.Where(p => p.Name.Contains(playerName));
-            }
-
-            return allPlayer;
+            return player;
         }
 
         private bool PlayerValidation(PlayerDto playerDto)
@@ -63,10 +58,10 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
                 if(string.IsNullOrEmpty(playerDto.Name)) {
                     return false;
                 }
-                var mailAddress = new MailAddress(playerDto.Email);
+
+                var mailAddress = playerDto.Email != null ? new MailAddress(playerDto.Email) : null;
 
                 return true;
-
             }
             catch (Exception)
             {
