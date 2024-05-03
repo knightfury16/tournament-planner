@@ -1,4 +1,5 @@
 using TournamentPlanner.Infrastructure;
+using TournamentPlanner.Application;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructureServices(configuration);
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 

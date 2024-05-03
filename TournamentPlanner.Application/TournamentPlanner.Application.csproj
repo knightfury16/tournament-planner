@@ -4,6 +4,10 @@
     <ProjectReference Include="..\TournamentPlanner.Domain\TournamentPlanner.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>library</OutputType>
     <TargetFramework>net8.0</TargetFramework>
