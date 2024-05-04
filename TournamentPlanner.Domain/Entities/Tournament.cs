@@ -7,7 +7,7 @@ using TournamentPlanner.Domain.Common;
 
 namespace TournamentPlanner.Domain.Entities
 {
-    public class Tournament: BaseEntity
+    public class Tournament : BaseEntity
     {
         public string Name { get; set; } = string.Empty;
 
@@ -15,8 +15,9 @@ namespace TournamentPlanner.Domain.Entities
 
         public DateTime? EndDate { get; set; }
 
+        // TODO: do this through fluent api
         [JsonIgnore]
         public List<Round> Rounds { get; set; } = new();
-        
+
     }
 }

@@ -7,6 +7,7 @@ using TournamentPlanner.Application.UseCases.MatchUseCase;
 
 namespace TournamentPlanner.Api.Controllers
 {
+    //TODO: Document route parameter
     [ApiController, Route("api/matches")]
     public class MatchesController : ControllerBase
     {
@@ -62,6 +63,7 @@ namespace TournamentPlanner.Api.Controllers
         [Route("{matchId}/reschedule")]
         public async Task<IActionResult> RescheduleMatch(int matchId, [FromBody] string rescheduledDate)
         {
+            //TODO: parse date properly and catch
             DateOnly.TryParse(rescheduledDate, out var date);
             var match = await _matchUseCase.RescheduleAMatch(matchId, date);
 
