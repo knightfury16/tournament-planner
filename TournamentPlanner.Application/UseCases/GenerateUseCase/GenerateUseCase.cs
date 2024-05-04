@@ -24,20 +24,31 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             _playerRepository = playerRepository;
             _matchRepository = matchRepository;
         }
-        public async Task<List<Player>> AddPlayerAutoToTournament(string TournamentName)
+        public async Task<IEnumerable<Player>> AddPlayerAutoToTournament(string TournamentName)
         {
+            var tournament = await AddNewTournament(TournamentName);
+
             List<Player> playerList = await GetAllPlayers();
 
             //Repository limitation, no method to add in bulk
             foreach (Player player in playerList)
             {
                 var playerDto = ToDto(player);
+                playerDto.Tournament = tournament;
                 await _playerRepository.AddAsync(playerDto);
             }
 
             await _playerRepository.SaveAsync();
 
-            return playerList;
+            return await _playerRepository.GetAllAsync();
+        }
+
+        private async Task<Tournament> AddNewTournament(string tournamentName)
+        {
+            var tournament = new Tournament{Name = tournamentName};
+            await _tournamentRepository.AddAsync(tournament);
+            await _tournamentRepository.SaveAsync();
+            return tournament;
         }
 
         //TODO: make a util, or add auto mapper
@@ -48,7 +59,6 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                 Name = player.Name,
                 PhoneNumber = player.PhoneNumber,
                 Email = player.Email,
-                Tournament = player.Tournament,
             };
         }
 

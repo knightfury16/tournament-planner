@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using TournamentPlanner.Application.UseCases.AddPlayer;
+using TournamentPlanner.Application.UseCases.GenerateUseCase;
 using TournamentPlanner.Application.UseCases.MatchUseCase;
 using TournamentPlanner.Application.UseCases.PlayerUseCase;
 
@@ -15,6 +16,7 @@ namespace TournamentPlanner.Application
             //TODO: Make a aggregate use cases
             services.AddScoped<IPlayerUseCase, PlayerUseCase> ();
             services.AddScoped<IMatchUseCase, MatchUseCase> ();
+            services.AddScoped<IGenerate, GenerateUseCase> ();
         }
         
     }
