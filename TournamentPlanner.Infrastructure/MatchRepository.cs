@@ -33,18 +33,12 @@ namespace TournamentPlanner.Infrastructure
             return matches;
         }
 
-        public async Task<Match> GetByIdAsync(int id)
+        public async Task<Match?> GetByIdAsync(int id)
         {
-            var match = await _dataContext.Matches.Include(match => match.Winner).FirstOrDefaultAsync(match => match.Id == id);
-
-            if (match == null)
-            {
-                throw new Exception("Match could not be found");
-            }
-            return match;
+            return await _dataContext.Matches.Include(match => match.Winner).FirstOrDefaultAsync(match => match.Id == id);
         }
 
-        public Task<IEnumerable<Match>> GetByNameAsync(string? name)
+        public Task<IEnumerable<Match>?> GetByNameAsync(string? name)
         {
             throw new NotImplementedException();
         }

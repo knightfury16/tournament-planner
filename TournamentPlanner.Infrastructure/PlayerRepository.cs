@@ -26,14 +26,9 @@ namespace TournamentPlanner.Infrastructure
         }
 
 
-        public async Task<Player> GetByIdAsync(int id)
+        public async Task<Player?> GetByIdAsync(int id)
         {
-            var player = await _context.Players.FirstOrDefaultAsync(p => p.Id == id);
-
-            if(player is null){
-                throw new ArgumentException("Can not find Player with specified Id");
-            }
-            return  player;
+            return await _context.Players.FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public Task<Player> UpdateAsync(PlayerDto obj)
@@ -83,7 +78,7 @@ namespace TournamentPlanner.Infrastructure
             return await _context.Players.AsNoTracking().ToListAsync();
         }
 
-        public async Task<IEnumerable<Player>> GetByNameAsync(string? name)
+        public async Task<IEnumerable<Player>?> GetByNameAsync(string? name)
         {
             if(string.IsNullOrEmpty(name)){
                 return await _context.Players.AsNoTracking().ToListAsync();
