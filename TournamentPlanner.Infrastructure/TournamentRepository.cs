@@ -35,14 +35,19 @@ namespace TournamentPlanner.Infrastructure
             return await _context.Tournaments.FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public Task<IEnumerable<Tournament>?> GetByNameAsync(string? name)
+        public async Task<IEnumerable<Tournament>?> GetByNameAsync(string? name)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+            {
+                return await _context.Tournaments.ToListAsync();
+            }
+
+            return await _context.Tournaments.Where(t => t.Name.ToLower().Contains(name.ToLower())).ToListAsync();
         }
 
-        public Task SaveAsync()
+        public async Task SaveAsync()
         {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
         }
 
         public Task<Tournament> UpdateAsync(Tournament obj)
