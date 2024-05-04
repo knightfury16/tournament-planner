@@ -14,5 +14,6 @@ namespace TournamentPlanner.Application.Common.Interfaces
         Task<IEnumerable<TResult>> GetByNameAsync(string? name);
         Task<TResult> UpdateAsync(T obj);
         Task<TResult> UpdateByIdAsync(int id, T obj);
+        Task SaveAsync();
     }
 }
