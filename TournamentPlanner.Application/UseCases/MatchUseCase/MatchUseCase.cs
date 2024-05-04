@@ -66,8 +66,7 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
         public async Task<Player?> GetWinnerOfMatch(int matchId)
         {
             var match = await _matchRepository.GetByIdAsync(matchId);
-            if (match is null)
-            {
+            if (match is null){
                 throw new Exception("Match not found");
             }
             return match.Winner;
