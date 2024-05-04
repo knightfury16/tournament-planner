@@ -22,4 +22,10 @@
       Include="..\TournamentPlanner.Application\TournamentPlanner.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="./playerData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
