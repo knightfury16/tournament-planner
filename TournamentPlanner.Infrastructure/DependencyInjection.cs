@@ -14,10 +14,12 @@ namespace TournamentPlanner.Infrastructure
 {
     public static class DependencyInjection
     {
-       public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration){
+        public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+        {
             services.AddDbContext<TournamentPlannerDataContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
-            services.AddScoped<IRepository<PlayerDto,Player>,PlayerRepository>();
-            services.AddScoped<IRepository<Match,Match>,MatchRepository>();
-       } 
+            services.AddScoped<IRepository<PlayerDto, Player>, PlayerRepository>();
+            services.AddScoped<IRepository<Match, Match>, MatchRepository>();
+            services.AddScoped<IRepository<Tournament, Tournament>, TournamentRepository>();
+        }
     }
 }
