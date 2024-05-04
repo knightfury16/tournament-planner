@@ -77,7 +77,9 @@ namespace TournamentPlanner.Infrastructure
 
         public async Task<IEnumerable<Player>> GetAllAsync()
         {
-            return await _context.Players.AsNoTracking().ToListAsync();
+            return await _context.Players.AsNoTracking()
+            .Include(p => p.Tournament)
+            .ToListAsync();
         }
 
         public async Task<IEnumerable<Player>?> GetByNameAsync(string? name)
