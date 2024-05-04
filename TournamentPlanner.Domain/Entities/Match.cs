@@ -18,6 +18,8 @@ namespace TournamentPlanner.Domain.Entities
         public DateOnly? GameScheduled { get; set; }
 
         public DateOnly? GamePlayed { get; set; }
+
+        public Round Round { get; set; } = new();
         
     }
 }

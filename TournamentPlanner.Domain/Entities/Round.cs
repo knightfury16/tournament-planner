@@ -10,6 +10,7 @@ namespace TournamentPlanner.Domain.Entities
     {
         public int RoundNumber { get; set; }
         public List<Match> Matches { get; set; } = new();
+        public Tournament? Tournament { get; set; } = new();
         
     }
 }
