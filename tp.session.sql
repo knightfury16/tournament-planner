@@ -37,3 +37,9 @@ INSERT INTO "Matches" ("RoundId", "FirstPlayerId", "SecondPlayerId", "IsComplete
 (2, 21,22, false, NULL), -- Alice Brown vs. David Miller
 (1, 19, 20, true, 20); -- Emily Garcia vs. Charles Johnson
 
+--DELETE ALL
+-- @block
+Delete from "Rounds";
+Delete from "Players";
+Delete from "Tournaments";
+Delete from "Matches";

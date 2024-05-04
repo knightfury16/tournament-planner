@@ -19,5 +19,8 @@ namespace TournamentPlanner.Domain.Entities
         [JsonIgnore]
         public List<Round> Rounds { get; set; } = new();
 
+        [JsonIgnore]
+        public List<Player> Players { get; set; } = new();
+
     }
 }
