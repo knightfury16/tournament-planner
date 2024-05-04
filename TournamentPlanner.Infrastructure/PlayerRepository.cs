@@ -59,7 +59,8 @@ namespace TournamentPlanner.Infrastructure
             {
                 Name = player.Name,
                 PhoneNumber = player.PhoneNumber,
-                Email = player.Email
+                Email = player.Email,
+                Tournament = player.Tournament,
             };
         }
 
@@ -69,7 +70,8 @@ namespace TournamentPlanner.Infrastructure
             {
                 Name = dto.Name,
                 PhoneNumber = dto.PhoneNumber,
-                Email = dto.Email
+                Email = dto.Email,
+                Tournament = dto.Tournament,
             };
         }
 

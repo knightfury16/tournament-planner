@@ -13,9 +13,9 @@ namespace TournamentPlanner.Domain.Entities
 
         public string? Email { get; set; }
 
-        public Tournament Tournament { get; set; } = new();
+        public Tournament? Tournament { get; set; }
 
-        public int TournamentId { get; set; }
+        public int? TournamentId { get; set; }
 
     }
 }

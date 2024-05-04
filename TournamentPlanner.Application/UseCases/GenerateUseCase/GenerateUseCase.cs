@@ -15,9 +15,11 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
         private readonly IRepository<PlayerDto, Player> _playerRepository;
         private readonly IRepository<Match, Match> _matchRepository;
         private readonly IConfiguration _configuration;
+        private readonly IRepository<Tournament, Tournament> _tournamentRepository;
 
-        public GenerateUseCase(IRepository<PlayerDto, Player> playerRepository, IRepository<Match, Match> matchRepository, IConfiguration configuration)
+        public GenerateUseCase(IRepository<PlayerDto, Player> playerRepository, IRepository<Match, Match> matchRepository, IRepository<Tournament, Tournament> tournamentRepository, IConfiguration configuration)
         {
+            _tournamentRepository = tournamentRepository;
             _configuration = configuration;
             _playerRepository = playerRepository;
             _matchRepository = matchRepository;
@@ -45,7 +47,8 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             {
                 Name = player.Name,
                 PhoneNumber = player.PhoneNumber,
-                Email = player.Email
+                Email = player.Email,
+                Tournament = player.Tournament,
             };
         }
 

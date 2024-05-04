@@ -21,7 +21,7 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
 
             if (roundId != null)
             {
-                matches = matches.Where(match => match.Round.RoundNumber == roundId);
+                matches = matches.Where(match => match.Round?.RoundNumber == roundId);
             }
             return matches;
         }
@@ -29,7 +29,7 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
         public async Task<IEnumerable<Player?>?> GetAllWinnersOfRound(int roundId)
         {
             var matches = await _matchRepository.GetAllAsync();
-            var winners = matches.Where(match => match.Round.RoundNumber == roundId)
+            var winners = matches.Where(match => match.Round?.RoundNumber == roundId)
                                         .Where(match => match.IsComplete == true)
                                         .Select(match => match.Winner);
             return winners;
@@ -41,7 +41,7 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
 
             if (roundId != null)
             {
-                matches = matches.Where(match => match.Round.RoundNumber == roundId);
+                matches = matches.Where(match => match.Round?.RoundNumber == roundId);
             }
 
             matches = matches.Where(match => match.IsComplete == false);
@@ -55,7 +55,7 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
 
             if (roundId != null)
             {
-                matches = matches.Where(match => match.Round.RoundNumber == roundId);
+                matches = matches.Where(match => match.Round?.RoundNumber == roundId);
             }
 
             matches = matches.Where(match => match.IsComplete == true);

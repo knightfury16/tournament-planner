@@ -15,7 +15,7 @@ namespace TournamentPlanner.Domain.Entities
         [JsonIgnore]
         public List<Match> Matches { get; set; } = new();
         public Tournament? Tournament { get; set; } = new();
-        public int TournamentId { get; set; }
+        public int? TournamentId { get; set; }
         
     }
 }

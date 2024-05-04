@@ -20,8 +20,8 @@ namespace TournamentPlanner.Domain.Entities
 
         public DateOnly? GamePlayed { get; set; }
 
-        public Round Round { get; set; } = new();
-        public int RoundId { get; set; }
+        public Round? Round { get; set; }
+        public int? RoundId { get; set; }
 
         
     }
