@@ -20,7 +20,8 @@ namespace TournamentPlanner.Infrastructure
         {
             var player = FromDto(obj);
             _context.Players.Add(player);
-            await _context.SaveChangesAsync();
+            // await _context.SaveChangesAsync();
+            await Task.CompletedTask;
             return player;
         }
 
@@ -52,7 +53,7 @@ namespace TournamentPlanner.Infrastructure
             player.PhoneNumber = obj.PhoneNumber;
             player.Email = obj.Email;
             
-            await _context.SaveChangesAsync();
+            // await _context.SaveChangesAsync();
 
             return player;
         }
@@ -90,6 +91,9 @@ namespace TournamentPlanner.Infrastructure
 
             return await _context.Players.AsNoTracking().Where(p => p.Name.ToLower().Contains(name.ToLower())).ToListAsync();
         }
-
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

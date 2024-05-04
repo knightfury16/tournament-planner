@@ -49,10 +49,16 @@ namespace TournamentPlanner.Infrastructure
             throw new NotImplementedException();
         }
 
+        public async Task SaveAsync()
+        {
+            await _dataContext.SaveChangesAsync();
+        }
+
         public async Task<Match> UpdateAsync(Match obj)
         {
             _dataContext.Attach(obj).State = EntityState.Modified;
-            await _dataContext.SaveChangesAsync();
+            await Task.CompletedTask;
+            // await _dataContext.SaveChangesAsync();
             return obj;
         }
 
