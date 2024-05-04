@@ -26,6 +26,7 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
             if (PlayerValidation(playerDto))
             {
                 var player = await _playerRepository.AddAsync(playerDto);
+                await _playerRepository.SaveAsync();
                 return player;
             }
             else

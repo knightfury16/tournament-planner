@@ -81,6 +81,7 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
                 m.GameScheduled = rescheduledDate;
 
                 await _matchRepository.UpdateAsync(m);
+                await _matchRepository.SaveAsync();
 
                 return m;
             }
