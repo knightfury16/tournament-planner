@@ -21,7 +21,7 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
 
             if (roundId != null)
             {
-                matches = matches.Where(match => match.Round.Id == roundId);
+                matches = matches.Where(match => match.Round.RoundNumber == roundId);
             }
             return matches;
         }
@@ -29,7 +29,7 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
         public async Task<IEnumerable<Player?>?> GetAllWinnersOfRound(int roundId)
         {
             var matches = await _matchRepository.GetAllAsync();
-            var winners = matches.Where(match => match.Round.Id == roundId)
+            var winners = matches.Where(match => match.Round.RoundNumber == roundId)
                                         .Where(match => match.IsComplete == true)
                                         .Select(match => match.Winner);
             return winners;
@@ -41,7 +41,7 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
 
             if (roundId != null)
             {
-                matches = matches.Where(match => match.Round.Id == roundId);
+                matches = matches.Where(match => match.Round.RoundNumber == roundId);
             }
 
             matches = matches.Where(match => match.IsComplete == false);
@@ -55,7 +55,7 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
 
             if (roundId != null)
             {
-                matches = matches.Where(match => match.Round.Id == roundId);
+                matches = matches.Where(match => match.Round.RoundNumber == roundId);
             }
 
             matches = matches.Where(match => match.IsComplete == true);
@@ -63,23 +63,34 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
             return matches;
         }
 
-        public Task<Player?> GetWinnerOfMatch(Match match)
+        public async Task<Player?> GetWinnerOfMatch(int matchId)
         {
-            throw new NotImplementedException();
+            var match = await _matchRepository.GetByIdAsync(matchId);
+            if (match is null)
+            {
+                throw new Exception("Match not found");
+            }
+            return match.Winner;
         }
 
-        public async Task<Match> RescheduleAMatch(Match match)
+        public async Task<Match> RescheduleAMatch(int matchId, DateOnly rescheduledDate)
         {
-            var m = await _matchRepository.GetByIdAsync(match.Id);
+            var m = await _matchRepository.GetByIdAsync(matchId);
 
             if (m != null)
             {
-                m.GameScheduled = match.GameScheduled;
+                m.GameScheduled = rescheduledDate;
 
                 await _matchRepository.UpdateAsync(m);
+
+                return m;
             }
 
-            return match;
+            else
+            {
+                throw new Exception("Problem in scheduling");
+            }
+
         }
     }
 }
