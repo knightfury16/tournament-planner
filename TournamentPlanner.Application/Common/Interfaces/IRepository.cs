@@ -6,10 +6,16 @@ using System.Threading.Tasks;
 
 namespace TournamentPlanner.Application.Common.Interfaces
 {
-    public interface IRepository<T, TResult> where T : class
+    public interface IRepository<T, TResult> where T : class where TResult : T
     {
         Task<TResult> AddAsync(T obj);
         Task<IEnumerable<TResult>> GetAllAsync();
+        Task<IEnumerable<TResult>> GetAllAsync(Func<T, bool> filter);
+
+        // Any non-existent properties will be silently ignored by EF Core when building the query.
+        Task<IEnumerable<TResult>> GetAllAsync(string[] includeProperties);
+
+        Task<IEnumerable<TResult>> GetAllAsync(Func<T, bool> filter, string[] includeProperties);
         Task<TResult?> GetByIdAsync(int id);
         Task<IEnumerable<TResult>?> GetByNameAsync(string? name);
         Task<TResult> UpdateAsync(T obj);
