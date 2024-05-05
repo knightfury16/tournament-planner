@@ -28,37 +28,32 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
 
         public async Task<IEnumerable<Player?>?> GetAllWinnersOfRound(int roundId)
         {
-            var matches = await _matchRepository.GetAllAsync();
-            var winners = matches.Where(match => match.Round?.RoundNumber == roundId)
-                                        .Where(match => match.IsComplete == true)
-                                        .Select(match => match.Winner);
+            var matches = await _matchRepository.GetAllAsync(match => match.Round?.RoundNumber == roundId && match.IsComplete == true, ["Winner"]);
+
+            var winners = matches.Select(match => match.Winner);
             return winners;
         }
 
         public async Task<IEnumerable<Match>> GetOpenMatches(int? roundId)
         {
-            var matches = await _matchRepository.GetAllAsync();
+            var matches = await _matchRepository.GetAllAsync(match => match.IsComplete == false);
 
             if (roundId != null)
             {
                 matches = matches.Where(match => match.Round?.RoundNumber == roundId);
             }
-
-            matches = matches.Where(match => match.IsComplete == false);
 
             return matches;
         }
 
         public async Task<IEnumerable<Match>> GetPlayedMatches(int? roundId)
         {
-            var matches = await _matchRepository.GetAllAsync();
+            var matches = await _matchRepository.GetAllAsync(match => match.IsComplete == true);
 
             if (roundId != null)
             {
                 matches = matches.Where(match => match.Round?.RoundNumber == roundId);
             }
-
-            matches = matches.Where(match => match.IsComplete == true);
 
             return matches;
         }
@@ -66,7 +61,8 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
         public async Task<Player?> GetWinnerOfMatch(int matchId)
         {
             var match = await _matchRepository.GetByIdAsync(matchId);
-            if (match is null){
+            if (match is null)
+            {
                 throw new Exception("Match not found");
             }
             return match.Winner;

@@ -14,9 +14,9 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
 {
     public class PlayerUseCase : IPlayerUseCase
     {
-        public IRepository<PlayerDto, Player> _playerRepository { get; }
+        public IRepository<Player, Player> _playerRepository { get; }
 
-        public PlayerUseCase(IRepository<PlayerDto, Player> playerRepository)
+        public PlayerUseCase(IRepository<Player, Player> playerRepository)
         {
             _playerRepository = playerRepository;
         }
@@ -25,7 +25,8 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
         {
             if (PlayerValidation(playerDto))
             {
-                var player = await _playerRepository.AddAsync(playerDto);
+                var player = FromDto(playerDto);
+                await _playerRepository.AddAsync(player);
                 await _playerRepository.SaveAsync();
                 return player;
             }
@@ -43,7 +44,8 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
         public async Task<IEnumerable<Player>> GetPlayersAsync(string? playerName)
         {
             var player = await _playerRepository.GetByNameAsync(playerName);
-            if(player == null){
+            if (player == null)
+            {
                 throw new ArgumentException("No player found");
             }
             return player;
@@ -54,11 +56,12 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
             //mock validation
             try
             {
-                if(playerDto == null)
+                if (playerDto == null)
                 {
                     return false;
                 }
-                if(string.IsNullOrEmpty(playerDto.Name)) {
+                if (string.IsNullOrEmpty(playerDto.Name))
+                {
                     return false;
                 }
 
@@ -70,6 +73,27 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
             {
                 return false;
             }
+        }
+        public PlayerDto ToDto(Player player)
+        {
+            return new PlayerDto
+            {
+                Name = player.Name,
+                PhoneNumber = player.PhoneNumber,
+                Email = player.Email,
+                Tournament = player.Tournament,
+            };
+        }
+
+        public Player FromDto(PlayerDto dto)
+        {
+            return new Player
+            {
+                Name = dto.Name,
+                PhoneNumber = dto.PhoneNumber,
+                Email = dto.Email,
+                Tournament = dto.Tournament,
+            };
         }
     }
 }

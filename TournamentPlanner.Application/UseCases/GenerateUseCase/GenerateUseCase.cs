@@ -12,13 +12,13 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
 {
     public class GenerateUseCase : IGenerate
     {
-        private readonly IRepository<PlayerDto, Player> _playerRepository;
+        private readonly IRepository<Player, Player> _playerRepository;
         private readonly IRepository<Match, Match> _matchRepository;
         private readonly IConfiguration _configuration;
         private readonly IRepository<Tournament, Tournament> _tournamentRepository;
         private readonly IRepository<Round, Round> _roundRepository;
 
-        public GenerateUseCase(IRepository<PlayerDto, Player> playerRepository, IRepository<Match, Match> matchRepository, IRepository<Tournament, Tournament> tournamentRepository, IRepository<Round, Round> roundRepository, IConfiguration configuration)
+        public GenerateUseCase(IRepository<Player, Player> playerRepository, IRepository<Match, Match> matchRepository, IRepository<Tournament, Tournament> tournamentRepository, IRepository<Round, Round> roundRepository, IConfiguration configuration)
         {
             _tournamentRepository = tournamentRepository;
             _roundRepository = roundRepository;
@@ -35,9 +35,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             //Repository limitation, no method to add in bulk
             foreach (Player player in playerList)
             {
-                var playerDto = ToDto(player);
-                playerDto.Tournament = tournament;
-                await _playerRepository.AddAsync(playerDto);
+                await _playerRepository.AddAsync(player);
             }
 
             await _playerRepository.SaveAsync();
@@ -98,7 +96,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
 
             //check if we have 32 palyers in this tournament
             if( typeof(T) == typeof(string)){
-                var rounds = await _roundRepository.GetByNameAsync(TournamentIdentifier.ToString());
+                // var rounds = await _roundRepository.GetByNameAsync(TournamentIdentifier.ToString());
             }
 
             if( typeof(T) == typeof(int)){
