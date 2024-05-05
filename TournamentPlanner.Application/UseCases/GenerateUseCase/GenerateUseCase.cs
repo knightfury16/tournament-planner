@@ -108,6 +108,15 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             //for this we need round repository, lets go make it
 
             //figure out the round
+            
+            List<Round> rounds = new();
+
+            var round = rounds.MaxBy(r => r.RoundNumber);
+
+            if(round != null){
+                var matchPlayed = round.Matches.Count();
+            }
+
             // if no match played, next round is 1st round
             // if 16 match played, next round is 2nd round
             // if 24 match played, next round is 3rd round
