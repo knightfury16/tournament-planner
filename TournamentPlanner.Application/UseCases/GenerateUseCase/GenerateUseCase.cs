@@ -16,10 +16,12 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
         private readonly IRepository<Match, Match> _matchRepository;
         private readonly IConfiguration _configuration;
         private readonly IRepository<Tournament, Tournament> _tournamentRepository;
+        private readonly IRepository<Round, Round> _roundRepository;
 
-        public GenerateUseCase(IRepository<PlayerDto, Player> playerRepository, IRepository<Match, Match> matchRepository, IRepository<Tournament, Tournament> tournamentRepository, IConfiguration configuration)
+        public GenerateUseCase(IRepository<PlayerDto, Player> playerRepository, IRepository<Match, Match> matchRepository, IRepository<Tournament, Tournament> tournamentRepository, IRepository<Round, Round> roundRepository, IConfiguration configuration)
         {
             _tournamentRepository = tournamentRepository;
+            _roundRepository = roundRepository;
             _configuration = configuration;
             _playerRepository = playerRepository;
             _matchRepository = matchRepository;
@@ -45,7 +47,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
 
         private async Task<Tournament> AddNewTournament(string tournamentName)
         {
-            var tournament = new Tournament{Name = tournamentName};
+            var tournament = new Tournament { Name = tournamentName };
             await _tournamentRepository.AddAsync(tournament);
             await _tournamentRepository.SaveAsync();
             return tournament;
@@ -89,13 +91,45 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
 
         }
 
-        public Task<List<Match>> MakeRoaster<T>(T TournamentIdentifier)
+        public async Task<List<Match>> MakeRoaster<T>(T TournamentIdentifier)
         {
+            // var rounds = await _roundRepository.GetAllAsync(new string[] {""})
+            // damn it, cant do this here, need to declare it in interface
+
+            //check if we have 32 palyers in this tournament
+            if( typeof(T) == typeof(string)){
+                var rounds = await _roundRepository.GetByNameAsync(TournamentIdentifier.ToString());
+            }
+
+            if( typeof(T) == typeof(int)){
+                throw new NotImplementedException();
+            }
+
+            //for this we need round repository, lets go make it
+
+            //figure out the round
+            // if no match played, next round is 1st round
+            // if 16 match played, next round is 2nd round
+            // if 24 match played, next round is 3rd round
+            // if 28 match played, next round is 4th round
+            // if 30 match played, next round is 5th and final round
+
+
+            //after figuring out the round, take all the winner from the previous round
+            // take all players if round 1
+
+            // take two random player and make a match between them
+
+
+            //can be done later,, schedule 8match at max each day.
+            //Assign schedule based on tournament start day
             throw new NotImplementedException();
         }
 
         public Task<List<Match>> SimulateMatches<T>(T TournamentIdentifier)
         {
+            //figure out which round, is going on
+            //take all the matches and assign a random winner
             throw new NotImplementedException();
         }
     }
