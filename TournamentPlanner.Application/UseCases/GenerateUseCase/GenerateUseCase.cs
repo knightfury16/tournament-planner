@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
         private readonly IConfiguration _configuration;
         private readonly IRepository<Tournament, Tournament> _tournamentRepository;
         private readonly IRepository<Round, Round> _roundRepository;
+        private int PLAYER_COUNT { get; } = 32;
 
         public GenerateUseCase(IRepository<Player, Player> playerRepository, IRepository<Match, Match> matchRepository, IRepository<Tournament, Tournament> tournamentRepository, IRepository<Round, Round> roundRepository, IConfiguration configuration)
         {
@@ -92,29 +94,58 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
 
         public async Task<List<Match>> MakeRoaster<T>(T TournamentIdentifier)
         {
-            // var rounds = await _roundRepository.GetAllAsync(new string[] {""})
-            // damn it, cant do this here, need to declare it in interface
+            IEnumerable<Round> rounds;
 
-            //check if we have 32 palyers in this tournament
-            if( typeof(T) == typeof(string)){
-                // var rounds = await _roundRepository.GetByNameAsync(TournamentIdentifier.ToString());
+            if (typeof(T) == typeof(string))
+            {
+                var tournamentName = TournamentIdentifier as string;
+
+                if (tournamentName is null)
+                {
+                    throw new Exception("Can not convert Tournament Identifier to string");
+                }
+
+                //figure out the round
+                //Get rounds, if we have any, game has been played before
+                rounds = await _roundRepository.GetAllAsync(r => r.Tournament?.Name == tournamentName, ["Tournament"]);
+
+                //else its first round, check for player constrain
+                if (rounds.Count() == 0)
+                {
+                    //check if we have 32 palyers in this tournament
+                    var players = await CheckAndGetPlayerCountInTournament(tournamentName);
+                    if (players == null)
+                    {
+                        throw new Exception("String Tournament Identifier: Insufficiant player to make schedule");
+                    }
+
+                    //we have 32 player and its first round, make a roaster
+                    IEnumerable<Match> matches = await MakeFirstMatchRoaster(players, tournamentName);
+
+                    return (List<Match>)await _matchRepository.GetAllAsync();
+                }
+
             }
 
-            if( typeof(T) == typeof(int)){
-                throw new NotImplementedException();
+            if (typeof(T) == typeof(int))
+            {
+                if (TournamentIdentifier is int)
+                {
+                    var tournamentId = Convert.ToInt32(TournamentIdentifier);
+                    var TRounds = await _roundRepository.GetAllAsync(r => r.TournamentId == tournamentId);
+                }
             }
 
-            //for this we need round repository, lets go make it
 
-            //figure out the round
-            
-            List<Round> rounds = new();
 
-            var round = rounds.MaxBy(r => r.RoundNumber);
+            // List<Round> rounds = new();
 
-            if(round != null){
-                var matchPlayed = round.Matches.Count();
-            }
+            // var round = rounds.MaxBy(r => r.RoundNumber);
+
+            // if (round != null)
+            // {
+            //     var matchPlayed = round.Matches.Count();
+            // }
 
             // if no match played, next round is 1st round
             // if 16 match played, next round is 2nd round
@@ -132,6 +163,68 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             //can be done later,, schedule 8match at max each day.
             //Assign schedule based on tournament start day
             throw new NotImplementedException();
+        }
+
+        private async Task<IEnumerable<Match>> MakeFirstMatchRoaster(List<Player> players, string tournamentName)
+        {
+            var tournament = await _tournamentRepository.GetByNameAsync(tournamentName);
+
+            var round1 = new Round{
+                RoundNumber = 1,
+                Tournament = tournament?.First(),
+            };
+
+            await _roundRepository.AddAsync(round1);
+
+            //we have 32 player
+            //we need to make 16 pairs and make a match between them
+
+            //Shuffle the player for randomness
+            var random = new Random();
+            players = players.OrderBy(p => random.Next()).ToList();
+
+
+            //Create 16 pairs of players
+            List<Match> matches = new List<Match>();
+            for (int i = 0; i < players.Count / 2; i++)
+            {
+                Player player1 = players[i * 2];
+                Player player2 = players[(i * 2) + 1];
+                
+                var match = new Match{
+                    FirstPlayer = player1,
+                    SecondPlayer = player2,
+                    IsComplete = false,
+                    Round = round1
+                };
+                matches.Add(match);
+                await _matchRepository.AddAsync(match);
+            }
+            await _matchRepository.SaveAsync();
+            return matches;
+        }
+
+
+        //* Tournament Identifier is string
+        private async Task<List<Player>?> CheckAndGetPlayerCountInTournament(string tournamentName)
+        {
+            var allPlayers = await _playerRepository.GetAllAsync(p => p.Tournament?.Name == tournamentName, ["Tournament"]);
+            if (allPlayers.Count() == PLAYER_COUNT)
+            {
+                return (List<Player>?)allPlayers;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        //* Tournament Identifier is int
+        private async Task<bool> CheckAndGetPlayerCountInTournament(int tournamentId)
+        {
+            var allPlayers = await _playerRepository.GetAllAsync(p => p.TournamentId == tournamentId);
+
+            return allPlayers.Count() == PLAYER_COUNT;
         }
 
         public Task<List<Match>> SimulateMatches<T>(T TournamentIdentifier)
