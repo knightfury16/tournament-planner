@@ -109,5 +109,20 @@ namespace TournamentPlanner.Infrastructure
         {
             throw new NotImplementedException();
         }
+
+        public Task<IEnumerable<Player>> GetAllAsync(IEnumerable<Func<Player, bool>> filters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Player>> GetAllAsync(IEnumerable<Func<Player, object>> includeByExpression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Player>> GetAllAsync(IEnumerable<Func<Player, object>> includeByExpression, IEnumerable<Func<Player, bool>> filters)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -48,6 +48,21 @@ namespace TournamentPlanner.Infrastructure
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<Match>> GetAllAsync(IEnumerable<Func<Match, bool>> filters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Match>> GetAllAsync(IEnumerable<Func<Match, object>> includeByExpression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Match>> GetAllAsync(IEnumerable<Func<Match, object>> includeByExpression, IEnumerable<Func<Match, bool>> filters)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Match?> GetByIdAsync(int id)
         {
             return await _dataContext.Matches.Include(match => match.Winner).FirstOrDefaultAsync(match => match.Id == id);
