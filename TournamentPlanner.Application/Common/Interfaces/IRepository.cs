@@ -11,6 +11,7 @@ namespace TournamentPlanner.Application.Common.Interfaces
         Task<TResult> AddAsync(T obj);
         Task<IEnumerable<TResult>> GetAllAsync();
         Task<IEnumerable<TResult>> GetAllAsync(Func<T, bool> filter);
+        Task<IEnumerable<TResult>> GetAllAsync(IEnumerable<Func<T, bool>> filters);
 
         // Any non-existent properties will be silently ignored by EF Core when building the query.
         Task<IEnumerable<TResult>> GetAllAsync(string[] includeProperties);

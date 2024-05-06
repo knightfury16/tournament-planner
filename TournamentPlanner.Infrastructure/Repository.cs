@@ -61,89 +61,69 @@ namespace TournamentPlanner.Infrastructure
                 return await GetAllAsync();
             }
             var query = _dataContext.Set<T>().AsQueryable();
-            /* foreach (var property in includeProperties)
-             {
-                 query = query.Include(p =>
-                 {
-                     var check = p.GetType().GetProperty(property);
-                     if(check != null)
-                     {
-                         return check.Name;
-                     }
-                     return p.
-                 });
-             }*/
+
             foreach (var property in includeProperties)
             {
                 var propertyInfo = typeof(T).GetProperty(property);
                 if (propertyInfo != null)
                 {
-                    var TP = propertyInfo.PropertyType;
-                    Console.WriteLine($"Property Type {TP}");
-                    // Construct an expression for the include property
-                    var parameter = Expression.Parameter(typeof(T), "x");
-                    var propertyExpression = Expression.Property(parameter, property);
-                    //var conversion = Expression.Convert(propertyExpression, typeof(T) );
-                     Expression<Func<T,object>> lambdaExpression = Expression.Lambda<Func<T,object>>(propertyExpression,parameter);
+                    Expression<Func<T, object>> lambdaExpression = BuildTheIncludeExpression(property);
 
                     query = query.Include(lambdaExpression);
-
-                    // Call the Include method using the constructed expression
-                    var allMethod = typeof(EntityFrameworkQueryableExtensions).GetMethods().Where(m => m.Name == "Include" && m.GetParameters().Length == 2);
-                    Console.WriteLine("Printing all methods of EFQueryableExtension");
-                    foreach (var method in allMethod)
-                    {
-                        Console.WriteLine($"Method Name: {method.Name}");
-                        var paramsa = method.GetParameters();
-
-                        Console.WriteLine("Printing all the parameter of the method and type of parameter");
-                        foreach (var param in paramsa)
-                        {
-                            Console.WriteLine(param.Name);
-                            Console.WriteLine(param.GetType().Name);
-                        }
-
-
-                    }
-                    Console.WriteLine("Exiting");
-                    var includeMethod = typeof(EntityFrameworkQueryableExtensions).GetMethod("Include", new[] {typeof(Expression<Func<T, object>>) });
-                    if(includeMethod != null && query != null)
-                    {
-                       query = (IQueryable<T>?)includeMethod.Invoke(null, new object[] { query, lambdaExpression });
-                    }
                 }
             }
-
             return (IEnumerable<TResult>)await query.ToListAsync();
         }
-
-        private static PropertyInfo? CheckProperty(T p, string property)
+        private static Expression<Func<T, object>> BuildTheIncludeExpression(string property)
         {
-            var properti = p.GetType().GetProperty(property);
-            if (properti == null)
-            {
-                return null;
-            }
-            var name = properti;
-            return name;
+            // Construct an expression for the include property
+            // it select parameter as x of Object Player
+            var parameter = Expression.Parameter(typeof(T), "x"); // x here is just a random name
+
+            // for example x => x.Tournament
+            //propertyExpression type Tournament
+            var propertyExpression = Expression.Property(parameter, property);
+
+            //TODO:: I dont understand this, need no know more about Expression
+            Expression<Func<T, object>> lambdaExpression = Expression.Lambda<Func<T, object>>(propertyExpression, parameter);
+            return lambdaExpression;
         }
 
         public async Task<IEnumerable<TResult>> GetAllAsync(Func<T, bool> filter, string[] includeProperties)
         {
-            var query = _dataContext.Set<T>();
+            var query = _dataContext.Set<T>().AsQueryable();
 
             if (filter != null)
             {
-                query = (DbSet<T>)query.Where(filter);
+                query = (IQueryable<T>)query.Where(filter);
             }
 
             if (includeProperties != null && includeProperties.Length > 0)
             {
                 foreach (var property in includeProperties)
                 {
-                    query = (DbSet<T>)query.Include(p => p.GetType().GetProperty(property));
+                    Expression<Func<T, object>> lambdaExpression = BuildTheIncludeExpression(property);
+
+                    query = query.Include(lambdaExpression);
                 }
             }
+            return (IEnumerable<TResult>)await query.ToListAsync();
+        }
+
+        public async Task<IEnumerable<TResult>> GetAllAsync(IEnumerable<Func<T, bool>> filters)
+        {
+            if(filters == null)
+            {
+                return await GetAllAsync();
+            }
+
+            var query = _dataContext.Set<T>();
+
+            foreach (var filter in filters)
+            {
+                query = (DbSet<T>)query.Where(filter);
+            }
+
             return (IEnumerable<TResult>)await query.ToListAsync();
         }
 
