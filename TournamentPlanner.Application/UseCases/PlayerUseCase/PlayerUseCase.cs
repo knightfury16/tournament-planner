@@ -43,8 +43,8 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
 
         public async Task<IEnumerable<Player>> GetPlayersAsync(string? playerName)
         {
-            var player = await _playerRepository.GetAllAsync(["Tournament"]);
-            //var player = await _playerRepository.GetAllAsync();
+            //var player = await _playerRepository.GetAllAsync(["Tournament"]);
+            var player = await _playerRepository.GetAllAsync();
             if (player == null)
             {
                 throw new ArgumentException("No player found");

@@ -40,7 +40,6 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             }
 
             await _playerRepository.SaveAsync();
-            var rounds = await _roundRepository.GetAllAsync();
 
             return await _playerRepository.GetAllAsync(["Tournament"]);
         }
