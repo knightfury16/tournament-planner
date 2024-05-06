@@ -25,6 +25,13 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(players);
         }
 
+        [HttpPost]
+        [Route("/roaster")]
+        public async Task<IActionResult> MakeRoaster([FromQuery] string tournamentName){
+            var matches = await _generate.MakeRoaster(tournamentName);
+            return Ok(matches);
+        }
+
         
     }
 }
