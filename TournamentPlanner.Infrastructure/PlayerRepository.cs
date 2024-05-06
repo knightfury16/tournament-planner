@@ -6,7 +6,7 @@ using TournamentPlanner.Infrastructure.DataContext;
 
 namespace TournamentPlanner.Infrastructure
 {
-    public class PlayerRepository : IRepository<PlayerDto, Player>
+    public class PlayerRepository : IRepository<Player, Player>
     {
         public TournamentPlannerDataContext _context { get; }
 
@@ -16,13 +16,13 @@ namespace TournamentPlanner.Infrastructure
 
         }
 
-        public async Task<Player> AddAsync(PlayerDto obj)
+        public async Task<Player> AddAsync(Player obj)
         {
-            var player = FromDto(obj);
-            _context.Players.Add(player);
+            //var player = FromDto(obj);
+            _context.Players.Add(obj);
             // await _context.SaveChangesAsync();
             await Task.CompletedTask;
-            return player;
+            return obj;
         }
 
 
@@ -31,12 +31,12 @@ namespace TournamentPlanner.Infrastructure
             return await _context.Players.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public Task<Player> UpdateAsync(PlayerDto obj)
+        public Task<Player> UpdateAsync(Player obj)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Player> UpdateByIdAsync(int id, PlayerDto obj)
+        public async Task<Player> UpdateByIdAsync(int id, Player obj)
         {
             var player = await _context.Players.FindAsync(id);
 
@@ -93,6 +93,21 @@ namespace TournamentPlanner.Infrastructure
         public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public Task<IEnumerable<Player>> GetAllAsync(Func<Player, bool> filter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Player>> GetAllAsync(string[] includeProperties)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Player>> GetAllAsync(Func<Player, bool> filter, string[] includeProperties)
+        {
+            throw new NotImplementedException();
         }
     }
 }

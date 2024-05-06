@@ -41,6 +41,16 @@ namespace TournamentPlanner.Infrastructure
             return await query.ToListAsync();
         }
 
+        public Task<IEnumerable<Round>> GetAllAsync(Func<Round, bool> filter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Round>> GetAllAsync(Func<Round, bool> filter, string[] includeProperties)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Round?> GetByIdAsync(int id)
         {
             return await _dataContext.Rounds.FirstOrDefaultAsync(r => r.Id == id);

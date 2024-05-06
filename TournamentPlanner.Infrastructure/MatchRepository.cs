@@ -33,6 +33,21 @@ namespace TournamentPlanner.Infrastructure
             return matches;
         }
 
+        public Task<IEnumerable<Match>> GetAllAsync(Func<Match, bool> filter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Match>> GetAllAsync(string[] includeProperties)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Match>> GetAllAsync(Func<Match, bool> filter, string[] includeProperties)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Match?> GetByIdAsync(int id)
         {
             return await _dataContext.Matches.Include(match => match.Winner).FirstOrDefaultAsync(match => match.Id == id);

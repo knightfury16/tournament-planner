@@ -30,6 +30,21 @@ namespace TournamentPlanner.Infrastructure
             return await _context.Tournaments.ToListAsync();
         }
 
+        public Task<IEnumerable<Tournament>> GetAllAsync(Func<Tournament, bool> filter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Tournament>> GetAllAsync(string[] includeProperties)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Tournament>> GetAllAsync(Func<Tournament, bool> filter, string[] includeProperties)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Tournament?> GetByIdAsync(int id)
         {
             return await _context.Tournaments.FirstOrDefaultAsync(t => t.Id == id);

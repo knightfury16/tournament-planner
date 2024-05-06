@@ -35,12 +35,14 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             //Repository limitation, no method to add in bulk
             foreach (Player player in playerList)
             {
-                await _playerRepository.AddAsync(player);
+                player.Tournament = tournament;
+                var addedPlayer = await _playerRepository.AddAsync(player);
             }
 
             await _playerRepository.SaveAsync();
+            var rounds = await _roundRepository.GetAllAsync();
 
-            return await _playerRepository.GetAllAsync();
+            return await _playerRepository.GetAllAsync(["Tournament"]);
         }
 
         private async Task<Tournament> AddNewTournament(string tournamentName)
