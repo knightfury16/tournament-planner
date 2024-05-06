@@ -92,11 +92,6 @@ namespace TournamentPlanner.Infrastructure
         {
             var query = _dataContext.Set<T>().AsQueryable();
 
-            if (filter != null)
-            {
-                query = (IQueryable<T>)query.Where(filter);
-            }
-
             if (includeProperties != null && includeProperties.Length > 0)
             {
                 foreach (var property in includeProperties)
@@ -106,6 +101,12 @@ namespace TournamentPlanner.Infrastructure
                     query = query.Include(lambdaExpression);
                 }
             }
+
+            if (filter != null)
+            {
+                return (IEnumerable<TResult>)query.Where(filter).ToList();
+            }
+
             return (IEnumerable<TResult>)await query.ToListAsync();
         }
 
@@ -137,11 +138,38 @@ namespace TournamentPlanner.Infrastructure
             {
                 return await GetAllAsync();
             }
-            var query = _dataContext.Set<T>().Where(e => MatchNameProperty(e, name));
+
+            Expression<Func<T, bool>> lamdaPredicateExpression = BuildNameMatchingExpression<T>(name);
+
+            var query = _dataContext.Set<T>().Where(lamdaPredicateExpression);
 
             return (IEnumerable<TResult>?)await query.ToListAsync();
         }
 
+        public static Expression<Func<T, bool>> BuildNameMatchingExpression<T>(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Name cannot be null or empty.");
+            }
+
+            //TODO: Add case insensitivity
+            // var nameLowered = Expression.Call(nameProperty, typeof(string).GetMethod("ToLowerInvariant", BindingFlags.Static | BindingFlags.Public)); // Safer method call
+            var parameter = Expression.Parameter(typeof(T), "x");
+            var nameProperty = Expression.Property(parameter, "Name");
+
+            if (nameProperty == null)
+            {
+                throw new ArgumentException("No Name property to filter by on this object");
+            }
+
+            var nameConstant = Expression.Constant(name); // No case-insensitive conversion
+            var comparison = Expression.Equal(nameProperty, nameConstant);
+
+            return Expression.Lambda<Func<T, bool>>(comparison, parameter);
+        }
+
+        //Naive I am
         private bool MatchNameProperty(T e, string name)
         {
             var nameProperty = e.GetType().GetProperty("Name");
