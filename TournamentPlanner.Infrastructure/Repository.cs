@@ -15,8 +15,7 @@ namespace TournamentPlanner.Infrastructure
 {
     public class Repository<T, TResult> : IRepository<T, TResult> where T : class where TResult : T
     {
-        //TODO:: Chnage the access to private later
-        public readonly TournamentPlannerDataContext _dataContext;
+        private readonly TournamentPlannerDataContext _dataContext;
         public Repository(TournamentPlannerDataContext dataContext)
         {
             _dataContext = dataContext;
