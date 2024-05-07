@@ -9,7 +9,7 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
     public interface IMatchUseCase
     {
 
-        Task<IEnumerable<Match>> GetAllMatches(int? roundId);
+        Task<IEnumerable<Match>> GetAllMatches(int roundId);
         Task<IEnumerable<Match>> GetOpenMatches(int? roundId);
         Task<IEnumerable<Match>> GetPlayedMatches(int? roundId);
         Task<Player?> GetWinnerOfMatch(int matchId);

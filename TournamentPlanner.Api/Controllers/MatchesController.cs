@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TournamentPlanner.Application.UseCases.MatchUseCase;
+using TournamentPlanner.Domain.Entities;
 
 namespace TournamentPlanner.Api.Controllers
 {
@@ -20,6 +21,7 @@ namespace TournamentPlanner.Api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type =typeof(IEnumerable<Match>))]
         public async Task<IActionResult> GetAllMatches()
         {
             var matches = await _matchUseCase.GetAllMatches(null);
@@ -28,6 +30,7 @@ namespace TournamentPlanner.Api.Controllers
 
         [HttpGet]
         [Route("open")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
         public async Task<IActionResult> GetAllOpenMatches()
         {
             var matches = await _matchUseCase.GetOpenMatches(null);
@@ -36,8 +39,14 @@ namespace TournamentPlanner.Api.Controllers
 
         [HttpGet]
         [Route("{roundId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAllMatchesOfRound(int roundId)
         {
+            if (roundId <= 0)
+            {
+                return BadRequest("Invalid RoundId. RoundId cant be null or negative");
+            }
             var matches = await _matchUseCase.GetAllMatches(roundId);
             return Ok(matches);
         }

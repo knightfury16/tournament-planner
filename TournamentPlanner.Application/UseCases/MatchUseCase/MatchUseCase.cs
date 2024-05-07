@@ -15,15 +15,9 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
         {
             _matchRepository = matchRepository;
         }
-        public async Task<IEnumerable<Match>> GetAllMatches(int? roundId)
+        public async Task<IEnumerable<Match>> GetAllMatches(int roundId)
         {
-            var matches = await _matchRepository.GetAllAsync();
-
-            if (roundId != null)
-            {
-                matches = matches.Where(match => match.Round?.RoundNumber == roundId);
-            }
-            return matches;
+            return  await _matchRepository.GetAllAsync(match => match.RoundId == roundId);
         }
 
         public async Task<IEnumerable<Player?>?> GetAllWinnersOfRound(int roundId)
@@ -40,7 +34,7 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
 
             if (roundId != null)
             {
-                matches = matches.Where(match => match.Round?.RoundNumber == roundId);
+                matches = matches.Where(match => match.RoundId == roundId);
             }
 
             return matches;
