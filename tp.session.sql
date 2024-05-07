@@ -39,7 +39,7 @@ INSERT INTO "Matches" ("RoundId", "FirstPlayerId", "SecondPlayerId", "IsComplete
 
 --DELETE ALL
 -- @block
+Delete from "Matches";
 Delete from "Rounds";
 Delete from "Players";
 Delete from "Tournaments";
-Delete from "Matches";
