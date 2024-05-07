@@ -129,6 +129,11 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                     var maxRound = rounds.MaxBy(r => r.RoundNumber);
                     if (maxRound != null)
                     {
+                        //TODO: Refactor this
+
+                        //Calling this to populate players
+                        await _matchRepository.GetAllAsync(m => m.RoundId == maxRound.Id, ["FirstPlayer", "SecondPlayer"]);
+                        
                         var matchesPlayed = GetTheMatchesPlayed(maxRound.Matches);
                         IEnumerable<Match> nextRoundMatches;
                         // if 16 match played, next round is 2nd round
@@ -137,22 +142,23 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                             nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 2);
                         }
                         // if 24 match played, next round is 3rd round
-                        else if (matchesPlayed.Count() == 24)
+                        else if (matchesPlayed.Count() == 8)
                         {
                             nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 3);
                         }
                         // if 28 match played, next round is 4th round
-                        else if (matchesPlayed.Count() == 28)
+                        else if (matchesPlayed.Count() == 4)
                         {
                             nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 4);
                         }
                         else
                         {
+                            //MakeSomeRandomWinner(maxRound.Matches);
+                            await MakeAllRandomWinnerAsync(maxRound.Matches);
                             // if 30 match played, next round is 5th and final round
-                            System.Console.WriteLine("TODO");
                         }
+                     
                     }
-
 
                 }
 
@@ -189,6 +195,44 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             //can be done later,, schedule 8match at max each day.
             //Assign schedule based on tournament start day
             throw new NotImplementedException();
+        }
+
+        private async void MakeSomeRandomWinner(List<Match> matches)
+        {
+            var random = new Random();
+            var matchNumber = matches.Count();
+            var randomWinnerNumber = random.Next(1, matchNumber);
+
+            for(var i = 0; i < randomWinnerNumber; i++)
+            {
+                var randomMatchIndex = random.Next(0, matchNumber);
+                if (matches[randomMatchIndex].IsComplete == false)
+                {
+                    var winnerPlayer = random.Next(0, 2) == 0 ? matches[randomMatchIndex].FirstPlayer : matches[randomMatchIndex].SecondPlayer;
+                    matches[randomMatchIndex].IsComplete = true;
+                    matches[randomMatchIndex].Winner = winnerPlayer;
+                }
+            }
+
+            //matches are being tracked by ef, so doing save will persist the data
+            await _matchRepository.SaveAsync();
+        }
+
+        private async Task MakeAllRandomWinnerAsync(List<Match> matches)
+        {
+            var random = new Random();
+
+            for (var i = 0; i < matches.Count; i++)
+            {
+                if (matches[i].IsComplete == false)
+                {
+                    var winnerPlayer = random.Next(0, 2) == 0 ? matches[i].FirstPlayer : matches[i].SecondPlayer;
+                    matches[i].IsComplete = true;
+                    matches[i].Winner = winnerPlayer;
+                }
+            }
+            //matches are being tracked by ef, so doing save will persist the data
+            await _matchRepository.SaveAsync();
         }
 
         private List<Match> GetTheMatchesPlayed(List<Match> matches)
