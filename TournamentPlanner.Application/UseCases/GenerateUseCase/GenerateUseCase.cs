@@ -193,7 +193,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
 
         private List<Match> GetTheMatchesPlayed(List<Match> matches)
         {
-            return matches.Where(m => m.IsComplete == false).ToList();
+            return matches.Where(m => m.IsComplete == true).ToList();
         }
 
         private async Task<IEnumerable<Match>> MakeMatchRoaster(List<Match> completedMatches, string tournamentName, int roundNumber)
