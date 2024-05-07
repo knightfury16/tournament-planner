@@ -10,8 +10,9 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
     {
 
         Task<IEnumerable<Match>> GetAllMatches(int roundId);
-        Task<IEnumerable<Match>> GetOpenMatches(int? roundId);
-        Task<IEnumerable<Match>> GetPlayedMatches(int? roundId);
+        Task<IEnumerable<Match>> GetAllMatches();
+        Task<IEnumerable<Match>> GetOpenMatches(int? roundId, string? tournamentName);
+        Task<IEnumerable<Match>> GetPlayedMatches(int? roundId, string? tournamentName);
         Task<Player?> GetWinnerOfMatch(int matchId);
         Task<IEnumerable<Player?>?> GetAllWinnersOfRound(int roundId);
         Task<Match> RescheduleAMatch(int matchId, DateOnly rescheduleDate);

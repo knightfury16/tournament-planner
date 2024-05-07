@@ -17,36 +17,54 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
         }
         public async Task<IEnumerable<Match>> GetAllMatches(int roundId)
         {
-            return  await _matchRepository.GetAllAsync(match => match.RoundId == roundId);
+
+            //without player there is no use of matches. So include player on deafult match fetch 
+            return await _matchRepository.GetAllAsync(match => match.RoundId == roundId, ["FirstPlayer", "SecondPlayer"]);
+        }
+
+        public async Task<IEnumerable<Match>> GetAllMatches()
+        {
+            //without player there is no use of matches. So include player on deafult match fetch 
+            return await _matchRepository.GetAllAsync(["FirstPlayer", "SecondPlayer"]);
         }
 
         public async Task<IEnumerable<Player?>?> GetAllWinnersOfRound(int roundId)
         {
-            var matches = await _matchRepository.GetAllAsync(match => match.Round?.RoundNumber == roundId && match.IsComplete == true, ["Winner"]);
+            var matches = await _matchRepository.GetAllAsync(match => match.RoundId == roundId && match.IsComplete == true, ["Winner"]);
 
             var winners = matches.Select(match => match.Winner);
             return winners;
         }
 
-        public async Task<IEnumerable<Match>> GetOpenMatches(int? roundId)
+        public async Task<IEnumerable<Match>> GetOpenMatches(int? roundId, string? tournamentName)
         {
-            var matches = await _matchRepository.GetAllAsync(match => match.IsComplete == false);
+            var matches = await _matchRepository.GetAllAsync(match => match.IsComplete == false, ["FirstPlayer", "SecondPlayer", "Round.Tournament"]);
 
-            if (roundId != null)
+            if (roundId.HasValue)
             {
                 matches = matches.Where(match => match.RoundId == roundId);
+            }
+
+            if (!string.IsNullOrEmpty(tournamentName))
+            {
+                matches = matches.Where(match => match.Round?.Tournament?.Name == tournamentName);
             }
 
             return matches;
         }
 
-        public async Task<IEnumerable<Match>> GetPlayedMatches(int? roundId)
+        public async Task<IEnumerable<Match>> GetPlayedMatches(int? roundId, string? tournamentName)
         {
-            var matches = await _matchRepository.GetAllAsync(match => match.IsComplete == true);
+            var matches = await _matchRepository.GetAllAsync(match => match.IsComplete == true, ["FirstPlayer", "SecondPlayer", "Round.Tournament"]);
 
-            if (roundId != null)
+            if (roundId.HasValue)
             {
-                matches = matches.Where(match => match.Round?.RoundNumber == roundId);
+                matches = matches.Where(match => match.RoundId == roundId);
+            }
+
+            if (!string.IsNullOrEmpty(tournamentName))
+            {
+                matches = matches.Where(match => match.Round?.Tournament?.Name == tournamentName);
             }
 
             return matches;
@@ -54,26 +72,33 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
 
         public async Task<Player?> GetWinnerOfMatch(int matchId)
         {
-            var match = await _matchRepository.GetByIdAsync(matchId);
+            //TODO: GetById should have an overload for include properties
+            // var match = await _matchRepository.GetByIdAsync(matchId);
+            var match = await _matchRepository.GetAllAsync(m => m.Id == matchId, ["Winner"]);
             if (match is null)
             {
                 throw new Exception("Match not found");
             }
-            return match.Winner;
+            if (match.First().IsComplete)
+            {
+                return match.First().Winner;
+            }
+            return null;
         }
 
         public async Task<Match> RescheduleAMatch(int matchId, DateOnly rescheduledDate)
         {
-            var m = await _matchRepository.GetByIdAsync(matchId);
+            //TODO: Add some logic, like if game is already played or if any game is being played on that day or not
+            var match = await _matchRepository.GetByIdAsync(matchId);
 
-            if (m != null)
+            if (match != null)
             {
-                m.GameScheduled = rescheduledDate;
+                match.GameScheduled = rescheduledDate;
 
-                await _matchRepository.UpdateAsync(m);
+                //No need to call update method, coz it is being tracked by ef
+                // await _matchRepository.UpdateAsync(m);
                 await _matchRepository.SaveAsync();
-
-                return m;
+                return match;
             }
 
             else
