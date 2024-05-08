@@ -29,6 +29,22 @@ namespace TournamentPlanner.Api.Controllers
         [Route("/roaster")]
         public async Task<IActionResult> MakeRoaster([FromQuery] string tournamentName){
             var matches = await _generate.MakeRoaster(tournamentName);
+            if(matches is null)
+            {
+                return Ok("Can not make roaster, previous round not finish");
+            }
+            return Ok(matches);
+        }
+
+        [HttpPost]
+        [Route("/simulate")]
+        public async Task<IActionResult> SimulateMatch([FromQuery]string tournamentName, bool allMatch)
+        {
+            var matches = await _generate.SimulateMatches(tournamentName, allMatch);
+            if(matches is null)
+            {
+                return Ok("No match is scheduled yet.Please schedule some match first");
+            }
             return Ok(matches);
         }
 

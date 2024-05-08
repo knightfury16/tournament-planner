@@ -92,7 +92,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
 
         }
 
-        public async Task<List<Match>> MakeRoaster<T>(T TournamentIdentifier)
+        public async Task<List<Match>?> MakeRoaster<T>(T TournamentIdentifier)
         {
             IEnumerable<Round> rounds;
 
@@ -105,12 +105,10 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                     throw new Exception("Can not convert Tournament Identifier to string");
                 }
 
-                //figure out the round
-                //Get rounds, if we have any, game has been played before
-                rounds = await _roundRepository.GetAllAsync(r => r.Tournament?.Name == tournamentName, ["Tournament", "Matches"]);
+                var maxRound = await GetMaxRound(tournamentName);
 
                 //else its first round, check for player constrain
-                if (rounds.Count() == 0)
+                if (maxRound is null)
                 {
                     //check if we have 32 palyers in this tournament
                     var players = await CheckAndGetPlayerCountInTournament(tournamentName);
@@ -120,52 +118,45 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                     }
 
                     //we have 32 player and its first round, make a roaster
-                    IEnumerable<Match> matches = await MakeFirstMatchRoaster(players, tournamentName);
+                    IEnumerable<Match> matches = await MakeMatchRoaster(null, tournamentName, 1);
 
                     return (List<Match>)matches;
                 }
                 else
                 {
-                    var maxRound = rounds.MaxBy(r => r.RoundNumber);
-                    if (maxRound != null)
+                    var matchesPlayed = GetTheMatchesPlayed(maxRound.Matches);
+
+                    IEnumerable<Match>? nextRoundMatches = null;
+
+                    // if 16 match played, next round is 2nd round
+                    if (matchesPlayed.Count() == 16)
                     {
-                        //TODO: Refactor this
-
-                        //Calling this to populate players
-                        await _matchRepository.GetAllAsync(m => m.RoundId == maxRound.Id, ["FirstPlayer", "SecondPlayer"]);
-
-                        var matchesPlayed = GetTheMatchesPlayed(maxRound.Matches);
-                        IEnumerable<Match> nextRoundMatches = null;
-                        // if 16 match played, next round is 2nd round
-                        if (matchesPlayed.Count() == 16)
-                        {
-                            nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 2);
-                        }
-                        // if 24 match played, next round is 3rd round
-                        else if (matchesPlayed.Count() == 8)
-                        {
-                            nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 3);
-                        }
-                        // if 28 match played, next round is 4th round
-                        else if (matchesPlayed.Count() == 4)
-                        {
-                            nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 4);
-                        }
-                        //final round, 5th
-                        else if (matchesPlayed.Count() == 2)
-                        {
-                            nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 5);
-                        }
-
-                        if (nextRoundMatches != null)
-                        {
-                            return (List<Match>)nextRoundMatches;
-                        }
-
+                        nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 2);
+                    }
+                    // if 24 match played, next round is 3rd round
+                    else if (matchesPlayed.Count() == 8)
+                    {
+                        nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 3);
+                    }
+                    // if 28 match played, next round is 4th round
+                    else if (matchesPlayed.Count() == 4)
+                    {
+                        nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 4);
+                    }
+                    //final round, 5th
+                    else if (matchesPlayed.Count() == 2)
+                    {
+                        nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 5);
                     }
 
-                }
+                    if (nextRoundMatches is null)
+                    {
+                        return null;
+                    }
 
+                    return (List<Match>)nextRoundMatches;
+
+                }
             }
 
             if (typeof(T) == typeof(int))
@@ -181,15 +172,35 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             throw new NotImplementedException();
         }
 
+        private async Task<Round?> GetMaxRound(string tournamentName)
+        {
+            //figure out the round
+            //Get rounds, if we have any, game has been played before
+            var rounds = await _roundRepository.GetAllAsync(r => r.Tournament?.Name == tournamentName, ["Tournament", "Matches"]);
+
+            var maxRound = rounds.MaxBy(r => r.RoundNumber);
+
+            if (maxRound != null)
+            {
+                //Calling this to populate players
+                //it does not make sense here to have matches and not populate the players
+                //TODO: Check if it populate winner by default
+                await _matchRepository.GetAllAsync(m => m.RoundId == maxRound.Id, ["FirstPlayer", "SecondPlayer"]);
+            }
+            //check if we populated winner by default
+            return maxRound;
+        }
+
         private List<Match> GetTheMatchesPlayed(List<Match> matches)
         {
             return matches.Where(m => m.IsComplete == true).ToList();
         }
 
-        private async Task<IEnumerable<Match>> MakeMatchRoaster(List<Match> completedMatches, string tournamentName, int roundNumber)
+        private async Task<IEnumerable<Match>> MakeMatchRoaster(List<Match>? completedMatches, string tournamentName, int roundNumber)
         {
 
             List<Match> matches = new List<Match>();
+            List<Player>? eligiblePlayers = new();
             var tournament = await _tournamentRepository.GetByNameAsync(tournamentName);
 
             var nextRound = new Round
@@ -200,21 +211,29 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
 
             await _roundRepository.AddAsync(nextRound);
 
-            var winnerPlayers = completedMatches.Select(m => m.Winner).ToList();
+            if (completedMatches == null)
+            {
+                eligiblePlayers = (List<Player>)await _playerRepository.GetAllAsync(p => p.Tournament?.Name == tournamentName, ["Tournament"]);
+            }
+            else
+            {
+                eligiblePlayers = completedMatches.Select(m => m.Winner).ToList();
+            }
+
 
             //Shuffle the player for randomness
             var random = new Random();
-            winnerPlayers = winnerPlayers.OrderBy(p => random.Next()).ToList();
+            eligiblePlayers = eligiblePlayers.OrderBy(p => random.Next()).ToList();
 
 
-            if (winnerPlayers != null && winnerPlayers.Count > 0)
+            if (eligiblePlayers != null && eligiblePlayers.Count > 0)
             {
 
                 //create 16 pairs of players
-                for (int i = 0; i < winnerPlayers.Count / 2; i++)
+                for (int i = 0; i < eligiblePlayers.Count / 2; i++)
                 {
-                    Player player1 = winnerPlayers[i * 2];
-                    Player player2 = winnerPlayers[(i * 2) + 1];
+                    Player player1 = eligiblePlayers[i * 2];
+                    Player player2 = eligiblePlayers[(i * 2) + 1];
 
                     var match = new Match
                     {
@@ -296,11 +315,34 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             return allPlayers.Count() == PLAYER_COUNT;
         }
 
-        public Task<List<Match>> SimulateMatches<T>(T TournamentIdentifier)
+        public async Task<List<Match>?> SimulateMatches<T>(T TournamentIdentifier, bool allMatch = false)
         {
             //figure out which round, is going on
-            //take all the matches and assign a random winner
-            throw new NotImplementedException();
+            string? tournamentName = null;
+
+            if (typeof(T) == typeof(string) && !string.IsNullOrEmpty(TournamentIdentifier as string))
+            {
+                tournamentName = TournamentIdentifier as string;
+            }
+
+            if(tournamentName is null) {
+                throw new Exception("TournamentIdentifier must be provided to determine the tournament name.");
+            }
+
+            var maxRound = await GetMaxRound(tournamentName);
+
+            if (maxRound == null)return null;
+
+            var matches = maxRound.Matches;
+
+            if (allMatch)
+            {
+                await _matchRepository.SaveAsync();
+                return WinnerGenerator.MakeAllMatchRadomWinner(matches);
+            }
+            await _matchRepository.SaveAsync();
+            return WinnerGenerator.MakeSomeMatchRandomWinner(matches);
+
         }
     }
 }
