@@ -43,7 +43,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
 
             await _playerRepository.SaveAsync();
 
-            return await _playerRepository.GetAllAsync(["Tournament"]);
+            return await _playerRepository.GetAllAsync(p => p.TournamentId == tournament.Id ,["Tournament"]);
         }
 
         private async Task<Tournament> AddNewTournament(string tournamentName)
@@ -94,8 +94,6 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
 
         public async Task<List<Match>?> MakeRoaster<T>(T TournamentIdentifier)
         {
-            IEnumerable<Round> rounds;
-
             if (typeof(T) == typeof(string))
             {
                 var tournamentName = TournamentIdentifier as string;

@@ -28,7 +28,7 @@ namespace TournamentPlanner.Api.Controllers
         }
 
         [HttpPost]
-        [Route("/roaster")]
+        [Route("roaster")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> MakeRoaster([FromQuery] string tournamentName){
@@ -41,7 +41,7 @@ namespace TournamentPlanner.Api.Controllers
         }
 
         [HttpPost]
-        [Route("/simulate")]
+        [Route("simulate")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SimulateMatch([FromQuery]string tournamentName, bool allMatch)

@@ -121,7 +121,7 @@ namespace TournamentPlanner.Infrastructure
 
         public async Task<IEnumerable<TResult>> GetAllAsync(IEnumerable<Func<T, bool>> filters)
         {
-            if(filters == null)
+            if (filters == null)
             {
                 return await GetAllAsync();
             }
@@ -148,14 +148,14 @@ namespace TournamentPlanner.Infrastructure
                 return await GetAllAsync();
             }
 
-            Expression<Func<T, bool>> lamdaPredicateExpression = BuildNameMatchingExpression<T>(name);
+            Expression<Func<T, bool>> lamdaPredicateExpression = BuildNameMatchingExpression(name);
 
             var query = _dataContext.Set<T>().Where(lamdaPredicateExpression);
 
             return (IEnumerable<TResult>?)await query.ToListAsync();
         }
 
-        public static Expression<Func<T, bool>> BuildNameMatchingExpression<T>(string name)
+        public static Expression<Func<T, bool>> BuildNameMatchingExpression(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -172,10 +172,15 @@ namespace TournamentPlanner.Infrastructure
                 throw new ArgumentException("No Name property to filter by on this object");
             }
 
+            // Use Contains method (assuming Name is a string)
+            var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
             var nameConstant = Expression.Constant(name); // No case-insensitive conversion
-            var comparison = Expression.Equal(nameProperty, nameConstant);
+            
+            var containsCall = Expression.Call(nameProperty, containsMethod, nameConstant);
 
-            return Expression.Lambda<Func<T, bool>>(comparison, parameter);
+            // var comparison = Expression.Equal(nameProperty, nameConstant);
+
+            return Expression.Lambda<Func<T, bool>>(containsCall, parameter);
         }
 
         //Naive I am

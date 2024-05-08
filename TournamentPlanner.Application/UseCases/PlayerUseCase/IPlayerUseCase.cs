@@ -14,6 +14,6 @@ namespace TournamentPlanner.Application.UseCases.AddPlayer
     {
         Task<Player> AddPlayerAsync(PlayerDto player);
         Task<IEnumerable<Player>> GetAllPlayerWhoseMatchNotStillPlayedAsync();
-        Task<IEnumerable<Player>> GetPlayersAsync(string? playerName);
+        Task<IEnumerable<Player>?> GetPlayersAsync(string? playerName);
     }
 }

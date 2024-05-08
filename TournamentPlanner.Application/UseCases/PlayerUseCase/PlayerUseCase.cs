@@ -41,15 +41,12 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Player>> GetPlayersAsync(string? playerName)
+        public async Task<IEnumerable<Player>?> GetPlayersAsync(string? playerName)
         {
             //var player = await _playerRepository.GetAllAsync(["Tournament"]);
-            var player = await _playerRepository.GetAllAsync();
-            if (player == null)
-            {
-                throw new ArgumentException("No player found");
-            }
-            return player;
+            if(playerName is null)return await _playerRepository.GetAllAsync();
+
+            return await _playerRepository.GetByNameAsync(playerName);
         }
 
         private bool PlayerValidation(PlayerDto playerDto)
