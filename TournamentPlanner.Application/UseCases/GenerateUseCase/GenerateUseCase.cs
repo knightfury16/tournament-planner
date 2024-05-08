@@ -122,7 +122,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                     //we have 32 player and its first round, make a roaster
                     IEnumerable<Match> matches = await MakeFirstMatchRoaster(players, tournamentName);
 
-                    return (List<Match>)await _matchRepository.GetAllAsync();
+                    return (List<Match>)matches;
                 }
                 else
                 {
@@ -133,9 +133,9 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
 
                         //Calling this to populate players
                         await _matchRepository.GetAllAsync(m => m.RoundId == maxRound.Id, ["FirstPlayer", "SecondPlayer"]);
-                        
+
                         var matchesPlayed = GetTheMatchesPlayed(maxRound.Matches);
-                        IEnumerable<Match> nextRoundMatches;
+                        IEnumerable<Match> nextRoundMatches = null;
                         // if 16 match played, next round is 2nd round
                         if (matchesPlayed.Count() == 16)
                         {
@@ -151,13 +151,17 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                         {
                             nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 4);
                         }
-                        else
+                        //final round, 5th
+                        else if (matchesPlayed.Count() == 2)
                         {
-                            //MakeSomeRandomWinner(maxRound.Matches);
-                            await MakeAllRandomWinnerAsync(maxRound.Matches);
-                            // if 30 match played, next round is 5th and final round
+                            nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 5);
                         }
-                     
+
+                        if (nextRoundMatches != null)
+                        {
+                            return (List<Match>)nextRoundMatches;
+                        }
+
                     }
 
                 }
@@ -172,67 +176,9 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                     var TRounds = await _roundRepository.GetAllAsync(r => r.TournamentId == tournamentId);
                 }
             }
-
-
-
-            // List<Round> rounds = new();
-
-            // var round = rounds.MaxBy(r => r.RoundNumber);
-
-            // if (round != null)
-            // {
-            //     var matchPlayed = round.Matches.Count();
-            // }
-
-
-
-            //after figuring out the round, take all the winner from the previous round
-            // take all players if round 1
-
-            // take two random player and make a match between them
-
-
             //can be done later,, schedule 8match at max each day.
             //Assign schedule based on tournament start day
             throw new NotImplementedException();
-        }
-
-        private async void MakeSomeRandomWinner(List<Match> matches)
-        {
-            var random = new Random();
-            var matchNumber = matches.Count();
-            var randomWinnerNumber = random.Next(1, matchNumber);
-
-            for(var i = 0; i < randomWinnerNumber; i++)
-            {
-                var randomMatchIndex = random.Next(0, matchNumber);
-                if (matches[randomMatchIndex].IsComplete == false)
-                {
-                    var winnerPlayer = random.Next(0, 2) == 0 ? matches[randomMatchIndex].FirstPlayer : matches[randomMatchIndex].SecondPlayer;
-                    matches[randomMatchIndex].IsComplete = true;
-                    matches[randomMatchIndex].Winner = winnerPlayer;
-                }
-            }
-
-            //matches are being tracked by ef, so doing save will persist the data
-            await _matchRepository.SaveAsync();
-        }
-
-        private async Task MakeAllRandomWinnerAsync(List<Match> matches)
-        {
-            var random = new Random();
-
-            for (var i = 0; i < matches.Count; i++)
-            {
-                if (matches[i].IsComplete == false)
-                {
-                    var winnerPlayer = random.Next(0, 2) == 0 ? matches[i].FirstPlayer : matches[i].SecondPlayer;
-                    matches[i].IsComplete = true;
-                    matches[i].Winner = winnerPlayer;
-                }
-            }
-            //matches are being tracked by ef, so doing save will persist the data
-            await _matchRepository.SaveAsync();
         }
 
         private List<Match> GetTheMatchesPlayed(List<Match> matches)
