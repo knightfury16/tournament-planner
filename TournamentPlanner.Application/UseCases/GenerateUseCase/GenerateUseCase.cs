@@ -256,48 +256,6 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             return matches;
         }
 
-        private async Task<IEnumerable<Match>> MakeFirstMatchRoaster(List<Player> players, string tournamentName)
-        {
-            var tournament = await _tournamentRepository.GetByNameAsync(tournamentName);
-
-            var round1 = new Round
-            {
-                RoundNumber = 1,
-                Tournament = tournament?.First(),
-            };
-
-            await _roundRepository.AddAsync(round1);
-
-            //we have 32 player
-            //we need to make 16 pairs and make a match between them
-
-            //Shuffle the player for randomness
-            var random = new Random();
-            players = players.OrderBy(p => random.Next()).ToList();
-
-
-            //Create 16 pairs of players
-            List<Match> matches = new List<Match>();
-            for (int i = 0; i < players.Count / 2; i++)
-            {
-                Player player1 = players[i * 2];
-                Player player2 = players[(i * 2) + 1];
-
-                var match = new Match
-                {
-                    FirstPlayer = player1,
-                    SecondPlayer = player2,
-                    IsComplete = false,
-                    Round = round1
-                };
-                matches.Add(match);
-                await _matchRepository.AddAsync(match);
-            }
-            await _matchRepository.SaveAsync();
-            return matches;
-        }
-
-
         //* Tournament Identifier is string
         private async Task<List<Player>?> CheckAndGetPlayerCountInTournament(string tournamentName)
         {

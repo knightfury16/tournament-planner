@@ -23,14 +23,11 @@ namespace TournamentPlanner.Infrastructure
         }
         public async Task<TResult> AddAsync(T obj)
         {
-            var state = _dataContext.Entry(obj).State;
             if (obj == null)
             {
                 throw new ArgumentNullException(nameof(obj));
             }
             _dataContext.Set<T>().Add(obj);
-
-            state = _dataContext.Entry(obj).State;
 
             await Task.CompletedTask;
 
