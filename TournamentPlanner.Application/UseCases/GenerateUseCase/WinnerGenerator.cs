@@ -13,7 +13,8 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
         public static List<Match> MakeAllMatchRadomWinner(List<Match> matches)
         {
             //is Player fiels populated
-            if(matches[0].FirstPlayer == null){
+            if (matches[0].FirstPlayer == null)
+            {
                 throw new Exception("Players of the Matches can not be empty.");
             }
 
@@ -24,6 +25,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                     var winnerPlayer = random.Next(0, 2) == 0 ? matches[i].FirstPlayer : matches[i].SecondPlayer;
                     matches[i].IsComplete = true;
                     matches[i].Winner = winnerPlayer;
+                    matches[i].GamePlayed = DateOnly.FromDateTime(DateTime.Now);
                 }
             }
             return matches;
@@ -32,7 +34,8 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
         public static List<Match> MakeSomeMatchRandomWinner(List<Match> matches, int matchIndex = 0)
         {
             //is Player fiels populated
-            if(matches[0].FirstPlayer == null){
+            if (matches[0].FirstPlayer == null)
+            {
                 throw new Exception("Players of the Matches can not be empty.");
             }
 
@@ -47,6 +50,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                     var winnerPlayer = random.Next(0, 2) == 0 ? matches[randomMatchIndex].FirstPlayer : matches[randomMatchIndex].SecondPlayer;
                     matches[randomMatchIndex].IsComplete = true;
                     matches[randomMatchIndex].Winner = winnerPlayer;
+                    matches[randomMatchIndex].GamePlayed = DateOnly.FromDateTime(DateTime.Now);
                 }
             }
             return matches;

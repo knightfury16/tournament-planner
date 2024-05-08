@@ -124,30 +124,35 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                 }
                 else
                 {
+                    if (maxRound.RoundNumber >= 5)
+                    {
+                        throw new Exception("Tournament Already Finish.Can not make roaster");
+                    }
                     var matchesPlayed = GetTheMatchesPlayed(maxRound.Matches);
 
                     IEnumerable<Match>? nextRoundMatches = null;
 
                     // if 16 match played, next round is 2nd round
-                    if (matchesPlayed.Count() == 16)
+                    if (maxRound.Matches.Count() == 16 && maxRound.Matches.Count() == matchesPlayed.Count())
                     {
                         nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 2);
                     }
                     // if 24 match played, next round is 3rd round
-                    else if (matchesPlayed.Count() == 8)
+                    else if (maxRound.Matches.Count() == 8 && maxRound.Matches.Count() == matchesPlayed.Count())
                     {
                         nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 3);
                     }
                     // if 28 match played, next round is 4th round
-                    else if (matchesPlayed.Count() == 4)
+                    else if (maxRound.Matches.Count() == 4 && maxRound.Matches.Count() == matchesPlayed.Count())
                     {
                         nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 4);
                     }
                     //final round, 5th
-                    else if (matchesPlayed.Count() == 2)
+                    else if (maxRound.Matches.Count() == 2 && maxRound.Matches.Count() == matchesPlayed.Count())
                     {
                         nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 5);
                     }
+
 
                     if (nextRoundMatches is null)
                     {
@@ -184,7 +189,6 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             {
                 //Calling this to populate players
                 //it does not make sense here to have matches and not populate the players
-                //TODO: Check if it populate winner by default
                 await _matchRepository.GetAllAsync(m => m.RoundId == maxRound.Id, ["FirstPlayer", "SecondPlayer"]);
             }
             //check if we populated winner by default
@@ -326,13 +330,14 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                 tournamentName = TournamentIdentifier as string;
             }
 
-            if(tournamentName is null) {
+            if (tournamentName is null)
+            {
                 throw new Exception("TournamentIdentifier must be provided to determine the tournament name.");
             }
 
             var maxRound = await GetMaxRound(tournamentName);
 
-            if (maxRound == null)return null;
+            if (maxRound == null) return null;
 
             var matches = maxRound.Matches;
 
