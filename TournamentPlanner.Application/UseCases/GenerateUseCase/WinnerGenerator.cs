@@ -29,7 +29,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             return matches;
         }
 
-        public static List<Match> MakeSomeMatchRandomWinner(List<Match> matches, int? matchIndex)
+        public static List<Match> MakeSomeMatchRandomWinner(List<Match> matches, int matchIndex = 0)
         {
             //is Player fiels populated
             if(matches[0].FirstPlayer == null){
@@ -37,7 +37,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             }
 
             var matchNumber = matches.Count();
-            var randomMatchWinnerNumber = matchIndex.HasValue ? matchIndex : random.Next(1, matchNumber);
+            var randomMatchWinnerNumber = matchIndex != 0 ? matchIndex : random.Next(1, matchNumber);
 
             for (var i = 0; i < randomMatchWinnerNumber; i++)
             {
