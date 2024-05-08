@@ -188,6 +188,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                 await _matchRepository.GetAllAsync(m => m.RoundId == maxRound.Id, ["FirstPlayer", "SecondPlayer"]);
             }
             //check if we populated winner by default
+            //Yah they populate automatically
             return maxRound;
         }
 
@@ -337,11 +338,14 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
 
             if (allMatch)
             {
-                await _matchRepository.SaveAsync();
-                return WinnerGenerator.MakeAllMatchRadomWinner(matches);
+                matches = WinnerGenerator.MakeAllMatchRadomWinner(matches);
+            }
+            else
+            {
+                matches = WinnerGenerator.MakeSomeMatchRandomWinner(matches);
             }
             await _matchRepository.SaveAsync();
-            return WinnerGenerator.MakeSomeMatchRandomWinner(matches);
+            return matches;
 
         }
     }
