@@ -23,7 +23,7 @@ namespace TournamentPlanner.Api.Controllers
         [Route("{tournamentName}")]
         [ProducesResponseType(StatusCodes.Status200OK,Type = typeof(IEnumerable<Player>))]
         public async Task<IActionResult> AddPlayerToTournament(string tournamentName){
-            var players = await _generate.AddPlayerAutoToTournament(tournamentName);
+            var players = await _generate.AddTournamentAndPlayerAuto(tournamentName);
             return Ok(players);
         }
 

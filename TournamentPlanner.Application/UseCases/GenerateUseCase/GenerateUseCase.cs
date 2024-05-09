@@ -28,7 +28,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             _playerRepository = playerRepository;
             _matchRepository = matchRepository;
         }
-        public async Task<IEnumerable<Player>> AddPlayerAutoToTournament(string TournamentName)
+        public async Task<IEnumerable<Player>> AddTournamentAndPlayerAuto(string TournamentName)
         {
             var tournament = await AddNewTournament(TournamentName);
 
