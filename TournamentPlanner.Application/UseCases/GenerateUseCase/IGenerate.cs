@@ -8,8 +8,8 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
 {
     public interface IGenerate
     {
-        Task<IEnumerable<Player>> AddTournamentAndPlayerAuto(string TournamentName);
-        Task<List<Match>?> MakeRoaster<T>(T TournamentIdentifier);
-        Task<List<Match>?> SimulateMatches<T>(T TournamentIdentifier, bool allMatch);
+        Task<IEnumerable<Player>> AddTournamentAndPlayerAuto(string tournamentName);
+        Task<List<Match>?> MakeRoaster(int tournamentId);
+        Task<List<Match>?> SimulateMatches(int tournamentId, bool allMatch);
     }
 }

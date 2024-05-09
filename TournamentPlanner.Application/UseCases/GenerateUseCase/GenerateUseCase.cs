@@ -28,9 +28,9 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             _playerRepository = playerRepository;
             _matchRepository = matchRepository;
         }
-        public async Task<IEnumerable<Player>> AddTournamentAndPlayerAuto(string TournamentName)
+        public async Task<IEnumerable<Player>> AddTournamentAndPlayerAuto(string tournamentName)
         {
-            var tournament = await AddNewTournament(TournamentName);
+            var tournament = await AddNewTournament(tournamentName);
 
             List<Player> playerList = await GetAllPlayers();
 
@@ -92,94 +92,77 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
 
         }
 
-        public async Task<List<Match>?> MakeRoaster<T>(T TournamentIdentifier)
+        public async Task<List<Match>?> MakeRoaster(int tournamentId)
         {
-            if (typeof(T) == typeof(string))
+            var maxRound = await GetMaxRound(tournamentId);
+
+            //its first round, check for player constrain
+            if (maxRound is null)
             {
-                var tournamentName = TournamentIdentifier as string;
-
-                if (tournamentName is null)
+                //check if we have 32 palyers in this tournament
+                var players = await CheckAndGetPlayerCountInTournament(tournamentId);
+                if (players == null)
                 {
-                    throw new Exception("Can not convert Tournament Identifier to string");
+                    throw new Exception("Insufficiant player to make schedule");
                 }
 
-                var maxRound = await GetMaxRound(tournamentName);
+                //we have 32 player and its first round, make a roaster
+                IEnumerable<Match> matches = await MakeRoundRoaster(null, tournamentId, 1);
 
-                //else its first round, check for player constrain
-                if (maxRound is null)
+                return (List<Match>)matches;
+            }
+            else
+            {
+                if (maxRound.RoundNumber >= 5)
                 {
-                    //check if we have 32 palyers in this tournament
-                    var players = await CheckAndGetPlayerCountInTournament(tournamentName);
-                    if (players == null)
-                    {
-                        throw new Exception("String Tournament Identifier: Insufficiant player to make schedule");
-                    }
-
-                    //we have 32 player and its first round, make a roaster
-                    IEnumerable<Match> matches = await MakeMatchRoaster(null, tournamentName, 1);
-
-                    return (List<Match>)matches;
+                    throw new Exception("Tournament Already Finish.Can not make roaster");
                 }
-                else
+
+                var matchesPlayed = GetTheMatchesPlayed(maxRound.Matches);
+
+                IEnumerable<Match>? nextRoundMatches = null;
+
+                // if 16 match played, next round is 2nd round
+                if (maxRound.Matches.Count() == 16 && maxRound.Matches.Count() == matchesPlayed.Count())
                 {
-                    if (maxRound.RoundNumber >= 5)
-                    {
-                        throw new Exception("Tournament Already Finish.Can not make roaster");
-                    }
-                    var matchesPlayed = GetTheMatchesPlayed(maxRound.Matches);
-
-                    IEnumerable<Match>? nextRoundMatches = null;
-
-                    // if 16 match played, next round is 2nd round
-                    if (maxRound.Matches.Count() == 16 && maxRound.Matches.Count() == matchesPlayed.Count())
-                    {
-                        nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 2);
-                    }
-                    // if 24 match played, next round is 3rd round
-                    else if (maxRound.Matches.Count() == 8 && maxRound.Matches.Count() == matchesPlayed.Count())
-                    {
-                        nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 3);
-                    }
-                    // if 28 match played, next round is 4th round
-                    else if (maxRound.Matches.Count() == 4 && maxRound.Matches.Count() == matchesPlayed.Count())
-                    {
-                        nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 4);
-                    }
-                    //final round, 5th
-                    else if (maxRound.Matches.Count() == 2 && maxRound.Matches.Count() == matchesPlayed.Count())
-                    {
-                        nextRoundMatches = await MakeMatchRoaster(matchesPlayed, tournamentName, 5);
-                    }
-
-
-                    if (nextRoundMatches is null)
-                    {
-                        return null;
-                    }
-
-                    return (List<Match>)nextRoundMatches;
-
+                    nextRoundMatches = await MakeRoundRoaster(matchesPlayed, tournamentId, 2);
                 }
+                // if 24 match played, next round is 3rd round
+                else if (maxRound.Matches.Count() == 8 && maxRound.Matches.Count() == matchesPlayed.Count())
+                {
+                    nextRoundMatches = await MakeRoundRoaster(matchesPlayed, tournamentId, 3);
+                }
+                // if 28 match played, next round is 4th round
+                else if (maxRound.Matches.Count() == 4 && maxRound.Matches.Count() == matchesPlayed.Count())
+                {
+                    nextRoundMatches = await MakeRoundRoaster(matchesPlayed, tournamentId, 4);
+                }
+                //final round, 5th
+                else if (maxRound.Matches.Count() == 2 && maxRound.Matches.Count() == matchesPlayed.Count())
+                {
+                    nextRoundMatches = await MakeRoundRoaster(matchesPlayed, tournamentId, 5);
+                }
+
+
+                if (nextRoundMatches is null)
+                {
+                    return null;
+                }
+
+                return (List<Match>)nextRoundMatches;
+
             }
 
-            if (typeof(T) == typeof(int))
-            {
-                if (TournamentIdentifier is int)
-                {
-                    var tournamentId = Convert.ToInt32(TournamentIdentifier);
-                    var TRounds = await _roundRepository.GetAllAsync(r => r.TournamentId == tournamentId);
-                }
-            }
             //can be done later,, schedule 8match at max each day.
             //Assign schedule based on tournament start day
-            throw new NotImplementedException();
+
         }
 
-        private async Task<Round?> GetMaxRound(string tournamentName)
+        private async Task<Round?> GetMaxRound(int tournamentId)
         {
             //figure out the round
             //Get rounds, if we have any, game has been played before
-            var rounds = await _roundRepository.GetAllAsync(r => r.Tournament?.Name == tournamentName, ["Tournament", "Matches"]);
+            var rounds = await _roundRepository.GetAllAsync(r => r.TournamentId == tournamentId, ["Matches"]);
 
             var maxRound = rounds.MaxBy(r => r.RoundNumber);
 
@@ -199,24 +182,24 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             return matches.Where(m => m.IsComplete == true).ToList();
         }
 
-        private async Task<IEnumerable<Match>> MakeMatchRoaster(List<Match>? completedMatches, string tournamentName, int roundNumber)
+        private async Task<IEnumerable<Match>> MakeRoundRoaster(List<Match>? completedMatches, int tournamentId, int roundNumber)
         {
 
             List<Match> matches = new List<Match>();
             List<Player>? eligiblePlayers = new();
-            var tournament = await _tournamentRepository.GetByNameAsync(tournamentName);
+            var tournament = await _tournamentRepository.GetByIdAsync(tournamentId);
 
             var nextRound = new Round
             {
                 RoundNumber = roundNumber,
-                Tournament = tournament?.First(),
+                Tournament = tournament,
             };
 
             await _roundRepository.AddAsync(nextRound);
 
             if (completedMatches == null)
             {
-                eligiblePlayers = (List<Player>)await _playerRepository.GetAllAsync(p => p.Tournament?.Name == tournamentName, ["Tournament"]);
+                eligiblePlayers = (List<Player>)await _playerRepository.GetAllAsync(p => p.TournamentId == tournamentId);
             }
             else
             {
@@ -254,10 +237,9 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             return matches;
         }
 
-        //* Tournament Identifier is string
-        private async Task<List<Player>?> CheckAndGetPlayerCountInTournament(string tournamentName)
+        private async Task<List<Player>?> CheckAndGetPlayerCountInTournament(int tournamentId)
         {
-            var allPlayers = await _playerRepository.GetAllAsync(p => p.Tournament?.Name == tournamentName, ["Tournament"]);
+            var allPlayers = await _playerRepository.GetAllAsync(p => p.TournamentId == tournamentId);
             if (allPlayers.Count() == PLAYER_COUNT)
             {
                 return (List<Player>?)allPlayers;
@@ -268,30 +250,12 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             }
         }
 
-        //* Tournament Identifier is int
-        private async Task<bool> CheckAndGetPlayerCountInTournament(int tournamentId)
-        {
-            var allPlayers = await _playerRepository.GetAllAsync(p => p.TournamentId == tournamentId);
 
-            return allPlayers.Count() == PLAYER_COUNT;
-        }
-
-        public async Task<List<Match>?> SimulateMatches<T>(T TournamentIdentifier, bool allMatch = false)
+        public async Task<List<Match>?> SimulateMatches(int tournamentId, bool allMatch = false)
         {
             //figure out which round, is going on
-            string? tournamentName = null;
 
-            if (typeof(T) == typeof(string) && !string.IsNullOrEmpty(TournamentIdentifier as string))
-            {
-                tournamentName = TournamentIdentifier as string;
-            }
-
-            if (tournamentName is null)
-            {
-                throw new Exception("TournamentIdentifier must be provided to determine the tournament name.");
-            }
-
-            var maxRound = await GetMaxRound(tournamentName);
+            var maxRound = await GetMaxRound(tournamentId);
 
             if (maxRound == null) return null;
 

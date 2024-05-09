@@ -28,11 +28,11 @@ namespace TournamentPlanner.Api.Controllers
         }
 
         [HttpPost]
-        [Route("roaster")]
+        [Route("roaster/{tournamentId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> MakeRoaster([FromQuery] string tournamentName){
-            var matches = await _generate.MakeRoaster(tournamentName);
+        public async Task<IActionResult> MakeRoaster([FromRoute] int tournamentId){
+            var matches = await _generate.MakeRoaster(tournamentId);
             if(matches is null)
             {
                 return BadRequest("Can not make roaster, previous round not finish");
@@ -41,12 +41,12 @@ namespace TournamentPlanner.Api.Controllers
         }
 
         [HttpPost]
-        [Route("simulate")]
+        [Route("simulate/{tournamentId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> SimulateMatch([FromQuery]string tournamentName, bool allMatch)
+        public async Task<IActionResult> SimulateMatch([FromRoute]int tournamentId, [FromQuery] bool allMatch)
         {
-            var matches = await _generate.SimulateMatches(tournamentName, allMatch);
+            var matches = await _generate.SimulateMatches(tournamentId, allMatch);
             if(matches is null)
             {
                 return BadRequest("No match is scheduled yet.Please schedule some match first");
