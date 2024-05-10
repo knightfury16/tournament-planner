@@ -234,6 +234,9 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                 await _matchRepository.SaveAsync();
             }
 
+            //Match make up complete schedule the matches now.
+            // Scheduler.schedule(matches)
+
             return matches;
         }
 
