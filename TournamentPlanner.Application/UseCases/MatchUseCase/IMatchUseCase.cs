@@ -15,7 +15,7 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
         Task<IEnumerable<Match>> GetPlayedMatches(int? roundId, string? tournamentName);
         Task<Player?> GetWinnerOfMatch(int matchId);
         Task<IEnumerable<Player?>?> GetAllWinnersOfRound(int roundId);
-        Task<Match> RescheduleAMatch(int matchId, DateOnly rescheduleDate);
+        Task<Match> RescheduleAMatch(int matchId, DateTime rescheduleDate);
         
     }
 }

@@ -86,7 +86,7 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
             return null;
         }
 
-        public async Task<Match> RescheduleAMatch(int matchId, DateOnly rescheduledDate)
+        public async Task<Match> RescheduleAMatch(int matchId, DateTime rescheduledDate)
         {
             //TODO: Add some logic, like if game is already played or if any game is being played on that day or not
             var match = await _matchRepository.GetByIdAsync(matchId);
