@@ -11,6 +11,8 @@ namespace TournamentPlanner.Domain.Entities
     {
         public int RoundNumber { get; set; }
 
+        public DateTime? StartTime { get; set; }
+
         // TODO: do this through fluent api
         [JsonIgnore]
         public List<Match> Matches { get; set; } = new();

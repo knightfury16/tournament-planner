@@ -16,9 +16,9 @@ namespace TournamentPlanner.Domain.Entities
 
         public Player? Winner { get; set; } 
 
-        public DateOnly? GameScheduled { get; set; }
+        public DateTime? GameScheduled { get; set; }
 
-        public DateOnly? GamePlayed { get; set; }
+        public DateTime? GamePlayed { get; set; }
 
         public Round? Round { get; set; }
         public int? RoundId { get; set; }
