@@ -193,6 +193,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             {
                 RoundNumber = roundNumber,
                 Tournament = tournament,
+                StartTime = DateTime.UtcNow
             };
 
             await _roundRepository.AddAsync(nextRound);
@@ -231,11 +232,12 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                     matches.Add(match);
                     await _matchRepository.AddAsync(match);
                 }
+            //Match make up complete schedule the matches now.
+            // Scheduler.schedule(matches,nextRound)
+                matches = Scheduler.Schedule(matches,nextRound);
+
                 await _matchRepository.SaveAsync();
             }
-
-            //Match make up complete schedule the matches now.
-            // Scheduler.schedule(matches)
 
             return matches;
         }
