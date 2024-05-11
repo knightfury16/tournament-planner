@@ -187,16 +187,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
 
             List<Match> matches = new List<Match>();
             List<Player>? eligiblePlayers = new();
-            var tournament = await _tournamentRepository.GetByIdAsync(tournamentId);
-
-            var nextRound = new Round
-            {
-                RoundNumber = roundNumber,
-                Tournament = tournament,
-                StartTime = DateTime.UtcNow
-            };
-
-            await _roundRepository.AddAsync(nextRound);
+            DateTime? nextRoundStartTime = DateTime.UtcNow;
 
             if (completedMatches == null)
             {
@@ -205,8 +196,20 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
             else
             {
                 eligiblePlayers = completedMatches.Select(m => m.Winner).ToList();
+                var latestCompletedMatch = completedMatches.MaxBy(m => m.GamePlayed);
+                if(latestCompletedMatch != null){
+                    nextRoundStartTime = latestCompletedMatch.GamePlayed?.ToUniversalTime();
+                }
             }
 
+            //set the Next round 
+            var nextRound = new Round
+            {
+                RoundNumber = roundNumber,
+                TournamentId = tournamentId,
+                StartTime = nextRoundStartTime
+            };
+            await _roundRepository.AddAsync(nextRound);
 
             //Shuffle the player for randomness
             var random = new Random();
