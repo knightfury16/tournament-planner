@@ -25,7 +25,7 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                     var winnerPlayer = random.Next(0, 2) == 0 ? matches[i].FirstPlayer : matches[i].SecondPlayer;
                     matches[i].IsComplete = true;
                     matches[i].Winner = winnerPlayer;
-                    matches[i].GamePlayed = DateTime.Now;
+                    matches[i].GamePlayed = matches[i].GameScheduled?.ToUniversalTime();
                 }
             }
             return matches;
@@ -50,7 +50,8 @@ namespace TournamentPlanner.Application.UseCases.GenerateUseCase
                     var winnerPlayer = random.Next(0, 2) == 0 ? matches[randomMatchIndex].FirstPlayer : matches[randomMatchIndex].SecondPlayer;
                     matches[randomMatchIndex].IsComplete = true;
                     matches[randomMatchIndex].Winner = winnerPlayer;
-                    matches[randomMatchIndex].GamePlayed = DateTime.Now;
+                    //* game played on scheduled
+                    matches[randomMatchIndex].GamePlayed = matches[randomMatchIndex].GameScheduled?.ToUniversalTime();
                 }
             }
             return matches;
