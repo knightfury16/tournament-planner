@@ -119,6 +119,32 @@ namespace TournamentPlanner.Infrastructure
             return (IEnumerable<TResult>)await query.ToListAsync();
         }
 
+        public async Task<IEnumerable<TResult>> GetAllAsync(IEnumerable<Func<T, bool>> filters, string[] includeProperties)
+        {
+            var query = _dataContext.Set<T>().AsQueryable();
+
+            if (includeProperties != null && includeProperties.Length > 0)
+            {
+                foreach (var property in includeProperties)
+                {
+                    Expression<Func<T, object>> lambdaExpression = BuildTheIncludeExpression(property);
+
+                    query = query.Include(lambdaExpression);
+                }
+            }
+
+            if (filters != null && filters.Count() > 1)
+            {
+                foreach (var filter in filters)
+                {
+                    query = query.Where(filter).AsQueryable();
+                }
+                return (IEnumerable<TResult>)query.ToList();
+            }
+
+            return (IEnumerable<TResult>)await query.ToListAsync();
+        }
+
         public async Task<IEnumerable<TResult>> GetAllAsync(IEnumerable<Func<T, bool>> filters)
         {
             if (filters == null)
@@ -126,14 +152,14 @@ namespace TournamentPlanner.Infrastructure
                 return await GetAllAsync();
             }
 
-            var query = _dataContext.Set<T>();
+            var query = _dataContext.Set<T>().AsQueryable();
 
             foreach (var filter in filters)
             {
-                query = (DbSet<T>)query.Where(filter);
+                query = query.Where(filter).AsQueryable();
             }
 
-            return (IEnumerable<TResult>)await query.ToListAsync();
+            return (IEnumerable<TResult>)query.ToList();
         }
 
         public async Task<TResult?> GetByIdAsync(int id)
