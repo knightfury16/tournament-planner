@@ -15,7 +15,7 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
         {
             _matchRepository = matchRepository;
         }
-        public async Task<IEnumerable<Match>> GetAllMatches(int roundId)
+        public async Task<IEnumerable<Match>> GetAllRoundMatches(int roundId)
         {
 
             //without player there is no use of matches. So include player on deafult match fetch 
@@ -26,6 +26,11 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
         {
             //without player there is no use of matches. So include player on deafult match fetch 
             return await _matchRepository.GetAllAsync(["FirstPlayer", "SecondPlayer"]);
+        }
+        public async Task<IEnumerable<Match>> GetAllTournamentMatches(int tournamentId)
+        {
+            //without player there is no use of matches. So include player on deafult match fetch 
+            return await _matchRepository.GetAllAsync(match => match.Round?.TournamentId == tournamentId,["FirstPlayer", "SecondPlayer", "Round.Tournament"]);
         }
 
         public async Task<IEnumerable<Player?>?> GetAllWinnersOfRound(int roundId)

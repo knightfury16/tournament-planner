@@ -21,8 +21,12 @@ namespace TournamentPlanner.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
-        public async Task<IActionResult> GetAllMatches()
+        public async Task<IActionResult> GetAllMatches([FromQuery]int? tournamentId)
         {
+            if (tournamentId.HasValue)
+            {
+                return Ok(await _matchUseCase.GetAllTournamentMatches(tournamentId.Value));
+            }
             var matches = await _matchUseCase.GetAllMatches();
             return Ok(matches);
         }
@@ -56,7 +60,7 @@ namespace TournamentPlanner.Api.Controllers
             {
                 return BadRequest("Invalid RoundId. RoundId cant be null or negative");
             }
-            var matches = await _matchUseCase.GetAllMatches(roundId);
+            var matches = await _matchUseCase.GetAllRoundMatches(roundId);
             return Ok(matches);
         }
 
