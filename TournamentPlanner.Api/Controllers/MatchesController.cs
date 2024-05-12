@@ -43,9 +43,9 @@ namespace TournamentPlanner.Api.Controllers
         [HttpGet]
         [Route("played")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
-        public async Task<IActionResult> GetPlayedMatches([FromQuery] int? roundId, [FromQuery] string? tournamentName)
+        public async Task<IActionResult> GetPlayedMatches([FromQuery] int? roundId, [FromQuery] int? tournamentId)
         {
-            var matches = await _matchUseCase.GetPlayedMatches(roundId, tournamentName);
+            var matches = await _matchUseCase.GetPlayedMatches(roundId, tournamentId);
             return Ok(matches);
         }
 
