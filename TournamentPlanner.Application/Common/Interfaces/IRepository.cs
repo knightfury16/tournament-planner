@@ -17,6 +17,8 @@ namespace TournamentPlanner.Application.Common.Interfaces
         Task<IEnumerable<TResult>> GetAllAsync(string[] includeProperties);
 
         Task<IEnumerable<TResult>> GetAllAsync(Func<T, bool> filter, string[] includeProperties);
+        Task<IEnumerable<TResult>> GetAllAsync(IEnumerable<Func<T, bool>> filters, string[] includeProperties);
+
         Task<TResult?> GetByIdAsync(int id);
         Task<IEnumerable<TResult>?> GetByNameAsync(string? name);
         Task<TResult> UpdateAsync(T obj);
