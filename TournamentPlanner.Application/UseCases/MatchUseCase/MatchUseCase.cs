@@ -41,19 +41,23 @@ namespace TournamentPlanner.Application.UseCases.MatchUseCase
             return winners;
         }
 
-        public async Task<IEnumerable<Match>> GetOpenMatches(int? roundId, string? tournamentName)
+        public async Task<IEnumerable<Match>> GetOpenMatches(int? roundId, int? tournamentId)
         {
-            var matches = await _matchRepository.GetAllAsync(match => match.IsComplete == false, ["FirstPlayer", "SecondPlayer", "Round.Tournament"]);
+            List<Func<Match, bool>> filters = new() {
+                match => match.IsComplete == false,
+            };
 
             if (roundId.HasValue)
             {
-                matches = matches.Where(match => match.RoundId == roundId);
+                filters.Add(match => match.RoundId == roundId.Value);
             }
 
-            if (!string.IsNullOrEmpty(tournamentName))
+            if (tournamentId.HasValue)
             {
-                matches = matches.Where(match => match.Round?.Tournament?.Name == tournamentName);
+                filters.Add(match => match.Round?.TournamentId == tournamentId.Value);
             }
+
+            var matches = await _matchRepository.GetAllAsync(filters, ["FirstPlayer","SecondPlayer","Round.Tournament"]);
 
             return matches;
         }

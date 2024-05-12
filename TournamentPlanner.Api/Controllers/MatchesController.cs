@@ -34,9 +34,9 @@ namespace TournamentPlanner.Api.Controllers
         [HttpGet]
         [Route("open")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
-        public async Task<IActionResult> GetAllOpenMatches([FromQuery] int? roundId, [FromQuery] string? tournamentName)
+        public async Task<IActionResult> GetAllOpenMatches([FromQuery] int? roundId, [FromQuery] int? tournamentId)
         {
-            var matches = await _matchUseCase.GetOpenMatches(roundId, tournamentName);
+            var matches = await _matchUseCase.GetOpenMatches(roundId, tournamentId);
             return Ok(matches);
         }
 
