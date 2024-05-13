@@ -79,7 +79,7 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
                 Name = player.Name,
                 PhoneNumber = player.PhoneNumber,
                 Email = player.Email,
-                Tournament = player.Tournament,
+                TournamentId = player.TournamentId,
             };
         }
 
@@ -90,7 +90,7 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
                 Name = dto.Name,
                 PhoneNumber = dto.PhoneNumber,
                 Email = dto.Email,
-                Tournament = dto.Tournament,
+                TournamentId = dto.TournamentId,
             };
         }
     }

@@ -7,6 +7,6 @@ namespace TournamentPlanner.Application.DTOs
         public string Name { get; set; } = string.Empty;
         public string? PhoneNumber { get; set; }
         public string? Email { get; set; }
-        public Tournament? Tournament { get; set; }
+        public int? TournamentId { get; set; }
     }
 }
