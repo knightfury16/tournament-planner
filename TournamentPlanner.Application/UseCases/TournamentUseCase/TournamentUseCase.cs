@@ -25,9 +25,24 @@ namespace TournamentPlanner.Application.UseCases.TournamentUseCase
             return tournament;
         }
 
-        public async Task<IEnumerable<Tournament>> GetAll()
+        public async Task<IEnumerable<Tournament>> GetAll(string? name, DateOnly? startDate, DateOnly? endDate)
         {
-            return await _tournamentRepository.GetAllAsync();
+            List<Func<Tournament, bool>> filters = new();
+
+            if(!string.IsNullOrEmpty(name)){
+                filters.Add(x => x.Name.ToLower().Contains(name.ToLower()));
+            }
+
+            if(startDate.HasValue){
+                filters.Add(x => x.StartDate?.Date >= startDate.Value.ToDateTime(TimeOnly.MinValue));
+            }
+            if(endDate.HasValue){
+                filters.Add(x => x.EndDate?.Date <= endDate.Value.ToDateTime(TimeOnly.MinValue));
+            }
+
+            var tournaments = await _tournamentRepository.GetAllAsync(filters);
+
+            return tournaments;
         }
 
         public Task<IEnumerable<Tournament>> GetTournamentsByDate(DateTime startDate, DateTime endDate)

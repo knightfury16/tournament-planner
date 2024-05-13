@@ -44,9 +44,21 @@ namespace TournamentPlanner.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTournament()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Tournament>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetTournament([FromQuery] string? name,[FromQuery] string? start,[FromQuery] string? end)
         {
-            IEnumerable<Tournament> tournamets = await _tournamentUseCase.GetAll();
+            DateOnly? startDate =  string.IsNullOrEmpty(start) ? null : DateOnly.Parse(start); 
+
+            DateOnly? endDate = string.IsNullOrEmpty(end) ? null : DateOnly.Parse(end); 
+
+            System.Console.WriteLine(endDate);
+
+            if(endDate != null && endDate <= startDate){
+                return BadRequest("Invalid Date.Please Enter a valid date range");
+            }
+
+            IEnumerable<Tournament> tournamets = await _tournamentUseCase.GetAll(name,startDate, endDate);
             return Ok(tournamets);
         }
     }
