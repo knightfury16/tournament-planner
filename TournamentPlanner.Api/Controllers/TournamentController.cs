@@ -10,39 +10,43 @@ namespace TournamentPlanner.Api.Controllers
     [Route("/api/tournamnet")]
     public class TournamentController : ControllerBase
     {
-        private readonly ITournamentUseCase tournamentUseCase;
+        private readonly ITournamentUseCase _tournamentUseCase;
 
         public TournamentController(ITournamentUseCase tournamnetUseCase)
         {
-            this.tournamentUseCase = tournamnetUseCase;
+            _tournamentUseCase = tournamnetUseCase;
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Tournament))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddTournament([FromBody] TournamentDto tournamentDto)
         {
             if (tournamentDto == null)
             {
                 return BadRequest("Tournament information needed");
             }
-            var tour = await tournamentUseCase.AddTournamnet(tournamentDto);
-            return CreatedAtAction(nameof(GetTournamentById), new {name = tour.Name}, tour);
+            var tour = await _tournamentUseCase.AddTournamnet(tournamentDto);
+            return CreatedAtAction(nameof(GetTournamentById), new {id = tour.Id}, tour);
         }
 
         [HttpGet("{id}", Name = nameof(GetTournamentById))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Tournament))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetTournamentById(int id)
         {
             if (id <= 0)
             {
                 return BadRequest("Id can not be negative");
             }
-            var tournament = await tournamentUseCase.GetTournamentbyId(id);
+            var tournament = await _tournamentUseCase.GetTournamentbyId(id);
             return Ok(tournament);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllTournament()
         {
-            IEnumerable<Tournament> tournamets = await tournamentUseCase.GetAll();
+            IEnumerable<Tournament> tournamets = await _tournamentUseCase.GetAll();
             return Ok(tournamets);
         }
     }
