@@ -27,7 +27,7 @@ namespace TournamentPlanner.Api.Controllers
                 return BadRequest("Tournament information needed");
             }
             var tour = await _tournamentUseCase.AddTournamnet(tournamentDto);
-            return CreatedAtAction(nameof(GetTournamentById), new {id = tour.Id}, tour);
+            return CreatedAtAction(nameof(GetTournamentById), new { id = tour.Id }, tour);
         }
 
         [HttpGet("{id}", Name = nameof(GetTournamentById))]
@@ -46,19 +46,19 @@ namespace TournamentPlanner.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Tournament>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetTournament([FromQuery] string? name,[FromQuery] string? start,[FromQuery] string? end)
+        public async Task<IActionResult> GetTournament([FromQuery] string? name, [FromQuery] string? start, [FromQuery] string? end)
         {
-            DateOnly? startDate =  string.IsNullOrEmpty(start) ? null : DateOnly.Parse(start); 
+            DateOnly? startDate = string.IsNullOrEmpty(start) ? null : DateOnly.Parse(start);
 
-            DateOnly? endDate = string.IsNullOrEmpty(end) ? null : DateOnly.Parse(end); 
+            DateOnly? endDate = string.IsNullOrEmpty(end) ? null : DateOnly.Parse(end);
 
-            System.Console.WriteLine(endDate);
 
-            if(endDate != null && endDate <= startDate){
+            if (endDate != null && endDate <= startDate)
+            {
                 return BadRequest("Invalid Date.Please Enter a valid date range");
             }
 
-            IEnumerable<Tournament> tournamets = await _tournamentUseCase.GetAll(name,startDate, endDate);
+            IEnumerable<Tournament> tournamets = await _tournamentUseCase.GetAll(name, startDate, endDate);
             return Ok(tournamets);
         }
     }
