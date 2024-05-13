@@ -10,24 +10,39 @@ namespace TournamentPlanner.Api.Controllers
     [Route("/api/tournamnet")]
     public class TournamentController : ControllerBase
     {
-        private readonly ITournamentUseCase tournamnetUseCase;
+        private readonly ITournamentUseCase tournamentUseCase;
 
         public TournamentController(ITournamentUseCase tournamnetUseCase)
         {
-            this.tournamnetUseCase = tournamnetUseCase;
+            this.tournamentUseCase = tournamnetUseCase;
         }
 
         [HttpPost]
         public async Task<IActionResult> AddTournament([FromBody] TournamentDto tournamentDto)
         {
-            var tour = await tournamnetUseCase.AddTournamnet(tournamentDto);
-            return Ok(tour);
+            if (tournamentDto == null)
+            {
+                return BadRequest("Tournament information needed");
+            }
+            var tour = await tournamentUseCase.AddTournamnet(tournamentDto);
+            return CreatedAtAction(nameof(GetTournamentById), new {name = tour.Name}, tour);
+        }
+
+        [HttpGet("{id}", Name = nameof(GetTournamentById))]
+        public async Task<IActionResult> GetTournamentById(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Id can not be negative");
+            }
+            var tournament = await tournamentUseCase.GetTournamentbyId(id);
+            return Ok(tournament);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllTournament()
         {
-            IEnumerable<Tournament> tournamets = await tournamnetUseCase.GetAll();
+            IEnumerable<Tournament> tournamets = await tournamentUseCase.GetAll();
             return Ok(tournamets);
         }
     }

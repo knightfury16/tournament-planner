@@ -11,6 +11,7 @@ namespace TournamentPlanner.Application.UseCases.TournamentUseCase
     public interface ITournamentUseCase
     {
         Task<Tournament> AddTournamnet(TournamentDto tournamentDto);
+        Task<Tournament> GetTournamentbyId(int id);
         Task<IEnumerable<Tournament>> GetAll();
 
         Task<IEnumerable<Tournament>> GetTournamentsByDate(DateTime startDate, DateTime endDate);
