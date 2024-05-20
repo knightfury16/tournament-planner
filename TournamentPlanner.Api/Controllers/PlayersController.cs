@@ -6,7 +6,7 @@ using TournamentPlanner.Domain.Entities;
 namespace TournamentPlanner.Api.Controllers
 {
     [ApiController]
-    [Route("api/players")]
+    [Route("/api/players")]
     public class PlayersController : ControllerBase
     {
         public IPlayerUseCase _playerUseCase { get; }
@@ -42,8 +42,7 @@ namespace TournamentPlanner.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddPlayer([FromBody] PlayerDto playerDto){
             var player = await _playerUseCase.AddPlayerAsync(playerDto);
-            //TODO: make return type createdAt
-            return Ok(player);
+            return CreatedAtAction(nameof(GetPlayerById), new {id = player.Id}, player);
         }
 
     }
