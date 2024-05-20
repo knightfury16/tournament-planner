@@ -23,17 +23,10 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
 
         public async Task<Player> AddPlayerAsync(PlayerDto playerDto)
         {
-            if (PlayerValidation(playerDto))
-            {
-                var player = FromDto(playerDto);
-                await _playerRepository.AddAsync(player);
-                await _playerRepository.SaveAsync();
-                return player;
-            }
-            else
-            {
-                throw new ArgumentException("Invalid parameter");
-            }
+            var player = FromDto(playerDto);
+            await _playerRepository.AddAsync(player);
+            await _playerRepository.SaveAsync();
+            return player;
         }
 
         public Task<IEnumerable<Player>> GetAllPlayerWhoseMatchNotStillPlayedAsync()
@@ -44,34 +37,11 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
         public async Task<IEnumerable<Player>?> GetPlayersAsync(string? playerName)
         {
             //var player = await _playerRepository.GetAllAsync(["Tournament"]);
-            if(playerName is null)return await _playerRepository.GetAllAsync();
+            if (playerName is null) return await _playerRepository.GetAllAsync();
 
             return await _playerRepository.GetByNameAsync(playerName);
         }
 
-        private bool PlayerValidation(PlayerDto playerDto)
-        {
-            //mock validation
-            try
-            {
-                if (playerDto == null)
-                {
-                    return false;
-                }
-                if (string.IsNullOrEmpty(playerDto.Name))
-                {
-                    return false;
-                }
-
-                var mailAddress = playerDto.Email != null ? new MailAddress(playerDto.Email) : null;
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
         public PlayerDto ToDto(Player player)
         {
             return new PlayerDto
