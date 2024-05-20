@@ -19,7 +19,6 @@ namespace TournamentPlanner.Api.Controllers
         [HttpGet]
         [Route("players")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Player>))]
-        //TODO: Implement the name filter
         public async Task<IActionResult> GetAllPlayer([FromQuery] string? name)
         {
             var players = await _playerUseCase.GetPlayersAsync(name);
