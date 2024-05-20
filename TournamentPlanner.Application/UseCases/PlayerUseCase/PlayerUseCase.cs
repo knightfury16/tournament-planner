@@ -63,5 +63,16 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
                 TournamentId = dto.TournamentId,
             };
         }
+
+        public async Task<Player> GetPlayerById(int id)
+        {
+            var player = await _playerRepository.GetByIdAsync(id);
+
+            if(player == null)
+            {
+                throw new Exception("Player with the speficied Id not found!");
+            }
+            return player;
+        }
     }
 }

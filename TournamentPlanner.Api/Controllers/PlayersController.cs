@@ -6,7 +6,7 @@ using TournamentPlanner.Domain.Entities;
 namespace TournamentPlanner.Api.Controllers
 {
     [ApiController]
-    [Route("api")]
+    [Route("api/players")]
     public class PlayersController : ControllerBase
     {
         public IPlayerUseCase _playerUseCase { get; }
@@ -17,7 +17,6 @@ namespace TournamentPlanner.Api.Controllers
         }
 
         [HttpGet]
-        [Route("players")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Player>))]
         public async Task<IActionResult> GetAllPlayer([FromQuery] string? name)
         {
@@ -25,9 +24,20 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(players);
         }
 
+        [HttpGet("{id}", Name = nameof(GetPlayerById))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Player))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetPlayerById([FromRoute]int id){
+            if (id <= 0)
+            {
+                return BadRequest("Id can not be negative");
+            }
+            var player = await _playerUseCase.GetPlayerById(id);
+            return Ok(player);
+        }
+
 
         [HttpPost]
-        [Route("players")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Player))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddPlayer([FromBody] PlayerDto playerDto){
