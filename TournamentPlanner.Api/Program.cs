@@ -4,6 +4,7 @@ using TournamentPlanner.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// TODO: configure error handling middleware
 // Add services to the container.
 
 builder.Services.AddControllers();
