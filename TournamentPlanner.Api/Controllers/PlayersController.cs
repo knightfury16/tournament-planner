@@ -29,23 +29,14 @@ namespace TournamentPlanner.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetPlayerById([FromRoute] int id)
         {
-            try
+
+            if (id <= 0)
             {
-                if (id <= 0)
-                {
-                    return BadRequest("Id can not be negative");
-                }
-                var player = await _playerUseCase.GetPlayerById(id);
-                return Ok(player);
+                return BadRequest("Id can not be negative");
             }
-            catch (Exception e)
-            {
-                if (e.Message.Contains("not found"))
-                {
-                    return NotFound(e.Message);
-                }
-                return BadRequest(e.Message);
-            }
+            var player = await _playerUseCase.GetPlayerById(id);
+            return Ok(player);
+
         }
 
 

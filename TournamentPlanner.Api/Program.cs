@@ -1,5 +1,6 @@
 using TournamentPlanner.Infrastructure;
 using TournamentPlanner.Application;
+using TournamentPlanner.Api.Middleware;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,5 +31,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.Run();
