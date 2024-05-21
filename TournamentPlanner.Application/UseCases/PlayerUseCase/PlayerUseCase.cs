@@ -70,10 +70,6 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
 
             if(player == null)
             {
-                /** 
-                    * *  any exception thrown is by default 500:internal server error.
-                    //TODO: properly handle error, like here send notFound
-                **/
                 throw new Exception("Player with the speficied Id not found!");
             }
             return player;

@@ -27,22 +27,35 @@ namespace TournamentPlanner.Api.Controllers
         [HttpGet("{id}", Name = nameof(GetPlayerById))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Player))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetPlayerById([FromRoute]int id){
-            if (id <= 0)
+        public async Task<IActionResult> GetPlayerById([FromRoute] int id)
+        {
+            try
             {
-                return BadRequest("Id can not be negative");
+                if (id <= 0)
+                {
+                    return BadRequest("Id can not be negative");
+                }
+                var player = await _playerUseCase.GetPlayerById(id);
+                return Ok(player);
             }
-            var player = await _playerUseCase.GetPlayerById(id);
-            return Ok(player);
+            catch (Exception e)
+            {
+                if (e.Message.Contains("not found"))
+                {
+                    return NotFound(e.Message);
+                }
+                return BadRequest(e.Message);
+            }
         }
 
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Player))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AddPlayer([FromBody] PlayerDto playerDto){
+        public async Task<IActionResult> AddPlayer([FromBody] PlayerDto playerDto)
+        {
             var player = await _playerUseCase.AddPlayerAsync(playerDto);
-            return CreatedAtAction(nameof(GetPlayerById), new {id = player.Id}, player);
+            return CreatedAtAction(nameof(GetPlayerById), new { id = player.Id }, player);
         }
 
     }
