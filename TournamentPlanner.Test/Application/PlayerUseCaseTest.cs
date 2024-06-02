@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Moq;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Application.UseCases.PlayerUseCase;
 using TournamentPlanner.Domain.Entities;
-using TournamentPlanner.Infrastructure;
-using Xunit;
 
 namespace TournamentPlanner.Test.Application
 {
