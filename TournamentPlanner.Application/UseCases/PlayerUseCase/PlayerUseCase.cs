@@ -37,7 +37,7 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
         public async Task<IEnumerable<Player>?> GetPlayersAsync(string? playerName)
         {
             //var player = await _playerRepository.GetAllAsync(["Tournament"]);
-            if (playerName is null) return await _playerRepository.GetAllAsync();
+            if (string.IsNullOrWhiteSpace(playerName)) return await _playerRepository.GetAllAsync();
 
             return await _playerRepository.GetByNameAsync(playerName);
         }

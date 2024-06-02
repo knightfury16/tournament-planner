@@ -169,7 +169,7 @@ namespace TournamentPlanner.Infrastructure
 
         public async Task<IEnumerable<TResult>?> GetByNameAsync(string? name)
         {
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
             {
                 return await GetAllAsync();
             }
