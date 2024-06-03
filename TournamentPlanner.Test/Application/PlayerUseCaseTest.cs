@@ -150,15 +150,17 @@ namespace TournamentPlanner.Test.Application
         }
 
         [Fact]
-        public async Task GetPlayerById_ThrowsException_WhenPlayerIdDoesNotExist()
+        public async Task GetPlayerById_ReturnsNull_WhenPlayerIdDoesNotExist()
         {
             // Arrange
             var playerId = 1;
             playerRepositoryMock.Setup(repo => repo.GetByIdAsync(playerId)).ReturnsAsync((Player)null);
 
-            // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(() => playerUseCase.GetPlayerById(playerId));
-            Assert.Equal("Player with the speficied Id not found!", exception.Message);
+            // Act
+            var result = await playerUseCase.GetPlayerById(playerId);
+
+            // Assert
+            Assert.Null(result);
         }
 
     }
