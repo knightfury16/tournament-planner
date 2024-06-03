@@ -72,15 +72,9 @@ namespace TournamentPlanner.Application.UseCases.TournamentUseCase
             };
         }
 
-        public async Task<Tournament> GetTournamentbyId(int id)
+        public async Task<Tournament?> GetTournamentbyId(int id)
         {
-            var tournament = await _tournamentRepository.GetByIdAsync(id);
-
-            if(tournament == null)
-            {
-                throw new Exception("Tournment with the speficied Id not found!");
-            }
-            return tournament;
+            return await _tournamentRepository.GetByIdAsync(id);
         }
     }
 }
