@@ -29,7 +29,7 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
             return player;
         }
 
-        public Task<IEnumerable<Player>> GetAllPlayerWhoseMatchNotStillPlayedAsync()
+        public Task<IEnumerable<Player>?> GetAllPlayerWhoseMatchNotStillPlayedAsync()
         {
             throw new NotImplementedException();
         }
@@ -64,15 +64,9 @@ namespace TournamentPlanner.Application.UseCases.PlayerUseCase
             };
         }
 
-        public async Task<Player> GetPlayerById(int id)
+        public async Task<Player?> GetPlayerById(int id)
         {
-            var player = await _playerRepository.GetByIdAsync(id);
-
-            if(player == null)
-            {
-                throw new Exception("Player with the speficied Id not found!");
-            }
-            return player;
+            return await _playerRepository.GetByIdAsync(id);
         }
     }
 }
