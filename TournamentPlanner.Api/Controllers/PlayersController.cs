@@ -35,6 +35,12 @@ namespace TournamentPlanner.Api.Controllers
                 return BadRequest("Id can not be negative");
             }
             var player = await _playerUseCase.GetPlayerById(id);
+
+            if (player == null)
+            {
+                return NotFound();
+            }
+
             return Ok(player);
 
         }
