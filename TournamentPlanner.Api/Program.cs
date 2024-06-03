@@ -54,7 +54,7 @@ try
 
     app.MapControllers();
 
-    // app.UseMiddleware<ExceptionHandlingMiddleware>();
+     app.UseMiddleware<ExceptionHandlingMiddleware>();
 
     app.Run();
 }
