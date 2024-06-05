@@ -1,4 +1,9 @@
 <h1>Number Display Test</h1>
 
-<app-regular-number [number]="2"></app-regular-number>
-<app-seven-segment-number [number]="_number()"></app-seven-segment-number>
+<form action="">
+  <label for="">Enter a number: </label>
+  <input type="number" [formControl]="numberInput">
+</form>
+
+<app-regular-number [number]="(numberInput.valueChanges | async) ?? 0"></app-regular-number>
+<app-seven-segment-number [number]="(numberInput.valueChanges | async)?? 0"></app-seven-segment-number>
