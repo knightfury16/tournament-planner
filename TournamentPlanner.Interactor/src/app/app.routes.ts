@@ -1,9 +1,6 @@
 import { Routes } from '@angular/router';
-import { GreetingComponent } from './greeting/greeting.component';
-import { SayingGoodbyeComponent } from './saying-goodbye/saying-goodbye.component';
+import { NumberDisplayTestComponent } from './number-display-test/number-display-test.component';
 
 export const routes: Routes = [ 
-    {path:'', redirectTo:'/greeting', pathMatch:'full'},
-    {path: 'greeting', component: GreetingComponent},
-    {path:'saying-goodbye', component: SayingGoodbyeComponent}
+    {path:'', component:NumberDisplayTestComponent, pathMatch:'full'}
 ];
