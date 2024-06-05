@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 
 @Component({
   selector: 'app-regular-digit',
@@ -8,10 +8,10 @@ import { Component, Input } from '@angular/core';
   styleUrl: './regular-digit.component.scss'
 })
 export class RegularDigitComponent {
-  _digit = 7;
+  _digit = signal(7);
 
   @Input() set  digit(value: number){
-    this._digit = value;
+    this._digit.set(value)
   }
 
 }
