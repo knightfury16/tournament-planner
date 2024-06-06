@@ -1,4 +1,11 @@
-import { Component, Input, computed, signal } from '@angular/core';
+import {
+  Component,
+  Input,
+  WritableSignal,
+  computed,
+  effect,
+  signal,
+} from '@angular/core';
 import { SevenSegmentDigitComponent } from '../seven-segment-digit/seven-segment-digit.component';
 
 @Component({
@@ -9,20 +16,38 @@ import { SevenSegmentDigitComponent } from '../seven-segment-digit/seven-segment
   styleUrl: './seven-segment-number.component.scss',
 })
 export class SevenSegmentNumberComponent {
-  _number = signal(0);
+  private _numberOfDigit: WritableSignal<number> = signal<number>(0);
+  private _number = signal(0);
+  _computedNumber: WritableSignal<number[]> = signal<number[]>([]);
+
   @Input() set number(value: number) {
     this._number.set(value);
   }
+  @Input() set numberOfDigit(value: number) {
+    this._numberOfDigit.set(value);
+  }
+
+  constructor() {
+    effect(() => {
+      this.computeAndSetDigits();
+    });
+  }
+
+private computeAndSetDigits() {
+  const numberOfDigits: number = this._numberOfDigit();
+  const number: number = this._number();
+  const digits: number[] = [];
+
+  for (let i = numberOfDigits - 1; i >= 0; i--) {
+    digits[i] = this.getDigit(i);
+  }
+
+  this._computedNumber.set(digits);
+}
 
   private getDigit = (position: number): number => {
-    if (this._number() / Math.pow(10, position) < 1) {
-      return -1;
-    }
-    return Math.floor(this._number() / Math.pow(10, position)) % 10;
+    const divisor = Math.pow(10, position);
+    return Math.floor(this._number() / divisor) % 10;
   };
 
-  first = computed(() => this._number() % 10);
-  second = computed(() => this.getDigit(1));
-  third = computed(() => this.getDigit(2));
-  fourth = computed(() => this.getDigit(3));
 }

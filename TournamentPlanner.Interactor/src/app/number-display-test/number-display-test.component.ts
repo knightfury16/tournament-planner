@@ -12,5 +12,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './number-display-test.component.scss',
 })
 export class NumberDisplayTestComponent {
+
   numberInput = new FormControl(0);
+  numberOfDigit = new FormControl(0);
 }

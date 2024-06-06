@@ -1,9 +1,19 @@
 <h1>Number Display Test</h1>
 
-<form action="">
-  <label for="">Enter a number: </label>
-  <input type="number" [formControl]="numberInput">
+<form >
+  <label for="">Enter how many number you want to display: </label>
+  <input type="number" [formControl]="numberOfDigit" />
+
+  <div *ngIf="numberOfDigit.value && numberOfDigit.value > 0">
+  <label for="">Enter the number: </label>
+    <input type="number"  [formControl]="numberInput"/>
+  </div>
 </form>
 
-<app-regular-number [number]="(numberInput.valueChanges | async) ?? 0"></app-regular-number>
-<app-seven-segment-number [number]="(numberInput.valueChanges | async)?? 0"></app-seven-segment-number>
+<app-regular-number
+  [number]="(numberInput.valueChanges | async) ?? 0"
+></app-regular-number>
+<app-seven-segment-number
+   [number]="(numberInput.valueChanges | async) ?? 0"
+   [numberOfDigit]="(numberOfDigit.valueChanges | async) ?? 0"
+></app-seven-segment-number>
