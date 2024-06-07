@@ -17,31 +17,28 @@ import { CommonModule } from '@angular/common';
   styleUrl: './seven-segment-number.component.scss',
 })
 export class SevenSegmentNumberComponent {
-
   private _numberOfDigit: WritableSignal<number> = signal<number>(0);
   private _number = signal(0);
-  public _digits: number [] = [];
+  public _digits: number[] = [];
 
   @Input() set number(value: number) {
     this._number.set(value);
+    this.computeAndSetDigits();
   }
   @Input() set numberOfDigit(value: number) {
     this._numberOfDigit.set(value);
-    this.computeAndSetDigits();
   }
-
 
   private computeAndSetDigits() {
     const numberOfDigits: number = this._numberOfDigit();
     this._digits = [];
 
-    for (let i = numberOfDigits - 1; i >= 0; i--) {
+    for (let i = 0; i < numberOfDigits ; i++) {
       this._digits[i] = this.getDigit(i);
     }
   }
 
   private getDigit = (position: number): number => {
-    return 1;
     const divisor = Math.pow(10, position);
     return Math.floor(this._number() / divisor) % 10;
   };
