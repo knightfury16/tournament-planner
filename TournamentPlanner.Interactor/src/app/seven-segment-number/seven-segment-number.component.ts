@@ -36,6 +36,7 @@ export class SevenSegmentNumberComponent {
     for (let i = 0; i < numberOfDigits ; i++) {
       this._digits[i] = this.getDigit(i);
     }
+    this._digits.reverse();
   }
 
   private getDigit = (position: number): number => {
