@@ -7,47 +7,42 @@ import {
   signal,
 } from '@angular/core';
 import { SevenSegmentDigitComponent } from '../seven-segment-digit/seven-segment-digit.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-seven-segment-number',
   standalone: true,
-  imports: [SevenSegmentDigitComponent],
+  imports: [SevenSegmentDigitComponent, CommonModule],
   templateUrl: './seven-segment-number.component.html',
   styleUrl: './seven-segment-number.component.scss',
 })
 export class SevenSegmentNumberComponent {
+
   private _numberOfDigit: WritableSignal<number> = signal<number>(0);
   private _number = signal(0);
-  _computedNumber: WritableSignal<number[]> = signal<number[]>([]);
+  public _digits: number [] = [];
 
   @Input() set number(value: number) {
     this._number.set(value);
   }
   @Input() set numberOfDigit(value: number) {
     this._numberOfDigit.set(value);
+    this.computeAndSetDigits();
   }
 
-  constructor() {
-    effect(() => {
-      this.computeAndSetDigits();
-    });
+
+  private computeAndSetDigits() {
+    const numberOfDigits: number = this._numberOfDigit();
+    this._digits = [];
+
+    for (let i = numberOfDigits - 1; i >= 0; i--) {
+      this._digits[i] = this.getDigit(i);
+    }
   }
-
-private computeAndSetDigits() {
-  const numberOfDigits: number = this._numberOfDigit();
-  const number: number = this._number();
-  const digits: number[] = [];
-
-  for (let i = numberOfDigits - 1; i >= 0; i--) {
-    digits[i] = this.getDigit(i);
-  }
-
-  this._computedNumber.set(digits);
-}
 
   private getDigit = (position: number): number => {
+    return 1;
     const divisor = Math.pow(10, position);
     return Math.floor(this._number() / divisor) % 10;
   };
-
 }

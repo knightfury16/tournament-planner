@@ -1,6 +1,5 @@
 <div>
-  <app-seven-segment-digit 
-    *ngFor="let digit of _computedNumber()" 
-    [digit]="digit">
-  </app-seven-segment-digit>
+  <span *ngFor="let digit of _digits">
+    <app-seven-segment-digit [digit]="digit"> </app-seven-segment-digit>
+  </span>
 </div>
