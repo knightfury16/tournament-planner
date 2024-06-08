@@ -1,5 +1,5 @@
 <div>
-  <span *ngFor="let digit of _digits">
-    <app-seven-segment-digit [digit]="digit"> </app-seven-segment-digit>
+  <span *ngFor="let digit of _digits(); index as i">
+    <app-seven-segment-digit [digit]="getDigit(_numberOfDigits() - i - 1)()"> </app-seven-segment-digit>
   </span>
 </div>
