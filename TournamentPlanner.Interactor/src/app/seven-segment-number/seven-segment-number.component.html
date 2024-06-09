@@ -1,5 +1,9 @@
 <div>
-  <span *ngFor="let digit of _digits(); index as i">
-    <app-seven-segment-digit [digit]="getDigit(_numberOfDigits() - i - 1)()"> </app-seven-segment-digit>
-  </span>
+  <app-seven-segment-digit [digit]="fourth()"></app-seven-segment-digit>
+  <app-seven-segment-digit [digit]="third()"></app-seven-segment-digit>
+  <svg width="20" height="20">
+    <circle class="decimal-point" cx="50%" cy="50%" r="8" />
+  </svg>
+  <app-seven-segment-digit [digit]="second()"></app-seven-segment-digit>
+  <app-seven-segment-digit [digit]="first()"></app-seven-segment-digit>
 </div>
