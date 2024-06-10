@@ -14,5 +14,4 @@ import { CommonModule } from '@angular/common';
 export class NumberDisplayTestComponent {
 
   numberInput = new FormControl(0);
-  numberOfDigit = new FormControl(0);
 }
