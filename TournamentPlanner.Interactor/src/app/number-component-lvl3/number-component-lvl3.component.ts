@@ -18,6 +18,8 @@ export class NumberComponentLvl3Component {
 
   _numberOfdigits = computed(() => this._digits().length);
 
+  _precision = signal(0);
+
   @Input() set nubmerOfDigit(value: number) {
     let digits = [];
 
