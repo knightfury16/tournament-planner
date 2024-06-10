@@ -13,5 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class NumberDisplayTestComponent {
 
+  digitInput = new FormControl(0);
   numberInput = new FormControl(0);
+  precisionInput = new FormControl(0);
 }

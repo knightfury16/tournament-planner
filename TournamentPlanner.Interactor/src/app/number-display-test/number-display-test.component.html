@@ -1,8 +1,18 @@
 <h1>Number Display Test</h1>
 
-<form>
-  <label for="">Enter the number: </label>
+<form class="input-grid-container">
+  <!-- **Input for number of digit -->
+  <label for="">Enter number of digit: </label>
+  <input type="number" [formControl]="digitInput" />
+
+
+  <!-- **Input for number -->
+  <label for="">Enter number: </label>
   <input type="number" [formControl]="numberInput" />
+
+  <!-- **Input for precision -->
+  <label for="">Precision: </label>
+  <input type="number" [formControl]="precisionInput" />
 </form>
 
 <app-regular-number [number]="(numberInput.valueChanges | async) ?? 0"></app-regular-number>

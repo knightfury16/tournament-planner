@@ -1,0 +1,12 @@
+.input-grid-container{
+  display: grid;
+  grid-template-columns: max-content auto;
+
+  input{
+    max-width: 100px;
+  }
+  label{
+    text-align: right;
+    margin-right: 5px;
+  }
+}
