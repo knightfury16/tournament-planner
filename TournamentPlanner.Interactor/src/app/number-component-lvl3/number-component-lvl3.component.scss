@@ -1,0 +1,12 @@
+.decimal-point{
+  stroke: var(--ssd-separator-stroke);
+  stroke-width: var(--ssd-decimal-stroke-width);
+  fill: var(--ssd-fill-color);
+  &.filled {
+    fill: var(--ssd-fill-color);
+  }
+  &:not(.filled) {
+    fill: none;
+  }
+}
+
