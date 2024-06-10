@@ -10,7 +10,7 @@ import { SevenSegmentDigitComponent } from '../seven-segment-digit/seven-segment
   styleUrl: './number-component-lvl3.component.scss',
 })
 export class NumberComponentLvl3Component {
-  //* 
+  //*
   _number = signal<number>(0);
 
   //* basically im keeping this array to loop through by *ngFor nothing else
@@ -32,14 +32,12 @@ export class NumberComponentLvl3Component {
   }
 
   //compute the digit given the index or position of the number
-  public calculateDigit(index: number): Signal<number> {
-    return computed(() => {
-      let offsetNumber = Math.floor(this._number() / Math.pow(10, index)); // 1234 -> 123 for index 1, 0 base index
-      if(offsetNumber == 0){
-        return -1;
-      }
-      let lastDigitOfTheOffsetNumber = offsetNumber % 10; // 123 -> 3
-      return lastDigitOfTheOffsetNumber;
-    });
+  public calculateDigit(index: number) {
+    let offsetNumber = Math.floor(this._number() / Math.pow(10, index)); // 1234 -> 123 for index 1, 0 base index
+    if (offsetNumber == 0) {
+      return -1;
+    }
+    let lastDigitOfTheOffsetNumber = offsetNumber % 10; // 123 -> 3
+    return lastDigitOfTheOffsetNumber;
   }
 }
