@@ -1,14 +1,19 @@
-import { Component, Input, computed, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Input, Signal, computed, signal } from '@angular/core';
+import { SevenSegmentDigitComponent } from '../seven-segment-digit/seven-segment-digit.component';
 
 @Component({
   selector: 'app-number-component-lvl3',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, SevenSegmentDigitComponent],
   templateUrl: './number-component-lvl3.component.html',
   styleUrl: './number-component-lvl3.component.scss',
 })
 export class NumberComponentLvl3Component {
+  //* 
   _number = signal<number>(0);
+
+  //* basically im keeping this array to loop through by *ngFor nothing else
   _digits = signal<unknown[]>([0, 0, 0, 0]);
 
   _numberOfdigits = computed(() => this._digits().length);
