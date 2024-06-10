@@ -47,8 +47,12 @@ export class NumberComponentLvl3Component {
     return lastDigitOfTheOffsetNumber;
   }
 
-  public calculateDecimal(index: number): boolean{
-    if(index == this._precision() - 1) return true;
+  public calculateDecimal(index: number): boolean {
+    if (
+      this._numberOfdigits() - index - 1 > 0 &&
+      this._numberOfdigits() - index - 1 === this._precision()
+    )
+      return true;
     return false;
   }
 }
