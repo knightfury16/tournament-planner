@@ -31,6 +31,10 @@ export class NumberComponentLvl3Component {
     this._number.set(value);
   }
 
+  @Input() set precision(value: number) {
+    this._precision.set(value);
+  }
+
   //compute the digit given the index or position of the number
   public calculateDigit(index: number) {
     let offsetNumber = Math.floor(this._number() / Math.pow(10, index)); // 1234 -> 123 for index 1, 0 base index
@@ -39,5 +43,10 @@ export class NumberComponentLvl3Component {
     }
     let lastDigitOfTheOffsetNumber = offsetNumber % 10; // 123 -> 3
     return lastDigitOfTheOffsetNumber;
+  }
+
+  public calculateDecimal(index: number): boolean{
+    if(index == this._precision() - 1) return true;
+    return false;
   }
 }
