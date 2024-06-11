@@ -31,6 +31,7 @@ export class NumberComponentLvl3Component {
 
   @Input() set number(value: number) {
     this._number.set(value);
+    this._precision.set(this.precisionOfNumber());
   }
 
   @Input() set precision(value: number) {
@@ -45,6 +46,44 @@ export class NumberComponentLvl3Component {
     }
     let lastDigitOfTheOffsetNumber = offsetNumber % 10; // 123 -> 3
     return lastDigitOfTheOffsetNumber;
+  }
+
+  //* To handle decimal digit dynamically
+  public calculateDigitV2(index: number) {
+    let numberString = this._number().toString();
+
+    //if number is decimal
+    if (numberString.indexOf('.') !== -1) {
+      //remove the decimal point
+      numberString = numberString.replace('.', '');
+    }
+    // Pad the string with leading zeros to match the total number of digits
+    numberString = numberString.padStart(this._numberOfdigits(), '0');
+
+    // if (index == 0 && numberString == '0') {
+    //   return -1;
+    // }
+
+    // Check if the index is within the length of the string
+    if (index >= numberString.length) {
+      return -1;
+    }
+
+    // Get the digit at the specified index
+    //* to display in right to left fashion, reversing the numberString
+    const digit = numberString[numberString.length - this._numberOfdigits() + index];
+
+    // Convert the digit back to a number and return
+    return parseInt(digit, 10);
+  }
+
+  public precisionOfNumber() {
+    let numberString = this._number().toString();
+    if (numberString.indexOf('.') == -1) {
+      return 0;
+    }
+    let precision = numberString.split('.')[1].length;
+    return precision;
   }
 
   public calculateDecimal(index: number): boolean {

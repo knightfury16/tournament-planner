@@ -1,6 +1,6 @@
 <p>number-component-lvl3 works!</p>
 <span *ngFor="let digit of _digits(); index as i">
-  <app-seven-segment-digit [digit]="calculateDigit(_numberOfdigits() - i - 1)"></app-seven-segment-digit>
+  <app-seven-segment-digit [digit]="calculateDigitV2(i)"></app-seven-segment-digit>
   <svg width="20" height="20">
     <circle class="decimal-point" [class.filled]="calculateDecimal(i)" cx="50%" cy="50%" r="8" />
   </svg>
