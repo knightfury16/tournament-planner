@@ -30,7 +30,9 @@ export class ShoppingCartService {
       }
 
       //* if item dont exists on the cart just add the item to the cart
-      cart = [...cart, {...offering}];
+      //! test if spread is necessary, that is if i change value of this offering later, will it impact in the cart
+      cart = [...cart, offering];
+      offering.priceEur = 100;
 
       //* return the updated cart
       return cart;
