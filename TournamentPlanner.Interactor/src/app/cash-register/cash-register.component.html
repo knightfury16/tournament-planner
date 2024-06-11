@@ -14,4 +14,9 @@
             </li>
         </ul>
     </div>
+    <div class="total">
+        <!-- Calculate the total price of all the item and display it using sevensegment display lvl3 -->
+         <app-number-component-lvl3 [nubmerOfDigit]="getTotalPriceDigit()" [number]="cart.totalPrice()"  ></app-number-component-lvl3>
+
+    </div>
 </div>
