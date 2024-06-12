@@ -11,3 +11,9 @@
 - [ ] Integrate Role
 - [ ] Migrate to CQRS
     - Use mediatr
+
+
+> [!WARNING]
+
+> [!CAUTION]  
+>Keep in mind the type of object, **reference type** or **value type**, you are handling *(inserting in other places or updating)* in `js`. Think about the side effects!
