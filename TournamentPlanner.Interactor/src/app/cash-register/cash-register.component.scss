@@ -1,9 +1,8 @@
 .grid-container {
  
     display: grid;
-    grid-template-columns: [products-start] 3fr [items-start] minmax(150px, 1fr) [end];
+    grid-template-columns: [products-start] 2fr [items-start] 2fr [end];
     grid-template-rows: [total-start] auto [items-start] 1fr [end];
-    row-gap: 20px;
   }
   
   .products {
