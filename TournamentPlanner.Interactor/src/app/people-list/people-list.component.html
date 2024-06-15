@@ -7,7 +7,7 @@
 </form>
 
 <ul *ngIf="data$">
-  <li *ngFor="let item of (data$ | async)">
-    {{item}}
+  <li *ngFor="let item of (data$ | async)?.value">
+    {{item.UserName}}
   </li>
 </ul>

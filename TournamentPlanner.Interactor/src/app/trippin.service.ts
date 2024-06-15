@@ -13,6 +13,8 @@ export class TrippinService {
   ) {}
 
   public getPeople(name: string): Observable<{ value: any[] }> {
-    return this.httpClient.get<{ value: any[] }>(`${this.baseUrl}/People`);
+    return this.httpClient.get<{ value: any[] }>(
+      `${this.baseUrl}/People?$filter=contains(UserName,'${name}' )`
+    );
   }
 }
