@@ -1,9 +1,13 @@
 <h2>People</h2>
 
 
-<form >
+<form>
   <label for="name">Enter Name:</label>
   <input id="name" type="text" [formControl]="nameInput">
 </form>
 
-{{input$ | async}}
+<ul *ngIf="data$">
+  <li *ngFor="let item of (data$ | async)">
+    {{item}}
+  </li>
+</ul>

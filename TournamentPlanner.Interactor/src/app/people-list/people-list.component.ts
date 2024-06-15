@@ -16,7 +16,7 @@ export class PeopleListComponent {
 
   name = this.nameInput.valueChanges;
 
-  public input$ = this.nameInput.valueChanges.pipe(
+  public data$ = this.nameInput.valueChanges.pipe(
     debounceTime(1000),
     distinctUntilChanged(),
     switchMap((name) => this.trippin.getPeople(name))
