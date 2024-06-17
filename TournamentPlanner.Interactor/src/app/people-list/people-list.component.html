@@ -6,8 +6,24 @@
   <input id="name" type="text" [formControl]="nameInput">
 </form>
 
-<ul *ngIf="data$">
-  <li *ngFor="let item of (data$ | async)?.value">
-    {{item.LastName}}
-  </li>
-</ul>
+<ng-container *ngIf="{ people: data$ | async} as vm">
+  <div *ngIf="vm.people; else loading" class="result-grid">
+    <div class="header">
+      <div>User Name</div>
+      <div>First Name</div>
+      <div>Middle Name</div>
+      <div>Last Name</div>
+      <div>Age</div>
+    </div>
+    <ng-container *ngFor="let p of vm.people.value">
+      <!-- <div><a [routerLink]="p.UserName + '/trips'">{{ p.UserName }}</a></div> -->
+      <div>{{ p.FirstName }}</div>
+      <div>{{ p.MiddleName }}</div>
+      <div>{{ p.LastName }}</div>
+      <div>{{ p.Age }}</div>
+    </ng-container>
+  </div>
+  <ng-template #loading>
+    <p>Loading...</p>
+  </ng-template>
+</ng-container>

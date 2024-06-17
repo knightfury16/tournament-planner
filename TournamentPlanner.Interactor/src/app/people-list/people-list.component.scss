@@ -1,0 +1,11 @@
+form {
+  margin-bottom: 20px;
+
+  label {
+    margin-right: 5px;
+  }
+}
+
+.result-grid {
+  grid-template-columns: repeat(5, 1fr);
+}
