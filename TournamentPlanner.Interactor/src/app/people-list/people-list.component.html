@@ -16,7 +16,7 @@
       <div>Age</div>
     </div>
     <ng-container *ngFor="let p of vm.people.value">
-      <!-- <div><a [routerLink]="p.UserName + '/trips'">{{ p.UserName }}</a></div> -->
+      <div><a [routerLink]="p.UserName + '/trips'">{{ p.UserName }}</a></div>
       <div>{{ p.FirstName }}</div>
       <div>{{ p.MiddleName }}</div>
       <div>{{ p.LastName }}</div>

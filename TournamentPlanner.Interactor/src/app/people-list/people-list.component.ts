@@ -3,11 +3,12 @@ import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, startWith, switchMap } from 'rxjs';
 import { TrippinService } from '../trippin.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-people-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './people-list.component.html',
   styleUrl: './people-list.component.scss',
 })

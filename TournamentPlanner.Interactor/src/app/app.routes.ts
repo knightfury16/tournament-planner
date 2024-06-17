@@ -4,8 +4,8 @@ import { CashRegisterComponent } from './cash-register/cash-register.component';
 import { PeopleListComponent } from './people-list/people-list.component';
 
 export const routes: Routes = [ 
+    {path:'', redirectTo:'people', pathMatch:'full'},
     {path:'digit', component:NumberDisplayTestComponent, pathMatch:'full'},
     {path:'cash-register', component:CashRegisterComponent},
-    {path:'', component:PeopleListComponent}
-
+    {path:'people', component:PeopleListComponent}
 ];
