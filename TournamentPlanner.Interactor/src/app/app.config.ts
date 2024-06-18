@@ -1,5 +1,5 @@
 import { ApplicationConfig, InjectionToken, importProvidersFrom } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 import { routes } from './app.routes';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
@@ -8,7 +8,7 @@ export const TRIPPIN_BASE_URL = new InjectionToken<string>('TRIPPIN_BASE_URL');
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     {
       provide: TRIPPIN_BASE_URL,
       useValue:
