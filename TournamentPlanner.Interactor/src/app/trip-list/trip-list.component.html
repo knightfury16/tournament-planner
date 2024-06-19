@@ -1,2 +1,29 @@
-<p>trip-list works!</p>
 <h1>{{userName}}</h1>
+
+<h3>Trip List</h3>
+
+<ng-container *ngIf="{ trips: data$ | async} as vm">
+  <div *ngIf="vm.trips; else loading" class="result-grid">
+    <div class="header">
+      <div>ID</div>
+      <div>Name</div>
+      <div class="right">Budget</div>
+      <div>Description</div>
+      <div>Tags</div>
+      <div class="center">Start</div>
+      <div class="center">End</div>
+    </div>
+    <ng-container *ngFor="let p of vm.trips.value">
+      <div>{{ p.TripId }}</div>
+      <div>{{ p.Name }}</div>
+      <div class="right">{{ p.Budget | number }}</div>
+      <div>{{ p.Description }}</div>
+      <div>{{ p.Tags }}</div>
+      <div class="center">{{ p.StartsAt | date }}</div>
+      <div class="center">{{ p.EndsAt | date }}</div>
+    </ng-container>
+  </div>
+  <ng-template #loading>
+    <p>Loading...</p>
+  </ng-template>
+</ng-container>
