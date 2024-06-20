@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { TRIPPIN_BASE_URL } from './app.config';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Person, Trip } from '../../models/trippin/TrippinModel';
+import { Airport, Person, Trip } from '../../models/trippin/TrippinModel';
 
 @Injectable({
   providedIn: 'root',
@@ -37,5 +37,17 @@ export class TrippinService {
 
     const url = `${this.baseUrl}/People('${userName}')/Trips`;
     return this.httpClient.get<{ value: Trip[] }>(url, { params });
+  }
+
+  public getAirports(name: string): Observable<{ value: Airport[] }> {
+    let params = new HttpParams();
+    if (name) {
+      params = params.set('$filter', `contains(Name,'${name}')`);
+    }
+
+    // params = params.set("$select", "Name,IataCode,Location")
+
+    const url = `${this.baseUrl}/Airports`;
+    return this.httpClient.get<{ value: Airport[] }>(url, { params });
   }
 }
