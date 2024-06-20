@@ -5,7 +5,9 @@
   <input id="name" type="text" [formControl]="nameInput">
 </form>
 
-
-<div >
-
-</div>
+<ul *ngIf="data$">
+  <li *ngFor="let item of (data$ | async)?.value">
+    {{item.Name}}
+    {{item.Location}}
+  </li>
+</ul>

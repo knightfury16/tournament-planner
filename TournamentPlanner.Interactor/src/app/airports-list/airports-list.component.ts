@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, startWith, switchMap } from 'rxjs';
 import { TrippinService } from '../trippin.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-airports-list',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './airports-list.component.html',
   styleUrl: './airports-list.component.scss'
 })
