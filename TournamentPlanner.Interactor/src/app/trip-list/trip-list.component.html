@@ -1,5 +1,25 @@
 <h1>{{userName}}</h1>
 
+<h3>Add Trip</h3>
+
+<form [formGroup]="tripForm">
+  <label for="name">Name:</label>
+  <input id="name" type="text" placeholder="Enter trip name here..." formControlName="name">
+  <label for="buget">Budget:</label>
+  <input id="budget" type="number" formControlName="budget">
+  <label for="description">Description:</label>
+  <input id="description" type="text" formControlName="description">
+  <label for="tags">Tags:</label>
+  <input id="tags" type="text" placeholder="Enter comma separated tags..." formControlName="tags">
+  <label for="startsAt">Starts at:</label>
+  <input id="startsAt" type="date" formControlName="startsAt">
+  <label for="endsAt">Ends at:</label>
+  <input id="endsAt" type="date" formControlName="endsAt">
+  <div></div>
+  <button (click)="addTrip()" [disabled]="!tripForm.valid">Add Trip</button>
+</form>
+
+
 <h3>Trip List</h3>
 
 <ng-container *ngIf="{ trips: data$ | async} as vm">
