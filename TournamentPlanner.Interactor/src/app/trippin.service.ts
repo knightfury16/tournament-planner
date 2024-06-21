@@ -40,7 +40,7 @@ export class TrippinService {
   }
 
   public addTrip(userName: string, trip: Trip): Observable<Trip> {
-    const url = `${this.baseUrl}/People('${userName}'/Trips)`;
+    const url = `${this.baseUrl}/People('${userName}')/Trips`;
     return this.httpClient.post<Trip>(url, trip);
   }
 
