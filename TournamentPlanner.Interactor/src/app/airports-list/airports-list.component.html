@@ -5,9 +5,28 @@
   <input id="name" type="text" [formControl]="nameInput">
 </form>
 
-<ul *ngIf="data$">
+
+<ng-container *ngIf="{ airports: data$ | async} as vm">
+  <div *ngIf="vm.airports; else loading" class="result-grid">
+    <div class="header">
+      <div>Name</div>
+      <div>Iata Code</div>
+      <div>Location</div>
+    </div>
+    <ng-container *ngFor="let a of vm.airports.value">
+      <div>{{a.Name}}</div>
+      <div>{{ a.IataCode }}</div>
+      <div>{{ a.Location?.City?.Name }}</div>
+    </ng-container>
+  </div>
+  <ng-template #loading>
+    <p>Loading...</p>
+  </ng-template>
+</ng-container>
+
+<!-- <ul *ngIf="data$">
   <li *ngFor="let item of (data$ | async)?.value">
     {{item.Name}}
     {{item.Location?.City?.Name}}
   </li>
-</ul>
+</ul> -->
