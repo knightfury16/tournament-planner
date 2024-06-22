@@ -47,10 +47,11 @@ export class TrippinService {
   public getAirports(name: string): Observable<{ value: Airport[] }> {
     let params = new HttpParams();
     if (name) {
+      // * Filter name here is case sensitive
       params = params.set('$filter', `contains(Name,'${name}')`);
     }
 
-    // params = params.set("$select", "Name,IataCode,Location")
+    params = params.set('$select', 'Name,IataCode,Location');
 
     const url = `${this.baseUrl}/Airports`;
     return this.httpClient.get<{ value: Airport[] }>(url, { params });
