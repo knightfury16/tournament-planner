@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 
 export const TRIPPIN_BASE_URL = new InjectionToken<string>('TRIPPIN_BASE_URL');
+export const TP_BASE_URL = new InjectionToken<string>("TP_BASE_URL");
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,6 +14,11 @@ export const appConfig: ApplicationConfig = {
       provide: TRIPPIN_BASE_URL,
       useValue:
         'https://services.odata.org/TripPinRESTierService/(S(dwkum2ychcndvz35fd2eivpa))',
+    },
+    {
+      provide: TP_BASE_URL,
+      useValue:
+      'http://localhost:5151/api'
     },
     // * can use both way to import http client
     // importProvidersFrom(HttpClient),
