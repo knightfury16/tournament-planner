@@ -1,0 +1,13 @@
+<p>tournament-list works!</p>
+
+<form>
+  <label for="name">Enter Name: </label>
+  <input type="text" id="name" [formControl]="nameInput">
+</form>
+
+
+<ul *ngIf="data$">
+  <li *ngFor="let item of (data$ | async)">
+    {{item}}
+  </li>
+</ul>
