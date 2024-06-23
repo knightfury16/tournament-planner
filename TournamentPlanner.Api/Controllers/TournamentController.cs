@@ -7,7 +7,7 @@ using TournamentPlanner.Domain.Entities;
 namespace TournamentPlanner.Api.Controllers
 {
     [ApiController]
-    [Route("/api/tournamnet")]
+    [Route("/api/tournament")]
     public class TournamentController : ControllerBase
     {
         private readonly ITournamentUseCase _tournamentUseCase;
