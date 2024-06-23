@@ -23,6 +23,17 @@ try
         .Enrich.FromLogContext());
 
     // Add services to the container.
+    // Add CORS policy to allow all
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowAll",
+            policy =>
+            {
+                policy.AllowAnyOrigin()
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
+            });
+    });
 
     builder.Services.AddControllers();
     var configuration = builder.Configuration;
@@ -34,6 +45,9 @@ try
     builder.Services.AddApplicationServices();
 
     var app = builder.Build();
+
+    // Use the CORS policy globally
+    app.UseCors("AllowAll");
 
     //serilog config
     app.UseSerilogRequestLogging(option =>
@@ -54,7 +68,7 @@ try
 
     app.MapControllers();
 
-     app.UseMiddleware<ExceptionHandlingMiddleware>();
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
 
     app.Run();
 }
