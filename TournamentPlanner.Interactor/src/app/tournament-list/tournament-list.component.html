@@ -8,6 +8,6 @@
 
 <ul *ngIf="data$">
   <li *ngFor="let item of (data$ | async)">
-    {{item}}
+    {{item.name}}
   </li>
 </ul>

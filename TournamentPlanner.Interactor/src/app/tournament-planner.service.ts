@@ -17,7 +17,6 @@ export class TournamentPlannerService {
     if(name){
       params = params.set("name", name);
     }
-    return of([1,2,3]);
-    // return this.httpClient.get<Observable<any>>(`${this.baseUrl}/tournament`,{params});
+    return this.httpClient.get<any[]>(`${this.baseUrl}/tournament`,{params});
   }
 }
