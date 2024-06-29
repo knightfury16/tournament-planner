@@ -4,11 +4,11 @@
     <input type="text" id="name" [formControl]="nameInput">
   </form>
 
+  <div>Cool</div>
   <ng-container>
-
     <ul *ngIf="data$; else loading">
       <li *ngFor="let item of (data$ | async)">
-        {{item.name}}
+        <a [routerLink]="item.id+'/matches/'">{{item.name}}</a>
       </li>
     </ul>
     <ng-template #loading>

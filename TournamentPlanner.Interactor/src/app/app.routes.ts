@@ -5,6 +5,7 @@ import { PeopleListComponent } from './people-list/people-list.component';
 import { TripListComponent } from './trip-list/trip-list.component';
 import { AirportsListComponent } from './airports-list/airports-list.component';
 import { TournamentListComponent } from './tournament-list/tournament-list.component';
+import { TournamentMatchesComponent } from './tournament-matches/tournament-matches.component';
 
 export const routes: Routes = [ 
     {path:'', redirectTo:'people', pathMatch:'full'},
@@ -13,5 +14,6 @@ export const routes: Routes = [
     {path:'people', component:PeopleListComponent},
     {path:'airports', component:AirportsListComponent},
     {path:'people/:userName/trips', component:TripListComponent},
+    {path:'tp/:tournamentId/matches', component:TournamentMatchesComponent},
     {path:'tp', component:TournamentListComponent},
 ];

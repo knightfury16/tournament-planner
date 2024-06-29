@@ -3,11 +3,12 @@ import { TournamentPlannerService } from '../tournament-planner.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { debounceTime, distinctUntilChanged, startWith, switchMap } from 'rxjs';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-tournament-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './tournament-list.component.html',
   styleUrl: './tournament-list.component.scss'
 })
