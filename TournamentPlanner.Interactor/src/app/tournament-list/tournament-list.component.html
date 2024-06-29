@@ -1,13 +1,18 @@
-<p>tournament-list works!</p>
+<div>
+  <form>
+    <label for="name">Enter Name: </label>
+    <input type="text" id="name" [formControl]="nameInput">
+  </form>
 
-<form>
-  <label for="name">Enter Name: </label>
-  <input type="text" id="name" [formControl]="nameInput">
-</form>
+  <ng-container>
 
-
-<ul *ngIf="data$">
-  <li *ngFor="let item of (data$ | async)">
-    {{item.name}}
-  </li>
-</ul>
+    <ul *ngIf="data$; else loading">
+      <li *ngFor="let item of (data$ | async)">
+        {{item.name}}
+      </li>
+    </ul>
+    <ng-template #loading>
+      loading...
+    </ng-template>
+  </ng-container>
+</div>
