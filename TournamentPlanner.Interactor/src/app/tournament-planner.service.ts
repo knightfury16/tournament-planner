@@ -4,19 +4,29 @@ import { TP_BASE_URL } from './app.config';
 import { Observable, of, retry } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TournamentPlannerService {
+  constructor(
+    private httpClient: HttpClient,
+    @Inject(TP_BASE_URL) private baseUrl: string
+  ) {}
 
-  constructor(private httpClient: HttpClient,@Inject(TP_BASE_URL) private baseUrl: string) { }
-
-
-  public getTournament(name:string): Observable<any[]>{
-
+  public getTournament(name: string): Observable<any[]> {
     let params = new HttpParams();
-    if(name){
-      params = params.set("name", name);
+    if (name) {
+      params = params.set('name', name);
     }
-    return this.httpClient.get<any[]>(`${this.baseUrl}/tournament`,{params});
+    return this.httpClient.get<any[]>(`${this.baseUrl}/tournament`, { params });
+  }
+
+  public getMatches(tournamentId: number) {
+    let params = new HttpParams();
+
+    if (tournamentId) {
+      params = params.set('tournamentId', tournamentId);
+    }
+    // /api/matches?tournamentId=21
+    return this.httpClient.get<any[]>(`${this.baseUrl}/matches`, { params });
   }
 }
