@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-tournament-matches',
@@ -8,5 +8,11 @@ import { Component } from '@angular/core';
   styleUrl: './tournament-matches.component.scss'
 })
 export class TournamentMatchesComponent {
+
+  @Input() public tournamentId?: string;
+
+  constructor(){
+    console.log("From matches component", this.tournamentId)
+  }
 
 }

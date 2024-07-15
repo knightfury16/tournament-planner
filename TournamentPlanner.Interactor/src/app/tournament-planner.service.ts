@@ -26,7 +26,6 @@ export class TournamentPlannerService {
     if (tournamentId) {
       params = params.set('tournamentId', tournamentId);
     }
-    // /api/matches?tournamentId=21
     return this.httpClient.get<any[]>(`${this.baseUrl}/matches`, { params });
   }
 }
