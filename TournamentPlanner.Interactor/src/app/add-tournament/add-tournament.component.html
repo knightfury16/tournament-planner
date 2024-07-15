@@ -9,13 +9,13 @@
     <div>
       <label for="startDate"
         >Start Date:
-        <input type="datetime-local" name="startDate" id="startDate"  [(ngModel)]="tournamentDto.startDate"/>
+        <input type="datetime-local" name="startDate" id="startDate"  (change)="onStartDateChange($event)"/>
       </label>
     </div>
     <div>
       <label for="endDate"
         >End Date:
-        <input type="datetime-local" name="endDate" id="endDate" [(ngModel)]="tournamentDto.endDate" />
+        <input type="datetime-local" name="endDate" id="endDate" (change)="onEndDateChange($event)"/>
       </label>
     </div>
     <button type="submit" [disabled]="!tournamentAddForm.form.valid" (click)="onClickCreate()">Create Tournament</button>
