@@ -1,20 +1,26 @@
 <div class="form-wrapper">
-    <form>
-        <div>
-            <label for="tournamentName">Tournament Name:
-                <input type="text" id="tournamentName" name="tournamentName">
-            </label>
-        </div>
-        <div>
-            <label for="startDate">Start Date:
-                <input type="date" name="startDate" id="startDate">
-            </label>
-        </div>
-        <div>
-            <label for="endDate">End Date:
-                <input type="date" name="endDate" id="endDate">
-            </label>
-        </div>
-        <button>Create Tournament</button>
-    </form>
+  <form>
+    <div>
+      <label for="tournamentName"
+        >Tournament Name:
+        <input type="text" id="tournamentName"  name="tournamentName"  [(ngModel)]="tournamentDto.name"/>
+      </label>
+    </div>
+    <div>
+      <label for="startDate"
+        >Start Date:
+        <input type="datetime-local" name="startDate" id="startDate"  [(ngModel)]="tournamentDto.startDate"/>
+      </label>
+    </div>
+    <div>
+      <label for="endDate"
+        >End Date:
+        <input type="datetime-local" name="endDate" id="endDate" [(ngModel)]="tournamentDto.endDate" />
+      </label>
+    </div>
+    <button type="submit" (click)="onClickCreate()">Create Tournament</button>
+  </form>
+  <p>
+    {{tournamentDto | json}}
+  </p>
 </div>
