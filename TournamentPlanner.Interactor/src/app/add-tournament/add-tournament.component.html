@@ -1,9 +1,9 @@
 <div class="form-wrapper">
-  <form>
+  <form #tournamentAddForm="ngForm">
     <div>
       <label for="tournamentName"
         >Tournament Name:
-        <input type="text" id="tournamentName"  name="tournamentName"  [(ngModel)]="tournamentDto.name"/>
+        <input type="text" id="tournamentName"  name="tournamentName" required  [(ngModel)]="tournamentDto.name"/>
       </label>
     </div>
     <div>
@@ -18,7 +18,7 @@
         <input type="datetime-local" name="endDate" id="endDate" [(ngModel)]="tournamentDto.endDate" />
       </label>
     </div>
-    <button type="submit" (click)="onClickCreate()">Create Tournament</button>
+    <button type="submit" [disabled]="!tournamentAddForm.form.valid" (click)="onClickCreate()">Create Tournament</button>
   </form>
   <p>
     {{tournamentDto | json}}
