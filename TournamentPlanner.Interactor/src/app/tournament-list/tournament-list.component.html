@@ -4,15 +4,16 @@
     <input type="text" id="name" [formControl]="nameInput">
   </form>
 
-  <div>Cool</div>
-  <ng-container>
-    <ul *ngIf="data$; else loading">
-      <li *ngFor="let item of (data$ | async)">
+  <ng-container *ngIf="{matches : data$ | async} as vm" >
+    <ul *ngIf="vm.matches; else loading">
+      <li *ngFor="let item of vm.matches">
         <a [routerLink]="item.id+'/matches/'">{{item.name}}</a>
       </li>
     </ul>
     <ng-template #loading>
-      loading...
+      <div>
+        Loading...
+      </div>
     </ng-template>
   </ng-container>
 </div>
