@@ -3,3 +3,37 @@ export interface TournamentDto {
   startDate?: string | null;
   endDate?: string | null;
 }
+interface Tournament {
+  name: string;
+  startDate: string | null;
+  endDate: string | null;
+  id: number;
+}
+export interface Player {
+  id: number;
+  name: string;
+  phoneNumber: string;
+  email: string;
+  tournament: Tournament;
+  tournamentId: number;
+}
+
+export interface Round {
+  id: number;
+  roundNumber: number;
+  startTime: string;
+  tournament: Tournament;
+  tournamentId: number;
+}
+
+interface Match {
+  id: number;
+  firstPlayer: Player;
+  secondPlayer: Player;
+  isComplete: boolean;
+  winner: string | null;
+  gameScheduled: string;
+  gamePlayed: string | null;
+  round: Round;
+  roundId: number;
+}
