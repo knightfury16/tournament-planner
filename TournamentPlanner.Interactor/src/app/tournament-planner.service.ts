@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { TP_BASE_URL } from './app.config';
 import { Observable, of, retry } from 'rxjs';
-import { TournamentDto } from './tp-model/TpModel';
+import { Match, TournamentDto } from './tp-model/TpModel';
 
 @Injectable({
   providedIn: 'root',
@@ -21,13 +21,13 @@ export class TournamentPlannerService {
     return this.httpClient.get<any[]>(`${this.baseUrl}/tournament`, { params });
   }
 
-  public getMatches(tournamentId: number) {
+  public getMatches(tournamentId: number): Observable<Match[]> {
     let params = new HttpParams();
 
     if (tournamentId) {
       params = params.set('tournamentId', tournamentId);
     }
-    return this.httpClient.get<any[]>(`${this.baseUrl}/matches`, { params });
+    return this.httpClient.get<Match[]>(`${this.baseUrl}/matches`, { params });
   }
 
   public addTournament(tournamentDto: TournamentDto): Observable<any[]> {
