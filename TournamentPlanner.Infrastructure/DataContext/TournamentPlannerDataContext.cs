@@ -38,11 +38,43 @@ namespace TournamentPlanner.Infrastructure.DataContext
                 entity.Property(p => p.Name).IsRequired();
             });
 
-            modelBuilder.Entity<BaseEntity>(entity =>
+            foreach(var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                entity.Property(p => p.CreatedAt).IsRequired();
-                entity.Property(p => p.UpdatedAt).IsRequired();
-            });
+                if(typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+                {
+                    modelBuilder.Entity(entityType.ClrType).Property<DateTime>("CreatedAt").IsRequired();
+                    modelBuilder.Entity(entityType.ClrType).Property<DateTime>("UpdatedAt").IsRequired();
+
+                }
+            }
+
+        }
+
+        public override int SaveChanges()
+        {
+            AddTimeStamps();
+            return base.SaveChanges();
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            AddTimeStamps();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void AddTimeStamps()
+        {
+            var entries = ChangeTracker.Entries<BaseEntity>();
+
+            foreach (var entry in entries)
+            {
+                var now = DateTime.UtcNow; // Current time
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = now;
+                }
+                entry.Entity.UpdatedAt = now;
+            }
 
         }
 
