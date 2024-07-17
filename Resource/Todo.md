@@ -11,6 +11,11 @@
 - [ ] Integrate Role
 - [ ] Migrate to CQRS
     - Use mediatr
+
+## Change Requirements
+- [x] Add createdAt DateTime property to all entity.[Domain Change] 
+
+
 > [!NOTE]
 > Keep the following points in mind
 
