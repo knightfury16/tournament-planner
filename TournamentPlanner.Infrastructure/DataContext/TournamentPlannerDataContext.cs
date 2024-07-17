@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using TournamentPlanner.Domain.Common;
 using TournamentPlanner.Domain.Entities;
 
 namespace TournamentPlanner.Infrastructure.DataContext
@@ -35,6 +36,12 @@ namespace TournamentPlanner.Infrastructure.DataContext
 
             modelBuilder.Entity<Tournament>(entity => {
                 entity.Property(p => p.Name).IsRequired();
+            });
+
+            modelBuilder.Entity<BaseEntity>(entity =>
+            {
+                entity.Property(p => p.CreatedAt).IsRequired();
+                entity.Property(p => p.UpdatedAt).IsRequired();
             });
 
         }
