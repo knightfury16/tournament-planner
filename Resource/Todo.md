@@ -30,3 +30,10 @@
     - [ ] During tournament creation **Name** field and **Start Date** is must required. Right now its configured only for **Name** field to be required.
     - [ ] Once a tournament has been created, sent out an email notification to all the registered users/players. **Advance**
     - [ ] Maybe later, Add some categorization (on sports basis) to the tournament, and sent notification to users only interested in those particular  category of sports.
+ - [ ] Once a user click a tournament, take him to *Tournament Match* view.
+    - [ ] List out the matches of tournament on Round Basis.
+    - [ ] *Default* show the user the latest round that is ongoing or going to play through.
+    - [ ] For example if we are on half way on round 2 and then show the user directly the matches of round 2 and keep a separate tab where if user wants can see the matches of previous round.
+    - [ ] Figure out a way to handle this requirement from backend.
+    - [ ] User can filter through the matches by player name.
+    - [ ] Maybe later, add an upvote option to show the round favourite and tournament favourite
