@@ -255,3 +255,13 @@ A: After
 ```
 
 Notice it does not even go to the controller. It hits a `terminal` middleware and short circuit there. And the next it just propagte to the middleware and execute the lines after `next`
+
+
+
+
+
+
+### No Net(19/07/24)
+Its the second day without internet. Tried to add the CreatedAt and UpdatedAt auto property of the BaseEntity which i already did. But forgot to pull it. Now without net I am unable to do it again. So much code is dependent on Internet.
+
+Without this cant seem to do anything. Well maybe I can so something in the frontend. Well maybe tomorrow.
