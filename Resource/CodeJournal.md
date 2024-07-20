@@ -265,3 +265,6 @@ Notice it does not even go to the controller. It hits a `terminal` middleware an
 Its the second day without internet. Tried to add the CreatedAt and UpdatedAt auto property of the BaseEntity which i already did. But forgot to pull it. Now without net I am unable to do it again. So much code is dependent on Internet.
 
 Without this cant seem to do anything. Well maybe I can so something in the frontend. Well maybe tomorrow.
+
+### No Net(20/07/24)
+First day of Curfew. They say they are gonna lift it tommorrow. Lets hope for best.
