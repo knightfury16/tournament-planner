@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using TournamentPlanner.Domain.Common;
 using TournamentPlanner.Domain.Entities;
 
 namespace TournamentPlanner.Infrastructure.DataContext
@@ -37,7 +38,27 @@ namespace TournamentPlanner.Infrastructure.DataContext
                 entity.Property(p => p.Name).IsRequired();
             });
 
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes()){
+
+                if(typeof(BaseEntity).IsAssignableFrom(entityType.ClrType)){
+                    
+                    modelBuilder.Entity(entityType.ClrType).Property("CreatedAt").IsRequired();
+                }
+
+            }
+
         }
 
+        public override int SaveChanges()
+        {
+            AddTimeStamp();
+            return base.SaveChanges();
+        }
+
+        private void AddTimeStamp()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

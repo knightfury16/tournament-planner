@@ -268,3 +268,7 @@ Without this cant seem to do anything. Well maybe I can so something in the fron
 
 ### No Net(20/07/24)
 First day of Curfew. They say they are gonna lift it tommorrow. Lets hope for best.
+
+### No Net(21/07/24)
+Finally remembered the forgotten code. Added the timeStamp on all entity on model Creation.
+Now need to remember the OnSave ovverride method. Damn it.
