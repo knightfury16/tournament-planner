@@ -275,3 +275,6 @@ Now need to remember the OnSave ovverride method. Damn it.
 
 ### No Net(22/07/24)
 Could not remember the AddTimeStamp() method. Need internet.
+
+### No Net(23/07/24)
+One more day without internet. Hopefully this is the last day.
