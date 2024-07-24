@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TournamentPlanner.Domain.Common;
 using TournamentPlanner.Domain.Entities;
 
@@ -43,7 +44,7 @@ namespace TournamentPlanner.Infrastructure.DataContext
 
                 if(typeof(BaseEntity).IsAssignableFrom(entityType.ClrType)){
                     
-                    modelBuilder.Entity(entityType.ClrType).Property("CreatedAt").IsRequired();
+                    modelBuilder.Entity(entityType.ClrType).Property<DateTime>("CreatedAt").IsRequired();
                 }
 
             }
@@ -56,9 +57,19 @@ namespace TournamentPlanner.Infrastructure.DataContext
             return base.SaveChanges();
         }
 
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            // AddTimeStamp();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
         private void AddTimeStamp()
         {
-            throw new NotImplementedException();
+            var entity = ChangeTracker.Entries<BaseEntity>();
+
+            // if(entity.State == EntityState.Added){
+            //     entity.Property<DateTime>("CreatedAt").CurrentValue = DateTime.UtcNow;
+            // }
         }
     }
 }
