@@ -16,7 +16,7 @@ namespace TournamentPlanner.Domain.Entities
         // TODO: do this through fluent api
         [JsonIgnore]
         public List<Match> Matches { get; set; } = new();
-        public Tournament? Tournament { get; set; } = new();
+        public Tournament? Tournament { get; set; }
         public int? TournamentId { get; set; }
         
     }
