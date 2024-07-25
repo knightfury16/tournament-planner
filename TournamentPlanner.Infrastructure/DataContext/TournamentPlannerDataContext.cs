@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using TournamentPlanner.Domain.Common;
 using TournamentPlanner.Domain.Entities;
 
@@ -39,37 +38,45 @@ namespace TournamentPlanner.Infrastructure.DataContext
                 entity.Property(p => p.Name).IsRequired();
             });
 
-
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes()){
-
-                if(typeof(BaseEntity).IsAssignableFrom(entityType.ClrType)){
-                    
+            foreach(var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                if(typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+                {
                     modelBuilder.Entity(entityType.ClrType).Property<DateTime>("CreatedAt").IsRequired();
-                }
+                    modelBuilder.Entity(entityType.ClrType).Property<DateTime>("UpdatedAt").IsRequired();
 
+                }
             }
 
         }
 
         public override int SaveChanges()
         {
-            AddTimeStamp();
+            AddTimeStamps();
             return base.SaveChanges();
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            // AddTimeStamp();
+            AddTimeStamps();
             return await base.SaveChangesAsync(cancellationToken);
         }
 
-        private void AddTimeStamp()
+        private void AddTimeStamps()
         {
-            var entity = ChangeTracker.Entries<BaseEntity>();
+            var entries = ChangeTracker.Entries<BaseEntity>();
 
-            // if(entity.State == EntityState.Added){
-            //     entity.Property<DateTime>("CreatedAt").CurrentValue = DateTime.UtcNow;
-            // }
+            foreach (var entry in entries)
+            {
+                var now = DateTime.UtcNow; // Current time
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = now;
+                }
+                entry.Entity.UpdatedAt = now;
+            }
+
         }
+
     }
 }

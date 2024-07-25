@@ -257,6 +257,92 @@ A: After
 Notice it does not even go to the controller. It hits a `terminal` middleware and short circuit there. And the next it just propagte to the middleware and execute the lines after `next`
 
 
+## EntityFrameWork auto create CreatedAt and updatedAt (17/07/2024)
+
+So on EF datacontext I can override two method. **SaveChanges()** and **SaveChangesAsync**.
+
+Here I Implemented the logic of adding timestamp
+
+```c#
+ public override int SaveChanges()
+ {
+     AddTimeStamps();
+     return base.SaveChanges();
+ }
+
+ public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+ {
+     AddTimeStamps();
+     return await base.SaveChangesAsync(cancellationToken);
+ }
+
+ private void AddTimeStamps()
+ {
+     var entries = ChangeTracker.Entries<BaseEntity>();
+
+     foreach (var entry in entries)
+     {
+         var now = DateTime.UtcNow; // Current time
+         if (entry.State == EntityState.Added)
+         {
+             entry.Entity.CreatedAt = now;
+         }
+         entry.Entity.UpdatedAt = now;
+     }
+
+ }
+
+```
+
+
+But the problem occured in OnModelCreating method
+
+```c#
+modelBuilder.Entity<BaseEntity>(entity =>
+{
+    entity.Property(p => p.CreatedAt).IsRequired();
+    entity.Property(p => p.UpdatedAt).IsRequired();
+});
+            
+```
+
+here **BaseEntity** is Abstract class
+EF Core doesn't directly map abstract classes to database tables, so trying to configure properties on BaseEntity directly isn't valid.
+
+Solution was doing this
+
+```c#
+ foreach(var entityType in modelBuilder.Model.GetEntityTypes())
+    {
+        if(typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+        {
+            modelBuilder.Entity(entityType.ClrType).Property<DateTime>("CreatedAt").IsRequired();
+            modelBuilder.Entity(entityType.ClrType).Property<DateTime>("UpdatedAt").IsRequired();
+
+        }
+    }           
+```
+
+
+Explanation
+- Iterate Through All Entity Types:
+  - `modelBuilder.Model.GetEntityTypes()` retrieves all the entity types that are part of your EF Core model.
+  - An entity type represents a table in the database.
+
+- Check Inheritance from BaseEntity:
+
+  - `entityType.ClrType` is the .NET type (class) associated with the entity.
+  - CLR Class: This is the .NET class that corresponds to the entity type. For example, if you have an entity type Person, the CLR class would be the Person class in your code.
+  - `typeof(BaseEntity).IsAssignableFrom(entityType.ClrType)` checks if the entity type is a subclass of BaseEntity or BaseEntity itself.
+
+- Configure Properties:
+
+  - `modelBuilder.Entity(entityType.ClrType)` gets the builder for the specific entity type.
+  - `.Property<DateTime>("CreatedAt").IsRequired()` configures the CreatedAt property to be required for that entity.
+  - `.Property<DateTime>("UpdatedAt").IsRequired()` configures the UpdatedAt property to be required for that entity.
+
+
+
 
 
 
