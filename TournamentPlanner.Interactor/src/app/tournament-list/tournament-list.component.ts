@@ -2,7 +2,13 @@ import { Component } from '@angular/core';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { debounceTime, distinctUntilChanged, startWith, switchMap } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -13,7 +19,6 @@ import { RouterModule } from '@angular/router';
   styleUrl: './tournament-list.component.scss'
 })
 export class TournamentListComponent {
-  
   nameInput = new FormControl();
 
   constructor(private tp: TournamentPlannerService){}
@@ -23,9 +28,20 @@ export class TournamentListComponent {
     startWith(''),
     debounceTime(500),
     distinctUntilChanged(),
-    switchMap(name => this.tp.getTournament(name))
+    switchMap((name) => this.tp.getTournament(name)),
+    map((tournaments) =>
+      tournaments.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+    ),
+    map((tournaments) =>
+      tournaments.filter((tor) => {
+        if (tor.endDate) {
+          return new Date(tor.endDate) >= new Date();
+        }
+        return true;
+      })
+    )
   );
-
-
-
 }

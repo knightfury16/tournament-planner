@@ -26,10 +26,10 @@
 ### Client Requirements
 
 - [ ] List out all the tournaments
-    - [ ] List(default view) out all the tournament that is **ongoing** and are **scheduled** in the future from **now**
+    - [x] List(default view) out all the tournament that is **ongoing** and are **scheduled** in the future from **now**
     - [ ] Show an option if the tournament is booked out or player can register for the tournament.
     - [ ] If not booked out then a valid registered player can register for the tournament going thorugh the necessary process.
-    - [ ] Sort it by createdDate field
+    - [x] Sort it by createdDate field
     - [ ] Keep an option to show the **past** tournaments already happened. Maybe a toggle switch.
     - [ ] User can search through the tournament with name parameter and date all through the records that is **past** and **future** tournament.
 - [ ] Create tournament
