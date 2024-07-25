@@ -43,3 +43,13 @@ Delete from "Matches";
 Delete from "Rounds";
 Delete from "Players";
 Delete from "Tournaments";
+
+--Drop all table
+-- @block
+DROP TABLE "Matches";
+DROP TABLE "Rounds";
+DROP TABLE "Players";
+DROP TABLE "Tournaments";
+
+-- @block
+DROP TABLE "__EFMigrationsHistory";
