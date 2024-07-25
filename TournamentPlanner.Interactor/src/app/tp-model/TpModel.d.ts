@@ -8,6 +8,8 @@ interface Tournament {
   startDate: string | null;
   endDate: string | null;
   id: number;
+  createdAt: string;
+  updatedAt: string;
 }
 export interface Player {
   id: number;
@@ -16,6 +18,8 @@ export interface Player {
   email: string;
   tournament: Tournament;
   tournamentId: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Round {
@@ -24,6 +28,8 @@ export interface Round {
   startTime: string;
   tournament: Tournament;
   tournamentId: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface Match {
@@ -36,4 +42,6 @@ interface Match {
   gamePlayed: string | null;
   round: Round;
   roundId: number;
+  createdAt: string;
+  updatedAt: string;
 }
