@@ -71,7 +71,11 @@ namespace TournamentPlanner.Infrastructure.DataContext
                 var now = DateTime.UtcNow; // Current time
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.CreatedAt = now;
+                    //Only add CreatedAt if it not provided(default or null)
+                    if (entry.Entity.CreatedAt == default)
+                    {
+                        entry.Entity.CreatedAt = now;
+                    }
                 }
                 entry.Entity.UpdatedAt = now;
             }
