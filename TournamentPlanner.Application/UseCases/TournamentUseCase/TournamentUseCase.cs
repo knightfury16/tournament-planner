@@ -12,10 +12,12 @@ namespace TournamentPlanner.Application.UseCases.TournamentUseCase
     public class TournamentUseCase : ITournamentUseCase
     {
         private readonly IRepository<Tournament, Tournament> _tournamentRepository;
+        private readonly IRepository<Player, Player> _playerRepository;
 
-        public TournamentUseCase(IRepository<Tournament, Tournament> tournamentRepository)
+        public TournamentUseCase(IRepository<Tournament, Tournament> tournamentRepository, IRepository<Player, Player> playerRepository)
         {
             _tournamentRepository = tournamentRepository;
+            _playerRepository = playerRepository;
         }
         public async Task<Tournament> AddTournamnet(TournamentDto tournamentDto)
         {
@@ -74,7 +76,20 @@ namespace TournamentPlanner.Application.UseCases.TournamentUseCase
 
         public async Task<Tournament?> GetTournamentbyId(int id)
         {
-            return await _tournamentRepository.GetByIdAsync(id);
+            //!! Will be changed 
+            var tournament = await _tournamentRepository.GetByIdAsync(id);
+            //if no tournament found return
+            if(tournament == null)return null;
+
+            //fetch all the players playing in the tournament
+            var players = await _playerRepository.GetAllAsync( player => player.TournamentId == id);
+
+            tournament.Players = (List<Player>)players;
+
+            return tournament;
+
+             // return await _tournamentRepository.GetByIdAsync(id);
+
         }
     }
 }
