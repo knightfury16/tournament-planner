@@ -77,6 +77,7 @@ namespace TournamentPlanner.Application.UseCases.TournamentUseCase
         public async Task<Tournament?> GetTournamentbyId(int id)
         {
             //!! Will be changed 
+            //* after freeing the player of tournament, i can remove the jsonignore property and can directly populate the players in one call. Might not also need the tournamentResponseDto
             var tournament = await _tournamentRepository.GetByIdAsync(id);
             //if no tournament found return
             if(tournament == null)return null;

@@ -364,3 +364,16 @@ Could not remember the AddTimeStamp() method. Need internet.
 
 ### No Net(23/07/24)
 One more day without internet. Hopefully this is the last day.
+
+
+### Problem at root(26/07/24)
+
+I f'ed up the entire thing from the start.
+
+I tied up each player to a tournament which should be the case. Player should be independent of the tournament. Same player can participate in multiple tournament.
+
+It is the Tournament that will hold who is playing in it.
+
+So changing it will require change in multiple places especially in generate use case.
+
+**Mind the design from beforehand**

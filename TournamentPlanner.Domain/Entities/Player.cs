@@ -13,6 +13,8 @@ namespace TournamentPlanner.Domain.Entities
 
         public string? Email { get; set; }
 
+
+        //! Player should be independent of the Tournament.
         public Tournament? Tournament { get; set; }
 
         public int? TournamentId { get; set; }
