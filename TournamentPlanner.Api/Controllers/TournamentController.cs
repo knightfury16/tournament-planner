@@ -31,7 +31,7 @@ namespace TournamentPlanner.Api.Controllers
         }
 
         [HttpGet("{id}", Name = nameof(GetTournamentById))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Tournament))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TournamentResponseDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetTournamentById(int id)
         {
@@ -44,7 +44,23 @@ namespace TournamentPlanner.Api.Controllers
             {
                 return NotFound();
             }
-            return Ok(tournament);
+            var tournamentResponseDto = convertToResponseDto(tournament);
+            return Ok(tournamentResponseDto);
+        }
+
+        private TournamentResponseDto convertToResponseDto(Tournament tournament)
+        {
+            return new TournamentResponseDto
+            {
+                Name = tournament.Name,
+                Id = tournament.Id,
+                CreatedAt = tournament.CreatedAt,
+                UpdatedAt = tournament.UpdatedAt,
+                StartDate = tournament.StartDate,
+                EndDate = tournament.EndDate,
+                PlayerCount = tournament.Players.Count(),
+
+            };
         }
 
         [HttpGet]
