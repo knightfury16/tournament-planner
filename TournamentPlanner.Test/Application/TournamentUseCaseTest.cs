@@ -93,7 +93,7 @@ public class TournamentUseCaseTest
         var tournamentId = 1;
         var expectedTournament = new Tournament { Id = tournamentId, Name = "Test Tournament", StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1) };
 
-        tournamentRepositoryMock.Setup(x => x.GetByIdAsync(tournamentId)).ReturnsAsync(expectedTournament);
+        tournamentRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<Func<Tournament, bool>>(), It.IsAny<string[]>())).ReturnsAsync(new List<Tournament> { expectedTournament });
 
         // Act
         var result = await tournamentUseCase.GetTournamentbyId(tournamentId);
