@@ -37,7 +37,7 @@ public class TournamentUseCaseTest
 
         tournamentRepositoryMock = new Mock<IRepository<Tournament, Tournament>>();
 
-        tournamentUseCase = new TournamentUseCase(tournamentRepositoryMock.Object);
+        //tournamentUseCase = new TournamentUseCase(tournamentRepositoryMock.Object);
 
     }
     [Fact]
