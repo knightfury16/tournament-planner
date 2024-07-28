@@ -13,7 +13,8 @@ namespace TournamentPlanner.Domain.Entities
 
         //How to store this value? should I just store TournamentId or the whole torunament?
         //!! keep this in mind, see the relationin database
-        public List<Tournament> TournamentParticipated { get; set; } = new List<Tournament>();
+        // public List<Tournament> TournamentParticipated { get; set; } = new List<Tournament>();
+        public List<int> TournamentParticipatedId { get; set; } = new List<int>();
 
         public int GamePlayed { get; set; }
 
