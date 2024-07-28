@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using TournamentPlanner.Domain.Common;
 using TournamentPlanner.Domain.Enum;
 using TournamentPlanner.Domain.Interface;
@@ -37,12 +32,8 @@ namespace TournamentPlanner.Domain.Entities
 
         public List<Player> Participants { get; set; } = new();
 
-        
-
-
-
-        
-
+        public List<Group<TScore>> Groups { get; set; } = new List<Group<TScore>>();
+        public List<Match<TScore>> Matches { get; set; } = new List<Match<TScore>>();
 
     }
 }
