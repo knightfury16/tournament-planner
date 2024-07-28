@@ -6,18 +6,20 @@ using TournamentPlanner.Domain.Common;
 
 namespace TournamentPlanner.Domain.Entities
 {
-    public class Player: BaseEntity
+    public class Player : User
     {
-        public string Name { get; set; } = string.Empty;
-        public string? PhoneNumber { get; set; }
+        public int Age { get; set; }
+        public int Weight { get; set; }
 
-        public string? Email { get; set; }
+        //How to store this value? should I just store TournamentId or the whole torunament?
+        //!! keep this in mind, see the relationin database
+        public List<Tournament> TournamentParticipated { get; set; } = new List<Tournament>();
 
+        public int GamePlayed { get; set; }
 
-        //! Player should be independent of the Tournament.
-        public Tournament? Tournament { get; set; }
+        public int GameWon { get; set; }
 
-        public int? TournamentId { get; set; }
+        public double WinRation => GamePlayed > 0 ? (double)GameWon / GamePlayed : 0;
 
     }
 }
