@@ -31,4 +31,160 @@ There will two type of user entity:
 
 
 
+One pausible solution:
 
+```c#
+using System;
+using System.Collections.Generic;
+
+namespace TournamentPlanner.Domain.Entities
+{
+    public abstract class User
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+    }
+
+    public class Player : User
+    {
+        public int Age { get; set; }
+        public double Weight { get; set; }
+        public int TournamentsParticipated { get; set; }
+        public int GamesPlayed { get; set; }
+        public int GamesWon { get; set; }
+        public double WinRatio => GamesPlayed > 0 ? (double)GamesWon / GamesPlayed : 0;
+    }
+
+    public class Admin : User
+    {
+        // Additional admin-specific properties can be added here if needed
+    }
+
+    public enum TournamentType
+    {
+        GroupStage,
+        Knockout
+    }
+
+    public enum ResolutionStrategy
+    {
+        StatBased,
+        Random,
+        KnockoutQualifier
+        // Add more strategies as needed
+    }
+
+    public interface IScore
+    {
+        bool IsComplete { get; }
+    }
+
+    public abstract class GameFormat<TScore> where TScore : IScore
+    {
+        public string Name { get; set; }
+        public abstract TScore CreateInitialScore();
+        public abstract bool IsValidScore(TScore score);
+        public abstract Player DetermineWinner(Player player1, Player player2, TScore score);
+    }
+
+    public class Tournament<TScore> where TScore : IScore
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public TournamentType Type { get; set; }
+        public int MaxParticipants { get; set; }
+        public int WinnersPerGroup { get; set; }
+        public int KnockoutStartNumber { get; set; }
+        public ResolutionStrategy ParticipantResolutionStrategy { get; set; }
+        public GameFormat<TScore> GameFormat { get; set; }
+        public List<Player> Participants { get; set; } = new List<Player>();
+        public List<Group<TScore>> Groups { get; set; } = new List<Group<TScore>>();
+        public List<Match<TScore>> Matches { get; set; } = new List<Match<TScore>>();
+    }
+
+    public class Group<TScore> where TScore : IScore
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public List<Player> Players { get; set; } = new List<Player>();
+        public List<Match<TScore>> Matches { get; set; } = new List<Match<TScore>>();
+    }
+
+    public class Match<TScore> where TScore : IScore
+    {
+        public Guid Id { get; set; }
+        public Player Player1 { get; set; }
+        public Player Player2 { get; set; }
+        public Player Winner { get; set; }
+        public TScore Score { get; set; }
+    }
+
+    public class TableTennisScore : IScore
+    {
+        public int Player1Sets { get; set; }
+        public int Player2Sets { get; set; }
+        public List<(int Player1Points, int Player2Points)> SetScores { get; set; } = new List<(int, int)>();
+        public bool IsComplete => Player1Sets == 3 || Player2Sets == 3;
+    }
+
+    public class TableTennisFormat : GameFormat<TableTennisScore>
+    {
+        public int SetsToWin { get; set; } = 3;
+        public int PointsPerSet { get; set; } = 11;
+
+        public override TableTennisScore CreateInitialScore()
+        {
+            return new TableTennisScore();
+        }
+
+        public override bool IsValidScore(TableTennisScore score)
+        {
+            if (score.Player1Sets + score.Player2Sets > SetsToWin * 2 - 1)
+                return false;
+
+            foreach (var setScore in score.SetScores)
+            {
+                if (setScore.Player1Points < PointsPerSet && setScore.Player2Points < PointsPerSet)
+                    return false;
+                if (Math.Abs(setScore.Player1Points - setScore.Player2Points) < 2)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public override Player DetermineWinner(Player player1, Player player2, TableTennisScore score)
+        {
+            return score.Player1Sets > score.Player2Sets ? player1 : player2;
+        }
+    }
+
+    public class ChessScore : IScore
+    {
+        public enum ChessResult { Ongoing, Player1Win, Player2Win, Draw }
+        public ChessResult Result { get; set; } = ChessResult.Ongoing;
+        public List<string> Moves { get; set; } = new List<string>();
+        public bool IsComplete => Result != ChessResult.Ongoing;
+    }
+
+    public class ChessFormat : GameFormat<ChessScore>
+    {
+        public override ChessScore CreateInitialScore()
+        {
+            return new ChessScore();
+        }
+
+        public override bool IsValidScore(ChessScore score)
+        {
+            return true; // In chess, any valid game state is a valid score
+        }
+
+        public override Player DetermineWinner(Player player1, Player player2, ChessScore score)
+        {
+            return score.Result == ChessScore.ChessResult.Player1Win ? player1 :
+                   score.Result == ChessScore.ChessResult.Player2Win ? player2 : null; // null for draw or ongoing
+        }
+    }
+}
+```
