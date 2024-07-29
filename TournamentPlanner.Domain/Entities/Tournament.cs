@@ -32,8 +32,8 @@ namespace TournamentPlanner.Domain.Entities
 
         public List<Player> Participants { get; set; } = new();
 
-        public List<Group<TScore>> Groups { get; set; } = new List<Group<TScore>>();
-        public List<KnockOut<TScore>> KnockOuts { get; set; } = new List<KnockOut<TScore>>();
+        public List<MatchType<IScore>> Groups { get; set; } = new ();
+        public List<MatchType<IScore>> KnockOuts { get; set; } = new ();
         public List<Match<TScore>> Matches { get; set; } = new List<Match<TScore>>();
 
 
