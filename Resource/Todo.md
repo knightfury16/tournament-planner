@@ -25,22 +25,38 @@
 
 ### Client Requirements
 
+## Tournaments
+
 - [ ] List out all the tournaments
     - [x] List(default view) out all the tournament that is **ongoing** and are **scheduled** in the future from **now**
     - [ ] Show an option if the tournament is booked out or player can register for the tournament.
-    - [ ] If not booked out then a valid registered player can register for the tournament going thorugh the necessary process.
+    - [ ] If not booked out then a valid **registered player** can **register** for the tournament going thorugh the necessary process.
     - [x] Sort it by createdDate field
     - [ ] Keep an option to show the **past** tournaments already happened. Maybe a toggle switch.
     - [ ] User can search through the tournament with name parameter and date all through the records that is **past** and **future** tournament.
 - [ ] Create tournament
     - [ ] **Only Admin** can create tournament. If you are not an admin don't show the *Add Tournament* option.
+    - [ ] Must requirement for a tournamnet are the following field:
+     - Name
+     - Start Date
+     - End Date
+     - Game type : Table Tennis, Chess, Football
     - [ ] During tournament creation **Name** field and **Start Date** is must required. Right now its configured only for **Name** field to be required.
-    - [ ] Once a tournament has been created, sent out an email notification to all the registered users/players. **Advance**
+    - [ ] Once a tournament has been created, sent out an email notification to all the registered players interested in that game. **Advance**
     - [ ] Maybe later, Add some categorization (on sports basis) to the tournament, and sent notification to users only interested in those particular  category of sports.
+
+## Matches
+
  - [ ] Once a user click a tournament, take him to *Tournament Match* view.
-    - [ ] List out the matches of tournament on Round Basis.
-    - [ ] *Default* show the user the latest round that is ongoing or going to play through.
-    - [ ] For example if we are on half way on round 2 and then show the user directly the matches of round 2 and keep a separate tab where if user wants can see the matches of previous round.
-    - [ ] Figure out a way to handle this requirement from backend.
+    - [ ] List out the **latest** matches of tournament.
+    - [ ] List out the matches on the basis of date.
+    - [ ] Each match record will show match name, participants name, match points
     - [ ] User can filter through the matches by player name.
     - [ ] Maybe later, add an upvote option to show the round favourite and tournament favourite
+
+- [ ] After a match has been played the admin of that match will be able to enter the match record/ That is save the record.
+- [ ] Admin can reschedule a match.
+- [ ] A player can request a reschedule of his/her match.
+- [ ] Scheduling algorithm will be determined later, but the schedule will be made auto.
+- [ ] Any viewer will be able to see matches and its result, as well as all the participant of that tournament.
+
