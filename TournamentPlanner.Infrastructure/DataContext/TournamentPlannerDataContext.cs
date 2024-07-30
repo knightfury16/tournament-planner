@@ -9,6 +9,8 @@ namespace TournamentPlanner.Infrastructure.DataContext
         public DbSet<Player> Players { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Match> Matches { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<KnockOut> KnockOuts { get; set; }
         public DbSet<Tournament> Tournaments { get; set; }
         public TournamentPlannerDataContext(DbContextOptions<TournamentPlannerDataContext> options) : base(options)
         { }
@@ -44,6 +46,29 @@ namespace TournamentPlanner.Infrastructure.DataContext
             //     entity.Property(p => p.SecondPlayer).IsRequired();
             // });
 
+            modelBuilder.Entity<Match>(entity =>
+            {
+                entity.Property(p => p.FirstPlayer)
+                      .IsRequired();
+                entity.Property(p => p.SecondPlayer)
+                      .IsRequired();
+                entity.Property(p => p.IsRescheduled)
+                      .HasDefaultValue(false);
+            });
+
+            modelBuilder.Entity<Group>(entity =>
+            {
+                entity.Property(p => p.Name)
+                      .IsRequired();
+            });
+
+            modelBuilder.Entity<KnockOut>(entity =>
+            {
+                entity.Property(p => p.Name)
+                      .IsRequired();
+                entity.Property(p => p.Round)
+                      .IsRequired();
+            });
 
             modelBuilder.Entity<Tournament>(entity =>
             {
