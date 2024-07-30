@@ -12,20 +12,19 @@ namespace TournamentPlanner.Domain.Entities
         public DateTime? EndDate { get; set; }
         public DateTime? RegistrationLastDate { get; set; }
 
-        public int MaxParticipant { get; set; }
-
+        public int MaxParticipant { get; set; } // Default: 26 Group (A-Z) * 4 per group = 104
         public string? Venue { get; set; }
 
         public decimal RegistrationFee { get; set; }
 
         public int MinimumAgeOfRegistration { get; set; }
 
-        public int WinnerPerGroup { get; set; }
-        public int KnockOutStartNumber { get; set; }
+        public int WinnerPerGroup { get; set; } // Default value 2
+        public int KnockOutStartNumber { get; set; } // Default value 16
 
-        public ResolutionStrategy ParticipantResolutionStrategy { get; set; }
+        public ResolutionStrategy? ParticipantResolutionStrategy { get; set; } // Default value StatBased
 
-        public required TournamentType TournamentType { get; set; }
+        public required TournamentType? TournamentType { get; set; } // Default value GroupStage
 
         public required GameType GameType { get; set; }
 
@@ -36,7 +35,7 @@ namespace TournamentPlanner.Domain.Entities
         public List<Match> Matches { get; set; } = new List<Match>();
 
         // Added to support tournament status
-        public TournamentStatus Status { get; set; }
+        public TournamentStatus? Status { get; set; } // Default value is Draft
         // Added to support search functionality
         public bool IsSearchable => Status != TournamentStatus.Draft;
 
