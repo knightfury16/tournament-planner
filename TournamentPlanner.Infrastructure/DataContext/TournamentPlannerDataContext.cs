@@ -38,8 +38,9 @@ namespace TournamentPlanner.Infrastructure.DataContext
                 entity.Property(p => p.PhoneNumber)
                       .IsRequired();
                 entity.Property(p => p.Email)
-                .IsRequired()
-                .HasAnnotation("RegularExpression", @"^[^@\s]+@[^@\s]+\.[^@\s]+$"); //Basic regex for email
+                      .HasMaxLength(250)
+                      .IsRequired()
+                      .HasAnnotation("RegularExpression", @"^[^@\s]+@[^@\s]+\.[^@\s]+$"); //Basic regex for email
             });
 
             //* Database provider dont support Player type exception
@@ -61,12 +62,14 @@ namespace TournamentPlanner.Infrastructure.DataContext
             modelBuilder.Entity<Group>(entity =>
             {
                 entity.Property(p => p.Name)
+                      .HasMaxLength(250)
                       .IsRequired();
             });
 
             modelBuilder.Entity<KnockOut>(entity =>
             {
                 entity.Property(p => p.Name)
+                      .HasMaxLength(250)
                       .IsRequired();
                 entity.Property(p => p.Round)
                       .IsRequired();
@@ -75,6 +78,7 @@ namespace TournamentPlanner.Infrastructure.DataContext
             modelBuilder.Entity<GameType>(entity =>
             {
                 entity.Property(p => p.Name)
+                      .HasMaxLength(250)
                       .IsRequired();
             });
 
