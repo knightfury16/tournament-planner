@@ -11,6 +11,7 @@ namespace TournamentPlanner.Infrastructure.DataContext
         public DbSet<Match> Matches { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<KnockOut> KnockOuts { get; set; }
+        public DbSet<GameType> GameTypes { get; set; }
         public DbSet<Tournament> Tournaments { get; set; }
         public TournamentPlannerDataContext(DbContextOptions<TournamentPlannerDataContext> options) : base(options)
         { }
@@ -67,6 +68,12 @@ namespace TournamentPlanner.Infrastructure.DataContext
                 entity.Property(p => p.Name)
                       .IsRequired();
                 entity.Property(p => p.Round)
+                      .IsRequired();
+            });
+
+            modelBuilder.Entity<GameType>(entity =>
+            {
+                entity.Property(p => p.Name)
                       .IsRequired();
             });
 
