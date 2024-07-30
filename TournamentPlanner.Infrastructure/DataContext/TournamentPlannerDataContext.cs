@@ -80,11 +80,6 @@ namespace TournamentPlanner.Infrastructure.DataContext
 
             modelBuilder.Entity<Tournament>(entity =>
             {
-                entity.Property(p => p.Name).IsRequired();
-            });
-
-            modelBuilder.Entity<Tournament>(entity =>
-            {
                 entity.Property(p => p.Name)
                       .HasMaxLength(250)
                       .IsRequired();
