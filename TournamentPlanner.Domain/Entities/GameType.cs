@@ -1,14 +1,14 @@
-using TournamentPlanner.Domain.Interface;
+using TournamentPlanner.Domain.Common;
 
 namespace TournamentPlanner.Domain.Entities
 {
-    public abstract class GameType<TScore> where TScore : IScore
+    //Figure out GameFormat which will be predefined, from GameType
+    // Changed from abstract class to regular class to support the InterestedGameTypes property in User
+    public class GameType : BaseEntity
     {
+        //TODO: Make a enum of the supported GameType
         public required string Name { get; set; }
-        public abstract TScore CreateInitialScore();
-        public abstract bool IsValidScore(TScore score);
-        public abstract Player DetermineWinner(Player player1, Player player2, TScore score);
 
     }
-   
+
 }

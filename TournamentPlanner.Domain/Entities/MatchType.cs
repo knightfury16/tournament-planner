@@ -3,10 +3,10 @@ using TournamentPlanner.Domain.Interface;
 
 namespace TournamentPlanner.Domain.Entities
 {
-    public class MatchType<TScore> : BaseEntity  where TScore : IScore
+    public class MatchType: BaseEntity  
     {
         public required string Name { get; set; }
         public List<Player> Players { get; set; } = new List<Player>();
-        public List<Match<TScore>> Matches { get; set; } = new List<Match<TScore>>();
+        public List<Match> Matches { get; set; } = new List<Match>();
     }
 }

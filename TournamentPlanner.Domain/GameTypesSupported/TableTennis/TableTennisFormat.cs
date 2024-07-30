@@ -3,7 +3,7 @@ using TournamentPlanner.Domain.Entities;
 namespace TournamentPlanner.Domain.GameTypesSupported.TableTennis
 {
 
-    public class TableTennisGame : GameType<TableTennisScore>
+    public class TableTennisFormat : GameFormat<TableTennisScore>
     {
         public int SetsToWin { get; set; } = 3;
         public int PointsPerSet { get; set; } = 11;

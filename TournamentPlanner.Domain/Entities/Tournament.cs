@@ -1,10 +1,9 @@
 using TournamentPlanner.Domain.Common;
 using TournamentPlanner.Domain.Enum;
-using TournamentPlanner.Domain.Interface;
 
 namespace TournamentPlanner.Domain.Entities
 {
-    public class Tournament<TScore> : BaseEntity where TScore : IScore
+    public class Tournament: BaseEntity
     {
         public required string Name { get; set; }
 
@@ -28,14 +27,18 @@ namespace TournamentPlanner.Domain.Entities
 
         public required TournamentType TournamentType { get; set; }
 
-        public required GameType<TScore> GameType { get; set; }
+        public required GameType GameType { get; set; }
 
         public List<Player> Participants { get; set; } = new();
 
-        public List<MatchType<IScore>> Groups { get; set; } = new ();
-        public List<MatchType<IScore>> KnockOuts { get; set; } = new ();
-        public List<Match<TScore>> Matches { get; set; } = new List<Match<TScore>>();
+        public List<Group> Groups { get; set; } = new ();
+        public List<KnockOut> KnockOuts { get; set; } = new ();
+        public List<Match> Matches { get; set; } = new List<Match>();
 
+        // Added to support tournament status
+        public TournamentStatus Status { get; set; }
+        // Added to support search functionality
+        public bool IsSearchable => Status != TournamentStatus.Draft;
 
     }
 }

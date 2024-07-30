@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TournamentPlanner.Domain.Common;
-using TournamentPlanner.Domain.Interface;
-
 namespace TournamentPlanner.Domain.Entities
 {
     // public class Player<TScore> : User where TScore: IScore
@@ -15,8 +8,8 @@ namespace TournamentPlanner.Domain.Entities
 
         //How to store this value? should I just store TournamentId or the whole torunament?
         //!! keep this in mind, see the relationin database
-        // public List<Tournament<TScore>> TournamentParticipated { get; set; } = new ();
-        public List<int> TournamentParticipatedId { get; set; } = new List<int>();
+        public List<Tournament> TournamentParticipated { get; set; } = new ();
+        // public List<int> TournamentParticipatedId { get; set; } = new List<int>();
 
         // public List<GameType<TScore>> InterestedIn { get; set; } = new List<GameType<TScore>>();
 

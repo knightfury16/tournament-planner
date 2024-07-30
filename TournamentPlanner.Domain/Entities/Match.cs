@@ -8,7 +8,7 @@ using TournamentPlanner.Domain.Interface;
 
 namespace TournamentPlanner.Domain.Entities
 {
-    public class Match<TScore> : BaseEntity where TScore : IScore
+    public class Match: BaseEntity 
     {
         public required Player FirstPlayer { get; set; }
         public required Player SecondPlayer { get; set; }
@@ -19,7 +19,11 @@ namespace TournamentPlanner.Domain.Entities
 
         public DateTime? GamePlayed { get; set; }
 
-        public TScore? Score { get; set; }
+        public IScore? Score { get; set; }
+        // Added to support match rescheduling
+        public bool IsRescheduled { get; set; }
+        public string? RescheduleReason { get; set; }
+        public Admin? RescheduledBy { get; set; }
 
     }
 }

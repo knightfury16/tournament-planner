@@ -10,5 +10,8 @@ namespace TournamentPlanner.Domain.Entities
     {
         public required string Name { get; set; }
         public required string Email { get; set; }
+
+        // Added to support email notifications
+        public List<GameType> InterestedGameTypes { get; set; } = new List<GameType>();
     }
 }
