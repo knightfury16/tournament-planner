@@ -2,7 +2,7 @@ using TournamentPlanner.Domain.Interface;
 
 namespace TournamentPlanner.Domain.Entities
 {
-    public abstract class GameFormat<TScore> where TScore : IScore
+    public abstract class GameFormat<TScore> where TScore : Score
     {
         public required GameType GameType { get; set; }
         public abstract TScore CreateInitialScore();

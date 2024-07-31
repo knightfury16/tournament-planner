@@ -19,7 +19,7 @@ namespace TournamentPlanner.Domain.Entities
 
         public DateTime? GamePlayed { get; set; }
 
-        public IScore? Score { get; set; }
+        public Score? Score { get; set; }
         // Added to support match rescheduling
         public bool IsRescheduled { get; set; }
         public string? RescheduleReason { get; set; }

@@ -1,8 +1,9 @@
+using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Interface;
 
 namespace TournamentPlanner.Domain.GameTypesSupported.TableTennis
 {
-    public class TableTennisScore : IScore
+    public class TableTennisScore : Score
     {
         public int Player1Sets { get; set; }
         public int Player2Sets { get; set; }
