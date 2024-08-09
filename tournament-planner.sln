@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentPlanner.Api", "To
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentPlanner.Test", "TournamentPlanner.Test\TournamentPlanner.Test.csproj", "{8A7EF600-2E33-4EF9-8464-808483C48CB0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentPlanner.DataModeling", "TournamentPlanner.DataModeling\TournamentPlanner.DataModeling.csproj", "{17FEE85B-EE83-47A5-BDA8-4A9BFD9CB4E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{8A7EF600-2E33-4EF9-8464-808483C48CB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A7EF600-2E33-4EF9-8464-808483C48CB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A7EF600-2E33-4EF9-8464-808483C48CB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17FEE85B-EE83-47A5-BDA8-4A9BFD9CB4E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17FEE85B-EE83-47A5-BDA8-4A9BFD9CB4E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17FEE85B-EE83-47A5-BDA8-4A9BFD9CB4E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17FEE85B-EE83-47A5-BDA8-4A9BFD9CB4E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
