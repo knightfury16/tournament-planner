@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace TournamentPlanner.Domain.Entities;
+
 using TournamentPlanner.Domain.Common;
 
-namespace TournamentPlanner.Domain.Entities
+public abstract class User : BaseEntity
 {
-    public abstract class User : BaseEntity
-    {
-        public required string Name { get; set; }
-        public required string Email { get; set; }
+    public required string Name { get; set; }
+    public required string Email { get; set; }
 
-        // Added to support email notifications
-        public List<GameType> InterestedGameTypes { get; set; } = new List<GameType>();
-    }
 }
