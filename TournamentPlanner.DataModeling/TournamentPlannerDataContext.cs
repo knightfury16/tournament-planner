@@ -1,8 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace TournamentPlanner.DataModeling;
 
 
 
-public class TournamentPlannerDataContext
+public class TournamentPlannerDataContext : DbContext
 {
 
 }
