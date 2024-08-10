@@ -7,13 +7,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="npgsql.EntityFrameworkCore.postgreSQL" Version="8.0.2" />
-  </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference
-      Include="..\TournamentPlanner.Application\TournamentPlanner.Application.csproj" />
+    <ProjectReference Include="..\TournamentPlanner.Application\TournamentPlanner.Application.csproj" />
+    <ProjectReference Include="..\TournamentPlanner.DataModeling\TournamentPlanner.DataModeling.csproj" />
   </ItemGroup>
 
 </Project>
