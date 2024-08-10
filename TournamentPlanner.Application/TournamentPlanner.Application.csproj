@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TournamentPlanner.Domain\TournamentPlanner.Domain.csproj" />
+    <ProjectReference Include="..\TournamentPlanner.Mediator\TournamentPlanner.Mediator.csproj" />
   </ItemGroup>
 
   <ItemGroup>
