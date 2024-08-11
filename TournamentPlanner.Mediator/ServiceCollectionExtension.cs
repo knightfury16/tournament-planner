@@ -5,6 +5,15 @@ namespace TournamentPlanner.Mediator
 {
     public static class ServiceCollectionExtension
     {
+        /*TODO: Enhancement feature can be added later
+         services.AddMediatorHandlers(options =>
+         {
+             options.Lifetime = ServiceLifetime.Transient;
+             options.TypeFilter = t => t.Namespace.StartsWith("YourNamespace");
+             options.Logger = Console.WriteLine;
+        }, typeof(AddPlayerCommand).Assembly); 
+        */
+
         public static void AddMediatorHandler(this IServiceCollection services, params Assembly[] assemblies)
         {
             var handlerType = typeof(IRequestHandler<,>);
