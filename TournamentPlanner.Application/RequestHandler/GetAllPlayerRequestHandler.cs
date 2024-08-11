@@ -13,9 +13,13 @@ namespace TournamentPlanner.Application.RequestHandler
         {
             this.playerRepository = playerRepository;
         }
-        public async Task<IEnumerable<Player>> Handle(GetAllPlayerRequest request, CancellationToken cancellationToken1 = default)
+        public async Task<IEnumerable<Player>?> Handle(GetAllPlayerRequest request, CancellationToken cancellationToken1 = default)
         {
-            var players = await playerRepository.GetAllAsync(["Tournament"]);
+            if(request.name != null){
+                return await playerRepository.GetAllAsync(player => player.Name.ToLowerInvariant().Contains(request.name));
+            }
+
+            var players = await playerRepository.GetAllAsync();
             return players;
         }
     }

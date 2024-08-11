@@ -21,7 +21,7 @@ namespace TournamentPlanner.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Player>))]
         public async Task<IActionResult> GetAllPlayer([FromQuery] string? name)
         {
-            var getAllPlayerRequest = new GetAllPlayerRequest();
+            var getAllPlayerRequest = new GetAllPlayerRequest(name);
             var players = await _mediator.Send(getAllPlayerRequest);
             return Ok(players);
         }
