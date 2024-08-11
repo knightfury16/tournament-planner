@@ -1,7 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using TournamentPlanner.Application.Request;
-using TournamentPlanner.Application.RequestHandler;
-using TournamentPlanner.Domain.Entities;
+using System.Reflection;
 using TournamentPlanner.Mediator;
 
 
@@ -11,10 +9,10 @@ namespace TournamentPlanner.Application
     {
         public static void AddApplicationServices(this IServiceCollection services)
         {
-            //TODO: Make a aggregate use cases
+            var executingAssembly = Assembly.GetExecutingAssembly();
             services.AddScoped<IMediator, Mediator.Mediator>();
-            services.AddScoped<IRequestHandler<GetAllPlayerRequest, IEnumerable<Player>>, GetAllPlayerRequestHandler>();
-            services.AddScoped<IRequestHandler<GetPlayerByIdRequest, Player>, GetPlayerByIdRequestHandler>();
+            //order is importent here. Register after adding mediator
+            services.AddMediatorHandler([executingAssembly]);
 
         }
 
