@@ -7,6 +7,8 @@ public class Player : User
     public int GamePlayed { get; set; }
     public int GameWon { get; set; }
     public double WinRatio => GamePlayed > 0 ? (double)GameWon / GamePlayed : 0;
+
+    //TODO: Remove Circular dependency
     public List<Tournament>? Tournament { get; set; }
     public List<MatchType>? MatchTypes { get; set; }
 }
