@@ -14,6 +14,7 @@ namespace TournamentPlanner.Application
             //TODO: Make a aggregate use cases
             services.AddScoped<IMediator, Mediator.Mediator>();
             services.AddScoped<IRequestHandler<GetAllPlayerRequest, IEnumerable<Player>>, GetAllPlayerRequestHandler>();
+            services.AddScoped<IRequestHandler<GetPlayerByIdRequest, Player>, GetPlayerByIdRequestHandler>();
 
         }
 

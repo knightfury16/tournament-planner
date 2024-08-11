@@ -26,26 +26,28 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(players);
         }
 
-        // [HttpGet("{id}", Name = nameof(GetPlayerById))]
-        // [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Player))]
-        // [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        // public async Task<IActionResult> GetPlayerById([FromRoute] int id)
-        // {
+        [HttpGet("{id}", Name = nameof(GetPlayerById))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Player))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetPlayerById([FromRoute] int id)
+        {
 
-        //     if (id <= 0)
-        //     {
-        //         return BadRequest("Id can not be negative");
-        //     }
-        //     var player = await _mediator.GetPlayerById(id);
+            if (id <= 0)
+            {
+                return BadRequest("Id can not be negative");
+            }
 
-        //     if (player == null)
-        //     {
-        //         return NotFound();
-        //     }
+            var getPlayerByIdRequest = new GetPlayerByIdRequest(id);
+            var player = await _mediator.Send(getPlayerByIdRequest);
 
-        //     return Ok(player);
+            if (player == null)
+            {
+                return NotFound();
+            }
 
-        // }
+            return Ok(player);
+
+        }
 
 
         // [HttpPost]
