@@ -1,9 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using TournamentPlanner.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace TournamentPlanner.Application.DTOs
 {
-    public class PlayerDto
+    public class FullPlayerDto
     {
         [Required]
         public int Id { get; set; }
@@ -13,7 +13,12 @@ namespace TournamentPlanner.Application.DTOs
         public string Name { get; set; } = string.Empty;
 
         public int? Age { get; set; }
-        public int? GamePlayed { get; set; }
-        public double? WinRatio { get; set; }
+
+        public int Weight { get; set; }
+        public int GamePlayed { get; set; }
+        public int GameWon { get; set; }
+
+        public double WinRatio { get; set; }
+
     }
 }

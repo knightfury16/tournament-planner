@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using TournamentPlanner.Domain.Enum;
 
 namespace TournamentPlanner.Application.DTOs
 {
     public class TournamentDto
     {
+        [Required]
+        public int Id { get; set; }
+
+        [Required]
         public string Name { get; set; } = string.Empty;
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public TournamentStatus Status { get; set; }
     }
 }
