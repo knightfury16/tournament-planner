@@ -20,11 +20,14 @@ namespace TournamentPlanner.Application.RequestHandler
         public async Task<IEnumerable<PlayerDto>?> Handle(GetAllPlayerRequest request, CancellationToken cancellationToken1 = default)
         {
             IEnumerable<Player> players;
-            if(request.name != null){
-                players =  await playerRepository.GetAllAsync(player => player.Name.ToLowerInvariant().Contains(request.name));
+            if (request.name != null)
+            {
+                players = await playerRepository.GetAllAsync(player => player.Name.ToLowerInvariant().Contains(request.name));
             }
-
-            players = await playerRepository.GetAllAsync();
+            else
+            {
+                players = await playerRepository.GetAllAsync();
+            }
 
             var playerDtos = _mapper.Map<IEnumerable<PlayerDto>>(players);
 
