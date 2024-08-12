@@ -1,26 +1,34 @@
+using AutoMapper;
 using TournamentPlanner.Application.Common.Interfaces;
+using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Application.Request;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Application.RequestHandler
 {
-    public class GetAllPlayerRequestHandler : IRequestHandler<GetAllPlayerRequest, IEnumerable<Player>>
+    public class GetAllPlayerRequestHandler : IRequestHandler<GetAllPlayerRequest, IEnumerable<PlayerDto>>
     {
         private readonly IRepository<Player, Player> playerRepository;
+        private readonly IMapper _mapper;
 
-        public GetAllPlayerRequestHandler(IRepository<Player, Player> playerRepository)
+        public GetAllPlayerRequestHandler(IRepository<Player, Player> playerRepository, IMapper mapper)
         {
             this.playerRepository = playerRepository;
+            _mapper = mapper;
         }
-        public async Task<IEnumerable<Player>?> Handle(GetAllPlayerRequest request, CancellationToken cancellationToken1 = default)
+        public async Task<IEnumerable<PlayerDto>?> Handle(GetAllPlayerRequest request, CancellationToken cancellationToken1 = default)
         {
+            IEnumerable<Player> players;
             if(request.name != null){
-                return await playerRepository.GetAllAsync(player => player.Name.ToLowerInvariant().Contains(request.name));
+                players =  await playerRepository.GetAllAsync(player => player.Name.ToLowerInvariant().Contains(request.name));
             }
 
-            var players = await playerRepository.GetAllAsync();
-            return players;
+            players = await playerRepository.GetAllAsync();
+
+            var playerDtos = _mapper.Map<IEnumerable<PlayerDto>>(players);
+
+            return playerDtos;
         }
     }
 }

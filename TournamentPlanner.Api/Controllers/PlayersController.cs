@@ -18,7 +18,7 @@ namespace TournamentPlanner.Api.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Player>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PlayerDto>))]
         public async Task<IActionResult> GetAllPlayer([FromQuery] string? name)
         {
             var getAllPlayerRequest = new GetAllPlayerRequest(name);
