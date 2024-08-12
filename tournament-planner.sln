@@ -3,27 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentPlanner.Domain", "TournamentPlanner.Domain\TournamentPlanner.Domain.csproj", "{93A8921C-1D99-4920-8000-A4AB254039AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TournamentPlanner.Domain", "TournamentPlanner.Domain\TournamentPlanner.Domain.csproj", "{93A8921C-1D99-4920-8000-A4AB254039AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentPlanner.Application", "TournamentPlanner.Application\TournamentPlanner.Application.csproj", "{E78C748D-4F30-4FDC-BF9C-5C93DE5355C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TournamentPlanner.Application", "TournamentPlanner.Application\TournamentPlanner.Application.csproj", "{E78C748D-4F30-4FDC-BF9C-5C93DE5355C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentPlanner.Infrastructure", "TournamentPlanner.Infrastructure\TournamentPlanner.Infrastructure.csproj", "{82362EB3-261A-4B0C-AADA-E7BD9286BE28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TournamentPlanner.Infrastructure", "TournamentPlanner.Infrastructure\TournamentPlanner.Infrastructure.csproj", "{82362EB3-261A-4B0C-AADA-E7BD9286BE28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentPlanner.Api", "TournamentPlanner.Api\TournamentPlanner.Api.csproj", "{99BA9CC8-8000-44C3-9438-A131B046408F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TournamentPlanner.Api", "TournamentPlanner.Api\TournamentPlanner.Api.csproj", "{99BA9CC8-8000-44C3-9438-A131B046408F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentPlanner.Test", "TournamentPlanner.Test\TournamentPlanner.Test.csproj", "{8A7EF600-2E33-4EF9-8464-808483C48CB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TournamentPlanner.Test", "TournamentPlanner.Test\TournamentPlanner.Test.csproj", "{8A7EF600-2E33-4EF9-8464-808483C48CB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentPlanner.DataModeling", "TournamentPlanner.DataModeling\TournamentPlanner.DataModeling.csproj", "{17FEE85B-EE83-47A5-BDA8-4A9BFD9CB4E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TournamentPlanner.DataModeling", "TournamentPlanner.DataModeling\TournamentPlanner.DataModeling.csproj", "{17FEE85B-EE83-47A5-BDA8-4A9BFD9CB4E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentPlanner.Mediator", "TournamentPlanner.Mediator\TournamentPlanner.Mediator.csproj", "{C6EB0794-03E7-4BA5-8A96-17D190E3E8E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TournamentPlanner.Mediator", "TournamentPlanner.Mediator\TournamentPlanner.Mediator.csproj", "{C6EB0794-03E7-4BA5-8A96-17D190E3E8E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{93A8921C-1D99-4920-8000-A4AB254039AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -43,7 +40,6 @@ Global
 		{99BA9CC8-8000-44C3-9438-A131B046408F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99BA9CC8-8000-44C3-9438-A131B046408F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8A7EF600-2E33-4EF9-8464-808483C48CB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A7EF600-2E33-4EF9-8464-808483C48CB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A7EF600-2E33-4EF9-8464-808483C48CB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A7EF600-2E33-4EF9-8464-808483C48CB0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{17FEE85B-EE83-47A5-BDA8-4A9BFD9CB4E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -54,5 +50,8 @@ Global
 		{C6EB0794-03E7-4BA5-8A96-17D190E3E8E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6EB0794-03E7-4BA5-8A96-17D190E3E8E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6EB0794-03E7-4BA5-8A96-17D190E3E8E1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
