@@ -11,6 +11,7 @@ namespace TournamentPlanner.Application
         {
             var executingAssembly = Assembly.GetExecutingAssembly();
             services.AddScoped<IMediator, Mediator.Mediator>();
+            services.AddAutoMapper(executingAssembly);
             //order is importent here. Register after adding mediator
             services.AddMediatorHandler([executingAssembly]);
 
