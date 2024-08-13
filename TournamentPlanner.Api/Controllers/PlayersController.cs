@@ -19,11 +19,11 @@ namespace TournamentPlanner.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PlayerDto>))]
-        public async Task<IActionResult> GetAllPlayer([FromQuery] string? name)
+        public async Task<ActionResult<IEnumerable<PlayerDto>>> GetAllPlayer([FromQuery] string? name)
         {
             var getAllPlayerRequest = new GetAllPlayerRequest(name);
-            var players = await _mediator.Send(getAllPlayerRequest);
-            return Ok(players);
+            var playersDto = await _mediator.Send(getAllPlayerRequest);
+            return Ok(playersDto);
         }
 
         [HttpGet("{id}", Name = nameof(GetPlayerById))]
