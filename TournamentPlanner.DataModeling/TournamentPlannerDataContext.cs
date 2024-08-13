@@ -110,7 +110,7 @@ public class TournamentPlannerDataContext : DbContext
 
             entity
             .HasMany(t => t.Participants)
-            .WithMany(p => p.Tournament)
+            .WithMany(p => p.Tournaments)
             .UsingEntity(j => j.ToTable("TournamentParticipant"));
 
         });
