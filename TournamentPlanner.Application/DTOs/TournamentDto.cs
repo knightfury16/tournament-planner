@@ -12,6 +12,6 @@ namespace TournamentPlanner.Application.DTOs
         public string Name { get; set; } = string.Empty;
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public TournamentStatus Status { get; set; }
+        public string? Status { get; set; }
     }
 }

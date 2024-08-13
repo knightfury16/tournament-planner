@@ -8,9 +8,10 @@ namespace TournamentPlanner.Application
     {
         public MappingProfile()
         {
-            CreateMap<Player,PlayerDto>().ReverseMap();
-            CreateMap<Player,FullPlayerDto>().ReverseMap();
+            CreateMap<Player, PlayerDto>().ReverseMap();
+            CreateMap<Player, FullPlayerDto>().ReverseMap();
+            CreateMap<Tournament, TournamentDto>().ReverseMap();
         }
-        
+
     }
 }
