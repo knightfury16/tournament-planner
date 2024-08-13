@@ -38,16 +38,15 @@ namespace TournamentPlanner.Api.Controllers
             }
 
             var getPlayerByIdRequest = new GetPlayerByIdRequest(id);
-            var player = await _mediator.Send(getPlayerByIdRequest);
-
-            if (player == null)
-            {
+            var fullPlayerDto = await _mediator.Send(getPlayerByIdRequest);
+            if(fullPlayerDto == null){
                 return NotFound();
             }
 
-            return Ok(player);
+            return Ok(fullPlayerDto);
 
         }
+
 
 
         // [HttpPost]

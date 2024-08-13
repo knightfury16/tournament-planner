@@ -1,27 +1,30 @@
+using AutoMapper;
 using TournamentPlanner.Application.Common.Interfaces;
+using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Application.Request;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Application.RequestHandler
 {
-    public class GetPlayerByIdRequestHandler : IRequestHandler<GetPlayerByIdRequest, Player>
+    public class GetPlayerByIdRequestHandler : IRequestHandler<GetPlayerByIdRequest, FullPlayerDto>
     {
         private readonly IRepository<Player, Player> _playerRepository;
+        private readonly IMapper _mapper;
 
-        public GetPlayerByIdRequestHandler(IRepository<Player, Player> playerRepository)
+        public GetPlayerByIdRequestHandler(IRepository<Player, Player> playerRepository, IMapper mapper)
         {
             _playerRepository = playerRepository;
+            _mapper = mapper;
         }
-        public async Task<Player?> Handle(GetPlayerByIdRequest request, CancellationToken cancellationToken1 = default)
+        public async Task<FullPlayerDto?> Handle(GetPlayerByIdRequest request, CancellationToken cancellationToken1 = default)
         {
 
-            //TODO: include the matched property of the palyer
-            var player = await _playerRepository.GetByIdAsync(request.id);
+            var player = await _playerRepository.GetAllAsync(player => player.Id == request.id, ["Tournaments"]);
 
             if (player == null) return null;
 
-            return player;
+            return _mapper.Map<FullPlayerDto>(player.First());
 
         }
 

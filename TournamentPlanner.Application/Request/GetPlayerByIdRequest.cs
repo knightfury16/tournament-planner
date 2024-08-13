@@ -1,9 +1,9 @@
-using TournamentPlanner.Domain.Entities;
+using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Application.Request
 {
-    public class GetPlayerByIdRequest: IRequest<Player>
+    public class GetPlayerByIdRequest: IRequest<FullPlayerDto>
     {
         public readonly int id;
 
