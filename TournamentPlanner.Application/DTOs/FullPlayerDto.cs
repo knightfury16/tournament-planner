@@ -20,5 +20,6 @@ namespace TournamentPlanner.Application.DTOs
 
         public double WinRatio { get; set; }
 
+        public List<TournamentDto>? Tournaments { get; set; }
     }
 }
