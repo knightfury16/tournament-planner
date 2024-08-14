@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Application.Request;
-using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Api.Controllers
