@@ -7,7 +7,7 @@ namespace TournamentPlanner.Application.DTOs
 
         [Required]
         [MinLength(5, ErrorMessage = "Name should at least 5 character long")]
-        [MaxLength(100, ErrorMessage = "Name should at most 100 charecter lond")]
+        [MaxLength(100, ErrorMessage = "Name should at most 100 charecter long")]
         public required string Name { get; set; }
 
         [Required]

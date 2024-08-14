@@ -6,7 +6,7 @@ namespace TournamentPlanner.Application.DTOs
         public required string Name { get; set; }
         public required string Email { get; set; }
         public required string PhoneNumber { get; set; }
-        public List<TournamentDto>? Tournaments { get; set; }
+        public List<TournamentDto>? CreatedTournament { get; set; }
         
     }
 }
