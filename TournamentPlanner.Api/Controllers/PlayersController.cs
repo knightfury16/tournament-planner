@@ -27,7 +27,7 @@ namespace TournamentPlanner.Api.Controllers
         }
 
         [HttpGet("{id}", Name = nameof(GetPlayerById))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Player))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FullPlayerDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetPlayerById([FromRoute] int id)
         {
@@ -49,14 +49,18 @@ namespace TournamentPlanner.Api.Controllers
 
 
 
-        // [HttpPost]
-        // [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Player))]
-        // [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        // public async Task<IActionResult> AddPlayer([FromBody] PlayerDto playerDto)
-        // {
-        //     var player = await _mediator.AddPlayerAsync(playerDto);
-        //     return CreatedAtAction(nameof(GetPlayerById), new { id = player.Id }, player);
-        // }
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PlayerDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddPlayer([FromBody] AddPlayerDto addPlayerDto)
+        {
+            var addPlayerRequest = new AddPlayerRequest(addPlayerDto);
+            var player = await _mediator.Send(addPlayerRequest);
+            if(player == null){
+                return BadRequest();
+            }
+            return CreatedAtAction(nameof(GetPlayerById), new { id = player.Id }, player);
+        }
 
     }
 }
