@@ -28,7 +28,17 @@ namespace TournamentPlanner.Mediator
                 {
                     var handlerInterface = handler.GetInterfaces()
                     .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerType);
-                    services.AddScoped(handlerInterface, handler);
+
+                    try
+                    {
+                        services.AddScoped(handlerInterface, handler);
+                        Console.WriteLine($"Successfully registered {handler.Name} as {handlerInterface.Name}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error registering {handler.Name} as {handlerInterface.Name}: {ex.Message}");
+                        throw; // Re-throw to catch in higher level or to stop the application
+                    }
                 }
 
             }
