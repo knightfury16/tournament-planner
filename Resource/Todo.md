@@ -5,12 +5,12 @@
     - use nuget NetArchTest.Rules
 - [ ] Write Integration test
 - [ ] Write Unit test for all the useCases
-- [ ] Add automapper
+- [x] Add automapper
 - [ ] Add constrain on reschedule match
-- [ ] Do the exception properly
+- [x] Do the exception properly
 - [ ] Integrate Role
-- [ ] Migrate to CQRS
-    - Use mediatr
+- [x] Migrate to CQRS
+    - Use mediatr(created own implementation)
 
 ## Change Requirements
 - [x] Add createdAt DateTime property to all entity.[Domain Change] 
