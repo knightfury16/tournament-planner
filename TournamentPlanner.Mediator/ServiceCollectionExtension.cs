@@ -16,6 +16,8 @@ namespace TournamentPlanner.Mediator
 
         public static void AddMediatorHandler(this IServiceCollection services, params Assembly[] assemblies)
         {
+            Console.WriteLine("In Mediator Service Extension.");
+
             var handlerType = typeof(IRequestHandler<,>);
             foreach (var assembly in assemblies)
             {

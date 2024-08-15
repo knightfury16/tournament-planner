@@ -13,14 +13,24 @@ Log.Logger = new LoggerConfiguration()
 
 try
 {
+    Log.Information("Starting Up...");
 
     var builder = WebApplication.CreateBuilder(args);
 
     // Configuring serilog service
-    builder.Services.AddSerilog((services, config) => config
-        .ReadFrom.Configuration(builder.Configuration)
-        .ReadFrom.Services(services)
-        .Enrich.FromLogContext());
+    //builder.Services.AddSerilog((services, config) => config
+    //    .ReadFrom.Configuration(builder.Configuration)
+    //    .ReadFrom.Services(services)
+    //    .Enrich.FromLogContext());
+    builder.Host.UseSerilog((context, services, configuration) =>
+    {
+        configuration.ReadFrom.Configuration(context.Configuration)
+                     .ReadFrom.Services(services)
+                     .Enrich.FromLogContext()
+                     .WriteTo.Console();
+    });
+
+
 
     // Add services to the container.
     // Add CORS policy to allow all
@@ -41,8 +51,17 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
+    try
+    {
+
     builder.Services.AddInfrastructureServices(configuration);
     builder.Services.AddApplicationServices();
+    }
+    catch (Exception ex)
+    {
+        Log.Error(ex, "An error occurred while configuring services.");
+        throw;
+    }
 
     var app = builder.Build();
 
@@ -80,6 +99,7 @@ catch (System.Exception ex)
 }
 finally
 {
+    Log.Information("Shutting down.");
     Log.CloseAndFlush();
 }
 return 0;
