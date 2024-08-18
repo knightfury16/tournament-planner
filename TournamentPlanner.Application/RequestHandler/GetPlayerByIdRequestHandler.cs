@@ -22,7 +22,7 @@ namespace TournamentPlanner.Application.RequestHandler
 
             var player = await _playerRepository.GetAllAsync(player => player.Id == request.id, ["Tournaments"]);
 
-            if (player == null) return null;
+            if (player == null || !player.Any()) return null;
 
             return _mapper.Map<FullPlayerDto>(player.First());
 
