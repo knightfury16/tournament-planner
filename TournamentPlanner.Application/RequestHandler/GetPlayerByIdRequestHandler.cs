@@ -9,10 +9,10 @@ namespace TournamentPlanner.Application.RequestHandler
 {
     public class GetPlayerByIdRequestHandler : IRequestHandler<GetPlayerByIdRequest, FullPlayerDto>
     {
-        private readonly IRepository<Player, Player> _playerRepository;
+        private readonly IRepository<Player> _playerRepository;
         private readonly IMapper _mapper;
 
-        public GetPlayerByIdRequestHandler(IRepository<Player, Player> playerRepository, IMapper mapper)
+        public GetPlayerByIdRequestHandler(IRepository<Player> playerRepository, IMapper mapper)
         {
             _playerRepository = playerRepository;
             _mapper = mapper;
