@@ -14,13 +14,13 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
     public class GetAdminByIdRequestHandlerTests
     {
         private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IRepository<Admin, Admin>> _mockRepository;
+        private readonly Mock<IRepository<Admin>> _mockRepository;
         private readonly GetAdminByIdRequestHandler _handler;
 
         public GetAdminByIdRequestHandlerTests()
         {
             _mockMapper = new Mock<IMapper>();
-            _mockRepository = new Mock<IRepository<Admin, Admin>>();
+            _mockRepository = new Mock<IRepository<Admin>>();
             _handler = new GetAdminByIdRequestHandler(_mockRepository.Object, _mockMapper.Object);
         }
 

@@ -10,7 +10,7 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
     public class AddAdminRequestHandlerTests
     {
         private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IRepository<Admin, Admin>> _mockRepository;
+        private readonly Mock<IRepository<Admin>> _mockRepository;
         private readonly AddAdminRequestHandler _handler;
 
 
@@ -19,7 +19,7 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
         public AddAdminRequestHandlerTests()
         {
             _mockMapper = new Mock<IMapper>();
-            _mockRepository = new Mock<IRepository<Admin, Admin>>();
+            _mockRepository = new Mock<IRepository<Admin>>();
             _handler = new AddAdminRequestHandler(_mockMapper.Object, _mockRepository.Object);
 
         }
