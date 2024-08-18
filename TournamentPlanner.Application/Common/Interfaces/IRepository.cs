@@ -1,28 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace TournamentPlanner.Application.Common.Interfaces
 {
-    public interface IRepository<T, TResult> where T : class where TResult : T
+    public interface IRepository<T> where T : class
     {
-        Task<TResult> AddAsync(T obj);
-        Task<IEnumerable<TResult>> GetAllAsync();
-        Task<IEnumerable<TResult>> GetAllAsync(Func<T, bool> filter);
-        Task<IEnumerable<TResult>> GetAllAsync(IEnumerable<Func<T, bool>> filters);
+        Task<T> AddAsync(T obj);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<IEnumerable<T>> GetAllAsync(Func<T, bool> filter);
+        Task<IEnumerable<T>> GetAllAsync(IEnumerable<Func<T, bool>> filters);
 
         // Any non-existent properties will be silently ignored by EF Core when building the query.
-        Task<IEnumerable<TResult>> GetAllAsync(string[] includeProperties);
+        Task<IEnumerable<T>> GetAllAsync(string[] includeProperties);
 
-        Task<IEnumerable<TResult>> GetAllAsync(Func<T, bool> filter, string[] includeProperties);
-        Task<IEnumerable<TResult>> GetAllAsync(IEnumerable<Func<T, bool>> filters, string[] includeProperties);
+        Task<IEnumerable<T>> GetAllAsync(Func<T, bool> filter, string[] includeProperties);
+        Task<IEnumerable<T>> GetAllAsync(IEnumerable<Func<T, bool>> filters, string[] includeProperties);
 
-        Task<TResult?> GetByIdAsync(int id);
-        Task<IEnumerable<TResult>?> GetByNameAsync(string? name);
-        Task<TResult> UpdateAsync(T obj);
-        Task<TResult> UpdateByIdAsync(int id, T obj);
+        Task<T?> GetByIdAsync(int id);
+        Task<IEnumerable<T>> GetByNameAsync(string? name);
+        Task<T> UpdateAsync(T obj);
+        Task<T> UpdateByIdAsync(int id, T obj);
         Task SaveAsync();
     }
 }
