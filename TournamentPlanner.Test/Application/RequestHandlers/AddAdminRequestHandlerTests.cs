@@ -54,7 +54,7 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
         public async Task Handle_NullRequest_ThrowsArgumentNullException()
         {
             // Act & Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => _handler.Handle(null, CancellationToken.None));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => _handler.Handle(null!, CancellationToken.None));
         }
 
     }
