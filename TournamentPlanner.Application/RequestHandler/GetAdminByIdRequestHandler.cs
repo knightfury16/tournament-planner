@@ -22,7 +22,7 @@ public class GetAdminByIdRequestHandler: IRequestHandler<GetAdminByIdRequest, Ad
 
         var admin = await _adminRepository.GetAllAsync(a => a.Id == request.id, ["CreatedTournament"]);
 
-        if (admin == null) return null;
+        if (admin == null || !admin.Any()) return null;
 
         return _mapper.Map<AdminDto>(admin.First());
 
