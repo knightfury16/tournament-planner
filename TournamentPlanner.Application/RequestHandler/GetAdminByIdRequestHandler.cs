@@ -9,10 +9,10 @@ namespace TournamentPlanner.Application;
 public class GetAdminByIdRequestHandler: IRequestHandler<GetAdminByIdRequest, AdminDto>
 {
 
-    private readonly IRepository<Admin, Admin> _adminRepository;
+    private readonly IRepository<Admin> _adminRepository;
     private readonly IMapper _mapper;
 
-    public GetAdminByIdRequestHandler(IRepository<Admin, Admin> adminRepository, IMapper mapper)
+    public GetAdminByIdRequestHandler(IRepository<Admin> adminRepository, IMapper mapper)
     {
         _adminRepository = adminRepository;
         _mapper = mapper;
