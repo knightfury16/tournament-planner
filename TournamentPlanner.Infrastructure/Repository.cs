@@ -6,7 +6,7 @@ using TournamentPlanner.DataModeling;
 
 namespace TournamentPlanner.Infrastructure
 {
-    public class Repository<T, TResult> : IRepository<T, TResult> where T : class where TResult : T
+    public class Repository<T> : IRepository<T> where T : class
     {
         private readonly TournamentPlannerDataContext _dataContext;
         public Repository(TournamentPlannerDataContext dataContext)
@@ -14,7 +14,7 @@ namespace TournamentPlanner.Infrastructure
             _dataContext = dataContext;
 
         }
-        public async Task<TResult> AddAsync(T obj)
+        public async Task<T> AddAsync(T obj)
         {
             if (obj == null)
             {
@@ -24,15 +24,15 @@ namespace TournamentPlanner.Infrastructure
 
             await Task.CompletedTask;
 
-            return (TResult)obj;
+            return obj;
         }
 
-        public async Task<IEnumerable<TResult>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return (IEnumerable<TResult>)await _dataContext.Set<T>().ToListAsync();
+            return await _dataContext.Set<T>().ToListAsync();
         }
 
-        public async Task<IEnumerable<TResult>> GetAllAsync(Func<T, bool> filter)
+        public async Task<IEnumerable<T>> GetAllAsync(Func<T, bool> filter)
         {
             if (filter == null)
             {
@@ -40,10 +40,10 @@ namespace TournamentPlanner.Infrastructure
             }
             var query = _dataContext.Set<T>().Where(filter);
 
-            return (IEnumerable<TResult>)query.ToList();
+            return query.ToList();
         }
 
-        public async Task<IEnumerable<TResult>> GetAllAsync(string[] includeProperties)
+        public async Task<IEnumerable<T>> GetAllAsync(string[] includeProperties)
         {
             if (includeProperties is null || includeProperties.Length == 0)
             {
@@ -61,7 +61,7 @@ namespace TournamentPlanner.Infrastructure
                     query = query.Include(lambdaExpression);
                 }
             }
-            return (IEnumerable<TResult>)await query.ToListAsync();
+            return await query.ToListAsync();
         }
         private static Expression<Func<T, object>> BuildTheIncludeExpression(string property)
         {
@@ -90,7 +90,7 @@ namespace TournamentPlanner.Infrastructure
             return lambdaExpression;
         }
 
-        public async Task<IEnumerable<TResult>> GetAllAsync(Func<T, bool> filter, string[] includeProperties)
+        public async Task<IEnumerable<T>> GetAllAsync(Func<T, bool> filter, string[] includeProperties)
         {
             var query = _dataContext.Set<T>().AsQueryable();
 
@@ -106,13 +106,13 @@ namespace TournamentPlanner.Infrastructure
 
             if (filter != null)
             {
-                return (IEnumerable<TResult>)query.Where(filter).ToList();
+                return query.Where(filter).ToList();
             }
 
-            return (IEnumerable<TResult>)await query.ToListAsync();
+            return await query.ToListAsync();
         }
 
-        public async Task<IEnumerable<TResult>> GetAllAsync(IEnumerable<Func<T, bool>> filters, string[] includeProperties)
+        public async Task<IEnumerable<T>> GetAllAsync(IEnumerable<Func<T, bool>> filters, string[] includeProperties)
         {
             var query = _dataContext.Set<T>().AsQueryable();
 
@@ -132,13 +132,13 @@ namespace TournamentPlanner.Infrastructure
                 {
                     query = query.Where(filter).AsQueryable();
                 }
-                return (IEnumerable<TResult>)query.ToList();
+                return query.ToList();
             }
 
-            return (IEnumerable<TResult>)await query.ToListAsync();
+            return await query.ToListAsync();
         }
 
-        public async Task<IEnumerable<TResult>> GetAllAsync(IEnumerable<Func<T, bool>> filters)
+        public async Task<IEnumerable<T>> GetAllAsync(IEnumerable<Func<T, bool>> filters)
         {
             if (filters == null)
             {
@@ -152,15 +152,15 @@ namespace TournamentPlanner.Infrastructure
                 query = query.Where(filter).AsQueryable();
             }
 
-            return (IEnumerable<TResult>)query.ToList();
+            return query.ToList();
         }
 
-        public async Task<TResult?> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(int id)
         {
-            return (TResult?)await _dataContext.Set<T>().FindAsync(id);
+            return await _dataContext.Set<T>().FindAsync(id);
         }
 
-        public async Task<IEnumerable<TResult>?> GetByNameAsync(string? name)
+        public async Task<IEnumerable<T>> GetByNameAsync(string? name)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
             {
@@ -171,7 +171,7 @@ namespace TournamentPlanner.Infrastructure
 
             var query = _dataContext.Set<T>().Where(lamdaPredicateExpression);
 
-            return (IEnumerable<TResult>?)await query.ToListAsync();
+            return await query.ToListAsync();
         }
 
         public static Expression<Func<T, bool>> BuildNameMatchingExpression(string name)
@@ -192,7 +192,7 @@ namespace TournamentPlanner.Infrastructure
             }
 
             // Use Contains method (assuming Name is a string)
-            var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+            var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) })!; // a string will always have Contains method
             var nameConstant = Expression.Constant(name); // No case-insensitive conversion
             
             var containsCall = Expression.Call(nameProperty, containsMethod, nameConstant);
@@ -224,7 +224,7 @@ namespace TournamentPlanner.Infrastructure
             await _dataContext.SaveChangesAsync();
         }
 
-        public async Task<TResult> UpdateAsync(T obj)
+        public async Task<T> UpdateAsync(T obj)
         {
             if (obj == null)
             {
@@ -241,10 +241,10 @@ namespace TournamentPlanner.Infrastructure
                 _dataContext.Entry(obj).State = EntityState.Modified; // Set state explicitly (optional)
             }
             await Task.CompletedTask;
-            return (TResult)obj;
+            return obj;
         }
 
-        public Task<TResult> UpdateByIdAsync(int id, T obj)
+        public Task<T> UpdateByIdAsync(int id, T obj)
         {
             throw new NotImplementedException();
         }

@@ -12,11 +12,11 @@ namespace TournamentPlanner.Infrastructure
         public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<TournamentPlannerDataContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
-            services.AddScoped<IRepository<Player, Player>, Repository<Player, Player>>();
-            services.AddScoped<IRepository<Match, Match>, Repository<Match, Match>>();
-            services.AddScoped<IRepository<Tournament, Tournament>, Repository<Tournament,Tournament>>();
-            services.AddScoped<IRepository<Round, Round>, Repository<Round, Round>>();
-            services.AddScoped<IRepository<Admin, Admin>, Repository<Admin, Admin>>();
+            services.AddScoped<IRepository<Player>, Repository<Player>>();
+            services.AddScoped<IRepository<Match>, Repository<Match>>();
+            services.AddScoped<IRepository<Tournament>, Repository<Tournament>>();
+            services.AddScoped<IRepository<Round>, Repository<Round>>();
+            services.AddScoped<IRepository<Admin>, Repository<Admin>>();
         }
     }
 }
