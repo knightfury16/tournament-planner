@@ -6,11 +6,15 @@ namespace TournamentPlanner.Application.Request
 {
     public class GetAllPlayerRequest : IRequest<IEnumerable<PlayerDto>>
     {
-        public string? name { get; set; }
+        public string? Name { get; set; }
 
         public GetAllPlayerRequest(string? name)
         {
-            this.name = name;
+            Name = name;
+        }
+
+        public GetAllPlayerRequest()
+        {
         }
     }
 }
