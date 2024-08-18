@@ -3,7 +3,7 @@ namespace TournamentPlanner.Application.Common.Interfaces
 {
     public interface IRepository<T> where T : class
     {
-        Task<T> AddAsync(T obj);
+        Task<T> AddAsync(T entity);
         Task<IEnumerable<T>> GetAllAsync();
         Task<IEnumerable<T>> GetAllAsync(Func<T, bool> filter);
         Task<IEnumerable<T>> GetAllAsync(IEnumerable<Func<T, bool>> filters);

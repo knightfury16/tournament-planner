@@ -14,17 +14,15 @@ namespace TournamentPlanner.Infrastructure
             _dataContext = dataContext;
 
         }
-        public async Task<T> AddAsync(T obj)
+        public async Task<T> AddAsync(T entity)
         {
-            if (obj == null)
+            if (entity == null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(entity));
             }
-            _dataContext.Set<T>().Add(obj);
+            await _dataContext.Set<T>().AddAsync(entity);
 
-            await Task.CompletedTask;
-
-            return obj;
+            return entity;
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
