@@ -11,6 +11,7 @@
 - [ ] Integrate Role
 - [x] Migrate to CQRS
     - Use mediatr(created own implementation)
+- [] Refactore IRepository
 
 ## Change Requirements
 - [x] Add createdAt DateTime property to all entity.[Domain Change] 
