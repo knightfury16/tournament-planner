@@ -10,5 +10,7 @@ public class GetAllAdminRequest : IRequest<IEnumerable<AdminDto>>
     {
         Name = name;
     }
-
+    public GetAllAdminRequest()
+    {
+    }
 }
