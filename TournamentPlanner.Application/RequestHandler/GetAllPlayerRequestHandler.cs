@@ -22,7 +22,8 @@ namespace TournamentPlanner.Application.RequestHandler
             IEnumerable<Player> players;
             if (request.name != null)
             {
-                players = await playerRepository.GetAllAsync(player => player.Name.ToLowerInvariant().Contains(request.name));
+                
+                players = await playerRepository.GetAllAsync(player => player.Name.ToLower().Contains(request.name));
             }
             else
             {
