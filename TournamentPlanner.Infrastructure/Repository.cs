@@ -3,6 +3,7 @@ using System.Data;
 using Microsoft.EntityFrameworkCore;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.DataModeling;
+using TournamentPlanner.Domain.Entities;
 
 namespace TournamentPlanner.Infrastructure
 {
@@ -30,15 +31,18 @@ namespace TournamentPlanner.Infrastructure
             return await _dataContext.Set<T>().ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(Func<T, bool> filter)
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter)
         {
             if (filter == null)
             {
                 return await GetAllAsync();
             }
             var query = _dataContext.Set<T>().Where(filter);
+            // var query2 = _dataContext.Set<Player>().Where(i => i.Name == "pla");
+             Console.WriteLine(query.ToQueryString());
+            // Console.WriteLine(query2.ToQueryString());
 
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
         public async Task<IEnumerable<T>> GetAllAsync(string[] includeProperties)
