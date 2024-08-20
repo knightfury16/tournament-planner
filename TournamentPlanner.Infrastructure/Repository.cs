@@ -3,7 +3,6 @@ using System.Data;
 using Microsoft.EntityFrameworkCore;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.DataModeling;
-using TournamentPlanner.Domain.Entities;
 
 namespace TournamentPlanner.Infrastructure
 {
@@ -140,7 +139,7 @@ namespace TournamentPlanner.Infrastructure
             return await query.ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(IEnumerable<Func<T, bool>> filters)
+        public async Task<IEnumerable<T>> GetAllAsync(IEnumerable<Expression<Func<T, bool>>> filters)
         {
             if (filters == null)
             {
@@ -151,10 +150,10 @@ namespace TournamentPlanner.Infrastructure
 
             foreach (var filter in filters)
             {
-                query = query.Where(filter).AsQueryable();
+                query = query.Where(filter);
             }
 
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
         public async Task<T?> GetByIdAsync(int id)
