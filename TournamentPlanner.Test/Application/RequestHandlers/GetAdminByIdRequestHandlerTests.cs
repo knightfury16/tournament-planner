@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using AutoMapper;
 using Moq;
 using TournamentPlanner.Application;
@@ -34,7 +31,7 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
             var expectedAdminDto = new AdminDto { Id = adminId, Name = "Test Admin", Email = "Test@gmail.com", PhoneNumber = "12345" };
 
             _mockRepository.Setup(r => r.GetAllAsync(
-                It.IsAny<Func<Admin, bool>>(),
+                It.IsAny<Expression<Func<Admin, bool>>>(),
                 It.IsAny<string[]>()))
                 .ReturnsAsync(new List<Admin> { admin });
             _mockMapper.Setup(m => m.Map<AdminDto>(admin)).Returns(expectedAdminDto);
@@ -56,7 +53,7 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
             var request = new GetAdminByIdRequest(adminId);
 
             _mockRepository.Setup(r => r.GetAllAsync(
-                It.IsAny<Func<Admin, bool>>(),
+                It.IsAny<Expression<Func<Admin, bool>>>(),
                 It.IsAny<string[]>()))
                 .ReturnsAsync(new List<Admin>());
 
