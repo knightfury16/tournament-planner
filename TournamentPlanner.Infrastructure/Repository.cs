@@ -37,9 +37,6 @@ namespace TournamentPlanner.Infrastructure
                 return await GetAllAsync();
             }
             var query = _dataContext.Set<T>().Where(filter);
-            // var query2 = _dataContext.Set<Player>().Where(i => i.Name == "pla");
-             Console.WriteLine(query.ToQueryString());
-            // Console.WriteLine(query2.ToQueryString());
 
             return await query.ToListAsync();
         }
@@ -64,34 +61,8 @@ namespace TournamentPlanner.Infrastructure
             }
             return await query.ToListAsync();
         }
-        private static Expression<Func<T, object>> BuildTheIncludeExpression(string property)
-        {
-            // Construct an expression for the include property
-            // it select parameter as x of Object Player
-            var parameter = Expression.Parameter(typeof(T), "x"); // x here is just a random name
 
-            // Split the property string by dots to handle nested properties
-            var propertyNames = property.Split('.');
-
-            // for example x => x.Tournament
-            //propertyExpression type Tournament
-            //var propertyExpression = Expression.Property(parameter, property);
-
-            Expression propertyExpression = parameter;
-
-            // Iterate through each property name to build the nested property expression
-            foreach (var propertyName in propertyNames)
-            {
-                propertyExpression = Expression.Property(propertyExpression, propertyName);
-            }
-
-
-            //TODO:: I dont understand this, need no know more about Expression
-            Expression<Func<T, object>> lambdaExpression = Expression.Lambda<Func<T, object>>(propertyExpression, parameter);
-            return lambdaExpression;
-        }
-
-        public async Task<IEnumerable<T>> GetAllAsync(Func<T, bool> filter, string[] includeProperties)
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter, string[] includeProperties)
         {
             var query = _dataContext.Set<T>().AsQueryable();
 
@@ -99,21 +70,21 @@ namespace TournamentPlanner.Infrastructure
             {
                 foreach (var property in includeProperties)
                 {
-                    Expression<Func<T, object>> lambdaExpression = BuildTheIncludeExpression(property);
+                    Expression<Func<T, object>> includeLambdaExpression = BuildTheIncludeExpression(property);
 
-                    query = query.Include(lambdaExpression);
+                    query = query.Include(includeLambdaExpression);
                 }
             }
 
             if (filter != null)
             {
-                return query.Where(filter).ToList();
+                query = query.Where(filter);
             }
 
             return await query.ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(IEnumerable<Func<T, bool>> filters, string[] includeProperties)
+        public async Task<IEnumerable<T>> GetAllAsync(IEnumerable<Expression<Func<T, bool>>> filters, string[] includeProperties)
         {
             var query = _dataContext.Set<T>().AsQueryable();
 
@@ -131,9 +102,8 @@ namespace TournamentPlanner.Infrastructure
             {
                 foreach (var filter in filters)
                 {
-                    query = query.Where(filter).AsQueryable();
+                    query = query.Where(filter);
                 }
-                return query.ToList();
             }
 
             return await query.ToListAsync();
@@ -248,6 +218,33 @@ namespace TournamentPlanner.Infrastructure
         public Task<T> UpdateByIdAsync(int id, T obj)
         {
             throw new NotImplementedException();
+        }
+
+        private static Expression<Func<T, object>> BuildTheIncludeExpression(string property)
+        {
+            // Construct an expression for the include property
+            // it select parameter as x of Object Player
+            var parameter = Expression.Parameter(typeof(T), "x"); // x here is just a random name
+
+            // Split the property string by dots to handle nested properties
+            var propertyNames = property.Split('.');
+
+            // for example x => x.Tournament
+            //propertyExpression type Tournament
+            //var propertyExpression = Expression.Property(parameter, property);
+
+            Expression propertyExpression = parameter;
+
+            // Iterate through each property name to build the nested property expression
+            foreach (var propertyName in propertyNames)
+            {
+                propertyExpression = Expression.Property(propertyExpression, propertyName);
+            }
+
+
+            //TODO:: I dont understand this, need no know more about Expression
+            Expression<Func<T, object>> lambdaExpression = Expression.Lambda<Func<T, object>>(propertyExpression, parameter);
+            return lambdaExpression;
         }
     }
 }
