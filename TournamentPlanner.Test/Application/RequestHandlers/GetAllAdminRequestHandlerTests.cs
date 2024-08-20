@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using AutoMapper;
 using Moq;
 using TournamentPlanner.Application;
@@ -62,7 +63,7 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
                 new AdminDto { Id = 1, Name = "Admin 1" , Email = "Test1@gmail.com", PhoneNumber = "12345" }
             };
 
-            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<Func<Admin, bool>>()))
+            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Admin, bool>>>()))
                 .ReturnsAsync(admins);
             _mockMapper.Setup(m => m.Map<IEnumerable<AdminDto>>(admins)).Returns(expectedAdminDtos);
 
