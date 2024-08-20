@@ -6,6 +6,10 @@ using TournamentPlanner.DataModeling;
 
 namespace TournamentPlanner.Infrastructure
 {
+    /// <summary>
+    /// Generic repository class for performing CRUD operations on entities of type T.
+    /// </summary>
+    /// <typeparam name="T">The entity type.</typeparam>
     public class Repository<T> : IRepository<T> where T : class
     {
         private readonly TournamentPlannerDataContext _dataContext;
@@ -165,7 +169,7 @@ namespace TournamentPlanner.Infrastructure
             // Use Contains method (assuming Name is a string)
             var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) })!; // a string will always have Contains method
             var nameConstant = Expression.Constant(name); // No case-insensitive conversion
-            
+
             var containsCall = Expression.Call(nameProperty, containsMethod, nameConstant);
 
             // var comparison = Expression.Equal(nameProperty, nameConstant);
