@@ -23,7 +23,7 @@ namespace TournamentPlanner.Application.RequestHandler
             if (request.Name != null)
             {
                 
-                players = await playerRepository.GetAllAsync(player => player.Name.ToLower().Contains(request.name));
+                players = await playerRepository.GetAllAsync(player => player.Name.ToLower().Contains(request.Name));
             }
             else
             {

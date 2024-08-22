@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Moq;
@@ -16,13 +17,13 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
 
     {
         private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IRepository<Player, Player>> _mockRepository;
+        private readonly Mock<IRepository<Player>> _mockRepository;
         private readonly GetPlayerByIdRequestHandler _handler;
 
         public GetPlayerByIdRequestHandlerTests()
         {
             _mockMapper = new Mock<IMapper>();
-            _mockRepository = new Mock<IRepository<Player, Player>>();
+            _mockRepository = new Mock<IRepository<Player>>();
             _handler = new GetPlayerByIdRequestHandler(_mockRepository.Object, _mockMapper.Object);
         }
 
@@ -36,7 +37,7 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
             var expectedPlayerDto = new FullPlayerDto { Id = playerId, Name = "Test Player", Weight = 78, Age = 23 };
 
             _mockRepository.Setup(r => r.GetAllAsync(
-                It.IsAny<Func<Player, bool>>(),
+                It.IsAny<Expression<Func<Player, bool>>>(),
                 It.IsAny<string[]>()))
                 .ReturnsAsync(new List<Player> { player });
             _mockMapper.Setup(m => m.Map<FullPlayerDto>(player)).Returns(expectedPlayerDto);
@@ -58,7 +59,7 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
             var request = new GetPlayerByIdRequest(playerId);
 
             _mockRepository.Setup(r => r.GetAllAsync(
-                It.IsAny<Func<Player, bool>>(),
+                It.IsAny<Expression<Func<Player, bool>>>(),
                 It.IsAny<string[]>()))
                 .ReturnsAsync(new List<Player>());
 

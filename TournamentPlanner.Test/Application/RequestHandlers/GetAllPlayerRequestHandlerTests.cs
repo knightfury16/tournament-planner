@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using AutoMapper;
 using Moq;
 using TournamentPlanner.Application.Common.Interfaces;
@@ -12,13 +13,13 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
     {
 
         private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IRepository<Player, Player>> _mockRepository;
+        private readonly Mock<IRepository<Player>> _mockRepository;
         private readonly GetAllPlayerRequestHandler _handler;
 
         public GetAllPlayerRequestHandlerTests()
         {
             _mockMapper = new Mock<IMapper>();
-            _mockRepository = new Mock<IRepository<Player, Player>>();
+            _mockRepository = new Mock<IRepository<Player>>();
             _handler = new GetAllPlayerRequestHandler(_mockRepository.Object, _mockMapper.Object);
         }
 
@@ -65,7 +66,7 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
             };
 
 
-            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<Func<Player, bool>>()))
+            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Player, bool>>>()))
                 .ReturnsAsync(players);
             _mockMapper.Setup(m => m.Map<IEnumerable<PlayerDto>>(players)).Returns(expectedPlayerDtos);
 

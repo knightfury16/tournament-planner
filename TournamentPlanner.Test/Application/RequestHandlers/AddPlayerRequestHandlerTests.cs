@@ -16,14 +16,14 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
     {
 
         private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IRepository<Player, Player>> _mockRepository;
+        private readonly Mock<IRepository<Player>> _mockRepository;
         private readonly AddPlayerRequestHandler _handler;
 
 
         public AddPlayerRequestHandlerTests()
         {
             _mockMapper = new Mock<IMapper>();
-            _mockRepository = new Mock<IRepository<Player, Player>>();
+            _mockRepository = new Mock<IRepository<Player>>();
             _handler = new AddPlayerRequestHandler(_mockRepository.Object, _mockMapper.Object);
 
         }
