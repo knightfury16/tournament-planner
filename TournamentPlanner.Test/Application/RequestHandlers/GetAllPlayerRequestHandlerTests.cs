@@ -80,6 +80,20 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
         }
 
         [Fact]
+        public void Handle_GetAllPlayerRequest_ConvertNameToLower()
+        {
+            // Arrange
+            string testName = "TesT";
+            var request = new GetAllPlayerRequest { Name = testName };
+
+            // Act
+
+            // Assert
+            Assert.Equal(testName.ToLower(), request.Name);
+        }
+
+
+        [Fact]
         public async Task Handle_NoPlayerFound_ReturnsEmptyList()
         {
             // Arrange
