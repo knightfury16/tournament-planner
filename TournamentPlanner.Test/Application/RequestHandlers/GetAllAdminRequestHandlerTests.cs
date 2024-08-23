@@ -50,6 +50,20 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
         }
 
         [Fact]
+        public void Handle_GetAllAdminRequest_ConvertNameToLower()
+        {
+            // Arrange
+            var testName = "TesT";
+            var request = new GetAllAdminRequest { Name = testName };
+
+            // Act
+
+            // Assert
+            Assert.Equal(testName.ToLower(), request.Name);
+        }
+
+
+        [Fact]
         public async Task Handle_WithNameFilter_ReturnsFilteredAdmins()
         {
             // Arrange
