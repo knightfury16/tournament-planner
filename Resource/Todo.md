@@ -4,14 +4,14 @@
 - [ ] Write architecture test
     - use nuget NetArchTest.Rules
 - [ ] Write Integration test
-- [ ] Write Unit test for all the useCases
+- [x] Write Unit test for all the useCases
 - [x] Add automapper
 - [ ] Add constrain on reschedule match
 - [x] Do the exception properly
 - [ ] Integrate Role
 - [x] Migrate to CQRS
     - Use mediatr(created own implementation)
-- [] Refactore IRepository
+- [x] Refactore IRepository
 
 ## Change Requirements
 - [x] Add createdAt DateTime property to all entity.[Domain Change] 
