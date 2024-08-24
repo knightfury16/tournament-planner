@@ -17,7 +17,7 @@ namespace TournamentPlanner.Application.RequestHandler
             this.playerRepository = playerRepository;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<PlayerDto>?> Handle(GetAllPlayerRequest request, CancellationToken cancellationToken1 = default)
+        public async Task<IEnumerable<PlayerDto>?> Handle(GetAllPlayerRequest request, CancellationToken cancellationToken = default)
         {
             IEnumerable<Player> players;
             if (request.Name != null)

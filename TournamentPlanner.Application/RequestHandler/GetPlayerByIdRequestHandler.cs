@@ -17,7 +17,7 @@ namespace TournamentPlanner.Application.RequestHandler
             _playerRepository = playerRepository;
             _mapper = mapper;
         }
-        public async Task<FullPlayerDto?> Handle(GetPlayerByIdRequest request, CancellationToken cancellationToken1 = default)
+        public async Task<FullPlayerDto?> Handle(GetPlayerByIdRequest request, CancellationToken cancellationToken = default)
         {
 
             var player = await _playerRepository.GetAllAsync(player => player.Id == request.id, ["Tournaments"]);

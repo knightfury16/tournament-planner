@@ -17,7 +17,7 @@ namespace TournamentPlanner.Application.RequestHandler
             _playerRepository = playerRepository;
             _mapper = mapper;
         }
-        public async Task<PlayerDto?> Handle(AddPlayerRequest request, CancellationToken cancellationToken1 = default)
+        public async Task<PlayerDto?> Handle(AddPlayerRequest request, CancellationToken cancellationToken = default)
         {
             if(request == null){
                 throw new ArgumentNullException(nameof(request));

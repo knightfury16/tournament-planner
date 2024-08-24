@@ -17,7 +17,7 @@ public class GetAdminByIdRequestHandler: IRequestHandler<GetAdminByIdRequest, Ad
         _adminRepository = adminRepository;
         _mapper = mapper;
     }
-    public async Task<AdminDto?> Handle(GetAdminByIdRequest request, CancellationToken cancellationToken1 = default)
+    public async Task<AdminDto?> Handle(GetAdminByIdRequest request, CancellationToken cancellationToken = default)
     {
 
         var admin = await _adminRepository.GetAllAsync(a => a.Id == request.id, ["CreatedTournament"]);

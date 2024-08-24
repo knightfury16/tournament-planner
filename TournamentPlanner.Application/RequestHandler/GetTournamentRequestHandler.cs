@@ -19,7 +19,7 @@ public class GetTournamentRequestHandler : IRequestHandler<GetTournamentRequest,
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<TournamentDto>?> Handle(GetTournamentRequest request, CancellationToken cancellationToken1 = default)
+    public async Task<IEnumerable<TournamentDto>?> Handle(GetTournamentRequest request, CancellationToken cancellationToken = default)
     {
         var filters = new List<Expression<Func<Tournament, bool>>>();
 

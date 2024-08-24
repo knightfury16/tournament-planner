@@ -16,7 +16,7 @@ public class AddAdminRequestHandler : IRequestHandler<AddAdminRequest, AdminDto>
         _mapper = mapper;
         _adminRepository = adminRepository;
     }
-    public async Task<AdminDto?> Handle(AddAdminRequest request, CancellationToken cancellationToken1 = default)
+    public async Task<AdminDto?> Handle(AddAdminRequest request, CancellationToken cancellationToken = default)
     {
         if(request == null){
             throw new ArgumentNullException(nameof(request));

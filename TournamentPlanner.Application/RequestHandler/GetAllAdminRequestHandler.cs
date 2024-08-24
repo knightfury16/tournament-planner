@@ -17,7 +17,7 @@ public class GetAllAdminRequestHandler : IRequestHandler<GetAllAdminRequest, IEn
         _adminRepository = adminRepository;
         _mapper = mapper;
     }
-    public async Task<IEnumerable<AdminDto>?> Handle(GetAllAdminRequest request, CancellationToken cancellationToken1 = default)
+    public async Task<IEnumerable<AdminDto>?> Handle(GetAllAdminRequest request, CancellationToken cancellationToken = default)
     {
         IEnumerable<Admin> admins;
         if (request.Name != null)
