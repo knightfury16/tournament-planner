@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace TournamentPlanner.Mediator
+namespace TournamentPlanner.Mediator;
+public interface IRequest<TResponse>
 {
-    public interface IRequest<TResponse>
-    {
 
-    }
 }
