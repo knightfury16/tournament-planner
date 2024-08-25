@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
 
 namespace TournamentPlanner.Application.DTOs
@@ -14,7 +13,7 @@ namespace TournamentPlanner.Application.DTOs
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public TournamentStatus? Status { get; set; }
-        public GameType? GameType { get; set; }
+        public GameTypeDto? GameTypeDto { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdateAt { get; set; }
