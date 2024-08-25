@@ -29,7 +29,7 @@ namespace TournamentPlanner.Tests.Application
             // Arrange
             var request = new GetTournamentRequest { SearchCategory = TournamentSearchCategory.All };
             var tournaments = GetSampleTournaments();
-            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>()))
+            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>(), It.IsAny<string[]>()))
                 .ReturnsAsync(tournaments);
             _mockMapper.Setup(m => m.Map<IEnumerable<TournamentDto>>(It.IsAny<IEnumerable<Tournament>>()))
                 .Returns((IEnumerable<Tournament> src) => src.Select(t => new TournamentDto { Id = t.Id, Name = t.Name }));
@@ -49,7 +49,7 @@ namespace TournamentPlanner.Tests.Application
             var request = new GetTournamentRequest { Name = "test", SearchCategory = TournamentSearchCategory.All };
             var tournaments = GetSampleTournaments().Where(t => t.Name.ToLower().Contains("test")).ToList();
 
-            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>()))
+            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>(), It.IsAny<string[]>()))
                 .ReturnsAsync(tournaments);
             _mockMapper.Setup(m => m.Map<IEnumerable<TournamentDto>>(It.IsAny<IEnumerable<Tournament>>()))
                 .Returns((IEnumerable<Tournament> src) => src.Select(t => new TournamentDto { Id = t.Id, Name = t.Name }));
@@ -82,7 +82,7 @@ namespace TournamentPlanner.Tests.Application
             // Arrange
             var request = new GetTournamentRequest { Status = TournamentStatus.Ongoing, SearchCategory = TournamentSearchCategory.All };
             var tournaments = GetSampleTournaments().Where(t => t.Status == TournamentStatus.Ongoing).ToList();
-            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>()))
+            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>(), It.IsAny<string[]>()))
                 .ReturnsAsync(tournaments);
             _mockMapper.Setup(m => m.Map<IEnumerable<TournamentDto>>(It.IsAny<IEnumerable<Tournament>>()))
                 .Returns((IEnumerable<Tournament> src) => src.Select(t => new TournamentDto { Id = t.Id, Name = t.Name, Status = t.Status }));
@@ -101,17 +101,29 @@ namespace TournamentPlanner.Tests.Application
             // Arrange
             var request = new GetTournamentRequest { GameTypeSupported = GameTypeSupported.Chess, SearchCategory = TournamentSearchCategory.All };
             var tournaments = GetSampleTournaments().Where(t => t.GameType.Name == GameTypeSupported.Chess.ToString()).ToList();
-            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>()))
+            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>(), It.IsAny<string[]>()))
                 .ReturnsAsync(tournaments);
+
+            _mockMapper.Setup(m => m.Map<GameTypeDto>(It.IsAny<GameType>()))
+             .Returns((GameType g) => new GameTypeDto
+             {
+                 Name = g.Name
+             });
+
             _mockMapper.Setup(m => m.Map<IEnumerable<TournamentDto>>(It.IsAny<IEnumerable<Tournament>>()))
-                .Returns((IEnumerable<Tournament> src) => src.Select(t => new TournamentDto { Id = t.Id, Name = t.Name, GameType = t.GameType }));
+                .Returns((IEnumerable<Tournament> src) => src.Select(t => new TournamentDto
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    GameTypeDto = _mockMapper.Object.Map<GameTypeDto>(t.GameType)
+                }));
 
             // Act
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
             Assert.NotNull(result);
-            Assert.All(result, t => Assert.Equal("Chess", t.GameType?.Name));
+            Assert.All(result, t => Assert.Equal("Chess", t.GameTypeDto?.Name));
         }
 
         [Fact]
@@ -122,7 +134,7 @@ namespace TournamentPlanner.Tests.Application
             var endDate = startDate.AddDays(7);
             var request = new GetTournamentRequest { StartDate = startDate, EndDate = endDate, SearchCategory = TournamentSearchCategory.All };
             var tournaments = GetSampleTournaments().Where(t => t.StartDate >= startDate && t.EndDate <= endDate).ToList();
-            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>()))
+            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>(), It.IsAny<string[]>()))
                 .ReturnsAsync(tournaments);
             _mockMapper.Setup(m => m.Map<IEnumerable<TournamentDto>>(It.IsAny<IEnumerable<Tournament>>()))
                 .Returns((IEnumerable<Tournament> src) => src.Select(t => new TournamentDto { Id = t.Id, Name = t.Name, StartDate = t.StartDate, EndDate = t.EndDate }));
@@ -142,7 +154,7 @@ namespace TournamentPlanner.Tests.Application
             var request = new GetTournamentRequest { SearchCategory = TournamentSearchCategory.Recent };
             var today = DateTime.UtcNow.Date;
             var tournaments = GetSampleTournaments().Where(t => t.EndDate <= today && t.EndDate >= today.AddDays(-7)).ToList();
-            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>()))
+            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>(), It.IsAny<string[]>()))
                 .ReturnsAsync(tournaments);
             _mockMapper.Setup(m => m.Map<IEnumerable<TournamentDto>>(It.IsAny<IEnumerable<Tournament>>()))
                 .Returns((IEnumerable<Tournament> src) => src.Select(t => new TournamentDto { Id = t.Id, Name = t.Name, EndDate = t.EndDate }));
@@ -164,7 +176,7 @@ namespace TournamentPlanner.Tests.Application
             var weekStart = today.AddDays(-(int)today.DayOfWeek);
             var weekEnd = weekStart.AddDays(7);
             var tournaments = GetSampleTournaments().Where(t => t.StartDate >= weekStart && t.StartDate < weekEnd).ToList();
-            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>()))
+            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>(), It.IsAny<string[]>()))
                 .ReturnsAsync(tournaments);
             _mockMapper.Setup(m => m.Map<IEnumerable<TournamentDto>>(It.IsAny<IEnumerable<Tournament>>()))
                 .Returns((IEnumerable<Tournament> src) => src.Select(t => new TournamentDto { Id = t.Id, Name = t.Name, StartDate = t.StartDate }));
@@ -184,7 +196,7 @@ namespace TournamentPlanner.Tests.Application
             var request = new GetTournamentRequest { SearchCategory = TournamentSearchCategory.Upcoming };
             var today = DateTime.UtcNow.Date;
             var tournaments = GetSampleTournaments().Where(t => t.StartDate > today).ToList();
-            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>()))
+            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>(), It.IsAny<string[]>()))
                 .ReturnsAsync(tournaments);
             _mockMapper.Setup(m => m.Map<IEnumerable<TournamentDto>>(It.IsAny<IEnumerable<Tournament>>()))
                 .Returns((IEnumerable<Tournament> src) => src.Select(t => new TournamentDto { Id = t.Id, Name = t.Name, StartDate = t.StartDate }));
@@ -203,7 +215,7 @@ namespace TournamentPlanner.Tests.Application
             // Arrange
             var request = new GetTournamentRequest { SearchCategory = TournamentSearchCategory.All };
             var tournaments = GetSampleTournaments();
-            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>()))
+            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>(), It.IsAny<string[]>()))
                 .ReturnsAsync(tournaments);
             _mockMapper.Setup(m => m.Map<IEnumerable<TournamentDto>>(It.IsAny<IEnumerable<Tournament>>()))
                 .Returns((IEnumerable<Tournament> src) => src.Select(t => new TournamentDto { Id = t.Id, Name = t.Name }));
@@ -236,15 +248,22 @@ namespace TournamentPlanner.Tests.Application
                 t.StartDate >= request.StartDate &&
                 t.EndDate <= request.EndDate
             ).ToList();
-            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>()))
+            _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>(), It.IsAny<string[]>()))
                 .ReturnsAsync(tournaments);
+
+            _mockMapper.Setup(m => m.Map<GameTypeDto>(It.IsAny<GameType>()))
+             .Returns((GameType g) => new GameTypeDto
+             {
+                 Name = g.Name
+             });
+             
             _mockMapper.Setup(m => m.Map<IEnumerable<TournamentDto>>(It.IsAny<IEnumerable<Tournament>>()))
                 .Returns((IEnumerable<Tournament> src) => src.Select(t => new TournamentDto
                 {
                     Id = t.Id,
                     Name = t.Name,
                     Status = t.Status,
-                    GameType = t.GameType,
+                    GameTypeDto = _mockMapper.Object.Map<GameTypeDto>(t.GameType), // map GameType to GameTypeDto 
                     StartDate = t.StartDate,
                     EndDate = t.EndDate
                 }));
@@ -258,7 +277,7 @@ namespace TournamentPlanner.Tests.Application
             {
                 Assert.Contains("test", t.Name.ToLower());
                 Assert.Equal(TournamentStatus.Ongoing, t.Status);
-                Assert.Equal("Chess", t.GameType?.Name);
+                Assert.Equal("Chess", t.GameTypeDto?.Name);
                 Assert.True(t.StartDate >= request.StartDate);
                 Assert.True(t.EndDate <= request.EndDate);
             });
