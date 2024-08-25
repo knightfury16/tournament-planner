@@ -52,7 +52,7 @@ public class GetTournamentRequestHandler : IRequestHandler<GetTournamentRequest,
             filters.Add(GetSearchCategoryFilter(request.SearchCategory));
         }
 
-        var tournaments = await _tournamentRepository.GetAllAsync(filters);
+        var tournaments = await _tournamentRepository.GetAllAsync(filters,[nameof(Tournament.GameType)]);
 
         return _mapper.Map<IEnumerable<TournamentDto>>(tournaments);
 
