@@ -40,6 +40,6 @@ public class Tournament : BaseEntity
     public TournamentStatus? Status { get; set; } // Default value is Draft
 
     // Added to support search functionality
-    public bool IsSearchable => Status != TournamentStatus.Draft;
+    public bool IsSearchable => Status != TournamentStatus.Draft; //TODO: If not searchable dont include it in the query
 
 }

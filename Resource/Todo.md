@@ -29,22 +29,37 @@
 ## Tournaments
 
 - [ ] List out all the tournaments
-    - [x] List(default view) out all the tournament that is **ongoing** and are **scheduled** in the future from **now**
+    - [ ] There will be **three** tab in the home screeen. Showing **Recent**,**This Week**(default),**Upcoming**
     - [ ] Show an option if the tournament is booked out or player can register for the tournament.
     - [ ] If not booked out then a valid **registered player** can **register** for the tournament going thorugh the necessary process.
     - [x] Sort it by createdDate field
-    - [ ] Keep an option to show the **past** tournaments already happened. Maybe a toggle switch.
-    - [ ] User can search through the tournament with name parameter and date all through the records that is **past** and **future** tournament.
+    - [ ] User can search through the tournament with via the advance search option with the following params:
+        - Tournament name
+        - Start date and End date
+        - Tournament Status 
+        - Game Type (*eg. Table Tennis, chess*)
+        - Search Category (*eg.Recent, Upcoming*)
 - [ ] Create tournament
     - [ ] **Only Admin** can create tournament. If you are not an admin don't show the *Add Tournament* option.
     - [ ] Must requirement for a tournamnet are the following field:
-     - Name
-     - Start Date
-     - End Date
-     - Game type : Table Tennis, Chess, Football
-    - [ ] During tournament creation **Name** field and **Start Date** is must required. Right now its configured only for **Name** field to be required.
-    - [ ] Once a tournament has been created, sent out an email notification to all the registered players interested in that game. **Advance**
-    - [ ] Maybe later, Add some categorization (on sports basis) to the tournament, and sent notification to users only interested in those particular  category of sports.
+        - Tournament Name
+        - Start Date 
+        - End Date
+        - Game Type (*Table Tennis*)
+        - Game Type (*Table Tennis*)
+        - Tournament Status
+    - [ ] Optional requirement for tournament creation:
+        - Registration Last Date
+        - MaxParticipant
+        - Venue
+        - Registration Fee
+        - Minimum Age of Registration
+        - Winner Per group
+        - Knockout Start number
+        - Participant Resolution Strategy
+        - Tournament Type
+    - [ ] (**Advande**) Once a tournament has been created, sent out an email notification to all the registered players interested in that game. 
+    - [ ] (**Advande**) Maybe later, Add some categorization (on sports basis) to the tournament, and sent notification to users only interested in those particular  category of sports.
 
 ## Matches
 
