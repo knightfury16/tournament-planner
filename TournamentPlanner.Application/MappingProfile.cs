@@ -11,7 +11,9 @@ namespace TournamentPlanner.Application
             CreateMap<Player, PlayerDto>().ReverseMap();
             CreateMap<Player, FullPlayerDto>().ReverseMap();
             CreateMap<GameType, GameTypeDto>().ReverseMap();
-            CreateMap<Tournament, TournamentDto>().ReverseMap();
+            CreateMap<Tournament, TournamentDto>()
+            .ForMember(dest => dest.GameTypeDto , opt => opt.MapFrom(src => src.GameType))
+            .ReverseMap();
             CreateMap<Player, AddPlayerDto>().ReverseMap();
             CreateMap<Admin, AdminDto>().ReverseMap();
             CreateMap<Admin, AddAdminDto>().ReverseMap();
