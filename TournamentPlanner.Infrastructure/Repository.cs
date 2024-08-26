@@ -93,7 +93,7 @@ namespace TournamentPlanner.Infrastructure
                 }
             }
 
-            if (filters != null && filters.Count() > 1)
+            if (filters != null)
             {
                 foreach (var filter in filters)
                 {
@@ -113,9 +113,12 @@ namespace TournamentPlanner.Infrastructure
 
             var query = _dataContext.Set<T>().AsQueryable();
 
-            foreach (var filter in filters)
+            if(filters != null)
             {
-                query = query.Where(filter);
+                foreach (var filter in filters)
+                {
+                    query = query.Where(filter);
+                }
             }
 
             return await query.ToListAsync();
