@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TournamentPlanner.Api.Models;
 using TournamentPlanner.Application;
-using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Application.Enums;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Mediator;
@@ -66,6 +65,12 @@ namespace TournamentPlanner.Api.Controllers
             };
 
             var tournaments = await _mediator.Send(request);
+
+            if (tournaments == null)
+            {
+                return BadRequest("Invalid search parameters or no tournaments found.");
+            }
+
             return Ok(tournaments);
         }
     }
