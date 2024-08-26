@@ -5,7 +5,7 @@ using TournamentPlanner.Domain.Enum;
 
 namespace TournamentPlanner.Api.Models
 {
-    [DataRangeValidator("StartDate", "EndDate")]
+    [DateRangeValidator("StartDate", "EndDate")]
     public class TournamentSearchParams
     {
         [FromQuery(Name = "name")]

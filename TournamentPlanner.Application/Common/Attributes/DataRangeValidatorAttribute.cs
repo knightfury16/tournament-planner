@@ -2,17 +2,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TournamentPlanner.Application.Common.Attributes;
 
-public class DataRangeValidatorAttribute : ValidationAttribute
+public class DateRangeValidatorAttribute : ValidationAttribute
 {
     private readonly string _startDatePropertyName;
     private readonly string _endDatePropertyName;
 
-    public DataRangeValidatorAttribute(string startDatePropertyName, string endDatePropertyName)
+    public DateRangeValidatorAttribute(string startDatePropertyName, string endDatePropertyName)
     {
         _startDatePropertyName = startDatePropertyName;
         _endDatePropertyName = endDatePropertyName;
     }
-    public DataRangeValidatorAttribute()
+    public DateRangeValidatorAttribute()
     {
         _startDatePropertyName = "StartDate";
         _endDatePropertyName = "EndDate";
