@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using TournamentPlanner.Application.Common.Attributes;
 using TournamentPlanner.Application.Enums;
 using TournamentPlanner.Domain.Enum;
 
 namespace TournamentPlanner.Api.Models
 {
+    [DataRangeValidator("StartDate", "EndDate")]
     public class TournamentSearchParams
     {
         [FromQuery(Name = "name")]
@@ -24,4 +26,5 @@ namespace TournamentPlanner.Api.Models
         [FromQuery(Name = "endDate")]
         public DateTime? EndDate { get; set; }
     }
+
 }
