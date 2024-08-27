@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TournamentPlanner.Application.Common.Attributes;
 
+[AttributeUsage(AttributeTargets.Class)] // Only allowed in class, not on field because StartDate and EndDate are two different field that must be in class
 public class DateRangeValidatorAttribute : ValidationAttribute
 {
     private readonly string _startDatePropertyName;
