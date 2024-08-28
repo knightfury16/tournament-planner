@@ -15,8 +15,22 @@ public class AddTournamentRequestHandler : IRequestHandler<AddTournamentRequest,
         _mapper = mapper;
         _tournamentRepository = tournamentRepository;
     }
-    public Task<TournamentDto?> Handle(AddTournamentRequest request, CancellationToken cancellationToken = default)
+    public async Task<TournamentDto?> Handle(AddTournamentRequest request, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        //TODO: Only Admin create Tournament, so dynamically find Admin from token
+        Admin testAdmin = new Admin() //Id = 4
+        {
+            Name = "Test creator",
+            Email = "test@gmail.com",
+            PhoneNumber = "12345"
+        };
+
+        var tournament = _mapper.Map<Tournament>(request.AddTournamentDto);
+        tournament.AdminId = 4;
+        var addedTorunament = await _tournamentRepository.AddAsync(tournament);
+
+        await _tournamentRepository.SaveAsync();
+
+        return _mapper.Map<TournamentDto>(addedTorunament);
     }
 }
