@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TournamentPlanner.Api.Models;
 using TournamentPlanner.Application;
+using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Application.Enums;
+using TournamentPlanner.Application.Request;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Mediator;
 
@@ -18,20 +20,27 @@ namespace TournamentPlanner.Api.Controllers
             _mediator = mediator;
         }
 
-        // [HttpPost]
-        // [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Tournament))]
-        // [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        // public async Task<IActionResult> AddTournament([FromBody] TournamentDto tournamentDto)
-        // {
-        //     if (tournamentDto == null)
-        //     {
-        //         return BadRequest("Tournament information needed");
-        //     }
-        //     var tour = await _mediator.AddTournamnet(tournamentDto);
-        //     return CreatedAtAction(nameof(GetTournamentById), new { id = tour.Id }, tour);
-        // }
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Tournament))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddTournament([FromBody] AddTournamentDto addTournamentDto)
+        {
+            if (addTournamentDto == null)
+            {
+                return BadRequest("Tournament information needed");
+            }
+            var addTournamentRequest = new AddTournamentRequest(addTournamentDto);
 
-        // [HttpGet("{id}", Name = nameof(GetTournamentById))]
+            var tournamentDto = await _mediator.Send(addTournamentRequest);
+
+            if (tournamentDto == null){
+                return BadRequest("Tournament creation failed");
+            }
+
+            return Ok(tournamentDto);
+        }
+
+        // // [HttpGet("{id}", Name = nameof(GetTournamentById))]
         // [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TournamentResponseDto))]
         // [ProducesResponseType(StatusCodes.Status400BadRequest)]
         // public async Task<IActionResult> GetTournamentById(int id)
