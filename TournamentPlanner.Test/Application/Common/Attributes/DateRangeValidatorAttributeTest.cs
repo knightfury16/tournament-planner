@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using TournamentPlanner.Application.Common.Attributes;
 
-namespace TournamentPlanner.Test.Application.Validators
+namespace TournamentPlanner.Test.Application.Common.Attributes
 {
     public class DateRangeValidatorTest
     {
