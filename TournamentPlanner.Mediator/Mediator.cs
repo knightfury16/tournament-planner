@@ -16,6 +16,7 @@ public class Mediator : IMediator
             throw new InvalidOperationException($"No handler found for request of type {request.GetType()}");
         }
 
-        return await (Task<TResponse>)handlerType.GetMethod("Handle")!.Invoke(handler, [request, cancellationToken])!;
+        var handleMethodName = nameof(IRequestHandler<IRequest<TResponse>, TResponse>.Handle); // to avoid the using of string
+        return await (Task<TResponse>)handlerType.GetMethod(handleMethodName)!.Invoke(handler, [request, cancellationToken])!;
     }
 }
