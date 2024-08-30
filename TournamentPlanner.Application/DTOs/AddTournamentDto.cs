@@ -14,6 +14,7 @@ public class AddTournamentDto
     public required string Name { get; set; }
 
     [Required(ErrorMessage = "You must specify start date")]
+    [Future]
     public required DateTime StartDate { get; set; }
 
     [Required(ErrorMessage = "You must specify end date")]
