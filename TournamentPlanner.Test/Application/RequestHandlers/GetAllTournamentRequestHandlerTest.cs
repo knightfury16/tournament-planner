@@ -293,10 +293,10 @@ namespace TournamentPlanner.Tests.Application
             };
             return new List<Tournament>
             {
-                new Tournament { Id = 1, Name = "Test Tournament 1", CreatedBy = testAdmin, Status = TournamentStatus.Ongoing, GameType = new GameType { Name = "Chess" }, StartDate = DateTime.UtcNow.Date, EndDate = DateTime.UtcNow.Date.AddDays(3), TournamentType = TournamentType.GroupStage },
-                new Tournament { Id = 2, Name = "Another Tournament", CreatedBy = testAdmin,Status = TournamentStatus.Draft, GameType = new GameType { Name = "Football" }, StartDate = DateTime.UtcNow.Date.AddDays(-1), EndDate = DateTime.UtcNow.Date.AddDays(2), TournamentType = TournamentType.GroupStage },
-                new Tournament { Id = 3, Name = "Test Tournament 2", CreatedBy = testAdmin,Status = TournamentStatus.Completed, GameType = new GameType { Name = "Chess" }, StartDate = DateTime.UtcNow.Date.AddDays(-5), EndDate = DateTime.UtcNow.Date.AddDays(-2), TournamentType = TournamentType.GroupStage },
-                new Tournament { Id = 4, Name = "Upcoming Test",CreatedBy = testAdmin, Status = TournamentStatus.Ongoing, GameType = new GameType { Name = "Tennis" }, StartDate = DateTime.UtcNow.Date.AddDays(5), EndDate = DateTime.UtcNow.Date.AddDays(10), TournamentType = TournamentType.GroupStage }
+                new Tournament { Id = 1, Name = "Test Tournament 1", CreatedBy = testAdmin, Status = TournamentStatus.Ongoing, GameType = new GameType { Name = "Chess" }, StartDate = DateTime.UtcNow.AddDays(2), EndDate = DateTime.UtcNow.AddDays(3), TournamentType = TournamentType.GroupStage },
+                new Tournament { Id = 2, Name = "Another Tournament", CreatedBy = testAdmin,Status = TournamentStatus.Draft, GameType = new GameType { Name = "Football" }, StartDate = DateTime.UtcNow.AddDays(-1), EndDate = DateTime.UtcNow.AddDays(2), TournamentType = TournamentType.GroupStage },
+                new Tournament { Id = 3, Name = "Test Tournament 2", CreatedBy = testAdmin,Status = TournamentStatus.Completed, GameType = new GameType { Name = "Chess" }, StartDate = DateTime.UtcNow.AddDays(-5), EndDate = DateTime.UtcNow.AddDays(-2), TournamentType = TournamentType.GroupStage },
+                new Tournament { Id = 4, Name = "Upcoming Test",CreatedBy = testAdmin, Status = TournamentStatus.Ongoing, GameType = new GameType { Name = "Tennis" }, StartDate = DateTime.UtcNow.AddDays(5), EndDate = DateTime.UtcNow.AddDays(10), TournamentType = TournamentType.GroupStage }
             };
         }
     }
