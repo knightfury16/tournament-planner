@@ -30,6 +30,7 @@ namespace TournamentPlanner.Api.Controllers
                 return BadRequest("Tournament information needed");
             }
             var addTournamentRequest = new AddTournamentRequest(addTournamentDto);
+            return Ok(addTournamentRequest);
 
             var tournamentDto = await _mediator.Send(addTournamentRequest);
 
@@ -40,23 +41,23 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(tournamentDto);
         }
 
-        // // [HttpGet("{id}", Name = nameof(GetTournamentById))]
-        // [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TournamentResponseDto))]
-        // [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        // public async Task<IActionResult> GetTournamentById(int id)
-        // {
-        //     if (id <= 0)
-        //     {
-        //         return BadRequest("Id can not be negative");
-        //     }
-        //     var tournament = await _mediator.GetTournamentbyId(id);
-        //     if (tournament == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //     var tournamentResponseDto = convertToResponseDto(tournament);
-        //     return Ok(tournamentResponseDto);
-        // }
+        [HttpGet("{id}", Name = nameof(GetTournamentById))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FullTournamentDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetTournamentById(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Id can not be negative");
+            }
+            var getTournamentByIdRequest = new GetTournamentByIdRequest(id);
+            var fullTournamentDto = await _mediator.Send(getTournamentByIdRequest);
+
+            if(fullTournamentDto == null){
+                return NotFound();
+            }
+            return Ok(fullTournamentDto);
+        }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Tournament>))]
