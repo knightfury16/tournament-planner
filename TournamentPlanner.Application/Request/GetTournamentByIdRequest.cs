@@ -2,7 +2,7 @@ using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Application.Request;
-public class GetTournamentByIdRequest : IRequest<FullTournamentDto>
+public class GetTournamentByIdRequest : IRequest<TournamentDto>
 {
 
     public readonly int Id;

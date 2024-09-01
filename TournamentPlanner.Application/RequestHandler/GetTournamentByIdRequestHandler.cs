@@ -7,7 +7,7 @@ using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Application.RequestHandler
 {
-    public class GetTournamentByIdRequestHandler: IRequestHandler<GetTournamentByIdRequest, FullTournamentDto>
+    public class GetTournamentByIdRequestHandler: IRequestHandler<GetTournamentByIdRequest, TournamentDto>
     {
 
         private readonly IRepository<Tournament> _tournamentRepository;
@@ -18,17 +18,19 @@ namespace TournamentPlanner.Application.RequestHandler
             _tournamentRepository = tournamentRepository;
             _mapper = mapper;
         }
-        public async Task<FullTournamentDto?> Handle(GetTournamentByIdRequest request, CancellationToken cancellationToken = default)
+        public async Task<TournamentDto?> Handle(GetTournamentByIdRequest request, CancellationToken cancellationToken = default)
         {
+            if(request == null){
+                throw new ArgumentNullException(nameof(GetTournamentByIdRequest));
+            }
 
-            var tournament = await _tournamentRepository.GetAllAsync(t => t.Id == request.Id, ["Participants", "Matches","CreatedBy","GameType"]);
+            var tournament = await _tournamentRepository.GetAllAsync(t => t.Id == request.Id);
 
             if (tournament == null || !tournament.Any()) return null;
 
-            return _mapper.Map<FullTournamentDto>(tournament.First());
+            return _mapper.Map<TournamentDto>(tournament.First());
 
         }
-
 
     }
 }
