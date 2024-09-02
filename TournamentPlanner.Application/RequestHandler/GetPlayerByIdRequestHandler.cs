@@ -20,7 +20,7 @@ namespace TournamentPlanner.Application.RequestHandler
         public async Task<FullPlayerDto?> Handle(GetPlayerByIdRequest request, CancellationToken cancellationToken = default)
         {
 
-            var player = await _playerRepository.GetAllAsync(player => player.Id == request.id, ["Tournaments"]);
+            var player = await _playerRepository.GetAllAsync(player => player.Id == request.id, [nameof(Player.Tournaments)]);
 
             if (player == null || !player.Any()) return null;
 
