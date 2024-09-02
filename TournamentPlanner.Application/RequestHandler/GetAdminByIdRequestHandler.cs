@@ -20,7 +20,7 @@ public class GetAdminByIdRequestHandler: IRequestHandler<GetAdminByIdRequest, Ad
     public async Task<AdminDto?> Handle(GetAdminByIdRequest request, CancellationToken cancellationToken = default)
     {
 
-        var admin = await _adminRepository.GetAllAsync(a => a.Id == request.id, ["CreatedTournament"]);
+        var admin = await _adminRepository.GetAllAsync(a => a.Id == request.id, [nameof(Admin.CreatedTournament)]);
 
         if (admin == null || !admin.Any()) return null;
 
