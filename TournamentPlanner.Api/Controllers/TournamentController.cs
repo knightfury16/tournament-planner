@@ -41,6 +41,9 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(tournamentDto);
         }
 
+        //getTournamentMatches(id)
+        //getTournamentPlayers(id)
+        //getTournamentMatchTypes(id)
         [HttpGet("{id}", Name = nameof(GetTournamentById))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FullTournamentDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -51,12 +54,12 @@ namespace TournamentPlanner.Api.Controllers
                 return BadRequest("Id can not be negative");
             }
             var getTournamentByIdRequest = new GetTournamentByIdRequest(id);
-            var fullTournamentDto = await _mediator.Send(getTournamentByIdRequest);
+            var tournamentDto = await _mediator.Send(getTournamentByIdRequest);
 
-            if(fullTournamentDto == null){
+            if(tournamentDto == null){
                 return NotFound();
             }
-            return Ok(fullTournamentDto);
+            return Ok(tournamentDto);
         }
 
         [HttpGet]
