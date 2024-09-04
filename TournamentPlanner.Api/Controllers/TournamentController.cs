@@ -108,5 +108,14 @@ namespace TournamentPlanner.Api.Controllers
         }
 
         //getTournamentMatchTypes(id)
+        [HttpGet("{id}/match-types", Name = nameof(GetTournamentMatchTypes))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MatchTypeDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetTournamentMatchTypes(int id)
+        {
+            var getTournamentMatchTypesRequest = new GetTournamentMatchTypesRequest(id);
+            var matchTypesDto = await _mediator.Send(getTournamentMatchTypesRequest);
+            return Ok(matchTypesDto);
+        }
     }
 }
