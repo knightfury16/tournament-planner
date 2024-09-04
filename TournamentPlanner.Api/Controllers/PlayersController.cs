@@ -54,11 +54,11 @@ namespace TournamentPlanner.Api.Controllers
         public async Task<IActionResult> AddPlayer([FromBody] AddPlayerDto addPlayerDto)
         {
             var addPlayerRequest = new AddPlayerRequest(addPlayerDto);
-            var player = await _mediator.Send(addPlayerRequest);
-            if(player == null){
+            var playerDto = await _mediator.Send(addPlayerRequest);
+            if(playerDto == null){
                 return BadRequest();
             }
-            return CreatedAtAction(nameof(GetPlayerById), new { id = player.Id }, player);
+            return CreatedAtAction(nameof(GetPlayerById), new { id = playerDto.Id }, playerDto);
         }
 
     }
