@@ -66,8 +66,6 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(tournaments);
         }
 
-        //getTournamentMatches(id)
-        //getTournamentMatchTypes(id)
         [HttpGet("{id}", Name = nameof(GetTournamentById))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FullTournamentDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -96,5 +94,19 @@ namespace TournamentPlanner.Api.Controllers
             var playersDto = await _mediator.Send(getTournamentPlayersRequest);
             return Ok(playersDto);
         }
+
+
+        //getTournamentMatches(id)
+        [HttpGet("{id}/matches", Name = nameof(GetTournamentMatches))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MatchDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetTournamentMatches(int id)
+        {
+            var getTournamentMatchesRequest = new GetTournamentMatchesRequest(id);
+            var matchesDto = await _mediator.Send(getTournamentMatchesRequest);
+            return Ok(matchesDto);
+        }
+
+        //getTournamentMatchTypes(id)
     }
 }
