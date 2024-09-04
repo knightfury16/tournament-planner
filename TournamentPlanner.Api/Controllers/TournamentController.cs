@@ -30,36 +30,15 @@ namespace TournamentPlanner.Api.Controllers
                 return BadRequest("Tournament information needed");
             }
             var addTournamentRequest = new AddTournamentRequest(addTournamentDto);
-            return Ok(addTournamentRequest);
 
             var tournamentDto = await _mediator.Send(addTournamentRequest);
 
-            if (tournamentDto == null){
+            if (tournamentDto == null)
+            {
                 return BadRequest("Tournament creation failed");
             }
 
-            return Ok(tournamentDto);
-        }
-
-        //getTournamentMatches(id)
-        //getTournamentPlayers(id)
-        //getTournamentMatchTypes(id)
-        [HttpGet("{id}", Name = nameof(GetTournamentById))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FullTournamentDto))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetTournamentById(int id)
-        {
-            if (id <= 0)
-            {
-                return BadRequest("Id can not be negative");
-            }
-            var getTournamentByIdRequest = new GetTournamentByIdRequest(id);
-            var tournamentDto = await _mediator.Send(getTournamentByIdRequest);
-
-            if(tournamentDto == null){
-                return NotFound();
-            }
-            return Ok(tournamentDto);
+            return CreatedAtAction(nameof(GetTournamentById), new { id = tournamentDto.Id }, tournamentDto);
         }
 
         [HttpGet]
@@ -85,6 +64,37 @@ namespace TournamentPlanner.Api.Controllers
             }
 
             return Ok(tournaments);
+        }
+
+        //getTournamentMatches(id)
+        //getTournamentMatchTypes(id)
+        [HttpGet("{id}", Name = nameof(GetTournamentById))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FullTournamentDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetTournamentById(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Id can not be negative");
+            }
+            var getTournamentByIdRequest = new GetTournamentByIdRequest(id);
+            var tournamentDto = await _mediator.Send(getTournamentByIdRequest);
+
+            if (tournamentDto == null)
+            {
+                return NotFound();
+            }
+            return Ok(tournamentDto);
+        }
+
+        [HttpGet("{id}/players", Name = nameof(GetTournamentPlayers))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PlayerDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetTournamentPlayers(int id)
+        {
+            var getTournamentPlayersRequest = new GetTournamentPlayersRequest(id);
+            var playersDto = await _mediator.Send(getTournamentPlayersRequest);
+            return Ok(playersDto);
         }
     }
 }
