@@ -24,7 +24,7 @@ public class RegisterPlayerInTournamentRequestHandler : IRequestHandler<Register
         //check if tournament exists
         var tournament = (await _tournamentRepository
         .GetAllAsync(t => t.Id == request.RegistrationInTournamentDto.TournamentId, [nameof(Tournament.Participants)]))
-        .First();
+        .FirstOrDefault();
 
         if (tournament == null)
         {
@@ -44,7 +44,7 @@ public class RegisterPlayerInTournamentRequestHandler : IRequestHandler<Register
         }
 
         //check if the paricipant is max or not 
-        if (tournament.Participants.Count > tournament.MaxParticipant)
+        if (tournament.Participants.Count >= tournament.MaxParticipant)
         {
             throw new InvalidOperationException("Tournament has reached the maximum number of participants");
         }
@@ -61,7 +61,7 @@ public class RegisterPlayerInTournamentRequestHandler : IRequestHandler<Register
         //check if player age is allowed to participate
         if (tournament.MinimumAgeOfRegistration > 0 && player.Age < tournament.MinimumAgeOfRegistration)
         {
-            throw new InvalidOperationException($"Player does not meet the minimum age requirement fo {tournament.MinimumAgeOfRegistration}");
+            throw new InvalidOperationException($"Player does not meet the minimum age requirement for {tournament.MinimumAgeOfRegistration}");
         }
 
         //check if player already registered
