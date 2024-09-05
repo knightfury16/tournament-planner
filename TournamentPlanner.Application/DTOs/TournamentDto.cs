@@ -12,6 +12,7 @@ namespace TournamentPlanner.Application.DTOs
         public string Name { get; set; } = string.Empty;
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public DateTime? RegistrationLastDate { get; set; }
         public string? Venue { get; set; }
         public decimal RegistrationFee { get; set; }
         public int MinimumAgeOfRegistration { get; set; }

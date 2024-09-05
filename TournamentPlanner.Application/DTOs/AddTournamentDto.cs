@@ -23,6 +23,7 @@ public class AddTournamentDto
     [Required]
     public required GameTypeDto GameType { get; set; }
     public TournamentStatus Status { get; set; } = TournamentStatus.Draft;
+    //TODO: make a validator or extends the current validator to check for Registration last date 
     public DateTime? RegistrationLastDate { get; set; }
 
     [Range(1, 104, ErrorMessage = "Max participant must be between 1 and 104")]
