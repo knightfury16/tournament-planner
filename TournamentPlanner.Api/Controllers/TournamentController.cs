@@ -41,6 +41,24 @@ namespace TournamentPlanner.Api.Controllers
             return CreatedAtAction(nameof(GetTournamentById), new { id = tournamentDto.Id }, tournamentDto);
         }
 
+        //TODO: need to verify if a valid player is registering the tournament or not
+        [HttpPost("register", Name = nameof(RegisterPlayerInTournament))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> RegisterPlayerInTournament([FromBody] RegistrationInTournamentDto registrationDto)
+        {
+            if (registrationDto == null)
+            {
+                return BadRequest("Registration information is required");
+            }
+
+            var registerPlayerInTournamentRequest = new RegisterPlayerInTournamentRequest(registrationDto);
+
+            var result = await _mediator.Send(registerPlayerInTournamentRequest);
+
+            return result ? Ok("Player successfully registered for the tournament") : BadRequest("Player registration failed");
+        }
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Tournament>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
