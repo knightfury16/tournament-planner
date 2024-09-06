@@ -59,6 +59,30 @@ namespace TournamentPlanner.Api.Controllers
             return result ? Ok("Player successfully registered for the tournament") : BadRequest("Player registration failed");
         }
 
+
+        [HttpPost("{tournamentId}/add-match")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddTournamentMatch(int tournamentId, [FromBody] AddMatchDto addMatchDto)
+        {
+            if (addMatchDto == null)
+            {
+                return BadRequest("Match to add information is required");
+            }
+
+            var addMatchToTournament = new AddMatchInTournamentRequest(addMatchDto, tournamentId);
+
+            var matchDto = await _mediator.Send(addMatchToTournament);
+
+            if (matchDto == null)
+            {
+                return BadRequest("Could not add match");
+            }
+
+            //TODO: make it created at action after making the get match by id route
+            return Ok(matchDto);
+        }
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Tournament>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
