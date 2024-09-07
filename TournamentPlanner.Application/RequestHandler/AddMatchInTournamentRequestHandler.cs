@@ -3,8 +3,11 @@ using AutoMapper;
 using TournamentPlanner.Application.Common;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.DTOs;
+using TournamentPlanner.Application.GameTypeHandler;
+using TournamentPlanner.Application.GameTypeScore;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
+using TournamentPlanner.Domain.Interface;
 using TournamentPlanner.Mediator;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
@@ -13,16 +16,16 @@ namespace TournamentPlanner.Application;
 public class AddMatchInTournamentRequestHandler : IRequestHandler<AddMatchInTournamentRequest, MatchDto>
 {
     private readonly IRepository<Tournament> _tournamentRepository;
-    private readonly GameTypeFactory gameTypeFactory;
-    private readonly Mapper _mapper;
+    private readonly IGameFormatFactory gameFormatFactory;
+    private readonly IMapper _mapper;
     private readonly IRepository<MatchType> _matchTypeRepository;
 
-    public AddMatchInTournamentRequestHandler(IRepository<Tournament> tournamentRepository, GameTypeFactory gameTypeFactory
-    , Mapper mapper, IRepository<MatchType> matchTypeRepository)
+    public AddMatchInTournamentRequestHandler(IRepository<Tournament> tournamentRepository, IGameFormatFactory gameTypeFactory
+    , IMapper mapper, IRepository<MatchType> matchTypeRepository)
     {
         this._matchTypeRepository = matchTypeRepository;
         this._tournamentRepository = tournamentRepository;
-        this.gameTypeFactory = gameTypeFactory;
+        this.gameFormatFactory = gameTypeFactory;
         this._mapper = mapper;
     }
     public async Task<MatchDto?> Handle(AddMatchInTournamentRequest request, CancellationToken cancellationToken = default)
@@ -44,15 +47,15 @@ public class AddMatchInTournamentRequestHandler : IRequestHandler<AddMatchInTour
         }
 
         //get the gametype handler from the factory
-        var gameType = GetGameTypeSupported(tournament.GameType);
-        var gameTypeHandler = gameTypeFactory.GetTheGameTypeHandler(gameType);
+        var gameTypeHandler = gameFormatFactory.GetGameFormat(tournament.GameType.Name);
 
         if (gameTypeHandler == null)
         {
             throw new InvalidOperationException("Game type hanlder could not be resolved");
         }
         //use the handler to validate the score
-        if (!gameTypeHandler.ValidateGameSpecificData(request.AddMatchDto.GameSpecificScore))
+        IScore gameScore = gameTypeHandler.DeserializeScore(request.AddMatchDto.GameSpecificScore);
+        if (!gameTypeHandler.IsValidScore(gameScore))
         {
             throw new ValidationException("Invalid game-specific data for the given game type.");
         }
@@ -63,32 +66,25 @@ public class AddMatchInTournamentRequestHandler : IRequestHandler<AddMatchInTour
         {
             throw new InvalidOperationException("Could not find match Type");
         }
+
+        var winner = gameTypeHandler.DetermineWinner(player1, player2, gameScore);
+
         var match = new Match
         {
             FirstPlayer = player1,
             SecondPlayer = player2,
             Tournament = tournament,
             MatchType = matchType,
-            ScoreJson = request.AddMatchDto.GameSpecificScore,
+            ScoreJson = gameScore,
             GamePlayed = DateTime.UtcNow,
+            Winner = winner
         };
 
         tournament.Matches.Add(match);
         //save the db context
-        await _tournamentRepository.SaveAsync();
+        await _tournamentRepository.SaveAsync(); 
         //map the match and return
         return _mapper.Map<MatchDto>(match);
     }
 
-    private GameTypeSupported GetGameTypeSupported(GameType gameType)
-    {
-        if (Enum.TryParse(gameType.Name, out GameTypeSupported gameTypeSupported))
-        {
-            return gameTypeSupported;
-        }
-        else
-        {
-            throw new InvalidOperationException("Could not parse gametype to enum");
-        }
-    }
 }
