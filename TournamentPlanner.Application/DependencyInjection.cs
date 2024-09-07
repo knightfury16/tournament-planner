@@ -16,7 +16,7 @@ namespace TournamentPlanner.Application
             services.AddAutoMapper(executingAssembly);
             //order is importent here. Register after adding mediator
             services.AddMediatorHandler([executingAssembly]);
-            services.AddScoped<IGameTypeFactory, GameTypeFactory>();
+            services.AddScoped<IGameFormatFactory, GameFormatFactory>();
 
         }
 
