@@ -115,6 +115,7 @@ public class TournamentPlannerDataContext : DbContext
 
         });
 
+        //match type configuration
         modelBuilder.Entity<MatchType>(entity =>
         {
             //matchtype relation config
@@ -130,12 +131,21 @@ public class TournamentPlannerDataContext : DbContext
 
         });
 
+
+        //game type configuration
+        modelBuilder.Entity<GameType>(entity =>
+        {
+            entity.Property(p => p.Name) //converting enum value to string
+            .HasConversion<string>();
+
+        });
+
         // Some default Seed Data for GameType
         var gameTypes = Enum.GetValues(typeof(GameTypeSupported)).Cast<GameTypeSupported>()
                         .Select((gameType, index) => new GameType
                         {
                             Id = index + 1,
-                            Name = gameType.ToString(),
+                            Name = gameType,
                             CreatedAt = DateTime.UtcNow,
                             UpdatedAt = DateTime.UtcNow,
                         }).ToArray();
