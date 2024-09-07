@@ -24,7 +24,7 @@ public class Match : BaseEntity
 
     public DateTime? GamePlayed { get; set; }
 
-    public string? ScoreJson { get; set; }
+    public object? ScoreJson { get; set; }
     // Added to support match rescheduling
     public bool IsRescheduled { get; set; }
     public string? RescheduleReason { get; set; }
