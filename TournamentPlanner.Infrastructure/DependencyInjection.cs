@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.DataModeling;
 using TournamentPlanner.Domain.Entities;
+using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
 namespace TournamentPlanner.Infrastructure
 {
@@ -17,6 +18,7 @@ namespace TournamentPlanner.Infrastructure
             services.AddScoped<IRepository<Tournament>, Repository<Tournament>>();
             services.AddScoped<IRepository<Round>, Repository<Round>>();
             services.AddScoped<IRepository<Admin>, Repository<Admin>>();
+            services.AddScoped<IRepository<MatchType>, Repository<MatchType>>();
         }
     }
 }
