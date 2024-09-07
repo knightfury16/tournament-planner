@@ -109,16 +109,16 @@ namespace TournamentPlanner.DataModeling.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 8, 13, 11, 46, 31, 383, DateTimeKind.Utc).AddTicks(6314),
+                            CreatedAt = new DateTime(2024, 9, 7, 14, 23, 8, 421, DateTimeKind.Utc).AddTicks(8604),
                             Name = "TableTennis",
-                            UpdatedAt = new DateTime(2024, 8, 13, 11, 46, 31, 383, DateTimeKind.Utc).AddTicks(6316)
+                            UpdatedAt = new DateTime(2024, 9, 7, 14, 23, 8, 421, DateTimeKind.Utc).AddTicks(8605)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 8, 13, 11, 46, 31, 383, DateTimeKind.Utc).AddTicks(6324),
+                            CreatedAt = new DateTime(2024, 9, 7, 14, 23, 8, 421, DateTimeKind.Utc).AddTicks(8610),
                             Name = "Chess",
-                            UpdatedAt = new DateTime(2024, 8, 13, 11, 46, 31, 383, DateTimeKind.Utc).AddTicks(6324)
+                            UpdatedAt = new DateTime(2024, 9, 7, 14, 23, 8, 421, DateTimeKind.Utc).AddTicks(8610)
                         });
                 });
 
@@ -157,7 +157,7 @@ namespace TournamentPlanner.DataModeling.Migrations
                     b.Property<int?>("RescheduledById")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ScoreJson")
+                    b.Property<object>("ScoreJson")
                         .HasColumnType("jsonb");
 
                     b.Property<int>("TournamentId")
@@ -206,6 +206,9 @@ namespace TournamentPlanner.DataModeling.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("Round")
+                        .HasColumnType("integer");
 
                     b.Property<int>("TournamentId")
                         .HasColumnType("integer");
@@ -357,9 +360,6 @@ namespace TournamentPlanner.DataModeling.Migrations
             modelBuilder.Entity("TournamentPlanner.Domain.Entities.KnockOut", b =>
                 {
                     b.HasBaseType("TournamentPlanner.Domain.Entities.MatchType");
-
-                    b.Property<int>("Round")
-                        .HasColumnType("integer");
 
                     b.HasDiscriminator().HasValue("Knockout");
                 });
