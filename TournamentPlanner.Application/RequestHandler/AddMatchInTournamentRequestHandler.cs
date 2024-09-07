@@ -13,6 +13,7 @@ using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
 namespace TournamentPlanner.Application;
 
+//TODO: refactor this handler
 public class AddMatchInTournamentRequestHandler : IRequestHandler<AddMatchInTournamentRequest, MatchDto>
 {
     private readonly IRepository<Tournament> _tournamentRepository;
@@ -60,7 +61,6 @@ public class AddMatchInTournamentRequestHandler : IRequestHandler<AddMatchInTour
             throw new ValidationException("Invalid game-specific data for the given game type.");
         }
         //add the match to the db
-        //TODO: figure out other way for finding match type
         MatchType? matchType = await _matchTypeRepository.GetByIdAsync(1);
         if (matchType == null)
         {
