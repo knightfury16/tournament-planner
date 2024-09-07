@@ -113,7 +113,7 @@ namespace TournamentPlanner.Test.Application.ModelValidators
                 Name = "Valid Tournament Name",
                 StartDate = DateTime.Now.AddDays(1),
                 EndDate = DateTime.Now.AddDays(2),
-                GameType = new GameTypeDto { Name = "Chess" },
+                GameType = new GameTypeDto { Name = GameTypeSupported.Chess.ToString() },
                 Status = TournamentStatus.Draft,
                 RegistrationLastDate = DateTime.Now,
                 MaxParticipant = 64,

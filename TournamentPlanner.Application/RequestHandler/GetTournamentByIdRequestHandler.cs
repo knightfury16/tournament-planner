@@ -24,7 +24,7 @@ namespace TournamentPlanner.Application.RequestHandler
                 throw new ArgumentNullException(nameof(GetTournamentByIdRequest));
             }
 
-            var tournament = await _tournamentRepository.GetAllAsync(t => t.Id == request.Id);
+            var tournament = await _tournamentRepository.GetAllAsync(t => t.Id == request.Id,[nameof(Tournament.GameType)]);
 
             if (tournament == null || !tournament.Any()) return null;
 

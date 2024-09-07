@@ -100,14 +100,14 @@ namespace TournamentPlanner.Tests.Application
         {
             // Arrange
             var request = new GetTournamentRequest { GameTypeSupported = GameTypeSupported.Chess, SearchCategory = TournamentSearchCategory.All };
-            var tournaments = GetSampleTournaments().Where(t => t.GameType.Name == GameTypeSupported.Chess.ToString()).ToList();
+            var tournaments = GetSampleTournaments().Where(t => t.GameType.Name == GameTypeSupported.Chess).ToList();
             _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>(), It.IsAny<string[]>()))
                 .ReturnsAsync(tournaments);
 
             _mockMapper.Setup(m => m.Map<GameTypeDto>(It.IsAny<GameType>()))
              .Returns((GameType g) => new GameTypeDto
              {
-                 Name = g.Name
+                 Name = g.Name.ToString()
              });
 
             _mockMapper.Setup(m => m.Map<IEnumerable<TournamentDto>>(It.IsAny<IEnumerable<Tournament>>()))
@@ -123,7 +123,7 @@ namespace TournamentPlanner.Tests.Application
 
             // Assert
             Assert.NotNull(result);
-            Assert.All(result, t => Assert.Equal("Chess", t.GameTypeDto?.Name));
+            Assert.All(result, t => Assert.Equal(GameTypeSupported.Chess.ToString(), t.GameTypeDto?.Name));
         }
 
         [Fact]
@@ -244,7 +244,7 @@ namespace TournamentPlanner.Tests.Application
             var tournaments = GetSampleTournaments().Where(t =>
                 t.Name.ToLower().Contains("test") &&
                 t.Status == TournamentStatus.Ongoing &&
-                t.GameType.Name == GameTypeSupported.Chess.ToString() &&
+                t.GameType.Name == GameTypeSupported.Chess &&
                 t.StartDate >= request.StartDate &&
                 t.EndDate <= request.EndDate
             ).ToList();
@@ -254,7 +254,7 @@ namespace TournamentPlanner.Tests.Application
             _mockMapper.Setup(m => m.Map<GameTypeDto>(It.IsAny<GameType>()))
              .Returns((GameType g) => new GameTypeDto
              {
-                 Name = g.Name
+                 Name = g.Name.ToString()
              });
              
             _mockMapper.Setup(m => m.Map<IEnumerable<TournamentDto>>(It.IsAny<IEnumerable<Tournament>>()))
@@ -277,7 +277,7 @@ namespace TournamentPlanner.Tests.Application
             {
                 Assert.Contains("test", t.Name.ToLower());
                 Assert.Equal(TournamentStatus.Ongoing, t.Status);
-                Assert.Equal("Chess", t.GameTypeDto?.Name);
+                Assert.Equal(GameTypeSupported.Chess.ToString(), t.GameTypeDto?.Name);
                 Assert.True(t.StartDate >= request.StartDate);
                 Assert.True(t.EndDate <= request.EndDate);
             });
@@ -293,10 +293,10 @@ namespace TournamentPlanner.Tests.Application
             };
             return new List<Tournament>
             {
-                new Tournament { Id = 1, Name = "Test Tournament 1", CreatedBy = testAdmin, Status = TournamentStatus.Ongoing, GameType = new GameType { Name = "Chess" }, StartDate = DateTime.UtcNow.AddDays(2), EndDate = DateTime.UtcNow.AddDays(3), TournamentType = TournamentType.GroupStage },
-                new Tournament { Id = 2, Name = "Another Tournament", CreatedBy = testAdmin,Status = TournamentStatus.Draft, GameType = new GameType { Name = "Football" }, StartDate = DateTime.UtcNow.AddDays(-1), EndDate = DateTime.UtcNow.AddDays(2), TournamentType = TournamentType.GroupStage },
-                new Tournament { Id = 3, Name = "Test Tournament 2", CreatedBy = testAdmin,Status = TournamentStatus.Completed, GameType = new GameType { Name = "Chess" }, StartDate = DateTime.UtcNow.AddDays(-5), EndDate = DateTime.UtcNow.AddDays(-2), TournamentType = TournamentType.GroupStage },
-                new Tournament { Id = 4, Name = "Upcoming Test",CreatedBy = testAdmin, Status = TournamentStatus.Ongoing, GameType = new GameType { Name = "Tennis" }, StartDate = DateTime.UtcNow.AddDays(5), EndDate = DateTime.UtcNow.AddDays(10), TournamentType = TournamentType.GroupStage }
+                new Tournament { Id = 1, Name = "Test Tournament 1", CreatedBy = testAdmin, Status = TournamentStatus.Ongoing, GameType = new GameType { Name = GameTypeSupported.Chess }, StartDate = DateTime.UtcNow.AddDays(2), EndDate = DateTime.UtcNow.AddDays(3), TournamentType = TournamentType.GroupStage },
+                new Tournament { Id = 2, Name = "Another Tournament", CreatedBy = testAdmin,Status = TournamentStatus.Draft, GameType = new GameType { Name = GameTypeSupported.TableTennis }, StartDate = DateTime.UtcNow.AddDays(-1), EndDate = DateTime.UtcNow.AddDays(2), TournamentType = TournamentType.GroupStage },
+                new Tournament { Id = 3, Name = "Test Tournament 2", CreatedBy = testAdmin,Status = TournamentStatus.Completed, GameType = new GameType { Name = GameTypeSupported.Chess }, StartDate = DateTime.UtcNow.AddDays(-5), EndDate = DateTime.UtcNow.AddDays(-2), TournamentType = TournamentType.GroupStage },
+                new Tournament { Id = 4, Name = "Upcoming Test",CreatedBy = testAdmin, Status = TournamentStatus.Ongoing, GameType = new GameType { Name = GameTypeSupported.TableTennis }, StartDate = DateTime.UtcNow.AddDays(5), EndDate = DateTime.UtcNow.AddDays(10), TournamentType = TournamentType.GroupStage }
             };
         }
     }

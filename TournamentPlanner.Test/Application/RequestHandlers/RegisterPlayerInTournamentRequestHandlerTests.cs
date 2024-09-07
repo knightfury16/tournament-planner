@@ -221,7 +221,7 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
 
             var testGameType = new GameType()
             {
-                Name = "Table tennis"
+                Name = GameTypeSupported.TableTennis
             };
 
             yield return new Tournament

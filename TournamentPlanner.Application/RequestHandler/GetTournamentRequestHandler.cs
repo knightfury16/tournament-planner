@@ -38,7 +38,7 @@ public class GetTournamentRequestHandler : IRequestHandler<GetTournamentRequest,
         //GameType filter
         if (request.GameTypeSupported.HasValue)
         {
-            filters.Add(t => t.GameType.Name == request.GameTypeSupported.ToString());
+            filters.Add(t => t.GameType.Name == request.GameTypeSupported);
         }
 
         //Date range filter
