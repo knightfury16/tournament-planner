@@ -31,6 +31,8 @@ public class Match : BaseEntity
     public Admin? RescheduledBy { get; set; }
     public int? RescheduledById { get; set; }
 
+    public TimeSpan Duration { get; set; }
+    public string? CourtName { get; set; } 
     // public required GameFormat<Score> GameFormat { get; set; } // we handle the game format in runtime, no need to save
 
 }
