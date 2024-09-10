@@ -60,6 +60,21 @@ namespace TournamentPlanner.Api.Controllers
         }
 
 
+        [HttpPost("{id}/make-match-type", Name = nameof(MakeMatchTypesOfTournament))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> MakeMatchTypesOfTournament(int id)
+        {
+            if(id <= 0 )return BadRequest("Tournament Id invalid");
+
+            var createMatchTypeRequest = new CreateMatchTypeRequest(id);
+
+            var matchTypes = await _mediator.Send(createMatchTypeRequest);
+
+            return  Ok(matchTypes);
+        }
+
+
         [HttpPost("{tournamentId}/add-match")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
