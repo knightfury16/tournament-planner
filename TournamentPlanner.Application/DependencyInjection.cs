@@ -17,6 +17,7 @@ namespace TournamentPlanner.Application
             //order is importent here. Register after adding mediator
             services.AddMediatorHandler([executingAssembly]);
             services.AddScoped<IGameFormatFactory, GameFormatFactory>();
+            services.AddScoped<ICreateMatchTypeFactory, CreateMatchTypeFactory>();
 
         }
 
