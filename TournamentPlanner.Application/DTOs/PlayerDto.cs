@@ -14,6 +14,7 @@ namespace TournamentPlanner.Application.DTOs
 
         public int? Age { get; set; }
         public int? GamePlayed { get; set; }
+        public int? GameWon { get; set; }
         public double? WinRatio { get; set; }
     }
 }
