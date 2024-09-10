@@ -1,4 +1,5 @@
-﻿using TournamentPlanner.Application.Common.Interfaces;
+﻿using AutoMapper;
+using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
 using TournamentPlanner.Mediator;
@@ -6,18 +7,20 @@ using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
 namespace TournamentPlanner.Application;
 
-public class CreateMatchTypeRequestHandler : IRequestHandler<CreateMatchTypeRequest, IEnumerable<MatchType>>
+public class CreateMatchTypeRequestHandler : IRequestHandler<CreateMatchTypeRequest, IEnumerable<MatchTypeDto>>
 {
     private readonly IRepository<Tournament> _tournamentRepository;
     private readonly ICreateMatchTypeFactory _createMatchTypeFactory;
-    public CreateMatchTypeRequestHandler(IRepository<Tournament> tournamentRepository, ICreateMatchTypeFactory createMatchTypeFactory)
+    private readonly IMapper _mapper;
+    public CreateMatchTypeRequestHandler(IRepository<Tournament> tournamentRepository, ICreateMatchTypeFactory createMatchTypeFactory, IMapper mapper)
     {
         _tournamentRepository = tournamentRepository;
         _createMatchTypeFactory = createMatchTypeFactory;
+        _mapper = mapper;
     }
 
 
-    public async Task<IEnumerable<MatchType>?> Handle(CreateMatchTypeRequest request, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<MatchTypeDto>?> Handle(CreateMatchTypeRequest request, CancellationToken cancellationToken = default)
     {
         if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -25,10 +28,10 @@ public class CreateMatchTypeRequestHandler : IRequestHandler<CreateMatchTypeRequ
 
         if (tournament == null) throw new Exception("Tournament not found");
 
-        if (tournament.Status == TournamentStatus.Ongoing || tournament.StartDate < DateTime.UtcNow)
-        {
-            throw new InvalidOperationException("Can not make match type");
-        }
+        //if (tournament.Status == TournamentStatus.Ongoing || tournament.StartDate < DateTime.UtcNow)
+        //{
+        //    throw new InvalidOperationException("Can not make match type");
+        //}
         if (tournament.Participants.Count == 0)
         {
             throw new Exception("Can not create match type with no participant");
@@ -36,13 +39,15 @@ public class CreateMatchTypeRequestHandler : IRequestHandler<CreateMatchTypeRequ
 
         var matchTypeCreator = _createMatchTypeFactory.GetMatchTypeCreator(tournament.TournamentType ?? TournamentType.GroupStage);
 
-        var matchTypes = await matchTypeCreator.CreateMatchType(tournament);
+        var matchTypes = await matchTypeCreator.CreateMatchType(tournament,"Cool");
 
         if (matchTypes == null)
         {
             throw new Exception("Could not create match types. see inner exception");
         }
+        //not saving it in the db yet
+        //!!ON TEST
 
-        return matchTypes;
+        return _mapper.Map<IEnumerable<MatchTypeDto>>(matchTypes);
     }
 }
