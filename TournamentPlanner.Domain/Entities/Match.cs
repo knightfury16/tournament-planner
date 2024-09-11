@@ -17,8 +17,8 @@ public class Match : BaseEntity
     public required Tournament Tournament { get; set; }
     public int TournamentId { get; set; }
 
-    public required MatchType MatchType { get; set; }
-    public int MatchTypeId { get; set; }
+    public required Round Round { get; set; }
+    public int RoundId { get; set; }
 
     public DateTime? GameScheduled { get; set; }
 
