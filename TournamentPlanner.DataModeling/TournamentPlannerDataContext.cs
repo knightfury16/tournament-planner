@@ -14,6 +14,7 @@ public class TournamentPlannerDataContext : DbContext
     public DbSet<GameType> GameTypes { get; set; }
     public DbSet<Match> Matches { get; set; }
     public DbSet<MatchType> MatchTypes { get; set; }
+    public DbSet<Round> Rounds { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<KnockOut> KnockOuts { get; set; }
 
@@ -60,6 +61,11 @@ public class TournamentPlannerDataContext : DbContext
             entity.HasOne(m => m.RescheduledBy)
             .WithOne()
             .HasForeignKey<Match>(m => m.RescheduledById);
+
+            entity.HasOne(m => m.Round)
+                .WithMany(r => r.Matches)
+                .HasForeignKey(m => m.RoundId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
 
@@ -129,6 +135,24 @@ public class TournamentPlannerDataContext : DbContext
             .WithMany(p => p.MatchTypes)
             .UsingEntity(j => j.ToTable("MatchTypeParticipants"));
 
+            //* Round configuration of Match type
+            entity
+            .HasMany(m => m.Rounds)
+            .WithOne(r => r.MatchType)
+            .HasForeignKey(r => r.MatchTypeId);
+
+        });
+
+        //* Round configuration
+        modelBuilder.Entity<Round>(entity =>
+        {
+            entity.Property(p => p.RoundNumber).IsRequired();
+            entity.Property(p => p.StartTime).IsRequired(false);
+
+            //*relation setup
+            entity.HasMany(r => r.Matches)
+            .WithOne(m => m.Round)
+            .HasForeignKey(m => m.RoundId);
         });
 
 
