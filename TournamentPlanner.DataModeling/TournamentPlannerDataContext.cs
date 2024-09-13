@@ -17,6 +17,8 @@ public class TournamentPlannerDataContext : DbContext
     public DbSet<Round> Rounds { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<KnockOut> KnockOuts { get; set; }
+    //TODO: Configure its relations manully to be exact
+    public DbSet<Draw> Draws { get; set; }
 
     public TournamentPlannerDataContext(DbContextOptions<TournamentPlannerDataContext> options) : base(options)
     {
