@@ -7,7 +7,6 @@ public abstract class MatchType : BaseEntity
     public required string Name { get; set; } //group name, eg. GroupA or Elimination1
     public List<Player> Players { get; set; } = new List<Player>();
     public List<Round> Rounds { get; set; } = new();
-    public required Tournament Tournament { get; set; }
-    public int TournamentId { get; set; }
+    public Draw? Draw { get; set; }
     public bool IsCompleted { get; set; }
 }

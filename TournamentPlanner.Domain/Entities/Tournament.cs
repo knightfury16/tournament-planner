@@ -33,7 +33,7 @@ public class Tournament : BaseEntity
     public int GameTypeId { get; set; }
 
     public List<Player> Participants { get; set; } = new();
-    public List<MatchType> MatchTypes { get; set; } = new();
+    public List<Draw> Draw { get; set; } = new();
     public List<Match> Matches { get; set; } = new();
 
     // Added to support tournament status
