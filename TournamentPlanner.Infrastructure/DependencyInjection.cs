@@ -19,6 +19,7 @@ namespace TournamentPlanner.Infrastructure
             services.AddScoped<IRepository<Round>, Repository<Round>>();
             services.AddScoped<IRepository<Admin>, Repository<Admin>>();
             services.AddScoped<IRepository<MatchType>, Repository<MatchType>>();
+            services.AddScoped<IRepository<Draw>, Repository<Draw>>();
         }
     }
 }
