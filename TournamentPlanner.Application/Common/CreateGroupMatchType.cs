@@ -7,10 +7,9 @@ namespace TournamentPlanner.Application.Common;
 public class CreateGroupMatchType : ICreateMatchType
 {
     private int _maxGroupSize = 5;
-    private int _initialRoundNumber = 1;
 
 
-    public Task<IEnumerable<MatchType>?> CreateMatchType(Tournament tournament, string? prefix )
+    public Task<IEnumerable<MatchType>?> CreateMatchType(Tournament tournament, string? prefix)
     {
         prefix ??= "Group";
         var numberOfGroup = DetermineNumberOfGroup(tournament.Participants.Count);
@@ -61,15 +60,22 @@ public class CreateGroupMatchType : ICreateMatchType
             var matchType = new Group
             {
                 Name = matchTypeName,
-                Tournament = tournament,
-                Round = _initialRoundNumber // initial round
             };
+            //TODO: Handle this place gracefully
+            matchType.Draw = GetDraw(tournament, matchType);
             matchTypes.Add(matchType);
             initialChar = (char)(initialChar + 1);
         }
         return matchTypes;
     }
-
+    private Draw GetDraw(Tournament tournament, MatchType matchType)
+    {
+        return new Draw
+        {
+            Tournament = tournament,
+            MatchType = matchType
+        };
+    }
     private int DetermineNumberOfGroup(int totalParticipant)
     {
         return (int)Math.Ceiling((double)totalParticipant / _maxGroupSize);
