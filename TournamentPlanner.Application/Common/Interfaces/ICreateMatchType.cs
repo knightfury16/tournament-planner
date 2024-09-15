@@ -5,5 +5,6 @@ namespace TournamentPlanner.Application.Common.Interfaces;
 
 public interface ICreateMatchType
 {
-    public Task<IEnumerable<MatchType>?> CreateMatchType(Tournament tournament, string? prefix = null);
+    //SeederPlayes list is a validated players list of a specific tournament 
+    public Task<IEnumerable<MatchType>?> CreateMatchType(Tournament tournament, string? prefix = null, List<int>? seederPlayerIds = null);
 }

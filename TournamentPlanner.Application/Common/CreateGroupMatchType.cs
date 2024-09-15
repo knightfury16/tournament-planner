@@ -9,7 +9,7 @@ public class CreateGroupMatchType : ICreateMatchType
     private int _maxGroupSize = 5;
 
 
-    public Task<IEnumerable<MatchType>?> CreateMatchType(Tournament tournament, string? prefix)
+    public Task<IEnumerable<MatchType>?> CreateMatchType(Tournament tournament, string? prefix, List<int>? seederPlayerIds)
     {
         prefix ??= "Group";
         var numberOfGroup = DetermineNumberOfGroup(tournament.Participants.Count);
@@ -61,20 +61,10 @@ public class CreateGroupMatchType : ICreateMatchType
             {
                 Name = matchTypeName,
             };
-            //TODO: Handle this place gracefully
-            matchType.Draw = GetDraw(tournament, matchType);
             matchTypes.Add(matchType);
             initialChar = (char)(initialChar + 1);
         }
         return matchTypes;
-    }
-    private Draw GetDraw(Tournament tournament, MatchType matchType)
-    {
-        return new Draw
-        {
-            Tournament = tournament,
-            MatchType = matchType
-        };
     }
     private int DetermineNumberOfGroup(int totalParticipant)
     {
