@@ -1,0 +1,56 @@
+﻿using TournamentPlanner.Application.Common.Interfaces;
+using TournamentPlanner.Domain.Entities;
+using TournamentPlanner.Domain.Enum;
+
+namespace TournamentPlanner.Application;
+public interface ITournamentService
+{
+    public Task<bool> CanIMakeDraw(Tournament tournament);
+    public Task<IEnumerable<Draw>> MakeDraws(Tournament tournament, string? matchTypePrefix = null, List<int>? seederPlayers = null);
+}
+
+public class TournamentService : ITournamentService
+{
+    private readonly IDrawService _drawService;
+    private readonly IMatchTypeService _matchTypeService;
+
+    public TournamentService(IDrawService drawService, IMatchTypeService matchTypeService)
+    {
+        this._drawService = drawService;
+        _matchTypeService = matchTypeService;
+    }
+
+    public async Task<bool> CanIMakeDraw(Tournament tournament)
+    {
+
+        if (tournament.Draw != null && tournament.Draw.Count == 0) return true;
+        return await _drawService.IsTheDrawComplete(tournament);
+
+    }
+    public async Task<IEnumerable<Draw>> MakeDraws(Tournament tournament, string? matchTypePrefix = null, List<int>? seedersPlayers = null)
+    {
+        var areSeedersValid = ValidateSeeders(tournament, seedersPlayers);
+        if(!areSeedersValid)throw new Exception("Seeders are not valid");
+        var matchTypes = await _matchTypeService.CreateMatchType(tournament, matchTypePrefix, seedersPlayers);
+        var draws = matchTypes.Select(mt => GetDraw(mt, tournament));
+        return draws;
+    }
+
+    private bool ValidateSeeders(Tournament tournament, List<int>? seedersPlayers)
+    {
+        if(seedersPlayers == null)return true; //seeders not seeded
+        foreach(var seederId in seedersPlayers){
+            if(tournament.Participants.Any(p => p.Id != seederId))return false; // if any sedder in not a participant of the tournament return false
+        }
+        return true;
+    }
+
+    private Draw GetDraw(Domain.Entities.MatchType mt, Tournament tournament)
+    {
+        return new Draw
+        {
+            Tournament = tournament,
+            MatchType = mt
+        };
+    }
+}
