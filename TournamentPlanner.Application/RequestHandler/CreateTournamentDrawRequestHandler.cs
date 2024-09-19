@@ -34,8 +34,11 @@ public class CreateTournamentDrawRequestHandler : IRequestHandler<CreateTourname
         var canIDarw = await _tournamentService.CanIMakeDraw(tournament);
 
         if (!canIDarw) throw new Exception("Previous draws are not completed.Can not make new draw");
+
         //make draw -> make matchType
         var draws = await _tournamentService.MakeDraws(tournament, request.MatchTypePrefix, request.SeedersId);
+        tournament.Draw.AddRange(draws);
+        await _tournamentRepository.SaveAsync();
 
         return _mapper.Map<IEnumerable<DrawDto>>(draws);
     }
