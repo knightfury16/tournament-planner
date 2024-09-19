@@ -32,7 +32,8 @@ namespace TournamentPlanner.Api.Middleware
         {
             var code = HttpStatusCode.InternalServerError; // Default to 500
 
-            if (exception.Message.Contains("not found")) code = HttpStatusCode.NotFound;
+            if (exception.Message.ToLower().Contains("not found")) code = HttpStatusCode.NotFound;
+            if(exception.Message.ToLower().Contains("not complete"))code = HttpStatusCode.BadRequest;
             // else if (exception is BadRequestException) code = HttpStatusCode.BadRequest;
 
             var result = JsonSerializer.Serialize(new { error = exception.Message });
