@@ -6,9 +6,7 @@ public class MatchDto
     public required PlayerDto SecondPlayer { get; set; }
 
     public PlayerDto? Winner { get; set; }
-    //TODO: dont have matchtype in match any more
-    //TODO: fix it
-    // public int MatchTypeId { get; set; }
+    public int RoundId { get; set; }
 
     public DateTime? GameScheduled { get; set; }
 
