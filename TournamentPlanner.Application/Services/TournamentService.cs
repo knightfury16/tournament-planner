@@ -39,10 +39,7 @@ public class TournamentService : ITournamentService
     private bool ValidateSeeders(Tournament tournament, List<int>? seedersPlayers)
     {
         if(seedersPlayers == null)return true; //seeders not seeded
-        foreach(var seederId in seedersPlayers){
-            if(tournament.Participants.Any(p => p.Id != seederId))return false; // if any sedder in not a participant of the tournament return false
-        }
-        return true;
+        return tournament.Participants.Select( p => p.Id).Intersect(seedersPlayers).Count() == seedersPlayers.Count();
     }
 
     private Draw GetDraw(Domain.Entities.MatchType mt, Tournament tournament)
