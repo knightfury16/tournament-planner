@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TournamentPlanner.Api.Models;
 using TournamentPlanner.Application;
 using TournamentPlanner.Application.DTOs;
@@ -71,7 +71,7 @@ namespace TournamentPlanner.Api.Controllers
 
             var matchTypes = await _mediator.Send(createMatchTypeRequest);
 
-            return  Ok(matchTypes);
+            return Ok(matchTypes);
         }
 
         [HttpPost("{id}/make-draw", Name = nameof(MakeTournamentDraw))]
@@ -188,6 +188,24 @@ namespace TournamentPlanner.Api.Controllers
             var getTournamentMatchTypesRequest = new GetTournamentMatchTypesRequest(id);
             var matchTypesDto = await _mediator.Send(getTournamentMatchTypesRequest);
             return Ok(matchTypesDto);
+        }
+        [HttpGet("{id}/get-draws", Name = nameof(GetTournamentDraws))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DrawDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetTournamentDraws(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Id can not be negative");
+            }
+            var getTournamentDrawRequest = new GetTournamentDrawRequest(id);
+            var draws = await _mediator.Send(getTournamentDrawRequest);
+
+            if (draws == null)
+            {
+                return NotFound();
+            }
+            return Ok(draws);
         }
     }
 }
