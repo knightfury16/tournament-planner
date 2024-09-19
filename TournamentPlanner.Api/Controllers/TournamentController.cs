@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using TournamentPlanner.Api.Models;
 using TournamentPlanner.Application;
 using TournamentPlanner.Application.DTOs;
@@ -73,6 +73,20 @@ namespace TournamentPlanner.Api.Controllers
 
             return  Ok(matchTypes);
         }
+
+        [HttpPost("{id}/make-draw", Name = nameof(MakeTournamentDraw))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> MakeTournamentDraw(int id, [FromBody] MakeTournamentDrawDto drawDto)
+        {
+
+            var createTournamentDrawRequest = new CreateTournamentDrawRequest(id, drawDto.SeedersId, drawDto.MatchTypePrefix);
+
+            var drawDtos = await _mediator.Send(createTournamentDrawRequest);
+
+            return Ok(drawDtos);
+        }
+
 
 
         //! On maintenance
