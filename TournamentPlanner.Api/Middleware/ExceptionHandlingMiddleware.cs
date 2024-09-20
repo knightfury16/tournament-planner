@@ -27,7 +27,7 @@ namespace TournamentPlanner.Api.Middleware
 
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var code = HttpStatusCode.InternalServerError; // Default to 500
+            var code = HttpStatusCode.BadRequest; // Default to 400
             var message = exception.Message;
 
 
@@ -37,6 +37,7 @@ namespace TournamentPlanner.Api.Middleware
                     code = HttpStatusCode.NotFound;
                     break;
                 case BadRequestException:
+                case ArgumentNullException:
                 case ValidationException:
                     code = HttpStatusCode.BadRequest;
                     break;
@@ -55,7 +56,9 @@ namespace TournamentPlanner.Api.Middleware
                 case DependencyException:
                     code = HttpStatusCode.FailedDependency;
                     break;
-                    // InternalServerErrorException is already covered by the default case
+                case InternalServerErrorException:
+                    code = HttpStatusCode.InternalServerError;
+                    break;
             }
 
 
