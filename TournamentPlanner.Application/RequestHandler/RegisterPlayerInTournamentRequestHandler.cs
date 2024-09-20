@@ -1,6 +1,7 @@
 ﻿using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
+using TournamentPlanner.Domain.Exceptions;
 using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Application;
@@ -55,19 +56,19 @@ public class RegisterPlayerInTournamentRequestHandler : IRequestHandler<Register
 
         if (player == null)
         {
-            throw new InvalidOperationException($"Player not found");
+            throw new NotFoundException(nameof(player));
         }
 
         //check if player age is allowed to participate
         if (tournament.MinimumAgeOfRegistration > 0 && player.Age < tournament.MinimumAgeOfRegistration)
         {
-            throw new InvalidOperationException($"Player does not meet the minimum age requirement for {tournament.MinimumAgeOfRegistration}");
+            throw new ValidationException($"Player does not meet the minimum age requirement for {tournament.MinimumAgeOfRegistration}");
         }
 
         //check if player already registered
         if (tournament.Participants.Any(p => p.Id == player.Id))
         {
-            throw new InvalidOperationException("Player is already registered for this tournament");
+            throw new BadRequestException("Player is already registered for this tournament");
         }
 
         //add the player to tournament participant

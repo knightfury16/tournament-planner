@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Domain.Entities;
+using TournamentPlanner.Domain.Exceptions;
 using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Application;
@@ -28,12 +29,12 @@ public class CreateTournamentDrawRequestHandler : IRequestHandler<CreateTourname
 
         if (tournament == null)
         {
-            throw new Exception($"Could not find Tournament with Id {request.TournamentId}.");
+            throw new NotFoundException(nameof(tournament), request.TournamentId);
         }
         //can i make draw? 
         var canIDarw = await _tournamentService.CanIMakeDraw(tournament);
 
-        if (!canIDarw) throw new Exception("Previous draws are not completed.Can not make new draw");
+        if (!canIDarw) throw new ValidationException("Previous draws are not completed.Can not make new draw");
 
         //make draw -> make matchType
         var draws = await _tournamentService.MakeDraws(tournament, request.MatchTypePrefix, request.SeedersId);

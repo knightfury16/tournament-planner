@@ -17,6 +17,7 @@ public class GetTournamentDrawRequestHandler : IRequestHandler<GetTournamentDraw
     }
     public async Task<IEnumerable<DrawDto>?> Handle(GetTournamentDrawRequest request, CancellationToken cancellationToken = default)
     {
+        if(request == null)throw new ArgumentNullException(nameof(request));
         var navigationString = nameof(Draw.MatchType)+ "." + nameof(Domain.Entities.MatchType.Players);
         var draws = await _drawRepository.GetAllAsync(d => d.TournamentId == request.TournamentId, [navigationString]);
         return _mapper.Map<IEnumerable<DrawDto>>(draws);

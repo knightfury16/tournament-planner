@@ -2,6 +2,7 @@
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
+using TournamentPlanner.Domain.Exceptions;
 using TournamentPlanner.Mediator;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
@@ -26,15 +27,15 @@ public class CreateMatchTypeRequestHandler : IRequestHandler<CreateMatchTypeRequ
 
         var tournament = (await _tournamentRepository.GetAllAsync(t => t.Id == request.TournamentId, [nameof(Tournament.Participants)])).FirstOrDefault();
 
-        if (tournament == null) throw new Exception("Tournament not found");
-
+        if (tournament == null) throw new NotFoundException(nameof(tournament));
+        //!!On Test
         //if (tournament.Status == TournamentStatus.Ongoing || tournament.StartDate < DateTime.UtcNow)
         //{
-        //    throw new InvalidOperationException("Can not make match type");
+        //    throw new ValidationException("Can not make match type. check Tournament status and start date.");
         //}
         if (tournament.Participants.Count == 0)
         {
-            throw new Exception("Can not create match type with no participant");
+            throw new ValidationException("Can not create match type with no participant");
         }
 
         var matchTypeCreator = _createMatchTypeFactory.GetMatchTypeCreator(tournament.TournamentType ?? TournamentType.GroupStage);
