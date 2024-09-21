@@ -1,11 +1,13 @@
 ﻿using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Domain.Entities;
+using TournamentPlanner.Domain.Exceptions;
 
 namespace TournamentPlanner.Application;
 
 public interface IDrawService
 {
     public Task<bool> IsTheDrawComplete(Tournament tournament);
+    public Task<bool> IsTheDrawComplete(IEnumerable<Draw> draws);
 }
 public class DrawService : IDrawService
 {
@@ -27,4 +29,14 @@ public class DrawService : IDrawService
         return true;
     }
 
+    public Task<bool> IsTheDrawComplete(IEnumerable<Draw> draws)
+    {
+
+        foreach (var draw in draws)
+        {
+            if (draw.MatchType == null) throw new NotFoundException(nameof(draw.MatchType));
+            if (draw.MatchType.IsCompleted == false) return Task.FromResult(false);
+        }
+        return Task.FromResult(true);
+    }
 }
