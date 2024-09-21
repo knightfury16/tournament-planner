@@ -24,7 +24,7 @@ public class CreateTournamentDrawRequestHandler : IRequestHandler<CreateTourname
     {
         //does the tournament exists?
         var tournament = (await _tournamentRepository.GetAllAsync(t => t.Id == request.TournamentId, [nameof(Tournament.Participants),
-                            nameof(Tournament.Draw)]))
+                            nameof(Tournament.Draws)]))
                             .FirstOrDefault();
 
         if (tournament == null)
@@ -38,7 +38,7 @@ public class CreateTournamentDrawRequestHandler : IRequestHandler<CreateTourname
 
         //make draw -> make matchType
         var draws = await _tournamentService.MakeDraws(tournament, request.MatchTypePrefix, request.SeedersId);
-        tournament.Draw.AddRange(draws);
+        tournament.Draws.AddRange(draws);
         await _tournamentRepository.SaveAsync();
 
         return _mapper.Map<IEnumerable<DrawDto>>(draws);

@@ -23,7 +23,7 @@ public class TournamentService : ITournamentService
     public async Task<bool> CanIMakeDraw(Tournament tournament)
     {
 
-        if (tournament.Draw != null && tournament.Draw.Count == 0) return true;
+        if (tournament.Draws != null && tournament.Draws.Count == 0) return true;
         return await _drawService.IsTheDrawComplete(tournament);
 
     }
