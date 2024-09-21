@@ -34,7 +34,7 @@ public class CreateTournamentDrawRequestHandler : IRequestHandler<CreateTourname
         //can i make draw? 
         var canIDarw = await _tournamentService.CanIMakeDraw(tournament);
 
-        if (!canIDarw) throw new ValidationException("Previous draws are not completed.Can not make new draw");
+        if (!canIDarw) throw new BadRequestException("Previous draws are not completed.Can not make new draw");
 
         //make draw -> make matchType
         var draws = await _tournamentService.MakeDraws(tournament, request.MatchTypePrefix, request.SeedersId);
