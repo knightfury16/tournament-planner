@@ -62,11 +62,6 @@ namespace TournamentPlanner.Api.Middleware
             }
 
 
-            //keep this for test. will remove it after
-            if (exception.Message.ToLower().Contains("not found")) code = HttpStatusCode.NotFound;
-            if(exception.Message.ToLower().Contains("not complete"))code = HttpStatusCode.BadRequest;
-            // else if (exception is BadRequestException) code = HttpStatusCode.BadRequest;
-
             var result = JsonSerializer.Serialize(new { error = message });
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
