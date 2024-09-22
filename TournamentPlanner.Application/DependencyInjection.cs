@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using TournamentPlanner.Application.Common;
 using TournamentPlanner.Application.Common.Interfaces;
+using TournamentPlanner.Application.Services;
 using TournamentPlanner.Mediator;
 
 
@@ -22,6 +23,9 @@ namespace TournamentPlanner.Application
             services.AddScoped<ITournamentService, TournamentService>();
             services.AddScoped<IDrawService, DrawService>();
             services.AddScoped<IMatchTypeService, MatchTypeService>();
+            services.AddScoped<IMatchService, MatchService>();
+            services.AddScoped<IMatchScheduler, MatchScheduler>();
+
 
 
         }
