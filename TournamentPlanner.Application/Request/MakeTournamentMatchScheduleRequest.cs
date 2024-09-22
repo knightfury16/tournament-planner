@@ -7,14 +7,11 @@ public class MakeTournamentMatchScheduleRequest : IRequest<IEnumerable<MatchDto>
 {
 
     public int TournamentId { get; set; }
-    public TimeSpan? EachMatchTime { get; set; } = TimeSpan.FromMinutes(30); // default 30 minute
-    public TimeOnly? StartTime { get; set; }
-
-    public MakeTournamentMatchScheduleRequest(int tournamentId, TimeSpan? eachMatchTime, TimeOnly? startTime)
+    public SchedulingInfo SchedulingInfo { get; set; }
+    public MakeTournamentMatchScheduleRequest(int tournamentId, SchedulingInfo schedulingInfo)
     {
         TournamentId = tournamentId;
-        EachMatchTime = eachMatchTime;
-        StartTime = startTime;
+        SchedulingInfo = schedulingInfo;
     }
 
 }
