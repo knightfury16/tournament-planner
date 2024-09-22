@@ -51,6 +51,7 @@ namespace TournamentPlanner.Api.Middleware
                     code = HttpStatusCode.Conflict;
                     break;
                 case ServiceUnavailableException:
+                case NotImplementedException:
                     code = HttpStatusCode.ServiceUnavailable;
                     break;
                 case DependencyException:
