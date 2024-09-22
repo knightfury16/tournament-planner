@@ -7,6 +7,7 @@ public class MatchDto
 
     public PlayerDto? Winner { get; set; }
     public int RoundId { get; set; }
+    public TimeSpan Duration { get; set; }
 
     public DateTime? GameScheduled { get; set; }
 
