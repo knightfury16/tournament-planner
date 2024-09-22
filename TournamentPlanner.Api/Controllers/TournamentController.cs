@@ -87,6 +87,22 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(drawDtos);
         }
 
+        [HttpPost("{id}/make-schedule", Name = nameof(MakeTournamentSchedule))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> MakeTournamentSchedule(int id)
+        {
+            var schedulingInfo = new SchedulingInfo
+            {
+            };
+
+            var createTournamentDrawRequest = new MakeTournamentMatchScheduleRequest(id, schedulingInfo);
+
+            var drawDtos = await _mediator.Send(createTournamentDrawRequest);
+
+            return Ok(drawDtos);
+        }
+
 
 
         //! On maintenance
