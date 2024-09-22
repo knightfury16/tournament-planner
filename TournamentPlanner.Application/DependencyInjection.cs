@@ -18,6 +18,7 @@ namespace TournamentPlanner.Application
             services.AddMediatorHandler([executingAssembly]);
             services.AddScoped<IGameFormatFactory, GameFormatFactory>();
             services.AddScoped<ICreateMatchTypeFactory, CreateMatchTypeFactory>();
+            services.AddScoped<ICreateMatchFactory, CreateMatchFactory>();
             services.AddScoped<ITournamentService, TournamentService>();
             services.AddScoped<IDrawService, DrawService>();
             services.AddScoped<IMatchTypeService, MatchTypeService>();
