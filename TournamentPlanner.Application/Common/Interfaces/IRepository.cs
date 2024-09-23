@@ -1,8 +1,9 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
+using TournamentPlanner.Domain.Common;
 
 namespace TournamentPlanner.Application.Common.Interfaces
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<T> where T : BaseEntity
     {
         /// <summary>
         /// Adds a new entity to the repository asynchronously.

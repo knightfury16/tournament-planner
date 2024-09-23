@@ -3,6 +3,7 @@ using System.Data;
 using Microsoft.EntityFrameworkCore;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.DataModeling;
+using TournamentPlanner.Domain.Common;
 
 namespace TournamentPlanner.Infrastructure
 {
@@ -10,7 +11,7 @@ namespace TournamentPlanner.Infrastructure
     /// Generic repository class for performing CRUD operations on entities of type T.
     /// </summary>
     /// <typeparam name="T">The entity type.</typeparam>
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly TournamentPlannerDataContext _dataContext;
         public Repository(TournamentPlannerDataContext dataContext)
