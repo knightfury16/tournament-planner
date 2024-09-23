@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Application.Helpers;
@@ -32,7 +32,7 @@ public class MakeTournamentMatchScheduleRequestHandler : IRequestHandler<MakeTou
 
         //get the tournament with all the draw
         var nagivationProperty = Utility.NavigationPrpertyCreator(nameof(Tournament.Draws), nameof(Draw.MatchType), nameof(MatchType.Players));
-        var tournament = (await _tournamentRepository.GetAllAsync(t => t.Id == request.TournamentId, [nagivationProperty, nameof(Tournament.Matches)])).FirstOrDefault();
+        var tournament = await _tournamentRepository.GetByIdAsync(request.TournamentId, [nagivationProperty, nameof(Tournament.Matches)]);
         if(tournament == null)throw new NotFoundException(nameof(tournament));
 
         //go to draw service and see if im able to make schedule
