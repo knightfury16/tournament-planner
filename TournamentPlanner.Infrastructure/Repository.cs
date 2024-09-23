@@ -130,6 +130,23 @@ namespace TournamentPlanner.Infrastructure
             return await _dataContext.Set<T>().FindAsync(id);
         }
 
+        public async Task<T?> GetByIdAsync(int id, string[] inclueProperties)
+        {
+            if (inclueProperties == null || inclueProperties.Length == 0)
+            {
+                return await GetByIdAsync(id);
+            }
+
+            var query = _dataContext.Set<T>().AsQueryable();
+
+            foreach (var property in inclueProperties)
+            {
+                query = query.Include(property);
+            }
+            query = query.Where(e => e.Id == id);
+            return await query.FirstOrDefaultAsync();
+        }
+
         public Task<IEnumerable<T>> GetByNameAsync(string? name)
         {
             throw new NotImplementedException();

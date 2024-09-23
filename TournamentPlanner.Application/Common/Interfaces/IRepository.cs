@@ -69,6 +69,14 @@ namespace TournamentPlanner.Application.Common.Interfaces
         Task<T?> GetByIdAsync(int id);
 
         /// <summary>
+        /// Retrieves an entity by its identifier asynchronously.
+        /// </summary>
+        /// <param name="id">The identifier of the entity.</param>
+        /// <param name="includeProperties">An array of related properties('.' separable) to include in the query.</param>
+        /// <returns>A task representing the asynchronous operation, with the entity as the result, or null if not found.</returns>
+        Task<T?> GetByIdAsync(int id, string[] includeProperties);
+
+        /// <summary>
         /// Retrieves entities by their name asynchronously.
         /// </summary>
         /// <param name="name">The name of the entities to retrieve.</param>
