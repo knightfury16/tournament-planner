@@ -24,7 +24,7 @@ public class TournamentService : ITournamentService
     {
 
         if (tournament.Draws != null && tournament.Draws.Count == 0) return true;
-        return await _drawService.IsTheDrawComplete(tournament);
+        return await _drawService.IsTheDrawComplete(tournament.Draws!);//checked null top line
 
     }
     public async Task<IEnumerable<Draw>> MakeDraws(Tournament tournament, string? matchTypePrefix = null, List<int>? seedersPlayers = null)
