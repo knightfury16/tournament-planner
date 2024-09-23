@@ -17,7 +17,7 @@ public class MatchScheduler : IMatchScheduler
         var tournament = matches.First().Tournament; // do i need to send the tournament explicitly here?
 
         // if start time is provided or else default to 30 minutes later of touranament start date
-        TimeOnly startTime = schedulingInfo?.StartTime ?? new TimeOnly(9, 0, 0); //hour 0-23, so 9 = 10am
+        TimeOnly startTime = schedulingInfo?.StartTime ?? new TimeOnly(10, 0, 0); //10am
         var eachMatchTime = schedulingInfo?.EachMatchTime ?? TimeSpan.FromMinutes(30);
         DateTime modifiedStartDate = GetModifiedStartDate(startTime, schedulingInfo?.StartDate ?? tournament.StartDate);
 
@@ -43,7 +43,7 @@ public class MatchScheduler : IMatchScheduler
         int minute = startTime.Minute;
         int second = startTime.Second;
 
-        return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, hour, minute, second); // setting the start time with start date
+        return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, hour, minute, second).ToUniversalTime(); // setting the start time with start date
     }
 
     public IEnumerable<Match> AdvanceMatchScheduler(ref List<Match> matches, SchedulingInfo schedulingInfo)
