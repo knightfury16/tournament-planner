@@ -42,8 +42,10 @@ public class MakeTournamentMatchScheduleRequestHandler : IRequestHandler<MakeTou
         var matches = await _matchService.CreateMatches(tournament, request.SchedulingInfo);
 
         //ON-TEST 
-        //! not saving it to db yet
         //! at worst case will have 20 group with 10 match each, with total 200 matches between them. so cant send all the info. remember it. 
+
+        tournament.Matches.AddRange(matches);
+        await _tournamentRepository.SaveAsync();
         return _mapper.Map<IEnumerable<MatchDto>>(matches);
     }
 
