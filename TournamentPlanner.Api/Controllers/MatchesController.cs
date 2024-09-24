@@ -1,116 +1,138 @@
-// using System;
-// using System.Collections.Generic;
-// using System.Linq;
-// using System.Threading.Tasks;
-// using Microsoft.AspNetCore.Mvc;
-// using TournamentPlanner.Application.UseCases.MatchUseCase;
-// using TournamentPlanner.Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
+using TournamentPlanner.Application.DTOs;
+using TournamentPlanner.Application.Request;
+using TournamentPlanner.Domain.Entities;
+using TournamentPlanner.Mediator;
 
-// namespace TournamentPlanner.Api.Controllers
-// {
-//     [ApiController, Route("api/matches")]
-//     public class MatchesController : ControllerBase
-//     {
-//         private readonly IMatchUseCase _matchUseCase;
+namespace TournamentPlanner.Api.Controllers
+{
+    [ApiController]
+    [Route("/api/matches")] 
+    public class MatchesController : ControllerBase
+    {
+        private readonly IMediator _mediator;
 
-//         public MatchesController(IMatchUseCase matchUseCase)
-//         {
-//             _matchUseCase = matchUseCase;
+        public MatchesController(IMediator mediator)
+        {
+            _mediator = mediator;
 
-//         }
+        }
 
-//         [HttpGet]
-//         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
-//         public async Task<IActionResult> GetAllMatches([FromQuery]int? tournamentId)
-//         {
-//             if (tournamentId.HasValue)
-//             {
-//                 return Ok(await _matchUseCase.GetAllTournamentMatches(tournamentId.Value));
-//             }
-//             var matches = await _matchUseCase.GetAllMatches();
-//             return Ok(matches);
-//         }
+        [HttpGet("{matchId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MatchDto>))]
+        public async Task<IActionResult> GetMatch(int matchId)
+        {
+            if(matchId < 0) return BadRequest("Invalid Id");
 
-//         [HttpGet]
-//         [Route("open")]
-//         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
-//         public async Task<IActionResult> GetAllOpenMatches([FromQuery] int? roundId, [FromQuery] int? tournamentId)
-//         {
-//             var matches = await _matchUseCase.GetOpenMatches(roundId, tournamentId);
-//             return Ok(matches);
-//         }
+            var getMatchRequest = new GetMatchRequest(matchId);
+            var matchDto = await _mediator.Send(getMatchRequest);
 
-//         [HttpGet]
-//         [Route("played")]
-//         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
-//         public async Task<IActionResult> GetPlayedMatches([FromQuery] int? roundId, [FromQuery] int? tournamentId)
-//         {
-//             var matches = await _matchUseCase.GetPlayedMatches(roundId, tournamentId);
-//             return Ok(matches);
-//         }
+            return Ok(matchDto);
+        }
 
+        [HttpPost("{matchId}/entry-match-score")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateMatch(int matchId, [FromBody] object gameSpecificScore )
+        {
+            if (gameSpecificScore == null)
+            {
+                return BadRequest("Need Score to update");
+            }
 
-//         [HttpGet]
-//         [Route("{roundId}")]
-//         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
-//         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-//         public async Task<IActionResult> GetAllMatchesOfRound(int roundId)
-//         {
-//             if (roundId <= 0)
-//             {
-//                 return BadRequest("Invalid RoundId. RoundId cant be null or negative");
-//             }
-//             var matches = await _matchUseCase.GetAllRoundMatches(roundId);
-//             return Ok(matches);
-//         }
+            var addMatchScoreRequest = new AddMatchScoreRequest(matchId, gameSpecificScore);
 
-//         [HttpGet]
-//         [Route("round/{roundId}/winner")]
-//         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Player>))]
-//         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-//         public async Task<IActionResult> GetAllWinnerOfRound(int roundId)
-//         {
-//             if (roundId <= 0)
-//             {
-//                 return BadRequest("Invalid RoundId. RoundId cant be null or negative");
-//             }
-//             var players = await _matchUseCase.GetAllWinnersOfRound(roundId);
-//             return Ok(players);
-//         }
+            var matchDto = await _mediator.Send(addMatchScoreRequest);
 
-//         [HttpGet]
-//         [Route("{matchId}/winner")]
-//         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Player))]
-//         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-//         [ProducesResponseType(StatusCodes.Status404NotFound)]
-//         public async Task<IActionResult> GetWinnerOfMatch(int matchId)
-//         {
-//             if (matchId <= 0)
-//             {
-//                 return BadRequest("Invalid MatchId. MatchId cant be null or negative");
-//             }
+            if (matchDto == null)
+            {
+                return BadRequest("Could not add match");
+            }
 
-//             var player = await _matchUseCase.GetWinnerOfMatch(matchId);
-//             if (player == null)
-//             {
-//                 return NotFound("Match not completed yet");
-//             }
-//             return Ok(player);
-//         }
+            //TODO: make it created at action after making the get match by id route
+            return Ok(matchDto);
+        }
+
+        // [HttpGet]
+        // [Route("open")]
+        // [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
+        // public async Task<IActionResult> GetAllOpenMatches([FromQuery] int? roundId, [FromQuery] int? tournamentId)
+        // {
+        //     var matches = await _mediator.GetOpenMatches(roundId, tournamentId);
+        //     return Ok(matches);
+        // }
+
+        // [HttpGet]
+        // [Route("played")]
+        // [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
+        // public async Task<IActionResult> GetPlayedMatches([FromQuery] int? roundId, [FromQuery] int? tournamentId)
+        // {
+        //     var matches = await _mediator.GetPlayedMatches(roundId, tournamentId);
+        //     return Ok(matches);
+        // }
 
 
-//         [HttpPut]
-//         [Route("{matchId}/reschedule")]
-//         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Match))]
-//         public async Task<IActionResult> RescheduleMatch(int matchId, [FromBody] string rescheduledDate)
-//         {
-//             //TODO: parse date properly and catch
-//             DateTime.TryParse(rescheduledDate, out var date);
-//             var match = await _matchUseCase.RescheduleAMatch(matchId, date);
+        // [HttpGet]
+        // [Route("{roundId}")]
+        // [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
+        // [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        // public async Task<IActionResult> GetAllMatchesOfRound(int roundId)
+        // {
+        //     if (roundId <= 0)
+        //     {
+        //         return BadRequest("Invalid RoundId. RoundId cant be null or negative");
+        //     }
+        //     var matches = await _mediator.GetAllRoundMatches(roundId);
+        //     return Ok(matches);
+        // }
 
-//             return Ok(match);
-//         }
+        // [HttpGet]
+        // [Route("round/{roundId}/winner")]
+        // [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Player>))]
+        // [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        // public async Task<IActionResult> GetAllWinnerOfRound(int roundId)
+        // {
+        //     if (roundId <= 0)
+        //     {
+        //         return BadRequest("Invalid RoundId. RoundId cant be null or negative");
+        //     }
+        //     var players = await _mediator.GetAllWinnersOfRound(roundId);
+        //     return Ok(players);
+        // }
+
+        // [HttpGet]
+        // [Route("{matchId}/winner")]
+        // [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Player))]
+        // [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        // [ProducesResponseType(StatusCodes.Status404NotFound)]
+        // public async Task<IActionResult> GetWinnerOfMatch(int matchId)
+        // {
+        //     if (matchId <= 0)
+        //     {
+        //         return BadRequest("Invalid MatchId. MatchId cant be null or negative");
+        //     }
+
+        //     var player = await _mediator.GetWinnerOfMatch(matchId);
+        //     if (player == null)
+        //     {
+        //         return NotFound("Match not completed yet");
+        //     }
+        //     return Ok(player);
+        // }
 
 
-//     }
-// }
+        // [HttpPut]
+        // [Route("{matchId}/reschedule")]
+        // [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Match))]
+        // public async Task<IActionResult> RescheduleMatch(int matchId, [FromBody] string rescheduledDate)
+        // {
+        //     //TODO: parse date properly and catch
+        //     DateTime.TryParse(rescheduledDate, out var date);
+        //     var match = await _mediator.RescheduleAMatch(matchId, date);
+
+        //     return Ok(match);
+        // }
+
+
+    }
+}
