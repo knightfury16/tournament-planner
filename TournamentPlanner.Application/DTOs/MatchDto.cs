@@ -1,6 +1,7 @@
 namespace TournamentPlanner.Application.DTOs;
 public class MatchDto
 {
+    public int Id { get; set; }
     public required PlayerDto FirstPlayer { get; set; }
 
     public required PlayerDto SecondPlayer { get; set; }
