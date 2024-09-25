@@ -7,8 +7,7 @@ public class MatchTypeDto
     public int Id { get; set; }
     public required string Name { get; set; } //group name, eg. GroupA or Elimination1
 
-    //TODO: Make a RoundDto and map it to it
-    public RoundDto? Round { get; set; }
+    public List<RoundDto> Rounds { get; set; } = new();
     //I dont need the players and matches unless specificlly required
     public List<PlayerDto> Players { get; set; } = new();
     // public List<MatchDto> Matches { get; set; } = new();

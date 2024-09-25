@@ -18,5 +18,6 @@ public class MatchDto
     // Added to support match rescheduling
     public bool IsRescheduled { get; set; }
     public string? RescheduleReason { get; set; }
+    public string? CourtName { get; set; }
 
 }
