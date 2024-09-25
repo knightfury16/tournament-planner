@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TournamentPlanner.Application;
 using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Application.Request;
 using TournamentPlanner.Domain.Entities;
@@ -30,26 +31,27 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(matchDto);
         }
 
+        //TODO: Only admins or the admin that created the T can entry-match-score
+        //TODO: Or we can have Co-Admin under the Admin that created the T and give them permission to do the score entry
         [HttpPost("{matchId}/entry-match-score")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateMatch(int matchId, [FromBody] object gameSpecificScore )
+        public async Task<IActionResult> EntryMatchScore(int matchId, [FromBody] AddMatchScoreDto addMatchScoreDto)
         {
-            if (gameSpecificScore == null)
+            if (addMatchScoreDto == null)
             {
                 return BadRequest("Need Score to update");
             }
 
-            var addMatchScoreRequest = new AddMatchScoreRequest(matchId, gameSpecificScore);
+            var addMatchScoreRequest = new AddMatchScoreRequest(matchId, addMatchScoreDto);
 
             var matchDto = await _mediator.Send(addMatchScoreRequest);
 
             if (matchDto == null)
             {
-                return BadRequest("Could not add match");
+                return BadRequest("Could not entry match score");
             }
 
-            //TODO: make it created at action after making the get match by id route
             return Ok(matchDto);
         }
 
