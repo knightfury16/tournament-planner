@@ -24,6 +24,7 @@ namespace TournamentPlanner.Application
             CreateMap<Admin, AddAdminDto>().ReverseMap();
             CreateMap<Tournament, AddTournamentDto>().ReverseMap();
             CreateMap<Match, MatchDto>().ReverseMap();
+            CreateMap<Round, RoundDto>().ReverseMap();
             CreateMap<Domain.Entities.MatchType, MatchTypeDto>().ReverseMap();
             CreateMap<Draw, DrawDto>().ReverseMap();
 
