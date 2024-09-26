@@ -16,12 +16,14 @@ public class AddMatchScoreRequestHandler : IRequestHandler<AddMatchScoreRequest,
     private readonly IRepository<Match> _matchRepository;
     private readonly IMapper _mapper;
     private readonly IGameFormatFactory _gameFormatFactory;
+    private readonly IRoundService _roundService;
 
-    public AddMatchScoreRequestHandler(IRepository<Match> matchRepository, IMapper mapper, IGameFormatFactory gameFormatFactory)
+    public AddMatchScoreRequestHandler(IRepository<Match> matchRepository, IMapper mapper, IGameFormatFactory gameFormatFactory, IRoundService roundService)
     {
         _matchRepository = matchRepository;
         _mapper = mapper;
         _gameFormatFactory = gameFormatFactory;
+        _roundService = roundService;
     }
 
     public async Task<MatchDto?> Handle(AddMatchScoreRequest request, CancellationToken cancellationToken = default)
@@ -30,13 +32,15 @@ public class AddMatchScoreRequestHandler : IRequestHandler<AddMatchScoreRequest,
 
         //get the match, need palyers and tournament game type
         var tournamentNavigationProp = Utility.NavigationPrpertyCreator(nameof(Match.Tournament), nameof(Tournament.GameType));
-        var match = await _matchRepository.GetByIdAsync(request.MatchId, [tournamentNavigationProp, nameof(Match.FirstPlayer), nameof(Match.SecondPlayer)]);
+        var match = await _matchRepository.
+                                GetByIdAsync(request.MatchId, [tournamentNavigationProp, 
+                                nameof(Match.FirstPlayer), nameof(Match.SecondPlayer), nameof(Match.Round)]);
 
         if (match == null) throw new NotFoundException(nameof(match));
 
         //check if the the game already played or not
         //TODO: i will not let the co-admin update the match if it is alrady added. But the Admin can update the match score
-        if(match.ScoreJson != null)throw new BadRequestException("Match score already entered. Please contact the Admin to update");
+        //if(match.ScoreJson != null)throw new BadRequestException("Match score already entered. Please contact the Admin to update");
 
         //get the game type handler
         var gameTypeHandler = _gameFormatFactory.GetGameFormat(match.Tournament.GameType.Name);
@@ -60,6 +64,7 @@ public class AddMatchScoreRequestHandler : IRequestHandler<AddMatchScoreRequest,
         //but this is a small app, will not have problem
 
         //update the round is complete or not
+        await _roundService.UpdateRoundCompletion(match.Round);
 
 
         return _mapper.Map<MatchDto>(match);
