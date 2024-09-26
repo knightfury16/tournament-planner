@@ -7,6 +7,7 @@ using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 namespace TournamentPlanner.Application.Services;
 public interface IMatchService 
 {
+    public bool IsMatchComplete(Match match);
     public Task<IEnumerable<Match>> CreateMatches(Tournament tournament, SchedulingInfo schedulingInfo);
 }
 public class MatchService : IMatchService
@@ -40,5 +41,14 @@ public class MatchService : IMatchService
         var scheduledMatches = _matchScheduler.DefaultMatchScheduler(ref createdMatches, schedulingInfo!);
 
         return scheduledMatches;
+    }
+
+    public bool IsMatchComplete(Match match)
+    {
+        if(match == null)throw new ArgumentNullException(nameof(match));
+
+        //decide on the score property if the match is complete or not
+        if(match.ScoreJson != null)return true;
+        return false;
     }
 }
