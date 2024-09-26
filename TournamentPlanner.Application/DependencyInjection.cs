@@ -25,6 +25,7 @@ namespace TournamentPlanner.Application
             services.AddScoped<IMatchTypeService, MatchTypeService>();
             services.AddScoped<IMatchService, MatchService>();
             services.AddScoped<IMatchScheduler, MatchScheduler>();
+            services.AddScoped<IRoundService, RoundService>();
 
 
 
