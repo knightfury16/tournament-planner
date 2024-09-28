@@ -9,12 +9,12 @@ public class CreateGroupMatchType : ICreateMatchType
     private int _maxGroupSize = 5;
 
 
-    public Task<IEnumerable<MatchType>?> CreateMatchType(Tournament tournament, string? prefix, List<int>? seederPlayerIds)
+    public Task<IEnumerable<MatchType>?> CreateMatchType(Tournament tournament, List<Player> players, string? prefix, List<int>? seederPlayerIds)
     {
         prefix ??= "Group";
-        var numberOfGroup = DetermineNumberOfGroup(tournament.Participants.Count);
+        var numberOfGroup = DetermineNumberOfGroup(players.Count);
         List<MatchType> groups = GenerateGroups(tournament, numberOfGroup, prefix);
-        var sortedPlayers = GetSortedPlayers(tournament.Participants, seederPlayerIds);
+        var sortedPlayers = GetSortedPlayers(players, seederPlayerIds);
         DistributePlayersAmongGroups(sortedPlayers, ref groups);
         return Task.FromResult((IEnumerable<MatchType>?)groups);
     }

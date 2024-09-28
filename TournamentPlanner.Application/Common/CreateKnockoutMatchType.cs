@@ -7,7 +7,8 @@ public class CreateKnockoutMatchType : ICreateMatchType
 {
 
 
-    public Task<IEnumerable<Domain.Entities.MatchType>?> CreateMatchType(Tournament tournament, string? prefix = null, List<int>? seederPlayerIds = null)
+    public Task<IEnumerable<Domain.Entities.MatchType>?> CreateMatchType(Tournament tournament,
+    List<Player> players, string? prefix = null, List<int>? seederPlayerIds = null)
     {
         throw new NotImplementedException();
     }
