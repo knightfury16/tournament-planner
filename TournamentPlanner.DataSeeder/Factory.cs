@@ -1,21 +1,71 @@
-using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Domain.Entities;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
-namespace TournamentPlanner.Application.Common;
+namespace TournamentPlanner.DataSeeder;
+
+
+public static class Factory
+{
+    public static List<Tournament> CreateTournaments(int numberOfTournament, string? name = "Test")
+    {
+        List<Tournament> tounaments = new List<Tournament>();
+
+        for (int i = 0; i < numberOfTournament; i++)
+        {
+            var tour = new TournamentBuilder()
+                .WithName($"{name} Tournament " + (i + 1).ToString())
+                .Build();
+            tounaments.Add(tour);
+
+        }
+
+        return tounaments;
+    }
+
+    public static List<Player> CreatePlayers(int numOfPlayers, string? name = "Test")
+    {
+        List<Player> players = new List<Player>();
+
+        for (int i = 0; i < numOfPlayers; i++)
+        {
+            var player = new PlayerBuilder()
+
+                .WithName($"{name} Player " + (i + 1).ToString())
+                .Build();
+            players.Add(player);
+        }
+        return players;
+    }
+
+    public static List<Admin> CreateAdmin(int numOfAdmin, string? name = "Test")
+    {
+        List<Admin> admins = new List<Admin>();
+        for (int i = 0; i <= numOfAdmin; i++)
+        {
+            var admin = new AdminBuilder().WithName($"{name} Admin " + (i + 1).ToString())
+                .Build();
+            admins.Add(admin);
+        }
+        return admins;
+    }
+}
+
+
+public interface ICreateMatchType
+{
+    public Task<IEnumerable<MatchType>?> CreateMatchType(Tournament tournament, string? prefix = "Untitled", List<int>? sedderPlayers = null);
+}
 
 public class CreateGroupMatchType : ICreateMatchType
 {
-    private int _maxGroupSize = 5;
+    private readonly int _maxGroupSize = 5;
 
-
-    public Task<IEnumerable<MatchType>?> CreateMatchType(Tournament tournament, List<Player> players, string? prefix, List<int>? seederPlayerIds)
+    public Task<IEnumerable<MatchType>?> CreateMatchType(Tournament tournament, string? prefix = "Group", List<int>? seederPlayers = null)
     {
-        prefix ??= "Group";
-        var numberOfGroup = DetermineNumberOfGroup(players.Count);
+        var numberOfGroup = DetermineNumberOfGroup(tournament.Participants.Count);
         List<MatchType> groups = GenerateGroups(tournament, numberOfGroup, prefix);
-        var sortedPlayers = GetSortedPlayers(players, seederPlayerIds);
-        DistributePlayersAmongGroups(sortedPlayers, ref groups);
+        var distributedPlayers = DetermineDistributedPlayers(tournament.Participants, seederPlayers);
+        DistributePlayersAmongGroups(distributedPlayers, ref groups);
         return Task.FromResult((IEnumerable<MatchType>?)groups);
     }
 
@@ -42,14 +92,12 @@ public class CreateGroupMatchType : ICreateMatchType
 
     }
 
-    private List<Player> GetSortedPlayers(List<Player> participants, List<int>? seederPlayerIds = null)
+    private List<Player> DetermineDistributedPlayers(List<Player> participants, List<int>? seederPlayerIds)
     {
-        //getting a list of player by seeder, power, then by randomly to distribute similar level player evenly among groups
         Random random = new Random();
-
-        //*custom sorting for learning purpose
         if (seederPlayerIds != null)
         {
+            //custom sorting
             participants.Sort((leftPlayer, rightPlayer) =>
            {
                //First level of sorting: Seeder Player
@@ -76,15 +124,13 @@ public class CreateGroupMatchType : ICreateMatchType
             {
                 //First level of sorting: Win Ratio
                 int winRatioComparison = leftPlayer.WinRatio.CompareTo(rightPlayer.WinRatio);
-                if (winRatioComparison != 0) return winRatioComparison * -1; //coz i need it in descending order
+                if (winRatioComparison != 0) return winRatioComparison;
 
                 //Second level of sorting: Random
                 return random.Next().CompareTo(random.Next());
             });
         }
         return participants;
-        //*Previous implementation
-        // return participants.OrderBy(p => p.WinRatio).ThenBy(p => random.Next()).Reverse().ToList();
     }
 
     private List<MatchType> GenerateGroups(Tournament tournament, int numberOfGroup, string? prefix)
@@ -99,13 +145,24 @@ public class CreateGroupMatchType : ICreateMatchType
             {
                 Name = matchTypeName,
             };
+            matchType.Draw = GetDraw(tournament, matchType);
             matchTypes.Add(matchType);
             initialChar = (char)(initialChar + 1);
         }
         return matchTypes;
     }
+
     private int DetermineNumberOfGroup(int totalParticipant)
     {
         return (int)Math.Ceiling((double)totalParticipant / _maxGroupSize);
+    }
+
+    private Draw GetDraw(Tournament tournament, MatchType matchType)
+    {
+        return new Draw
+        {
+            Tournament = tournament,
+            MatchType = matchType
+        };
     }
 }

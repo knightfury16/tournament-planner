@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TournamentPlanner.DataModel
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TournamentPlanner.Mediator", "TournamentPlanner.Mediator\TournamentPlanner.Mediator.csproj", "{C6EB0794-03E7-4BA5-8A96-17D190E3E8E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TournamentPlanner.DataSeeder", "TournamentPlanner.DataSeeder\TournamentPlanner.DataSeeder.csproj", "{907413C4-D3BE-4BBA-ABF1-B13C56BC19D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{C6EB0794-03E7-4BA5-8A96-17D190E3E8E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6EB0794-03E7-4BA5-8A96-17D190E3E8E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6EB0794-03E7-4BA5-8A96-17D190E3E8E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{907413C4-D3BE-4BBA-ABF1-B13C56BC19D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{907413C4-D3BE-4BBA-ABF1-B13C56BC19D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{907413C4-D3BE-4BBA-ABF1-B13C56BC19D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{907413C4-D3BE-4BBA-ABF1-B13C56BC19D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

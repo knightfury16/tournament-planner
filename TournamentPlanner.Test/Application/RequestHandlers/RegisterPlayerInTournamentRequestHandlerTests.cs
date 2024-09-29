@@ -5,6 +5,7 @@ using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
+using TournamentPlanner.Domain.Exceptions;
 
 namespace TournamentPlanner.Test.Application.RequestHandlers
 {
@@ -142,13 +143,12 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
             _mockPlayerRepository.Setup(r => r.GetByIdAsync(999)).ReturnsAsync((Player)null!);// asserting null with !
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(request, CancellationToken.None));
-            Assert.Equal("Player not found", exception.Message);
+            await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(request, CancellationToken.None)); // will assert only exception type not messages
         }
 
 
         [Fact]
-        public async Task Handle_PlayerUnderAge_ThrowsInvalidOperationException()
+        public async Task Handle_PlayerUnderAge_ThrowsValidationException()
         {
             // Arrange
             var tournament = GetSomeMockTournaments().First(t => t.MinimumAgeOfRegistration > 0);
@@ -163,11 +163,11 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
             _mockPlayerRepository.Setup(r => r.GetByIdAsync(player.Id)).ReturnsAsync(player);
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(request, CancellationToken.None));
+            var exception = await Assert.ThrowsAsync<ValidationException>(() => _handler.Handle(request, CancellationToken.None));
             Assert.Equal($"Player does not meet the minimum age requirement for {tournament.MinimumAgeOfRegistration}", exception.Message);
         }
         [Fact]
-        public async Task Handle_PlayerAlreadyRegistered_ThrowsInvalidOperationException()
+        public async Task Handle_PlayerAlreadyRegistered_ThrowsBadRequestException()
         {
             // Arrange
             var tournament = GetSomeMockTournaments().First(t => t.Participants.Count > 0);
@@ -182,7 +182,7 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
             _mockPlayerRepository.Setup(r => r.GetByIdAsync(player.Id)).ReturnsAsync(player);
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(request, CancellationToken.None));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(() => _handler.Handle(request, CancellationToken.None));
             Assert.Equal("Player is already registered for this tournament", exception.Message);
         }
         [Fact]
