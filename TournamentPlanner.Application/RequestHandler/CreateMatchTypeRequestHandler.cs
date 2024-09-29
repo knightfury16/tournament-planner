@@ -40,7 +40,7 @@ public class CreateMatchTypeRequestHandler : IRequestHandler<CreateMatchTypeRequ
 
         var matchTypeCreator = _createMatchTypeFactory.GetMatchTypeCreator(tournament.TournamentType ?? TournamentType.GroupStage);
 
-        var matchTypes = await matchTypeCreator.CreateMatchType(tournament,"Cool");
+        var matchTypes = await matchTypeCreator.CreateMatchType(tournament, tournament.Participants,"Cool");
 
         if (matchTypes == null)
         {

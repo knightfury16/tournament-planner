@@ -31,6 +31,8 @@ public class CreateTournamentDrawRequestHandler : IRequestHandler<CreateTourname
         {
             throw new NotFoundException(nameof(tournament), request.TournamentId);
         }
+        //TODO: Need to check the tournament status
+        //only allow if the registration is complete>> if status is completed will not allow to make the draw.
         //can i make draw? 
         var canIDarw = await _tournamentService.CanIMakeDraw(tournament);
 
