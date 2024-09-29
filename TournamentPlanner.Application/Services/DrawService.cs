@@ -31,6 +31,7 @@ public class DrawService : IDrawService
 
     public Task<bool> IsTheDrawComplete(IEnumerable<Draw> draws)
     {
+        if(draws == null) throw new ArgumentNullException(nameof(draws));
 
         foreach (var draw in draws)
         {
