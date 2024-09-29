@@ -7,17 +7,23 @@ public interface ITournamentService
 {
     public Task<bool> CanIMakeDraw(Tournament tournament);
     public Task<IEnumerable<Draw>> MakeDraws(Tournament tournament, string? matchTypePrefix = null, List<int>? seederPlayers = null);
+    public Task<bool> CanISchedule(Tournament tournament);
 }
 
 public class TournamentService : ITournamentService
 {
     private readonly IDrawService _drawService;
     private readonly IMatchTypeService _matchTypeService;
+    private readonly IRoundService _roundService;
+    private readonly IRepository<Tournament> _tournamentRepository;
 
-    public TournamentService(IDrawService drawService, IMatchTypeService matchTypeService)
+
+    public TournamentService(IDrawService drawService, IMatchTypeService matchTypeService, IRepository<Tournament> tornamentRepository, IRoundService roundService)
     {
         this._drawService = drawService;
         _matchTypeService = matchTypeService;
+        _tournamentRepository = tornamentRepository;
+        _roundService = roundService;
     }
 
     public async Task<bool> CanIMakeDraw(Tournament tournament)
@@ -26,6 +32,32 @@ public class TournamentService : ITournamentService
         if (tournament.Draws != null && tournament.Draws.Count == 0) return true;
         return await _drawService.IsTheDrawComplete(tournament.Draws!);//checked null top line
 
+    }
+    public async Task<bool> CanISchedule(Tournament tournament){
+        var draws = tournament.Draws;
+        if(draws == null){
+            var tournamentDrawPopulated =  await _tournamentRepository.GetByIdAsync(tournament.Id, [nameof(Tournament.Draws)]);
+            draws = tournamentDrawPopulated?.Draws;  
+        }
+        //sort the draws by created date
+        if(draws == null)throw new NullReferenceException(nameof(draws));
+
+        draws = draws.OrderByDescending(dr => dr.CreatedAt).ToList();
+
+        if(draws.First().MatchType is KnockOut){
+            //for knockout matches in order to know if i can make schedule i need to check if all the previous roudn of the \
+            //knockout is finsihed or not 
+            //for knockout matches i dont need it to be complete, i just need to know if the previous round is complete or not
+            //the reason is that, for knockout match type i can not scheudle all the matches of all the round at onece
+            //i need to know the winner of the previous round in order to schedule the next round
+            //in group match type i know all the matches of all the round before hand so in order to schedule it i dont need to 
+            //to know any information beforehand
+            return await _roundService.IsAllRoundComplete(draws.First().MatchType);
+        }
+
+        //if it is  not knockout match type i need to check if all the preivious draws matchtype is complete or not
+        //that is, is all the group matches competed
+        return await _drawService.IsTheDrawComplete(draws);
     }
     public async Task<IEnumerable<Draw>> MakeDraws(Tournament tournament, string? matchTypePrefix = null, List<int>? seedersPlayers = null)
     {
