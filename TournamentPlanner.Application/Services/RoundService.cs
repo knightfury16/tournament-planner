@@ -13,11 +13,13 @@ public class RoundService : IRoundService
 {
     private readonly IRepository<Round> _roundRepository;
     private readonly IMatchService _matchService;
+    private readonly IMatchTypeService _matchTypeService;
 
-    public RoundService(IRepository<Round> roundRepository, IMatchService matchService)
+    public RoundService(IRepository<Round> roundRepository, IMatchService matchService, IMatchTypeService matchTypeService)
     {
         _roundRepository = roundRepository;
         _matchService = matchService;
+        _matchTypeService = matchTypeService;
     }
 
     public async Task UpdateRoundCompletion(Round round)
@@ -41,6 +43,7 @@ public class RoundService : IRoundService
         round.IsCompleted = true;
         await _roundRepository.SaveAsync();
         //call the update matchtype
+        await _matchTypeService.UpdateMatchTypeCompletion(round.MatchType);
 
     }
 }
