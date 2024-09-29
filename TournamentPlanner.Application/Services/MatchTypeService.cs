@@ -31,11 +31,13 @@ public class MatchTypeService : IMatchTypeService
         ICreateMatchType matchTypeCreator;
         if (tournament.Draws == null || tournament.Draws.Count == 0)
         {
+            //if it is the first draw of the 2 according to the axiom, let the tournament type handle it
             playersToCreateMatchType = tournament.Participants;
             matchTypeCreator = createMatchTypeFactory.GetMatchTypeCreator(tournament.TournamentType ?? TournamentType.GroupStage);
         }
         else
         {
+            //this is the second draw of the tournament, the second draw the last that means previous draw was group
             playersToCreateMatchType = await GetMatchTypeParticipants(tournament.Draws);
             //group stage will be only one time,all other knockout
             matchTypeCreator = createMatchTypeFactory.GetMatchTypeCreator(TournamentType.Knockout);
@@ -65,14 +67,15 @@ public class MatchTypeService : IMatchTypeService
     }
     private async Task<List<Player>> GetMatchTypeParticipants(List<Draw> draws)
     {
-        draws = draws.OrderByDescending(d => d.CreatedAt).ToList();
-
-        //not the first knockout
-        if (draws.FirstOrDefault()?.MatchType is KnockOut) // latest knockout, sorted by date
-        {
-            return await GetWinnerOfPreviousKnockOut(draws.First());
-        }
+        // I dont need to check the winner of the prvious knocout match , maybe i need it while scheduling but not now
+        // draws = draws.OrderByDescending(d => d.CreatedAt).ToList();
+        // //not the first knockout
+        // if (draws.FirstOrDefault()?.MatchType is KnockOut) // latest knockout, sorted by date
+        // {
+        //     return await GetWinnerOfPreviousKnockOut(draws.First());
+        // }
         //it is first knockout match
+        await Task.CompletedTask;
         return GetGroupStanding(draws);
     }
 
