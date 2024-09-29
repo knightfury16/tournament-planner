@@ -17,14 +17,16 @@ public class MakeTournamentMatchScheduleRequestHandler : IRequestHandler<MakeTou
     private readonly IMapper _mapper;
     private readonly IDrawService _drawService;
     private readonly IMatchService _matchService;
+    private readonly ITournamentService _tournamentService;
 
-    public MakeTournamentMatchScheduleRequestHandler(IRepository<Tournament> tournamentRepository, IMapper mapper, 
-                                                    IDrawService drawService, IMatchService matchService)
+    public MakeTournamentMatchScheduleRequestHandler(IRepository<Tournament> tournamentRepository, IMapper mapper,
+                                                    IDrawService drawService, IMatchService matchService, ITournamentService tournamentService)
     {
         _tournamentRepository = tournamentRepository;
         _mapper = mapper;
         _drawService = drawService;
         _matchService = matchService;
+        _tournamentService = tournamentService;
     }
     public async Task<IEnumerable<MatchDto>?> Handle(MakeTournamentMatchScheduleRequest request, CancellationToken cancellationToken = default)
     {
@@ -36,7 +38,8 @@ public class MakeTournamentMatchScheduleRequestHandler : IRequestHandler<MakeTou
         if(tournament == null)throw new NotFoundException(nameof(tournament));
 
         //go to draw service and see if im able to make schedule
-        var canISchedule = await CanISchedule(tournament);
+            //ON-TEST: Test this please 29/09/24
+        var canISchedule = await _tournamentService.CanISchedule(tournament);
         if(canISchedule == false)throw new BadRequestException("Previous draws not complete. Can not make schedule");
         //got to match servie with all the draws
         var matches = await _matchService.CreateMatches(tournament, request.SchedulingInfo);
@@ -51,7 +54,7 @@ public class MakeTournamentMatchScheduleRequestHandler : IRequestHandler<MakeTou
 
     private async Task<bool> CanISchedule(Tournament tourament)
     {
-        if (tourament.Matches == null || tourament.Matches.Count() == 0 && tourament.Draws != null) return true; //I have made draws but no mathces yes scheduled or played, initial phase
+        if (tourament.Matches == null || tourament.Matches.Count() == 0 && tourament.Draws != null) return true; //I have made draws but no mathces yet scheduled or played, initial phase
         if (tourament.Draws == null) return false; //no draws yet created, so can not make schedule
         return await _drawService.IsTheDrawComplete(tourament.Draws); //
     }
