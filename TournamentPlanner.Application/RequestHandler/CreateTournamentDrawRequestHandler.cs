@@ -22,6 +22,8 @@ public class CreateTournamentDrawRequestHandler : IRequestHandler<CreateTourname
 
     public async Task<IEnumerable<DrawDto>?> Handle(CreateTournamentDrawRequest request, CancellationToken cancellationToken = default)
     {
+        //!! Axiom:: in TP I can only make two draw at most if the type is Group
+        //else only one that is knockout
         //does the tournament exists?
         var tournament = (await _tournamentRepository.GetAllAsync(t => t.Id == request.TournamentId, [nameof(Tournament.Participants),
                             nameof(Tournament.Draws)]))
