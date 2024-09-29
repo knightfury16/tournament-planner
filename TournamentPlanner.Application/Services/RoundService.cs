@@ -2,12 +2,14 @@
 using TournamentPlanner.Application.Services;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Exceptions;
+using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
 namespace TournamentPlanner.Application;
 
 public interface IRoundService
 {
     public Task UpdateRoundCompletion(Round round);
+    public Task<bool> IsAllRoundComplete(MatchType matchType);
 }
 public class RoundService : IRoundService
 {
@@ -20,6 +22,29 @@ public class RoundService : IRoundService
         _roundRepository = roundRepository;
         _matchService = matchService;
         _matchTypeService = matchTypeService;
+    }
+
+    public async Task<bool> IsAllRoundComplete(MatchType matchType)
+    {
+        if(matchType == null)throw new ArgumentNullException(nameof(matchType));
+
+        var rounds = matchType.Rounds;
+
+        if(rounds == null){
+            rounds = (await _roundRepository.GetAllAsync(r => r.MatchTypeId == matchType.Id)).ToList();
+        }
+
+        if(rounds == null || rounds.Count == 0){
+            return true; //since no round is there so all round is complete
+        }
+
+        foreach (var round in rounds)
+        {
+            if(round.IsCompleted == false)return false;// if any round is not completed than all round is not completed
+        }
+
+        // if here then all round is complete
+        return true;
     }
 
     public async Task UpdateRoundCompletion(Round round)
