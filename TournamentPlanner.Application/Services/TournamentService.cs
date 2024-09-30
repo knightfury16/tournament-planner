@@ -1,4 +1,4 @@
-﻿using TournamentPlanner.Application.Common.Interfaces;
+using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
 
@@ -28,10 +28,16 @@ public class TournamentService : ITournamentService
 
     public async Task<bool> CanIMakeDraw(Tournament tournament)
     {
+        //TODO: Need to check tournament status here. if tournament status is complete can not make draw even if all the draw are complete
+        // i dont need to check the status. once a tournament is on knockoutstate it can not draw
 
-        if (tournament.Draws != null && tournament.Draws.Count == 0) return true;
-        return await _drawService.IsTheDrawComplete(tournament.Draws!);//checked null top line
+        //no draws availabe, inital state
+        if(tournament.Draws == null || tournament.Draws.Count == 0)return true;
 
+        //draws exists and state is not knockout
+        if(tournament.CurrentState == TournamentState.GroupState)return await _drawService.IsTheDrawComplete(tournament);
+
+        return false;
     }
     public async Task<bool> CanISchedule(Tournament tournament){
         var draws = tournament.Draws;
