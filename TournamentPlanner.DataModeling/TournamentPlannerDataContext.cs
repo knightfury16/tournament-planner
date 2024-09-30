@@ -194,12 +194,16 @@ public class TournamentPlannerDataContext : DbContext
 
     public override int SaveChanges()
     {
+        //set state of tournament during add/creation
+        SetTournamentState();
         AddTimeStamps();
         return base.SaveChanges();
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        //set state of tournament during add/creation
+        SetTournamentState();
         AddTimeStamps();
         return await base.SaveChangesAsync(cancellationToken);
     }
@@ -224,6 +228,19 @@ public class TournamentPlannerDataContext : DbContext
 
     }
 
+    //setting tournament initial state based on tournament type when creating Tournament
+    private void SetTournamentState()
+    {
+        var entries = ChangeTracker.Entries<Tournament>();
+        foreach (var entry in entries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CurrentState =
+                    entry.Entity.TournamentType == TournamentType.GroupStage ? TournamentState.GroupState : TournamentState.KnockoutState;
+            }
+        }
+    }
 
 
 }
