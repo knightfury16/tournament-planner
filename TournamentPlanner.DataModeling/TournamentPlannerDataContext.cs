@@ -105,6 +105,9 @@ public class TournamentPlannerDataContext : DbContext
             .HasDefaultValue(TournamentType.GroupStage)
             .HasConversion<string>();
 
+            entity.Property(p => p.CurrentState)
+            .HasConversion<string>();
+
             entity.Property(p => p.Status)
             .HasDefaultValue(TournamentStatus.Draft)
             .HasConversion<string>();
