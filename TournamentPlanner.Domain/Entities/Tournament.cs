@@ -29,6 +29,9 @@ public class Tournament : BaseEntity
 
     public required TournamentType? TournamentType { get; set; } // Default value GroupStage
 
+    //setting the inital current state during creation of tournament in datacontext, based on tournament type
+    public TournamentState CurrentState { get; set; } 
+
     public required GameType GameType { get; set; }
     public int GameTypeId { get; set; }
 
