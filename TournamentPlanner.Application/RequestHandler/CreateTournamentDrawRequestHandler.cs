@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using TournamentPlanner.Application.Common.Interfaces;
+using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain.Entities;
+using TournamentPlanner.Domain.Enum;
 using TournamentPlanner.Domain.Exceptions;
 using TournamentPlanner.Mediator;
 
@@ -23,18 +25,23 @@ public class CreateTournamentDrawRequestHandler : IRequestHandler<CreateTourname
     public async Task<IEnumerable<DrawDto>?> Handle(CreateTournamentDrawRequest request, CancellationToken cancellationToken = default)
     {
         //!! Axiom:: in TP I can only make two draw at most if the type is Group
-        //else only one that is knockout
         //does the tournament exists?
+        var navigationProperty = Utility.NavigationPrpertyCreator(nameof(Tournament.Draws), nameof(Draw.MatchType));
         var tournament = (await _tournamentRepository.GetAllAsync(t => t.Id == request.TournamentId, [nameof(Tournament.Participants),
-                            nameof(Tournament.Draws)]))
+                            navigationProperty]))
                             .FirstOrDefault();
 
         if (tournament == null)
         {
             throw new NotFoundException(nameof(tournament), request.TournamentId);
         }
+
         //TODO: Need to check the tournament status
         //only allow if the registration is complete>> if status is completed will not allow to make the draw.
+        if (tournament.Status <= TournamentStatus.RegistrationOpen)
+        {
+            throw new BadRequestException("Please close the Tournament Registration in order to make draw");
+        }
         //can i make draw? 
         var canIDarw = await _tournamentService.CanIMakeDraw(tournament);
 
