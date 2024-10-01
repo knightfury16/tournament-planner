@@ -23,6 +23,7 @@ public class CreateRoundRobinMatches : ICreateMatch
         if (players.Count() % 2 != 0)
         {
             //add a bye player
+            //ToDO: this hold on to the reference of the bye, need to remove it
             players.Add(
                 new Player
                 {
