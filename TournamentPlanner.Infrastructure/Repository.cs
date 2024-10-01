@@ -182,5 +182,45 @@ namespace TournamentPlanner.Infrastructure
             throw new NotImplementedException();
         }
 
+        public async Task ExplicitLoadReferenceAsync<TProperty>(T entity, Expression<Func<T, TProperty?>> propertyExpression)
+                   where TProperty : class
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            if (propertyExpression == null)
+            {
+                throw new ArgumentNullException(nameof(propertyExpression));
+            }
+
+            // Ensure the entity is being tracked by the context
+            _dataContext.Attach(entity);
+
+            // Load the reference property
+            await _dataContext.Entry(entity).Reference(propertyExpression).LoadAsync();
+        }
+
+        public async Task ExplicitLoadCollectionAsync<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression)
+            where TProperty : class
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            if (propertyExpression == null)
+            {
+                throw new ArgumentNullException(nameof(propertyExpression));
+            }
+
+            // Ensure the entity is being tracked by the context
+            _dataContext.Attach(entity);
+
+            // Load the collection property
+            await _dataContext.Entry(entity).Collection(propertyExpression).LoadAsync();
+        }
+
     }
 }

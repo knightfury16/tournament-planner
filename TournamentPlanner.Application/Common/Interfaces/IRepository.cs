@@ -103,5 +103,23 @@ namespace TournamentPlanner.Application.Common.Interfaces
         /// </summary>
         /// <returns>A task representing the asynchronous operation.</returns>
         Task SaveAsync();
+
+        /// <summary>
+        /// Explicitly loads a reference property for the given entity asynchronously.
+        /// </summary>
+        /// <typeparam name="TProperty">The type of the property to load.</typeparam>
+        /// <param name="entity">The entity for which to load the property.</param>
+        /// <param name="propertyExpression">An expression representing the property to load.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        Task ExplicitLoadReferenceAsync<TProperty>(T entity, Expression<Func<T, TProperty?>> propertyExpression) where TProperty : class;
+
+        /// <summary>
+        /// Explicitly loads a collection property for the given entity asynchronously.
+        /// </summary>
+        /// <typeparam name="TProperty">The type of the elements in the collection property.</typeparam>
+        /// <param name="entity">The entity for which to load the property.</param>
+        /// <param name="propertyExpression">An expression representing the property to load.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        Task ExplicitLoadCollectionAsync<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression) where TProperty : class;
     }
 }
