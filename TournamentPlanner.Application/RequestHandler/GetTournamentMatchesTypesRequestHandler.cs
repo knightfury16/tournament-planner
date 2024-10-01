@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using TournamentPlanner.Application.Common.Interfaces;
+using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Mediator;
 
@@ -22,8 +23,9 @@ public class GetTournamentMatchesTypesRequestHandler : IRequestHandler<GetTourna
         {
             throw new ArgumentNullException(nameof(request));
         }
-
-        var matchTypes =(await _drawRepository.GetAllAsync(t => t.Id == request.tournamentId,[nameof(Draw.MatchType)])).Select(d => d.MatchType).ToList();
+        var navigationProperty = Utility.NavigationPrpertyCreator(nameof(Draw.MatchType), nameof(Domain.Entities.MatchType.Players));
+        var navigationProperty2 = Utility.NavigationPrpertyCreator(nameof(Draw.MatchType), nameof(Domain.Entities.MatchType.Rounds));
+        var matchTypes =(await _drawRepository.GetAllAsync(d => d.TournamentId == request.tournamentId,[navigationProperty, navigationProperty2])).Select(d => d.MatchType).ToList();
 
         return _mapper.Map<IEnumerable<MatchTypeDto>>(matchTypes);
 
