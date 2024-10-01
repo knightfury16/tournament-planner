@@ -37,6 +37,7 @@ public class TournamentService : ITournamentService
         //draws exists and state is not knockout
         if(tournament.CurrentState == TournamentState.GroupState)return await _drawService.IsTheDrawComplete(tournament);
 
+        //in all cases it is false
         return false;
     }
     public async Task<bool> CanISchedule(Tournament tournament){
@@ -69,8 +70,6 @@ public class TournamentService : ITournamentService
     {
         var areSeedersValid = ValidateSeeders(tournament, seedersPlayers);
         if(!areSeedersValid)throw new Exception("Seeders are not valid");
-        //!!i need a match creator on match type param not only on tournament type.
-        //!! because i can make draw, say group is finish, so next will be knockout
         var matchTypes = await _matchTypeService.CreateMatchType(tournament, matchTypePrefix, seedersPlayers);
         var draws = matchTypes.Select(mt => GetDraw(mt, tournament));
         return draws;
