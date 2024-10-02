@@ -30,7 +30,7 @@ public class GetMatchTypeRequestHandler : IRequestHandler<GetMatchTypeRequest, M
 
         // get the matchtype and populate the round and matches
         var roundNavigationProop = Utility.NavigationPrpertyCreator(nameof(MatchType.Rounds), nameof(Round.Matches));
-        var matchType = await _matchTypeRepository.GetByIdAsync(request.MatchTypeId, [roundNavigationProop]);
+        var matchType = await _matchTypeRepository.GetByIdAsync(request.MatchTypeId, [nameof(MatchType.Players),roundNavigationProop]);
 
         if (matchType == null) throw new NotFoundException(nameof(matchType));
 
