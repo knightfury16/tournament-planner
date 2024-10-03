@@ -9,4 +9,5 @@ public abstract class MatchType : BaseEntity
     public List<Round> Rounds { get; set; } = new();
     public Draw? Draw { get; set; }
     public bool IsCompleted { get; set; }
+    //TODO: keep a record of seeder player
 }
