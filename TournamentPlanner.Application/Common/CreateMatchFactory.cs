@@ -12,12 +12,6 @@ public class CreateMatchFactory : ICreateMatchFactory
 {
     public ICreateMatch GetMatchCreator(MatchType matchType)
     {
-        return matchType switch
-        {
-            //!! hold debugger here
-           Group => new CreateRoundRobinMatches(),
-           KnockOut => new CreateKnockOutMatches(),
-           _ => throw new ArgumentException("Unsupported match type: " + matchType),
-        };
+        throw new NotImplementedException();
     }
 }
