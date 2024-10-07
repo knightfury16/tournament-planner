@@ -20,7 +20,7 @@ public class MatchTypeService : IMatchTypeService
     private readonly IRepository<Tournament> _tournamentRepository;
     private readonly IGameFormatFactory _gameFormatFactory;
 
-    public MatchTypeService(ICreateMatchTypeFactory createMatchTypeFactory, IRepository<MatchType> matchTypeRepository, IRepository<Draw> drawRepository, ICreateMatchFactory matchCreatorFactory, IGameFormatFactory gameFormatFactory, IRepository<Tournament> tournamentRepository)
+    public MatchTypeService(ICreateMatchTypeFactory createMatchTypeFactory, IRepository<MatchType> matchTypeRepository, IRepository<Draw> drawRepository, IGameFormatFactory gameFormatFactory, IRepository<Tournament> tournamentRepository)
     {
         this.createMatchTypeFactory = createMatchTypeFactory;
         _matchTypeRepository = matchTypeRepository;
