@@ -1,10 +1,19 @@
 using TournamentPlanner.Application.Common.Interfaces;
+using TournamentPlanner.Domain;
 using TournamentPlanner.Domain.Entities;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
 namespace TournamentPlanner.Application.Common;
 
-public class CreateKnockOutMatches : ICreateMatch
+public interface IKnockout
+{
+
+    Task<IEnumerable<Match>> CreateMatches(Tournament tournament, MatchType matchType);
+    Task<IEnumerable<Match>> CreateFirstRoundMatches(Tournament tournament, MatchType matchType);
+    Task<IEnumerable<Match>> CreateFirstRoundMatchesAfterGroup(Tournament tournament, MatchType matchType, Dictionary<string, List<PlayerStanding>> groupOfPlayerStanding);
+}
+
+public class CreateKnockOutMatches : IKnockout
 {
     private readonly IRepository<MatchType> _matchTypeRepository;
 
@@ -42,9 +51,21 @@ public class CreateKnockOutMatches : ICreateMatch
         //check if the  order remain the same
         throw new NotImplementedException();
     }
+    public async Task<IEnumerable<Match>> CreateFirstRoundMatches(Tournament tournament, MatchType matchType)
+    {
+        return await KnockoutTournamentFirstRound(tournament, matchType);
+    }
+
+    public Task<IEnumerable<Match>> CreateFirstRoundMatchesAfterGroup(Tournament tournament, MatchType matchType, Dictionary<string, List<PlayerStanding>> groupOfPlayerStanding)
+    {
+        throw new NotImplementedException();
+    }
 
     private IEnumerable<Match> KnockoutAfterGroupFirstRound(Tournament tournament, MatchType matchType)
     {
+        //i nedd to get all the player from all the group standing
+        //every draw contain a group
+        //get all the draws j
         throw new NotImplementedException();
     }
 

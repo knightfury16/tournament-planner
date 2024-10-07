@@ -1,11 +1,15 @@
-using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Exceptions;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
 namespace TournamentPlanner.Application.Common;
 
-public class CreateRoundRobinMatches : ICreateMatch
+public interface IRoundRobin
+{
+    Task<IEnumerable<Match>> CreateMatches(Tournament tournament, MatchType matchType);
+}
+
+public class CreateRoundRobinMatches : IRoundRobin
 {
     private readonly string _roundPrefix = "Round";
     private readonly string _byePlayerName = "Bye";
