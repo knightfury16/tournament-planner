@@ -57,9 +57,59 @@ public class CreateKnockOutMatches : IKnockout
         return await KnockoutTournamentFirstRound(tournament, matchType);
     }
 
-    public Task<IEnumerable<Match>> CreateFirstRoundMatchesAfterGroup(Tournament tournament, MatchType matchType, Dictionary<string, List<PlayerStanding>> groupOfPlayerStanding)
+    public async Task<IEnumerable<Match>> CreateFirstRoundMatchesAfterGroup(Tournament tournament, MatchType matchType, Dictionary<string, List<PlayerStanding>> groupOfPlayerStanding)
     {
-        throw new NotImplementedException();
+        if (groupOfPlayerStanding == null || groupOfPlayerStanding.Count == 0) throw new Exception("Group of player standing can not be null or zero");
+
+        var playerPerGroup = groupOfPlayerStanding.First().Value.Count;
+        //need to handle odd player case
+
+        //is the gorupOfPlayerStanding even?
+        if (groupOfPlayerStanding.Count % 2 != 0)
+        {
+            List<PlayerStanding> byePlayersStanding = new List<PlayerStanding>();
+            for (int i = 0; i < playerPerGroup; i++)
+            {
+
+                byePlayersStanding.Add(new PlayerStanding
+                {
+                    Player = GetByePlayer()
+                });
+            }
+
+            groupOfPlayerStanding.Add("BYE_GROUP", byePlayersStanding);
+        }
+        //TODO
+        //!! AM writing the code logic with 2 player per group in mind, need to make it dynamic
+        // var numberOfByePlayer = GetNumberOfBye(groupOfPlayerStanding.First().Value.Count);
+        //is the playerStanding per group power of tw0?
+
+        //shuffle up th groupOfPlayeStanding
+        var random = new Random();
+        var groupCount = groupOfPlayerStanding.Count;
+        int halfGroupCount = groupCount / 2;
+
+        Round round = GetRound(1, matchType);
+        List<Match> matches = new List<Match>();
+
+        groupOfPlayerStanding = groupOfPlayerStanding.OrderBy(gr => random.Next()).ToDictionary();
+
+        //per pair of group match from A2-B1, A1-B2... An-B(n-1)
+        for (int i = 0; i < halfGroupCount; i++)
+        {
+            var formerGroup = groupOfPlayerStanding.ElementAt(i).Value;
+            var laterGroup = groupOfPlayerStanding.ElementAt((groupCount - 1) - i).Value; //-1 for the index
+            for (int numberOfPlayer = 0; numberOfPlayer < playerPerGroup; numberOfPlayer++)
+            {
+                //first group first player
+                var firstPlayer = formerGroup[numberOfPlayer].Player;
+                var secondPlayer = laterGroup[(playerPerGroup - 1) - numberOfPlayer].Player;
+                matches.Add(GetMatch(firstPlayer, secondPlayer, round, tournament));
+            }
+
+        }
+        //create matches and return
+        return await Task.FromResult(matches);
     }
 
     private IEnumerable<Match> KnockoutAfterGroupFirstRound(Tournament tournament, MatchType matchType)
