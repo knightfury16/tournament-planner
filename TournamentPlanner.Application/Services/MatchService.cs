@@ -38,12 +38,12 @@ public class MatchService : IMatchService
     {
         var createdMatches = new List<Match>();
         //if tournament current state knockout  create knocout match
-        if (tournament.CurrentState == Domain.Enum.TournamentState.KnockoutState)
+        if (tournament.CurrentState == TournamentState.KnockoutState)
         {
             createdMatches = await CreateKnockOutMatches(tournament);
         }
         //if tournament current state group create matches in the group
-        if (tournament.CurrentState == Domain.Enum.TournamentState.GroupState)
+        if (tournament.CurrentState == TournamentState.GroupState)
         {
             createdMatches = await CreateGroupMatches(tournament);
         }
@@ -75,7 +75,7 @@ public class MatchService : IMatchService
 
         var knockoutDraw = tournament.Draws.Where(draw => draw.MatchType is KnockOut).FirstOrDefault();
         if (knockoutDraw == null) throw new NotFoundException("Could not find knockout draw to create matches");
-        await _drawRepository.GetByIdAsync(knockoutDraw.Id, [allRoundWithMatch]);
+        await _drawRepository.GetByIdAsync(knockoutDraw.Id, [allRoundWithMatch]); //populating the knockout draw
 
         //check if it is the first round
         if (knockoutDraw.MatchType.Rounds.Count == 0)
@@ -94,7 +94,7 @@ public class MatchService : IMatchService
                 Dictionary<string, List<PlayerStanding>> groupOfPlayerStanding = new Dictionary<string, List<PlayerStanding>>();
                 foreach (var groupDraw in groupDraws)
                 {
-                    await _drawRepository.GetByIdAsync(groupDraw.Id, [allPlayersProperty, allRoundWithMatch]);
+                    await _drawRepository.GetByIdAsync(groupDraw.Id, [allPlayersProperty, allRoundWithMatch]); //populating the draw
                     var groupStanding = gameTypeHandler.GetGroupStanding(tournament, groupDraw.MatchType);
                     if (groupStanding == null) throw new Exception("Group stading is null. could not determine group stanidng");
                     groupOfPlayerStanding.Add(groupDraw.MatchType.Name, groupStanding);
