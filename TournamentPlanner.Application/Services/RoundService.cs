@@ -14,19 +14,26 @@ public interface IRoundService
 public class RoundService : IRoundService
 {
     private readonly IRepository<Round> _roundRepository;
+    private readonly IRepository<MatchType> _matchTypeRepository;
     private readonly IMatchService _matchService;
     private readonly IMatchTypeService _matchTypeService;
 
-    public RoundService(IRepository<Round> roundRepository, IMatchService matchService, IMatchTypeService matchTypeService)
+    public RoundService(IRepository<Round> roundRepository, IMatchService matchService, IMatchTypeService matchTypeService, IRepository<MatchType> matchTypeRepository)
     {
         _roundRepository = roundRepository;
         _matchService = matchService;
         _matchTypeService = matchTypeService;
+        _matchTypeRepository = matchTypeRepository;
     }
 
     public async Task<bool> IsAllRoundComplete(MatchType matchType)
     {
         if(matchType == null)throw new ArgumentNullException(nameof(matchType));
+
+        if (matchType.Rounds.Count == 0)
+        {
+            await _matchTypeRepository.ExplicitLoadCollectionAsync(matchType, mt => mt.Rounds);
+        }
 
         var rounds = matchType.Rounds;
 
