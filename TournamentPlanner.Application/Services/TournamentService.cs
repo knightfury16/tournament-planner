@@ -1,4 +1,4 @@
-using TournamentPlanner.Application.Common.Interfaces;
+﻿using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
 
@@ -40,18 +40,22 @@ public class TournamentService : ITournamentService
         //in all cases it is false
         return false;
     }
-    public async Task<bool> CanISchedule(Tournament tournament){
+    public async Task<bool> CanISchedule(Tournament tournament)
+    {
         var draws = tournament.Draws;
-        if(draws == null){
-            var tournamentDrawPopulated =  await _tournamentRepository.GetByIdAsync(tournament.Id, [nameof(Tournament.Draws)]);
-            draws = tournamentDrawPopulated?.Draws;  
+        if (draws == null)
+        {
+            var tournamentDrawPopulated = await _tournamentRepository.GetByIdAsync(tournament.Id, [nameof(Tournament.Draws)]);
+            draws = tournamentDrawPopulated?.Draws;
         }
-        //sort the draws by created date
-        if(draws == null)throw new NullReferenceException(nameof(draws));
 
-        draws = draws.OrderByDescending(dr => dr.CreatedAt).ToList();
+        if (draws == null) throw new NullReferenceException(nameof(draws));
+        if (tournament.Matches == null || tournament.Matches.Count == 0) return true; // i have made draw but no matches scheduled yet
 
-        if(draws.First().MatchType is KnockOut){
+        if (tournament.CurrentState == TournamentState.KnockoutState)
+        {
+            var knockoutDraw = draws.Where(d => d.MatchType is KnockOut).FirstOrDefault();
+            if(knockoutDraw == null) throw  new NullReferenceException("ToournamentStatus is knokout but could not find any knockout draw");
             //for knockout matches in order to know if i can make schedule i need to check if all the previous roudn of the \
             //knockout is finsihed or not 
             //for knockout matches i dont need it to be complete, i just need to know if the previous round is complete or not
