@@ -16,6 +16,7 @@ public interface IKnockout
 public class CreateKnockOutMatches : IKnockout
 {
     private readonly IRepository<MatchType> _matchTypeRepository;
+    private Player? _byePlayer;
 
     public CreateKnockOutMatches(IRepository<MatchType> matchTypeRepository)
     {
@@ -129,6 +130,20 @@ public class CreateKnockOutMatches : IKnockout
             return N;
         // else set only the most significant bit
         return 1 << (Convert.ToString(N, 2).Length);
+    }
+
+    private Player GetByePlayer()
+    {
+        if (_byePlayer == null)
+        {
+            _byePlayer = new Player
+            {
+                Email = "Bye@gmail.com",
+                Name = "Bye player",
+                Age = 18,
+            };
+        }
+        return _byePlayer;
     }
 
     private string GetRoundName(int playerNumber)
