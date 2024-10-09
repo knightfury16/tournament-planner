@@ -15,14 +15,14 @@ public static class Data
         context.Admins.AddRange(admins);
 
         // Create Players
-        var players = Factory.CreatePlayers(6);
+        var players = Factory.CreatePlayers(7);
         CreateSomeRandomWin(7, ref players);
         context.Players.AddRange(players);
 
         // Create tournament
         var tableTennisGameType = await context.GameTypes.FirstOrDefaultAsync(gt => gt.Name == GameTypeSupported.TableTennis);
         var tournament = new TournamentBuilder()
-            .WithName("Test KO")
+            .WithName("Test Knockout")
             .WithAdmin(admins[0])
             .WithStatus(TournamentStatus.RegistrationClosed)
             .WithGameType(tableTennisGameType!)
