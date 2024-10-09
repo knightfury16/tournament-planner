@@ -72,7 +72,7 @@ public class CreateKnockOutMatches : IKnockout
     private async Task<IEnumerable<Match>> KnockoutTournamentFirstRound(Tournament tournament, MatchType matchType)
     {
         if (matchType.Players.Count == 0) await _matchTypeRepository.ExplicitLoadCollectionAsync(matchType, mt => mt.Players);
-        int numberOfBye = GetNumberOfBye(matchType.Players);
+        int numberOfBye = GetNumberOfBye(matchType.Players.Count);
         int matchToBePlayed = matchType.Players.Count - numberOfBye;
 
         //shuffle the players total random
@@ -117,9 +117,9 @@ public class CreateKnockOutMatches : IKnockout
         return players.OrderBy(p => random.Next()).ToList();
     }
 
-    private int GetNumberOfBye(List<Player> players)
+    private int GetNumberOfBye(int count)
     {
-        return HighestPowerof2(players.Count) - players.Count;
+        return HighestPowerof2(count) - count;
     }
 
     private int HighestPowerof2(int N)
