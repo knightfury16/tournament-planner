@@ -17,7 +17,7 @@ async Task SeedData(TournamentPlannerDataContext context)
 
   try
   {
-    //Data.RemoveAllDataBeforeSeedAndSave(context);
+    Data.RemoveAllDataBeforeSeedAndSave(context);
     await Data.SeedData(context);
     await transaction.CommitAsync();
     Console.WriteLine("Simulated success!!");
