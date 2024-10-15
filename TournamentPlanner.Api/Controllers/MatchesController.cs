@@ -55,6 +55,19 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(matchDto);
         }
 
+        //!! REMOVE in production, this route is for development purpose
+        //TODO: Add authorization for this route where developer can only access it
+        [HttpPost("{tournamentId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> SimulateMatches(int tournamentId)
+        {
+            if(tournamentId < 0) return BadRequest("Invalid Id");
+
+            var simulateMatchesRequest = new SimulateMatchesRequest(tournamentId);
+            await _mediator.Send(simulateMatchesRequest);
+            return Ok("Simulated successfully!");
+        }
+
         // [HttpGet]
         // [Route("open")]
         // [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Match>))]
