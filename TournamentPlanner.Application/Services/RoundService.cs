@@ -56,6 +56,8 @@ public class RoundService : IRoundService
 
     public async Task UpdateRoundCompletion(Round round)
     {
+        if(round == null)throw new ArgumentNullException(nameof(round));
+
         //get all the matches of the round
         var roundWithPopulatedMatches = await _roundRepository.GetByIdAsync(round.Id, [nameof(Round.Matches), nameof(Round.MatchType)]);
 
