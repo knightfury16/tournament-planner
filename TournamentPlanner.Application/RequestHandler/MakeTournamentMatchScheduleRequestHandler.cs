@@ -40,7 +40,7 @@ public class MakeTournamentMatchScheduleRequestHandler : IRequestHandler<MakeTou
         //go to draw service and see if im able to make schedule
             //ON-TEST: Test this please 29/09/24
         var canISchedule = await _tournamentService.CanISchedule(tournament);
-        if(canISchedule == false)throw new BadRequestException("Previous draws not complete. Can not make schedule");
+        if(canISchedule == false)throw new BadRequestException("Draws not made or previous draws not complete. Can not make schedule");
         //got to match servie with all the draws
         var matches = await _matchService.CreateMatches(tournament, request.SchedulingInfo);
 
