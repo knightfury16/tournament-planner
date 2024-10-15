@@ -50,6 +50,7 @@ public class TournamentService : ITournamentService
         }
 
         if (draws == null) throw new NullReferenceException(nameof(draws));
+        if (draws.Count == 0) return false; // i have not made any draw yet
         if (tournament.Matches == null || tournament.Matches.Count == 0) return true; // i have made draw but no matches scheduled yet
 
         if (tournament.CurrentState == TournamentState.KnockoutState)
