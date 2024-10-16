@@ -11,16 +11,19 @@ public interface IKnockout
     Task<IEnumerable<Match>> CreateMatches(Tournament tournament, MatchType matchType);
     Task<IEnumerable<Match>> CreateFirstRoundMatches(Tournament tournament, MatchType matchType);
     Task<IEnumerable<Match>> CreateFirstRoundMatchesAfterGroup(Tournament tournament, MatchType matchType, Dictionary<string, List<PlayerStanding>> groupOfPlayerStanding);
+    Task<IEnumerable<Match>> CreateSubsequentMatches(Tournament tournament, MatchType matchType);
 }
 
 public class CreateKnockOutMatches : IKnockout
 {
     private readonly IRepository<MatchType> _matchTypeRepository;
+    private readonly IRepository<Round> _roundRepository;
     private Player? _byePlayer;
 
-    public CreateKnockOutMatches(IRepository<MatchType> matchTypeRepository)
+    public CreateKnockOutMatches(IRepository<MatchType> matchTypeRepository, IRepository<Round> roundRepository)
     {
         _matchTypeRepository = matchTypeRepository;
+        _roundRepository = roundRepository;
     }
 
     public async Task<IEnumerable<Match>> CreateMatches(Tournament tournament, MatchType matchType)
@@ -205,5 +208,55 @@ public class CreateKnockOutMatches : IKnockout
             2 => "Final",
             _ => "KnockOut"
         };
+    }
+    public async Task<IEnumerable<Match>> CreateSubsequentMatches(Tournament tournament, MatchType matchType)
+    {
+        ArgumentNullException.ThrowIfNull(matchType);
+        ArgumentNullException.ThrowIfNull(tournament);
+
+        //get the latest previous round matches
+        var previousRound = matchType.Rounds.OrderBy(r => r.RoundNumber).LastOrDefault();
+        if (previousRound == null) throw new Exception("Previous round can not be null");
+
+        //populate the matches of the previous round
+        if( previousRound.Matches == null || previousRound.Matches.Count == 0)
+        {
+            await _roundRepository.ExplicitLoadCollectionAsync(previousRound, r => r.Matches);
+        }
+
+        //still if previous round match count is 0 then throw an exception
+        if(previousRound!.Matches!.Count == 0)
+        {
+            throw new Exception("Previous round matches can not be empty");
+        }
+
+        //get the winner of the previous round matches
+        //! Need to check the order of the player
+        // say AvsB and CvsD and EvsF and GvsH, then AvsC and EvsG, it should alternate
+        var winners = previousRound.Matches.Select(m => m.Winner).Distinct().ToList();
+
+        //make match for the current round
+        var currentRound = GetRound(previousRound.RoundNumber + 1, matchType);
+
+        //check if the number of winners is even
+        if (winners.Count % 2 != 0)
+        {
+            //at this point, we should have even number of players, coz already handle the odd number of player in the first round
+            throw new Exception("Number of winners is odd");
+        }
+
+        List<Match> matches = new List<Match>();
+        for (int i = 0; i < winners.Count/2; i++)
+        {
+            var firstPlayer = winners[i];   
+            var secondPlayer = winners[winners.Count - 1 - i];
+            if(firstPlayer == null || secondPlayer == null)
+            {
+                throw new Exception("Player can not be null");
+            }
+            matches.Add(GetMatch(firstPlayer, secondPlayer, currentRound, tournament));
+        }
+
+        return matches;
     }
 }
