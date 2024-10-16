@@ -27,7 +27,7 @@ namespace TournamentPlanner.Domain.Entities
             if (tournament == null || matchType == null) throw new ArgumentNullException(nameof(GetGroupStanding));
 
             var winnerPerGroup = tournament.WinnerPerGroup;
-            var playerStandings = matchType.Players.Select(gp => new PlayerStanding { Player = gp });
+            var playerStandings = matchType.Players.Select(gp => new PlayerStanding { Player = gp }).ToList();
 
             foreach (var round in matchType.Rounds)
             {
