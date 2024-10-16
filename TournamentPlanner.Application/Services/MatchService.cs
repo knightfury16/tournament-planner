@@ -107,8 +107,7 @@ public class MatchService : IMatchService
         //else create subsequent matches of the knockout
         else
         {
-            //find out the winner of the previous round
-            //order the winner accordingly, like AvsB and CvsD then next match will be among the winner of these
+            createdMatches = (List<Match>)await _knockOut.CreateSubsequentMatches(tournament, knockoutDraw.MatchType);
         }
 
         return createdMatches;
