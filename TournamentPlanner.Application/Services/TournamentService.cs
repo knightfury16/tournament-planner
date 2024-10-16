@@ -66,7 +66,7 @@ public class TournamentService : ITournamentService
             //i need to know the winner of the previous round in order to schedule the next round
             //in group match type i know all the matches of all the round before hand so in order to schedule it i dont need to 
             //to know any information beforehand
-            return await _roundService.IsAllRoundComplete(draws.First().MatchType);
+            return await _roundService.IsAllRoundComplete(knockoutDraw.MatchType);
         }
 
         return false; //in all other cases it is false
