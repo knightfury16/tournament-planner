@@ -143,6 +143,8 @@ public static class Data
         context.Players.RemoveRange(context.Players);
         context.Admins.RemoveRange(context.Admins);
         context.Rounds.RemoveRange(context.Rounds);
+        context.Matches.RemoveRange(context.Matches);
+        context.MatchTypes.RemoveRange(context.MatchTypes);
         //context.GameTypes.RemoveRange(context.GameTypes);//its preseeded on migration
 
         context.SaveChanges();
