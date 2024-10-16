@@ -6,8 +6,8 @@ namespace TournamentPlanner.Application;
 
 public interface IDrawService
 {
-    public Task<bool> IsTheDrawComplete(Tournament tournament);
-    public Task<bool> IsTheDrawComplete(IEnumerable<Draw> draws);
+    public Task<bool> IsDrawsComplete(Tournament tournament);
+    public Task<bool> IsDrawsComplete(IEnumerable<Draw> draws);
 }
 public class DrawService : IDrawService
 {
@@ -18,7 +18,7 @@ public class DrawService : IDrawService
         _drawRepository = drawRepository;
     }
 
-    public async Task<bool> IsTheDrawComplete(Tournament tournament)
+    public async Task<bool> IsDrawsComplete(Tournament tournament)
     {
         var draws = await _drawRepository.GetAllAsync(d => d.TournamentId == tournament.Id, [nameof(Draw.MatchType)]);
 
@@ -29,7 +29,7 @@ public class DrawService : IDrawService
         return true;
     }
 
-    public Task<bool> IsTheDrawComplete(IEnumerable<Draw> draws)
+    public Task<bool> IsDrawsComplete(IEnumerable<Draw> draws)
     {
         if(draws == null) throw new ArgumentNullException(nameof(draws));
 
