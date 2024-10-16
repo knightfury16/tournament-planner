@@ -35,7 +35,7 @@ public class TournamentService : ITournamentService
         if(tournament.Draws == null || tournament.Draws.Count == 0)return true;
 
         //draws exists and state is not knockout
-        if(tournament.CurrentState == TournamentState.GroupState)return await _drawService.IsTheDrawComplete(tournament);
+        if(tournament.CurrentState == TournamentState.GroupState)return await _drawService.IsDrawsComplete(tournament);
 
         //in all cases it is false
         return false;
@@ -43,7 +43,7 @@ public class TournamentService : ITournamentService
     public async Task<bool> CanISchedule(Tournament tournament)
     {
         var draws = tournament.Draws;
-        if (draws == null)
+        if (draws == null) //populate the draws if null
         {
             var tournamentDrawPopulated = await _tournamentRepository.GetByIdAsync(tournament.Id, [nameof(Tournament.Draws)]);
             draws = tournamentDrawPopulated?.Draws;
@@ -51,6 +51,8 @@ public class TournamentService : ITournamentService
 
         if (draws == null) throw new NullReferenceException(nameof(draws));
         if (draws.Count == 0) return false; // i have not made any draw yet
+
+        //this will only his in initial state of Group Matches
         if (tournament.Matches == null || tournament.Matches.Count == 0) return true; // i have made draw but no matches scheduled yet
 
         if (tournament.CurrentState == TournamentState.KnockoutState)
@@ -67,9 +69,7 @@ public class TournamentService : ITournamentService
             return await _roundService.IsAllRoundComplete(draws.First().MatchType);
         }
 
-        //if it is  not knockout match type i need to check if all the preivious draws matchtype is complete or not
-        //that is, is all the group matches competed
-        return await _drawService.IsTheDrawComplete(draws);
+        return false; //in all other cases it is false
     }
     public async Task<IEnumerable<Draw>> MakeDraws(Tournament tournament, string? matchTypePrefix = null, List<int>? seedersPlayers = null)
     {
