@@ -9,8 +9,56 @@ var factory = new SeederFactory(ON_TEST);
 // var factory = new TournamentPlannerDataContextFactory();
 
 var dataContext = factory.CreateDbContext(null);
-await RemoveAllData(dataContext);
-await SeedData(dataContext);
+
+bool shouldRemove = false;
+bool shouldSeed = false;
+int playerCount = 16;
+
+foreach (var arg in args)
+{
+    switch (arg.ToLower())
+    {
+        case "seed":
+            shouldSeed = true;
+            break;
+        case "remove":
+            shouldRemove = true;
+            break;
+    }
+}
+
+// Add this block after the foreach loop
+if (args.Length > 0 && args[^1].StartsWith("player="))
+{
+    string playerArg = args[^1].Split('=')[1];
+    if (int.TryParse(playerArg, out int parsedPlayerCount))
+    {
+        playerCount = parsedPlayerCount;
+        Console.WriteLine($"Player count set to: {playerCount}");
+    }
+    else
+    {
+        Console.WriteLine($"Invalid player count: {playerArg}. Using default: {playerCount}");
+    }
+}
+
+if (shouldRemove)
+{
+    await RemoveAllData(dataContext);
+    Console.WriteLine("All data removed.");
+}
+
+if (shouldSeed)
+{
+    await SeedData(dataContext);
+    Console.WriteLine("Data seeded.");
+}
+
+if (!shouldRemove && !shouldSeed)
+{
+    Console.WriteLine("Please provide arguments: 'remove' to remove all data and/or 'seed' to seed data.");
+    Console.WriteLine("Example: dotnet run remove seed");
+}
 
 async Task SeedData(TournamentPlannerDataContext context)
 {
@@ -18,7 +66,7 @@ async Task SeedData(TournamentPlannerDataContext context)
 
   try
   {
-    await Data.SeedData(context);
+    await Data.SeedData(context, playerCount);
     await transaction.CommitAsync();
     Console.WriteLine("Simulated success!!");
 

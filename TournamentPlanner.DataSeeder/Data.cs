@@ -8,14 +8,13 @@ namespace TournamentPlanner.Data;
 
 public static class Data
 {
-    public static async Task SeedData(TournamentPlannerDataContext context)
+    public static async Task SeedData(TournamentPlannerDataContext context, int playerCount = 16)
     {
         // Create admins
         var admins = Factory.CreateAdmin(3);
         context.Admins.AddRange(admins);
 
         // Create Players
-        var playerCount = 23;
         var players = Factory.CreatePlayers(playerCount);
         CreateSomeRandomWin(playerCount, ref players);
         context.Players.AddRange(players);
