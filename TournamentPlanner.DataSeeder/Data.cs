@@ -15,8 +15,9 @@ public static class Data
         context.Admins.AddRange(admins);
 
         // Create Players
-        var players = Factory.CreatePlayers(9);
-        CreateSomeRandomWin(9, ref players);
+        var playerCount = 23;
+        var players = Factory.CreatePlayers(playerCount);
+        CreateSomeRandomWin(playerCount, ref players);
         context.Players.AddRange(players);
 
         // Create tournament
