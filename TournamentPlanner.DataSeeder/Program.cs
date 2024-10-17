@@ -9,6 +9,7 @@ var factory = new SeederFactory(ON_TEST);
 // var factory = new TournamentPlannerDataContextFactory();
 
 var dataContext = factory.CreateDbContext(null);
+await RemoveAllData(dataContext);
 await SeedData(dataContext);
 
 async Task SeedData(TournamentPlannerDataContext context)
@@ -17,7 +18,6 @@ async Task SeedData(TournamentPlannerDataContext context)
 
   try
   {
-    Data.RemoveAllDataBeforeSeedAndSave(context);
     await Data.SeedData(context);
     await transaction.CommitAsync();
     Console.WriteLine("Simulated success!!");
@@ -29,3 +29,8 @@ async Task SeedData(TournamentPlannerDataContext context)
   }
 }
 
+async Task RemoveAllData(TournamentPlannerDataContext dataContext)
+{
+  // Clear existing data
+  await Task.Run(() => Data.RemoveAllDataBeforeSeedAndSave(dataContext));
+}
