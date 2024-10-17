@@ -173,10 +173,10 @@ public class CreateKnockOutMatches : IKnockout
 
     private int GetNumberOfBye(int count)
     {
-        return HighestPowerof2(count) - count;
+        return HighestPowerof2Ceil(count) - count;
     }
 
-    private int HighestPowerof2(int N)
+    private int HighestPowerof2Ceil(int N)
     {
         // if N is a power of two simply return it
         if ((N & (N - 1)) == 0)
