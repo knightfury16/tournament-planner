@@ -60,6 +60,17 @@ public class SimulateMatchesRequestHandler : IRequestHandler<SimulateMatchesRequ
                 //match already player
                 continue;
             }
+            //if any player is bye then winner is the other player
+            if(match.FirstPlayer.Name.ToLower().Contains("bye"))
+            {
+                match.Winner = match.SecondPlayer;
+                continue;
+            }
+            if(match.SecondPlayer.Name.ToLower().Contains("bye"))
+            {
+                match.Winner = match.FirstPlayer;
+                continue;
+            }
 
             var randomlyGeneratedMatchScore = GetRandomScore();
 
