@@ -106,6 +106,7 @@ public class CreateGroupMatchType : ICreateMatchType
     }
     private int DetermineNumberOfGroup(int totalParticipant)
     {
+        //TODO: I need to adjust the calculation so that player procedding to knockout is a pwoer of two
         return (int)Math.Ceiling((double)totalParticipant / _maxGroupSize);
     }
 }
