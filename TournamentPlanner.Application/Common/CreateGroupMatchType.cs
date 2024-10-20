@@ -12,7 +12,7 @@ public class CreateGroupMatchType : ICreateMatchType
     public Task<IEnumerable<MatchType>?> CreateMatchType(Tournament tournament, List<Player> players, string? prefix, List<int>? seederPlayerIds)
     {
         prefix ??= "Group";
-        var numberOfGroup = DetermineNumberOfGroup(players.Count);
+        var numberOfGroup = DetermineNumberOfGroupDynamically(tournament.KnockOutStartNumber, tournament.WinnerPerGroup);
         List<MatchType> groups = GenerateGroups(tournament, numberOfGroup, prefix);
         var sortedPlayers = GetSortedPlayers(players, seederPlayerIds);
         DistributePlayersAmongGroups(sortedPlayers, ref groups);
@@ -103,6 +103,10 @@ public class CreateGroupMatchType : ICreateMatchType
             initialChar = (char)(initialChar + 1);
         }
         return matchTypes;
+    }
+    private int DetermineNumberOfGroupDynamically(int playersInKnockoutStage, int playerAdvancingPerGroup)
+    {
+        return (int)Math.Ceiling((double)playersInKnockoutStage / playerAdvancingPerGroup);
     }
     private int DetermineNumberOfGroup(int totalParticipant)
     {
