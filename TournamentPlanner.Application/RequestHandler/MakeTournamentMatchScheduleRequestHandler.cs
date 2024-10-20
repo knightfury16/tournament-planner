@@ -4,6 +4,7 @@ using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Application.Services;
 using TournamentPlanner.Domain.Entities;
+using TournamentPlanner.Domain.Enum;
 using TournamentPlanner.Domain.Exceptions;
 using TournamentPlanner.Mediator;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
@@ -36,6 +37,8 @@ public class MakeTournamentMatchScheduleRequestHandler : IRequestHandler<MakeTou
         var nagivationProperty = Utility.NavigationPrpertyCreator(nameof(Tournament.Draws), nameof(Draw.MatchType), nameof(MatchType.Players));
         var tournament = await _tournamentRepository.GetByIdAsync(request.TournamentId, [nagivationProperty, nameof(Tournament.Matches)]);
         if(tournament == null)throw new NotFoundException(nameof(tournament));
+
+        if(tournament.Status == TournamentStatus.Completed)throw new BadRequestException("Tournament already completed");
 
         //go to draw service and see if im able to make schedule
             //ON-TEST: Test this please 29/09/24
