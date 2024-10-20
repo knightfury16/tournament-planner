@@ -92,7 +92,7 @@ public class CreateKnockOutMatches : IKnockout
         var groupCount = groupOfPlayerStanding.Count;
         int halfGroupCount = groupCount / 2;
 
-        Round round = GetRound(1, matchType);
+        Round round = GetRound(1, matchType, matchType.Players.Count);
         List<Match> matches = new List<Match>();
 
         groupOfPlayerStanding = groupOfPlayerStanding.OrderBy(gr => random.Next()).ToDictionary();
@@ -131,7 +131,7 @@ public class CreateKnockOutMatches : IKnockout
 
         //shuffle the players total random
         List<Match> matches = new List<Match>();
-        Round round = GetRound(1, matchType);
+        Round round = GetRound(1, matchType, matchType.Players.Count);
 
         List<Player> shuffledPlayers = ShuffledPlayers(matchType.Players);
         for (int i = 0; i < matchToBePlayed; i += 2)
@@ -154,9 +154,9 @@ public class CreateKnockOutMatches : IKnockout
         };
     }
 
-    private Round GetRound(int roundNumber, MatchType matchType)
+    private Round GetRound(int roundNumber, MatchType matchType, int playerCount)
     {
-        var roundName = GetRoundName(matchType.Players.Count);
+        var roundName = GetRoundName(playerCount);
         return new Round
         {
             RoundNumber = roundNumber,
@@ -206,6 +206,7 @@ public class CreateKnockOutMatches : IKnockout
             8 => "Quater Final",
             4 => "Semi Final",
             2 => "Final",
+            -1 => "Playoff 3/4", //-1 is for playoff, selected randomly
             _ => "KnockOut"
         };
     }
@@ -236,7 +237,8 @@ public class CreateKnockOutMatches : IKnockout
         var winners = previousRound.Matches.Select(m => m.Winner).Distinct().ToList();
 
         //make match for the current round
-        var currentRound = GetRound(previousRound.RoundNumber + 1, matchType);
+        var currentRound = GetRound(previousRound.RoundNumber + 1, matchType, winners.Count);
+
 
         //check if the number of winners is even
         if (winners.Count % 2 != 0)
