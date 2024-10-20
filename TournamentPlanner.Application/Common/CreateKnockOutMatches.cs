@@ -249,10 +249,20 @@ public class CreateKnockOutMatches : IKnockout
         }
 
         List<Match> matches = new List<Match>();
-        for (int i = 0; i < winners.Count/2; i++)
+
+        //make playoff for third and fourth place
+        if(currentRound.RoundName == "Final")
+        {
+            //get the loser of the semifinal
+            var semiFinalLosers = previousRound.Matches.Select(mt => mt.Winner == mt.SecondPlayer ? mt.FirstPlayer : mt.SecondPlayer).ToList();
+            var playoffRound = GetRound(previousRound.RoundNumber + 2, matchType, -1);
+            matches.Add(GetMatch(semiFinalLosers[0], semiFinalLosers[1], playoffRound, tournament));
+        }
+
+        for (int i = 0; i < winners.Count; i+=2)
         {
             var firstPlayer = winners[i];   
-            var secondPlayer = winners[winners.Count - 1 - i];
+            var secondPlayer = winners[i+1];
             if(firstPlayer == null || secondPlayer == null)
             {
                 throw new Exception("Player can not be null");
