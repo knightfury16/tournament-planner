@@ -234,7 +234,8 @@ public class CreateKnockOutMatches : IKnockout
         //get the winner of the previous round matches
         //! Need to check the order of the player
         // say AvsB and CvsD and EvsF and GvsH, then AvsC and EvsG, it should alternate
-        var winners = previousRound.Matches.Select(m => m.Winner).Distinct().ToList();
+
+        var winners = previousRound.Matches.OrderBy(mt => mt.Id).Select(m => m.Winner).Distinct().ToList();
 
         //make match for the current round
         var currentRound = GetRound(previousRound.RoundNumber + 1, matchType, winners.Count);
