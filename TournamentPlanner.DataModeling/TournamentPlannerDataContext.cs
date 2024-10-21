@@ -169,7 +169,7 @@ public class TournamentPlannerDataContext : DbContext
             .HasForeignKey(s => s.PlayerId);
 
             entity.HasOne(s => s.MatchType)
-            .WithMany(m => m.SeededEntries)
+            .WithMany(m => m.SeededPlayers)
             .HasForeignKey(s => s.MatchTypeId);
         });
 
