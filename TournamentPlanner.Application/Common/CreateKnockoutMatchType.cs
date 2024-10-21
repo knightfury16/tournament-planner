@@ -14,11 +14,22 @@ public class CreateKnockoutMatchType : ICreateMatchType
         //im here, and i will be here only once in my tp life. according to Axiom.
         //there is no work here all the work will be done by scheduler of knockout match type
         prefix ??= "Knockout";
+
+        var knockoutMatchType = new KnockOut
+        {
+            Name = prefix,
+            Players = players
+        };
+
+        if (seederPlayerIds != null)
+        {
+            knockoutMatchType.SeededPlayers = players.Select(p => new SeededPlayer{Player = p, MatchType = knockoutMatchType}).ToList();
+        }
+
+
+
         var matchTypes = new List<MatchType>(){
-            new KnockOut {
-                Name = prefix,
-                Players = players,
-            }
+            knockoutMatchType
         };
 
         return Task.FromResult((IEnumerable<MatchType>?)matchTypes);
