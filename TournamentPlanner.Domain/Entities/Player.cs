@@ -10,5 +10,5 @@ public class Player : User
 
     public List<Tournament>? Tournaments { get; set; }
     public List<MatchType>? MatchTypes { get; set; }
-    public List<SeededPlayer>? SeededEntries { get; set; } = new();
+    public List<SeededPlayer>? SeededEntries { get; set; }
 }
