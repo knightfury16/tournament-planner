@@ -15,11 +15,11 @@ public class CreateGroupMatchType : ICreateMatchType
         var numberOfGroup = DetermineNumberOfGroupDynamically(tournament.KnockOutStartNumber, tournament.WinnerPerGroup);
         List<MatchType> groups = GenerateGroups(tournament, numberOfGroup, prefix);
         var sortedPlayers = GetSortedPlayers(players, seederPlayerIds);
-        DistributePlayersAmongGroups(sortedPlayers, ref groups);
+        DistributePlayersAmongGroups(sortedPlayers, groups);
         return Task.FromResult((IEnumerable<MatchType>?)groups);
     }
 
-    private void DistributePlayersAmongGroups(List<Player> distributedPlayers, ref List<MatchType> groups)
+    private void DistributePlayersAmongGroups(List<Player> distributedPlayers, List<MatchType> groups)
     {
         var distributedPlayersQueue = new Queue<Player>(distributedPlayers);
 
