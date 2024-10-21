@@ -19,6 +19,7 @@ public class TournamentPlannerDataContext : DbContext
     public DbSet<KnockOut> KnockOuts { get; set; }
     //TODO: Configure its relations manully to be exact
     public DbSet<Draw> Draws { get; set; }
+    public DbSet<SeededPlayer> SeededPlayers { get; set; }
 
     public TournamentPlannerDataContext(DbContextOptions<TournamentPlannerDataContext> options) : base(options)
     {
@@ -28,21 +29,21 @@ public class TournamentPlannerDataContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
-        // Player configuration
+        //* Player configuration
         modelBuilder.Entity<Player>(entity =>
         {
             entity.Property(p => p.Age).IsRequired();
             entity.Property(p => p.Weight).IsRequired();
         });
 
-        // Admin configuration
+        //* Admin configuration
         modelBuilder.Entity<Admin>(entity =>
         {
             entity.Property(a => a.PhoneNumber).IsRequired();
         });
 
 
-        // Match configuration
+        //* Match configuration
         modelBuilder.Entity<Match>(entity =>
         {
             // fields
@@ -158,6 +159,18 @@ public class TournamentPlannerDataContext : DbContext
             entity.HasMany(r => r.Matches)
             .WithOne(m => m.Round)
             .HasForeignKey(m => m.RoundId);
+        });
+
+        //* Seeded player configuration
+        modelBuilder.Entity<SeededPlayer>(entity =>
+        {
+            entity.HasOne(s => s.Player)
+            .WithMany(p => p.SeededEntries)
+            .HasForeignKey(s => s.PlayerId);
+
+            entity.HasOne(s => s.MatchType)
+            .WithMany(m => m.SeededEntries)
+            .HasForeignKey(s => s.MatchTypeId);
         });
 
 
