@@ -22,7 +22,7 @@ namespace TournamentPlanner.Domain.Entities
         }
 
         //Deafult group standing calculation based on only number of game wins, then by match points
-        public virtual List<PlayerStanding> GetGroupStanding(Tournament tournament, MatchType matchType)
+        public virtual List<PlayerStanding> GetGroupStanding(Tournament tournament, MatchType matchType, bool completeStanding = false)
         {
             if (tournament == null || matchType == null) throw new ArgumentNullException(nameof(GetGroupStanding));
 
@@ -44,7 +44,7 @@ namespace TournamentPlanner.Domain.Entities
                 }
             }
 
-            return playerStandings.OrderByDescending(ps => ps.Wins).ThenBy(ps => ps.MatchPoints).Take(winnerPerGroup).ToList();
+            return completeStanding ? playerStandings.OrderByDescending(ps => ps.Wins).ThenBy(ps => ps.MatchPoints).ToList() : playerStandings.OrderByDescending(ps => ps.Wins).ThenBy(ps => ps.MatchPoints).Take(winnerPerGroup).ToList();
         }
 
         public abstract IScore DeserializeScore(object scoreData);
