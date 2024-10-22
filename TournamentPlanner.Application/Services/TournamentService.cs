@@ -83,6 +83,7 @@ public class TournamentService : ITournamentService
     private bool ValidateSeeders(Tournament tournament, List<int>? seedersPlayers)
     {
         if(seedersPlayers == null)return true; //seeders not seeded
+        if(seedersPlayers.Count > tournament.Participants.Count)return false;
         return tournament.Participants.Select( p => p.Id).Intersect(seedersPlayers).Count() == seedersPlayers.Count();
     }
 
