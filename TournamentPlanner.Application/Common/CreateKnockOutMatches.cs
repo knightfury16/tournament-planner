@@ -126,21 +126,67 @@ public class CreateKnockOutMatches : IKnockout
     private async Task<IEnumerable<Match>> KnockoutTournamentFirstRound(Tournament tournament, MatchType matchType)
     {
         if (matchType.Players.Count == 0) await _matchTypeRepository.ExplicitLoadCollectionAsync(matchType, mt => mt.Players);
-        int numberOfBye = GetNumberOfBye(matchType.Players.Count);
-        int matchToBePlayed = matchType.Players.Count - numberOfBye;
-
-        //shuffle the players total random
-        List<Match> matches = new List<Match>();
-        Round round = GetRound(1, matchType, matchType.Players.Count);
-
-        List<Player> shuffledPlayers = ShuffledPlayers(matchType.Players);
-        for (int i = 0; i < matchToBePlayed; i += 2)
+        //load all the seeded players
+        if(matchType.SeededPlayers == null || matchType.SeededPlayers.Count == 0)
         {
-            matches.Add(GetMatch(shuffledPlayers[i], shuffledPlayers[i + 1], round, tournament));
+            await _matchTypeRepository.ExplicitLoadCollectionAsync(matchType, mt => mt.SeededPlayers);
+        }
+        
+        int totalSlots = HighestPowerof2Ceil(matchType.Players.Count);
+        int numberOfBye = totalSlots - matchType.Players.Count;
+
+        List<Match> matches = new List<Match>();
+        Round round = GetRound(1, matchType, totalSlots);
+        var allPlayerList = new List<Player>(matchType.Players);
+
+        if(numberOfBye > 0 && matchType.SeededPlayers?.Count > 0)
+        {
+            //remove the seeded players from the allPlayerList
+            foreach(var seededPlayer in matchType.SeededPlayers)
+            {
+                allPlayerList.Remove(seededPlayer.Player!); //i know players cant be empty here
+            }
+
+            var seededPlayerList = matchType.SeededPlayers.Select(sp => sp.Player).ToList();
+            int byeMatchAdded = 0;
+            while(numberOfBye > 0 && byeMatchAdded < seededPlayerList.Count )
+            {
+                var match = GetMatch(GetByePlayer(), seededPlayerList[byeMatchAdded]!, round, tournament);
+                matches.Add(match);
+                numberOfBye--;
+                byeMatchAdded++;
+            }
         }
 
-        //add the logic in front end to show bye where a player match is not set
-        return matches;
+        List<Player> shuffledPlayers = ShuffledPlayers(allPlayerList);
+
+        //assign byes to the remaining slots
+        for(int i = 0; i < numberOfBye; i++)
+        {
+            matches.Add(GetMatch(GetByePlayer(), shuffledPlayers[i], round, tournament));
+        }
+
+
+        //create match for the remaining slots
+        for (int i = numberOfBye; i < shuffledPlayers.Count; i += 2)
+        {
+            if(i + 1 < shuffledPlayers.Count)
+            {
+                var firstPlayer = shuffledPlayers[i];
+                var secondPlayer = shuffledPlayers[i + 1];
+                matches.Add(GetMatch(firstPlayer, secondPlayer, round, tournament));
+            }
+            else
+            {
+                //If i am here and the number of player is odd, that means soemthing is off
+                throw new Exception("Number of player is odd");
+            }
+        }
+
+        //shuffle the matches to distribute the byes matches evenly.
+        //matches is saved by the order of the match creation, so i need to shuffle it
+        var random = new Random();
+        return matches.OrderBy(m => random.Next()).ToList();
     }
 
     private Match GetMatch(Player player1, Player player2, Round round, Tournament tournament)
