@@ -23,7 +23,7 @@ public class CreateKnockoutMatchType : ICreateMatchType
 
         if (seederPlayerIds != null)
         {
-            knockoutMatchType.SeededPlayers = players.Select(p => new SeededPlayer{Player = p, MatchType = knockoutMatchType}).ToList();
+            knockoutMatchType.SeededPlayers = players.Where(p => seederPlayerIds.Any(id => id == p.Id)).Select(p => new SeededPlayer { Player = p, MatchType = knockoutMatchType }).ToList();
         }
 
 
