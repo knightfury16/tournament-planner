@@ -11,7 +11,7 @@ using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 namespace TournamentPlanner.Application.Services;
 public interface IMatchService
 {
-    public bool IsMatchComplete(Match match);
+    public Task<bool> IsMatchComplete(Match match);
     public Task<IEnumerable<Match>> CreateMatches(Tournament tournament, SchedulingInfo schedulingInfo);
 }
 public class MatchService : IMatchService
@@ -22,12 +22,16 @@ public class MatchService : IMatchService
 
     private readonly IRepository<Draw> _drawRepository;
     private readonly IRepository<MatchType> _matchTypeRepository;
+    private readonly IRepository<Match> _matchRepository;
     private readonly IMatchScheduler _matchScheduler;
 
-    public MatchService(IRepository<Draw> drawRepository, IRepository<MatchType> matchTypeRepository, IMatchScheduler matchScheduler, IRoundRobin rounRobin, IGameFormatFactory gameFormatFactory, IKnockout knockOut)
+    public MatchService(IRepository<Draw> drawRepository, IRepository<MatchType> matchTypeRepository, 
+                        IRepository<Match> matchRepository, IMatchScheduler matchScheduler,
+                         IRoundRobin rounRobin, IGameFormatFactory gameFormatFactory, IKnockout knockOut)
     {
         _drawRepository = drawRepository;
         _matchTypeRepository = matchTypeRepository;
+        _matchRepository = matchRepository;
         _matchScheduler = matchScheduler;
         _rounRobin = rounRobin;
         _gameFormatFactory = gameFormatFactory;
@@ -113,9 +117,22 @@ public class MatchService : IMatchService
         return createdMatches;
     }
 
-    public bool IsMatchComplete(Match match)
+    public async Task<bool> IsMatchComplete(Match match)
     {
         if(match == null)throw new ArgumentNullException(nameof(match));
+
+        //check for player
+        if(match.FirstPlayer == null || match.SecondPlayer == null)
+        {
+            //load player
+            await _matchRepository.ExplicitLoadReferenceAsync(match, m => m.FirstPlayer);
+            await _matchRepository.ExplicitLoadReferenceAsync(match, m => m.SecondPlayer);
+        }
+
+        if(match.FirstPlayer!.Name.ToLower().Contains("bye") || match.SecondPlayer!.Name.ToLower().Contains("bye"))
+        {
+            return true;
+        }
 
         //decide on the score property if the match is complete or not
         if(match.ScoreJson != null)return true;

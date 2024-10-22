@@ -68,7 +68,7 @@ public class RoundService : IRoundService
         foreach (var match in matches)
         {
             //if any match is not complete round is not complete
-            if(!_matchService.IsMatchComplete(match)){
+            if(!await _matchService.IsMatchComplete(match)){
                 return;
             }
         }
