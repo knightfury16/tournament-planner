@@ -27,15 +27,16 @@ namespace TournamentPlanner.Domain.Entities
             if (tournament == null || matchType == null) throw new ArgumentNullException(nameof(GetGroupStanding));
 
             var winnerPerGroup = tournament.WinnerPerGroup;
-            var playerStandings = matchType.Players.Select(gp => new PlayerStanding { Player = gp }).ToList();
+
+            var playerStandings = matchType.Players.Select(p => new PlayerStanding { Player = p }).ToDictionary(ps => ps.Player.Id);
 
             foreach (var round in matchType.Rounds)
             {
                 foreach (var match in round.Matches)
                 {
                     if (match.Winner == null) throw new Exception("Winner not found");
-                    var winnerStanding = playerStandings.First(ps => ps.Player.Id == match.Winner.Id);
-                    var loserStanding = playerStandings.First(ps => ps.Player.Id == (match.Winner.Id == match.FirstPlayer.Id ? match.SecondPlayer.Id : match.FirstPlayer.Id));
+                    var winnerStanding = playerStandings[match.Winner.Id];
+                    var loserStanding = playerStandings[match.Winner.Id == match.FirstPlayer.Id ? match.SecondPlayer.Id : match.FirstPlayer.Id];
 
                     winnerStanding.Wins++;
                     winnerStanding.MatchPoints += 2;
