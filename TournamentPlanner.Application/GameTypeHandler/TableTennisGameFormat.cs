@@ -72,8 +72,11 @@ public class TableTennisGameFormat : GameFormat
                 var player2Standing = playerStandings[match.SecondPlayer.Id];
 
                 // Update game points
-                player1Standing.GamePoints += score.Player1Sets;
-                player2Standing.GamePoints += score.Player2Sets;
+                player1Standing.GamesWon += score.Player1Sets;
+                player1Standing.GamesLost += score.Player2Sets;
+
+                player2Standing.GamesWon += score.Player2Sets;
+                player2Standing.GamesLost += score.Player1Sets;
 
                 // Update wins and losses
                 if (score.Player1Sets > score.Player2Sets)
@@ -81,13 +84,9 @@ public class TableTennisGameFormat : GameFormat
                     player1Standing.Wins++;
                     player2Standing.Losses++;
 
-                    //match points
+                    // Match points
                     player1Standing.MatchPoints += 2;
                     player2Standing.MatchPoints += 1;
-
-                    //game difference
-                    player1Standing.GamesWon += score.Player1Sets;
-                    player2Standing.GamesLost += score.Player2Sets;
 
                 }
                 else
@@ -95,26 +94,18 @@ public class TableTennisGameFormat : GameFormat
                     player2Standing.Wins++;
                     player1Standing.Losses++;
 
-                    //match points
+                    // Match points
                     player2Standing.MatchPoints += 2;
                     player1Standing.MatchPoints += 1;
-
-                    //game difference
-                    player2Standing.GamesWon += score.Player2Sets;
-                    player1Standing.GamesLost += score.Player1Sets;
                 }
 
 
                 // Update points difference
                 foreach (var setScore in score.SetScores)
                 {
-                    //player 1 points won
                     player1Standing.PointsWon += setScore.Player1Points;
-                    //player 1 points lost  
                     player1Standing.PointsLost += setScore.Player2Points;
-                    //player 2 points won
                     player2Standing.PointsWon += setScore.Player2Points;
-                    //player 2 points lost
                     player2Standing.PointsLost += setScore.Player1Points;
                 }
             }
@@ -124,7 +115,7 @@ public class TableTennisGameFormat : GameFormat
         var standings = playerStandings.Values.ToList();
         standings.Sort((x, y) =>
         {
-            int result = y.GamePoints.CompareTo(x.GamePoints);
+            int result = y.MatchPoints.CompareTo(x.MatchPoints);
             if (result == 0) result = y.Wins.CompareTo(x.Wins);
             if (result == 0) result = y.GameDifference.CompareTo(x.GameDifference);
             if (result == 0) result = y.PointsDifference.CompareTo(x.PointsDifference);
@@ -135,7 +126,7 @@ public class TableTennisGameFormat : GameFormat
         for (int i = 0; i < standings.Count; i++)
         {
             standings[i].Ranking = i + 1;
-            if (i > 0 && standings[i].GamePoints == standings[i - 1].GamePoints &&
+            if (i > 0 && standings[i].MatchPoints == standings[i - 1].MatchPoints &&
                 standings[i].Wins == standings[i - 1].Wins &&
                 standings[i].GameDifference == standings[i - 1].GameDifference &&
                 standings[i].PointsDifference == standings[i - 1].PointsDifference)
