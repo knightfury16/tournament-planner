@@ -44,8 +44,8 @@ namespace TournamentPlanner.Domain.Entities
                     loserStanding.MatchPoints += 1;
                 }
             }
-
-            return completeStanding ? playerStandings.OrderByDescending(ps => ps.Wins).ThenBy(ps => ps.MatchPoints).ToList() : playerStandings.OrderByDescending(ps => ps.Wins).ThenBy(ps => ps.MatchPoints).Take(winnerPerGroup).ToList();
+            var standing = playerStandings.Values.ToList();
+            return completeStanding ? standing.OrderByDescending(ps => ps.Wins).ThenBy(ps => ps.MatchPoints).ToList() : standing.OrderByDescending(ps => ps.Wins).ThenBy(ps => ps.MatchPoints).Take(winnerPerGroup).ToList();
         }
 
         public abstract IScore DeserializeScore(object scoreData);
