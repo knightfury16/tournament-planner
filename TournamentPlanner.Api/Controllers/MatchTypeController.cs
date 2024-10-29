@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TournamentPlanner.Application;
+using TournamentPlanner.Domain;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Mediator;
 
@@ -28,6 +29,18 @@ namespace MyApp.Namespace
             var matchTypeDto = await _mediator.Send(getMatchTypeRequest);
 
             return Ok(matchTypeDto);
+        }
+
+        [HttpGet("{matchTypeId}/group-standing")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PlayerStanding>))]
+        public async Task<IActionResult> GetGroupStanding(int matchTypeId)
+        {
+            if (matchTypeId < 0) return BadRequest("Invalid Id");
+
+            var getGroupStandingRequest = new GetGroupStandingRequest(matchTypeId);
+            var playerStandings = await _mediator.Send(getGroupStandingRequest);
+
+            return Ok(playerStandings);
         }
 
     }
