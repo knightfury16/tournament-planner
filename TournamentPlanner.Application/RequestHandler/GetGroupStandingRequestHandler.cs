@@ -25,18 +25,16 @@ public class GetGroupStandingRequestHandler : IRequestHandler<GetGroupStandingRe
     {
         if (request == null) throw new ArgumentNullException(nameof(request));
 
-        //populating tournament
-        var includePropOfTournament = nameof(Tournament.GameType);
-        var tournament = await _tournamentRepository.GetByIdAsync(request.TournamentId, [includePropOfTournament]);
-        if (tournament == null) throw new NotFoundException(nameof(tournament));
-
         //populating matches of match type
         var includePropOfMatchType = Utility.NavigationPrpertyCreator(nameof(MatchType.Rounds), nameof(Round.Matches));
-        var matchType = await _matchTypeRepository.GetByIdAsync(request.GroupId, [includePropOfMatchType]);
+        var includePropTournament = Utility.NavigationPrpertyCreator(nameof(MatchType.Draw), nameof(Draw.Tournament));
+        var matchType = await _matchTypeRepository.GetByIdAsync(request.GroupId, [includePropTournament, includePropOfMatchType]);
 
         if (matchType == null) throw new NotFoundException(nameof(matchType));
         if (matchType.Rounds == null || matchType.Rounds.Count == 0) throw new BadRequestException("No rounds founds to get group standing");
 
+        var tournament = matchType.Draw?.Tournament;
+        if (tournament == null) throw new NotFoundException(nameof(tournament));
 
         var gameTypeHandler = _gameFormatFactory.GetGameFormat(tournament.GameType.Name);
 
