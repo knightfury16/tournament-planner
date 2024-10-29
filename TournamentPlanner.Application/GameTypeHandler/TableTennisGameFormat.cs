@@ -59,6 +59,8 @@ public class TableTennisGameFormat : GameFormat
     {
         if (tournament == null || matchType == null) throw new ArgumentNullException(nameof(GetGroupStanding));
 
+        if(matchType.Rounds.Count == 0)throw new Exception("No Rounds found to get Group standing");
+
         var playerStandings = matchType.Players.Select(p => new PlayerStanding { Player = p }).ToDictionary(ps => ps.Player.Id);
 
         foreach (var round in matchType.Rounds)
