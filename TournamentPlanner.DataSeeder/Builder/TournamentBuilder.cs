@@ -10,6 +10,8 @@ namespace TournamentPlanner.DataSeeder
             Name = "",
             CreatedBy = new AdminBuilder().Build(),
             GameType = new GameType() { Name = GameTypeSupported.TableTennis },
+            KnockOutStartNumber = 16,
+            WinnerPerGroup = 2,
             TournamentType = TournamentType.GroupStage,
             StartDate = DateTime.UtcNow.AddDays(12),
             EndDate = DateTime.UtcNow.AddDays(20),
@@ -48,6 +50,18 @@ namespace TournamentPlanner.DataSeeder
         public TournamentBuilder WithTournamentType(TournamentType tournamentType)
         {
             _tournament.TournamentType = tournamentType;
+            return this;
+        }
+
+        public TournamentBuilder WithTournamentKnockoutStartNumber(int tournamentKnocoutStartNumber)
+        {
+            _tournament.KnockOutStartNumber = tournamentKnocoutStartNumber;
+            return this;
+        }
+
+        public TournamentBuilder WithTournamentWinnerPerGroup(int winnerPerGroup)
+        {
+            _tournament.WinnerPerGroup = winnerPerGroup;
             return this;
         }
 
