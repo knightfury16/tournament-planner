@@ -28,7 +28,7 @@ public class GetRoundsOfMatchTypeRequestHandler : IRequestHandler<GetRoundsOfMat
 
         if (rounds == null) throw new NotFoundException("Could not find any round of the ");
 
-        return (IEnumerable<RoundDto>?)_mapper.Map<RoundDto>(rounds);
+        return _mapper.Map<IEnumerable<RoundDto>>(rounds);
 
     }
 }
