@@ -1,3 +1,4 @@
+﻿using AutoMapper;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain;
@@ -13,12 +14,14 @@ public class GetGroupStandingRequestHandler : IRequestHandler<GetGroupStandingRe
     private readonly IRepository<Tournament> _tournamentRepository;
     private readonly IRepository<MatchType> _matchTypeRepository;
     private readonly IGameFormatFactory _gameFormatFactory;
+    private readonly IMapper _mapper;
 
-    public GetGroupStandingRequestHandler(IRepository<Tournament> tournamentRepository, IGameFormatFactory gameFormatFactory, IRepository<MatchType> matchTypeRepository)
+    public GetGroupStandingRequestHandler(IRepository<Tournament> tournamentRepository, IGameFormatFactory gameFormatFactory, IRepository<MatchType> matchTypeRepository, IMapper mapper)
     {
         _tournamentRepository = tournamentRepository;
         _gameFormatFactory = gameFormatFactory;
         _matchTypeRepository = matchTypeRepository;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<PlayerStandingDto>?> Handle(GetGroupStandingRequest request, CancellationToken cancellationToken = default)
@@ -27,8 +30,9 @@ public class GetGroupStandingRequestHandler : IRequestHandler<GetGroupStandingRe
 
         //populating matches of match type
         var includePropOfMatchType = Utility.NavigationPrpertyCreator(nameof(MatchType.Rounds), nameof(Round.Matches));
-        var includePropTournament = Utility.NavigationPrpertyCreator(nameof(MatchType.Draw), nameof(Draw.Tournament));
-        var matchType = await _matchTypeRepository.GetByIdAsync(request.GroupId, [includePropTournament, includePropOfMatchType]);
+        var includePropTournament = Utility.NavigationPrpertyCreator(nameof(MatchType.Draw), nameof(Draw.Tournament), nameof(Tournament.GameType));
+        var includePlayerOfMatchType = Utility.NavigationPrpertyCreator(nameof(MatchType.Players));
+        var matchType = await _matchTypeRepository.GetByIdAsync(request.GroupId, [includePropTournament, includePropOfMatchType, includePlayerOfMatchType ]);
 
         if (matchType == null) throw new NotFoundException(nameof(matchType));
         if (matchType.Rounds == null || matchType.Rounds.Count == 0) throw new BadRequestException("No rounds founds to get group standing");
