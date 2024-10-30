@@ -23,7 +23,7 @@ public class CreateGroupMatchType : ICreateMatchType
     {
         var distributedPlayersQueue = new Queue<Player>(distributedPlayers);
 
-        for (int i = 0; i < _maxGroupSize; i++)
+        while (distributedPlayersQueue.Count > 0)
         {
             foreach (var group in groups)
             {
