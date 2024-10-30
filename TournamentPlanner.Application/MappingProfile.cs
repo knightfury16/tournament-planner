@@ -1,5 +1,6 @@
 using AutoMapper;
 using TournamentPlanner.Application.DTOs;
+using TournamentPlanner.Domain;
 using TournamentPlanner.Domain.Entities;
 
 namespace TournamentPlanner.Application
@@ -27,6 +28,7 @@ namespace TournamentPlanner.Application
             CreateMap<Round, RoundDto>().ReverseMap();
             CreateMap<Domain.Entities.MatchType, MatchTypeDto>().ReverseMap();
             CreateMap<Draw, DrawDto>().ReverseMap();
+            CreateMap<PlayerStanding, PlayerStandingDto>().ReverseMap();
 
         }
 
