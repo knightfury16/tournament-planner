@@ -78,8 +78,8 @@
       "setScores": [
         { "player1Points": 11, "player2Points": 9 },
         { "player1Points": 9, "player2Points": 11 },
-        { "player1Points": 11, "player2Points": 8 },
-        { "player1Points": 8, "player2Points": 11 },
+        { "player1Points": 11, "player2Points": 9 },
+        { "player1Points": 7, "player2Points": 11 },
         { "player1Points": 9, "player2Points": 11 }
       ]
     }
