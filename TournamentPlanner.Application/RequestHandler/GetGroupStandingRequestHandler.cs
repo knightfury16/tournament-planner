@@ -1,4 +1,4 @@
-﻿using TournamentPlanner.Application.Common.Interfaces;
+using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain;
 using TournamentPlanner.Domain.Entities;
@@ -8,7 +8,7 @@ using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
 namespace TournamentPlanner.Application;
 
-public class GetGroupStandingRequestHandler : IRequestHandler<GetGroupStandingRequest, IEnumerable<PlayerStanding>>
+public class GetGroupStandingRequestHandler : IRequestHandler<GetGroupStandingRequest, IEnumerable<PlayerStandingDto>>
 {
     private readonly IRepository<Tournament> _tournamentRepository;
     private readonly IRepository<MatchType> _matchTypeRepository;
@@ -21,7 +21,7 @@ public class GetGroupStandingRequestHandler : IRequestHandler<GetGroupStandingRe
         _matchTypeRepository = matchTypeRepository;
     }
 
-    public async Task<IEnumerable<PlayerStanding>?> Handle(GetGroupStandingRequest request, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<PlayerStandingDto>?> Handle(GetGroupStandingRequest request, CancellationToken cancellationToken = default)
     {
         if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -42,6 +42,6 @@ public class GetGroupStandingRequestHandler : IRequestHandler<GetGroupStandingRe
 
         var groupStanding = gameTypeHandler.GetGroupStanding(tournament, matchType, true);
 
-        return groupStanding;
+        return _mapper.Map<IEnumerable<PlayerStandingDto>>(groupStanding);
     }
 }

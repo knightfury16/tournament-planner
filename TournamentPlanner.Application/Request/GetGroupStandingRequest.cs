@@ -3,7 +3,7 @@ using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Application;
 
-public class GetGroupStandingRequest: IRequest<IEnumerable<PlayerStanding>>
+public class GetGroupStandingRequest: IRequest<IEnumerable<PlayerStandingDto>>
 {
     public int GroupId { get; set; }
 

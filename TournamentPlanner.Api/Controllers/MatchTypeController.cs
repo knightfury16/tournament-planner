@@ -38,9 +38,9 @@ namespace MyApp.Namespace
             if (matchTypeId < 0) return BadRequest("Invalid Id");
 
             var getGroupStandingRequest = new GetGroupStandingRequest(matchTypeId);
-            var playerStandings = await _mediator.Send(getGroupStandingRequest);
+            var playerStandingDtos = await _mediator.Send(getGroupStandingRequest);
 
-            return Ok(playerStandings);
+            return Ok(playerStandingDtos);
         }
 
     }
