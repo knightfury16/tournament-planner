@@ -19,6 +19,7 @@ namespace MyApp.Namespace
         }
 
         //That is the get the Group-A for example
+        //-- Get Match type by id
         [HttpGet("{matchTypeId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MatchTypeDto>))]
         public async Task<IActionResult> GetMatchType(int matchTypeId)
