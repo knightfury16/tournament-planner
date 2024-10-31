@@ -20,6 +20,7 @@ namespace TournamentPlanner.Api.Controllers
             _mediator = mediator;
         }
 
+        //- Add tournament
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Tournament))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -41,6 +42,7 @@ namespace TournamentPlanner.Api.Controllers
             return CreatedAtAction(nameof(GetTournamentById), new { id = tournamentDto.Id }, tournamentDto);
         }
 
+        //- Register player in tournament
         //TODO: need to verify if a valid player is registering the tournament or not
         [HttpPost("register", Name = nameof(RegisterPlayerInTournament))]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -60,6 +62,8 @@ namespace TournamentPlanner.Api.Controllers
         }
 
 
+        //- Make match type
+        //! Experimental
         [HttpPost("{id}/make-match-type", Name = nameof(MakeMatchTypesOfTournament))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -74,6 +78,8 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(matchTypes);
         }
 
+
+        //- Make tournament draw
         [HttpPost("{id}/make-draw", Name = nameof(MakeTournamentDraw))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -87,6 +93,7 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(drawDtos);
         }
 
+        //- Make tournament schedule
         [HttpPost("{id}/make-schedule", Name = nameof(MakeTournamentSchedule))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -129,6 +136,7 @@ namespace TournamentPlanner.Api.Controllers
         //     return Ok(matchDto);
         // }
 
+        //- Get tournament
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Tournament>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -154,6 +162,7 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(tournaments);
         }
 
+        //- Get tournament by id
         [HttpGet("{id}", Name = nameof(GetTournamentById))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FullTournamentDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -173,6 +182,7 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(tournamentDto);
         }
 
+        //- Get tournament players
         [HttpGet("{id}/players", Name = nameof(GetTournamentPlayers))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PlayerDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -184,6 +194,7 @@ namespace TournamentPlanner.Api.Controllers
         }
 
 
+        //- Get tournament matches
         //getTournamentMatches(id)
         [HttpGet("{id}/matches", Name = nameof(GetTournamentMatches))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MatchDto>))]
@@ -196,6 +207,7 @@ namespace TournamentPlanner.Api.Controllers
         }
 
         //getTournamentMatchTypes(id)
+        //- Get tournament match type
         [HttpGet("{id}/match-types", Name = nameof(GetTournamentMatchTypes))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MatchTypeDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -205,6 +217,8 @@ namespace TournamentPlanner.Api.Controllers
             var matchTypesDto = await _mediator.Send(getTournamentMatchTypesRequest);
             return Ok(matchTypesDto);
         }
+
+        //- Get tournament Draws
         [HttpGet("{id}/get-draws", Name = nameof(GetTournamentDraws))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DrawDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
