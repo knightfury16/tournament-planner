@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TournamentPlanner.Application;
+using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Domain;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Mediator;
@@ -32,6 +33,20 @@ namespace MyApp.Namespace
             return Ok(matchTypeDto);
         }
 
+        //-- Get Rounds of a match type
+        [HttpGet("{matchTypeId}/rounds")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RoundDto>))]
+        public async Task<IActionResult> GetRoundsOfMatchType(int matchTypeId)
+        {
+            if (matchTypeId < 0) return BadRequest("Invalid Id");
+
+            var getRoundsOfMatchTypeReq = new GetRoundsOfMatchTypeRequest(matchTypeId);
+            var roundDtos = await _mediator.Send(getRoundsOfMatchTypeReq);
+
+            return Ok(roundDtos);
+        }
+
+        //-- Get group standing of a match type
         [HttpGet("{matchTypeId}/group-standing")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PlayerStanding>))]
         public async Task<IActionResult> GetGroupStanding(int matchTypeId)
