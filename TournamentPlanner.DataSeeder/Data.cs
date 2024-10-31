@@ -22,10 +22,11 @@ public static class Data
         // Create tournament
         var tableTennisGameType = await context.GameTypes.FirstOrDefaultAsync(gt => gt.Name == GameTypeSupported.TableTennis);
         var tournament = new TournamentBuilder()
-            .WithName("Test Group")
+            .WithName("Inter Group championship")
             .WithAdmin(admins[0])
             .WithStatus(TournamentStatus.RegistrationClosed)
             .WithGameType(tableTennisGameType!)
+            .WithTournamentKnockoutStartNumber(8)
             .WithTournamentType(TournamentType.GroupStage)
 
             .WithStartDate(DateTime.UtcNow.AddDays(30))
