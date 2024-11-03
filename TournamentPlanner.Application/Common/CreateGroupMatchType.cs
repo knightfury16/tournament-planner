@@ -1,5 +1,6 @@
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Domain.Entities;
+using TournamentPlanner.Domain.Exceptions;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
 namespace TournamentPlanner.Application.Common;
@@ -12,6 +13,7 @@ public class CreateGroupMatchType : ICreateMatchType
     public Task<IEnumerable<MatchType>?> CreateMatchType(Tournament tournament, List<Player> players, string? prefix, List<int>? seederPlayerIds)
     {
         prefix ??= "Group";
+        if(tournament.KnockOutStartNumber > players.Count)throw new ValidationException("Knockout start number is greater than registered player");
         var numberOfGroup = DetermineNumberOfGroupDynamically(tournament.KnockOutStartNumber, tournament.WinnerPerGroup);
         List<MatchType> groups = GenerateGroups(tournament, numberOfGroup, prefix);
         var sortedPlayers = GetSortedPlayers(players, seederPlayerIds);
