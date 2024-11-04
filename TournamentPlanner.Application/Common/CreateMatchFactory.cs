@@ -3,7 +3,7 @@ using TournamentPlanner.Domain.Entities;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
 namespace TournamentPlanner.Application.Common;
-
+//!Depricated
 public interface ICreateMatchFactory
 {
     ICreateMatch GetMatchCreator(MatchType matchType);
