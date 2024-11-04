@@ -1,3 +1,4 @@
+using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Exceptions;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
@@ -23,6 +24,8 @@ public class CreateRoundRobinMatches : IRoundRobin
         }
         //get the players of matchtype
         var players = group.Players;
+
+        if (players == null || players.Count == 0) throw new ValidationException("No players found in gorup to create matches");
 
         if (players.Count() % 2 != 0)
         {
