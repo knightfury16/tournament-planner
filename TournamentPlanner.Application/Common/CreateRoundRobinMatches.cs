@@ -12,8 +12,8 @@ public interface IRoundRobin
 public class CreateRoundRobinMatches : IRoundRobin
 {
     private readonly string _roundPrefix = "Round";
-    private readonly string _byePlayerName = "Bye";
-    private readonly string _byePlayerEmail = "bye@gmail.com";
+    private static Player? _byePlayerInstance;
+
     public Task<IEnumerable<Match>> CreateMatches(Tournament tournament, MatchType matchType)
     {
         //check if match type is group
@@ -28,13 +28,9 @@ public class CreateRoundRobinMatches : IRoundRobin
         {
             //add a bye player
             //ToDO: this hold on to the reference of the bye, need to remove it
-            players.Add(
-                new Player
-                {
-                    Name = _byePlayerName,
-                    Email = _byePlayerEmail,
-                }
-            );
+            // -- Caution -- remember this point
+            //not deleting the bye, will have only one bye player in the entire TP platform
+            players.Add(GetByePlayer());
         }
         //figure out the round number
         var roundNumber = players.Count() - 1;
@@ -53,7 +49,7 @@ public class CreateRoundRobinMatches : IRoundRobin
                 var player2 = players[players.Count() - 1 - i];
 
                 //check if any player is bye
-                if (player1.Name != _byePlayerName && player2.Name != _byePlayerName)
+                if (player1.Name != Utility.ByePlayerName && player2.Name != Utility.ByePlayerName)
                 {
                     //only creating matches here, not scheduling. scheduling will be done my scheduler
                     var roundMatch = GetMatch(player1, player2, tournament, round);
@@ -69,6 +65,21 @@ public class CreateRoundRobinMatches : IRoundRobin
 
         return Task.FromResult(createdMatches.AsEnumerable());
     }
+
+    private Player GetByePlayer()
+    {
+        if (_byePlayerInstance == null)
+        {
+            _byePlayerInstance = new Player
+            {
+                Name = Utility.ByePlayerName,
+                Email = Utility.ByePlayerEmail,
+                Age = 18
+            };
+        }
+        return _byePlayerInstance;
+    }
+
     private List<Player> RotateLeft(List<Player> players)
     {
         if (players.Count <= 1)
