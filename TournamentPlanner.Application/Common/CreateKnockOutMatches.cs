@@ -1,4 +1,5 @@
 using TournamentPlanner.Application.Common.Interfaces;
+using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain;
 using TournamentPlanner.Domain.Entities;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
@@ -200,8 +201,9 @@ public class CreateKnockOutMatches : IKnockout
         {
             _byePlayer = new Player
             {
-                Email = "Bye@gmail.com",
-                Name = "Bye player",
+                //One bye player for the entire Tournament platform
+                Name = Utility.ByePlayerName,
+                Email = Utility.ByePlayerEmail,
                 Age = 18,
             };
         }
@@ -264,7 +266,7 @@ public class CreateKnockOutMatches : IKnockout
         {
             //get the loser of the semifinal
             var semiFinalLosers = previousRound.Matches.Select(mt => mt.Winner == mt.SecondPlayer ? mt.FirstPlayer : mt.SecondPlayer).ToList();
-            var playoffRound = GetRound(previousRound.RoundNumber + 2, matchType, -1);
+            var playoffRound = GetRound(previousRound.RoundNumber + 2, matchType, -1); // palyouff round with index -1
             matches.Add(GetMatch(semiFinalLosers[0], semiFinalLosers[1], playoffRound, tournament));
         }
 
