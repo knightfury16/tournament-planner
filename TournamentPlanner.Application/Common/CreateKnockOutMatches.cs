@@ -8,7 +8,6 @@ namespace TournamentPlanner.Application.Common;
 public interface IKnockout
 {
 
-    Task<IEnumerable<Match>> CreateMatches(Tournament tournament, MatchType matchType);
     Task<IEnumerable<Match>> CreateFirstRoundMatches(Tournament tournament, MatchType matchType);
     Task<IEnumerable<Match>> CreateFirstRoundMatchesAfterGroup(Tournament tournament, MatchType matchType, Dictionary<string, List<PlayerStanding>> groupOfPlayerStanding);
     Task<IEnumerable<Match>> CreateSubsequentMatches(Tournament tournament, MatchType matchType);
@@ -26,35 +25,6 @@ public class CreateKnockOutMatches : IKnockout
         _roundRepository = roundRepository;
     }
 
-    public async Task<IEnumerable<Match>> CreateMatches(Tournament tournament, MatchType matchType)
-    {
-        //is it the first time? does the matchtype contain any round?
-        if (matchType == null) throw new ArgumentNullException(nameof(matchType));
-
-        if (matchType.Rounds == null)
-        {
-            await _matchTypeRepository.ExplicitLoadCollectionAsync(matchType, mt => mt.Rounds);
-        }
-
-        //if it is knockout tournament
-        if (matchType.Rounds?.Count == 0 && tournament.TournamentType == Domain.Enum.TournamentType.Knockout)
-        {
-            //go make some random pair up
-            //match up the player with power of 2
-            return await KnockoutTournamentFirstRound(tournament, matchType);
-
-        }
-        else if (matchType.Rounds?.Count == 0)
-        {
-            //if it is group type and im here, that means group section is done. get the group matches standing players and make a match up among them
-            // match up the player with power of 2
-            return KnockoutAfterGroupFirstRound(tournament, matchType);
-        }
-        //previous round exists
-        //fetch the previous matches winner. 
-        //check if the  order remain the same
-        throw new NotImplementedException();
-    }
     public async Task<IEnumerable<Match>> CreateFirstRoundMatches(Tournament tournament, MatchType matchType)
     {
         return await KnockoutTournamentFirstRound(tournament, matchType);
@@ -115,13 +85,6 @@ public class CreateKnockOutMatches : IKnockout
         return await Task.FromResult(matches);
     }
 
-    private IEnumerable<Match> KnockoutAfterGroupFirstRound(Tournament tournament, MatchType matchType)
-    {
-        //i nedd to get all the player from all the group standing
-        //every draw contain a group
-        //get all the draws j
-        throw new NotImplementedException();
-    }
 
     private async Task<IEnumerable<Match>> KnockoutTournamentFirstRound(Tournament tournament, MatchType matchType)
     {
