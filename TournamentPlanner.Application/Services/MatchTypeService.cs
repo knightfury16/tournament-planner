@@ -1,5 +1,4 @@
-﻿using TournamentPlanner.Application.Common;
-using TournamentPlanner.Application.Common.Interfaces;
+﻿using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
@@ -63,7 +62,7 @@ public class MatchTypeService : IMatchTypeService
     {
         var advancePlayers = new List<Player>();
         //check if game type is null or else fetch it
-        if(tournament.GameType == null)
+        if (tournament.GameType == null)
         {
             await _tournamentRepository.ExplicitLoadReferenceAsync(tournament, t => t.GameType);
         }
@@ -96,24 +95,6 @@ public class MatchTypeService : IMatchTypeService
         //if here then all round complete
         matchType.IsCompleted = true;
         await _matchTypeRepository.SaveAsync();
-    }
-   
-
-    private async Task<List<Player>> GetWinnerOfPreviousKnockOut(Draw draw)
-    {
-        var navigationProp = Utility.NavigationPrpertyCreator(nameof(Draw.MatchType), nameof(MatchType.Rounds), nameof(Round.Matches), nameof(Match.Winner));
-
-        var drawPopulated = await _drawRepository.GetByIdAsync(draw.Id, [navigationProp]);
-
-        if (drawPopulated == null) throw new NotFoundException(nameof(draw));
-
-        var matches = drawPopulated.MatchType.Rounds.First().Matches;
-
-        var players = matches.Select(m => m.Winner).ToList();
-
-        if (players == null) throw new Exception("Could not create winner player list");
-
-        return players!;
     }
 
 }
