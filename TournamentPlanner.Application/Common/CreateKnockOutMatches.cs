@@ -100,7 +100,7 @@ public class CreateKnockOutMatches : IKnockout
         int numberOfBye = totalSlots - matchType.Players.Count;
 
         List<Match> matches = new List<Match>();
-        Round round = GetRound(1, matchType, totalSlots);
+        Round round = GetRound(1, matchType, totalSlots); // this is the first round
         var allPlayerList = new List<Player>(matchType.Players);
 
         if(numberOfBye > 0 && matchType.SeededPlayers?.Count > 0)
@@ -112,13 +112,13 @@ public class CreateKnockOutMatches : IKnockout
             }
 
             var seededPlayerList = matchType.SeededPlayers.Select(sp => sp.Player).ToList();
-            int byeMatchAdded = 0;
-            while(numberOfBye > 0 && byeMatchAdded < seededPlayerList.Count )
+            int byeMatchCount = 0;
+            while(numberOfBye > 0 && byeMatchCount < seededPlayerList.Count )
             {
-                var match = GetMatch(GetByePlayer(), seededPlayerList[byeMatchAdded]!, round, tournament);
+                var match = GetMatch(GetByePlayer(), seededPlayerList[byeMatchCount]!, round, tournament);
                 matches.Add(match);
                 numberOfBye--;
-                byeMatchAdded++;
+                byeMatchCount++;
             }
         }
 
