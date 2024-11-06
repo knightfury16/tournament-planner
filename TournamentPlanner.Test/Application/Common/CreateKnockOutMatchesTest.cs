@@ -11,6 +11,8 @@ using System.Linq;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain;
+using TournamentPlanner.Domain.Exceptions;
+using Match = Domain.Entities.Match;
 
 public class CreateKnockOutMatchesTest
 {
@@ -173,38 +175,38 @@ public class CreateKnockOutMatchesTest
     }
 
 
-        [Fact]
-        public async Task CreateFirstRoundMatchesAfterGroup_WithEvenGroupOfPlayerStanding_ReturnsMatches()
-        {
-            // Arrange
-            var tournament = TournamentFixtures.GetKnockoutTournament();
-            var players = PlayerFixtures.GetSamplePlayers(8).ToList();
-            var matchType = new KnockOut { Name = "Knockout Test", Players = players};
+    [Fact]
+    public async Task CreateFirstRoundMatchesAfterGroup_WithProperGroupOfPlayerStanding_ReturnsMatches()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetKnockoutTournament();
+        var players = PlayerFixtures.GetSamplePlayers(8).ToList();
+        var matchType = new KnockOut { Name = "Knockout Test", Players = players };
 
-            var groupAStanding = new List<PlayerStanding> 
+        var groupAStanding = new List<PlayerStanding>
             {
                 new PlayerStanding { Player = players[0], GamesWon = 4, GamesLost = 1, Ranking = 1},
                 new PlayerStanding { Player = players[1], GamesWon = 3, GamesLost = 1, Ranking = 2},
             };
-            var groupBStanding = new List<PlayerStanding> 
+        var groupBStanding = new List<PlayerStanding>
             {
 
                 new PlayerStanding { Player = players[2], GamesWon = 3, GamesLost = 2, Ranking = 1},
                 new PlayerStanding { Player = players[3], GamesWon = 2, GamesLost = 3, Ranking = 2},
             };
-            var groupCStanding = new List<PlayerStanding>
+        var groupCStanding = new List<PlayerStanding>
             {
 
                 new PlayerStanding { Player = players[4], GamesWon = 4, GamesLost = 1, Ranking = 1},
                 new PlayerStanding { Player = players[5], GamesWon = 3, GamesLost = 1, Ranking = 2},
             };
-            var groupDStanding = new List<PlayerStanding>
+        var groupDStanding = new List<PlayerStanding>
             {
                 new PlayerStanding { Player = players[6], GamesWon = 2, GamesLost = 2, Ranking = 1},
                 new PlayerStanding { Player = players[7], GamesWon = 1, GamesLost = 3, Ranking = 2}
             };
 
-            var groupOfPlayerStanding = new Dictionary<string, List<PlayerStanding>>
+        var groupOfPlayerStanding = new Dictionary<string, List<PlayerStanding>>
             {
                 {"Group A", groupAStanding},
                 {"Group B", groupBStanding},
@@ -213,87 +215,204 @@ public class CreateKnockOutMatchesTest
 
             };
 
-            _matchTypeRepositoryMock.Setup(r => r.ExplicitLoadCollectionAsync(matchType, mt => mt.Players)).Returns(Task.CompletedTask);
+        _matchTypeRepositoryMock.Setup(r => r.ExplicitLoadCollectionAsync(matchType, mt => mt.Players)).Returns(Task.CompletedTask);
 
-            // Act
-            var matches = await _createKnockOutMatches.CreateFirstRoundMatchesAfterGroup(tournament, matchType, groupOfPlayerStanding);
+        // Act
+        var matches = await _createKnockOutMatches.CreateFirstRoundMatchesAfterGroup(tournament, matchType, groupOfPlayerStanding);
 
-            // Assert
-            Assert.NotNull(matches);
-            Assert.Equal(4, matches.Count());
-        }
+        // Assert
+        Assert.NotNull(matches);
+        Assert.Equal(4, matches.Count());
+    }
 
-        [Fact]
-        public async Task CreateFirstRoundMatchesAfterGroup_WithOddGroupOfPlayerStanding_ReturnsMatches()
-        {
-            // Arrange
-            var tournament = TournamentFixtures.GetKnockoutTournament();
-            var players = PlayerFixtures.GetSamplePlayers(8).ToList();
-            var matchType = new KnockOut { Name = "Knockout Test", Players = players};
+    [Fact]
+    public async Task CreateFirstRoundMatchesAfterGroup_WithOddGroupOfPlayerStanding_ThrowsException()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetKnockoutTournament();
+        var players = PlayerFixtures.GetSamplePlayers(8).ToList();
+        var matchType = new KnockOut { Name = "Knockout Test", Players = players };
 
-            var groupAStanding = new List<PlayerStanding> 
+        var groupAStanding = new List<PlayerStanding>
             {
                 new PlayerStanding { Player = players[0], GamesWon = 4, GamesLost = 1, Ranking = 1},
                 new PlayerStanding { Player = players[1], GamesWon = 3, GamesLost = 1, Ranking = 2},
             };
-            var groupBStanding = new List<PlayerStanding> 
+        var groupBStanding = new List<PlayerStanding>
             {
 
                 new PlayerStanding { Player = players[2], GamesWon = 3, GamesLost = 2, Ranking = 1},
                 new PlayerStanding { Player = players[3], GamesWon = 2, GamesLost = 3, Ranking = 2},
             };
-            var groupCStanding = new List<PlayerStanding>
+        var groupCStanding = new List<PlayerStanding>
             {
 
                 new PlayerStanding { Player = players[4], GamesWon = 4, GamesLost = 1, Ranking = 1},
                 new PlayerStanding { Player = players[5], GamesWon = 3, GamesLost = 1, Ranking = 2},
             };
 
-            var groupOfPlayerStanding = new Dictionary<string, List<PlayerStanding>>
+        var groupOfPlayerStanding = new Dictionary<string, List<PlayerStanding>>
             {
                 {"Group A", groupAStanding},
                 {"Group B", groupBStanding},
                 {"Group C", groupCStanding},
             };
 
-            _matchTypeRepositoryMock.Setup(r => r.ExplicitLoadCollectionAsync(matchType, mt => mt.Players)).Returns(Task.CompletedTask);
+        _matchTypeRepositoryMock.Setup(r => r.ExplicitLoadCollectionAsync(matchType, mt => mt.Players)).Returns(Task.CompletedTask);
 
-            // Act
-            var matches = await _createKnockOutMatches.CreateFirstRoundMatchesAfterGroup(tournament, matchType, groupOfPlayerStanding);
+        //Act & Assert
+        await Assert.ThrowsAsync<ValidationException>(() => _createKnockOutMatches.CreateFirstRoundMatchesAfterGroup(tournament, matchType, groupOfPlayerStanding));
 
-            // Assert
-            Assert.NotNull(matches);
-            Assert.Equal(4, matches.Count());
-            Assert.Equal(4, groupOfPlayerStanding.Count); // A bye group was added making it 3+1=4
+    }
 
-            var byeMatchesCount = matches.Count(m => m.FirstPlayer.Name == Utility.ByePlayerName || m.SecondPlayer.Name == Utility.ByePlayerName);
-            Assert.Equal(2, byeMatchesCount);
+    [Fact]
+    public async Task CreateFirstRoundMatchesAfterGroup_WithOddPlayerInGroupOfPlayerStanding_ThrowsException()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetKnockoutTournament();
+        var players = PlayerFixtures.GetSamplePlayers(8).ToList();
+        var matchType = new KnockOut { Name = "Knockout Test", Players = players };
 
-            //assert the bye matches are from the same group of player
-            var byeMatchGroups = matches.Where(m => m.FirstPlayer.Name == Utility.ByePlayerName || m.SecondPlayer.Name == Utility.ByePlayerName)
-                .Select(m => groupOfPlayerStanding.FirstOrDefault(g => g.Value.Any(ps => ps.Player == m.FirstPlayer || ps.Player == m.SecondPlayer))).ToList();
-            var firstByeMatchGroup = byeMatchGroups.First();
-            var secondByeMatchGroup = byeMatchGroups.Skip(1).First();
-            Assert.Equal(firstByeMatchGroup, secondByeMatchGroup);
-        }
+        var groupAStanding = new List<PlayerStanding>
+            {
+                new PlayerStanding { Player = players[0], GamesWon = 4, GamesLost = 1, Ranking = 1},
+                new PlayerStanding { Player = players[1], GamesWon = 3, GamesLost = 1, Ranking = 2},
+            };
+        var groupBStanding = new List<PlayerStanding>
+            {
 
-    //     [Fact]
-    //     public async Task CreateSubsequentMatches_WithValidTournamentAndMatchType_ReturnsMatches()
-    //     {
-    //         // Arrange
-    //         var tournament = TournamentFixtures.GetKnockoutTournament();
-    //         var matchType = new MatchType { Players = PlayerFixtures.GetSamplePlayers(8).ToList() };
-    //         var previousRound = new Round { Matches = new List<Match> { new Match { Winner = PlayerFixtures.GetSamplePlayers(1).First() } } };
-    //         _matchTypeRepositoryMock.Setup(r => r.ExplicitLoadCollectionAsync(matchType, mt => mt.Players)).Returns(Task.CompletedTask);
-    //         _roundRepositoryMock.Setup(r => r.ExplicitLoadCollectionAsync(previousRound, r => r.Matches)).Returns(Task.CompletedTask);
+                new PlayerStanding { Player = players[2], GamesWon = 3, GamesLost = 2, Ranking = 1},
+            };
 
-    //         // Act
-    //         var matches = await _createKnockOutMatches.CreateSubsequentMatches(tournament, matchType);
+        var groupOfPlayerStanding = new Dictionary<string, List<PlayerStanding>>
+            {
+                {"Group A", groupAStanding},
+                {"Group B", groupBStanding},
+            };
 
-    //         // Assert
-    //         Assert.NotNull(matches);
-    //         Assert.True(matches.Count() > 0);
-    //     }
-    // }
+        _matchTypeRepositoryMock.Setup(r => r.ExplicitLoadCollectionAsync(matchType, mt => mt.Players)).Returns(Task.CompletedTask);
+
+        //Act & Assert
+        await Assert.ThrowsAsync<ValidationException>(() => _createKnockOutMatches.CreateFirstRoundMatchesAfterGroup(tournament, matchType, groupOfPlayerStanding));
+
+    }
+    [Fact]
+    public async Task CreateSubsequentMatches_NullMatchType_ThrowsArgumentNullException()
+    {
+        var tournament = TournamentFixtures.GetTournament();
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _createKnockOutMatches.CreateSubsequentMatches(tournament, null!));
+    }
+
+    [Fact]
+    public async Task CreateSubsequentMatches_NullTournament_ThrowsArgumentNullException()
+    {
+        var matchType = new KnockOut { Name = "Knockout Test" };
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _createKnockOutMatches.CreateSubsequentMatches(null!, matchType));
+    }
+
+    [Fact]
+    public async Task CreateSubsequentMatches_NoPreviousRoundMatches_ThrowsException()
+    {
+        var tournament = TournamentFixtures.GetTournament();
+        var matchType = new KnockOut { Name = "Knockout Test", Rounds = new List<Round>() };
+
+        await Assert.ThrowsAsync<Exception>(() => _createKnockOutMatches.CreateSubsequentMatches(tournament, matchType));
+    }
+
+    [Fact]
+    public async Task CreateSubsequentMatches_EmptyPreviousRoundMatches_ThrowsException()
+    {
+        var tournament = TournamentFixtures.GetKnockoutTournament();
+        var matchType = new KnockOut
+        {
+            Name = "Knockout Test",
+        };
+        var round = new Round { RoundNumber = 1, RoundName = "Test Round", MatchType = matchType, Matches = new List<Match>() };
+
+        matchType.Rounds.Add(round);
+
+        await Assert.ThrowsAsync<Exception>(() => _createKnockOutMatches.CreateSubsequentMatches(tournament, matchType));
+    }
+
+    [Fact]
+    public async Task CreateSubsequentMatches_OddNumberOfWinners_ThrowsException()
+    {
+        var players = PlayerFixtures.GetSamplePlayers(4);
+        var tournament = TournamentFixtures.GetTournament();
+        var matchType = new KnockOut
+        {
+            Name = "Knockout Test",
+        };
+        var round = new Round
+        {
+            MatchType = matchType, // Ensure MatchType is set
+        };
+        var previousmatches = new List<Match>
+        {
+            new Match {FirstPlayer = players[0], SecondPlayer = players[1], Winner = players[0],Tournament = tournament,Round = round}
+        };
+
+        round.Matches.AddRange(previousmatches);
+        matchType.Rounds.Add(round);
+
+        await Assert.ThrowsAsync<Exception>(() => _createKnockOutMatches.CreateSubsequentMatches(tournament, matchType));
+    }
+
+    [Fact]
+    public async Task CreateSubsequentMatches_SuccessfulMatchCreation_ReturnsMatches()
+    {
+
+        var players = PlayerFixtures.GetSamplePlayers(8);
+        var tournament = TournamentFixtures.GetTournament();
+        var matchType = new KnockOut
+        {
+            Name = "Knockout Test",
+        };
+        var round = new Round
+        {
+            MatchType = matchType, // Ensure MatchType is set
+        };
+        var previousmatches = new List<Match>
+        {
+            new Match { Id = 1, FirstPlayer = players[0], SecondPlayer = players[1], Winner = players[0],Tournament = tournament,Round = round},
+            new Match {Id = 2, FirstPlayer = players[2], SecondPlayer = players[3], Winner = players[3],Tournament = tournament,Round = round},
+            new Match {Id = 3, FirstPlayer = players[4], SecondPlayer = players[5], Winner = players[5],Tournament = tournament,Round = round},
+            new Match {Id = 4, FirstPlayer = players[6], SecondPlayer = players[7], Winner = players[7],Tournament = tournament,Round = round}
+        };
+
+        round.Matches.AddRange(previousmatches);
+        matchType.Rounds.Add(round);
+
+
+        var matches = await _createKnockOutMatches.CreateSubsequentMatches(tournament, matchType);
+
+        Assert.NotNull(matches);
+        Assert.Equal(2, matches.Count()); // Assuming 2 winners create 1 match
+    }
+
+    [Fact]
+    public async Task CreateSubsequentMatches_PlayerNullCheck_ThrowsException()
+    {
+        var players = PlayerFixtures.GetSamplePlayers(4);
+        var tournament = TournamentFixtures.GetTournament();
+        var matchType = new KnockOut
+        {
+            Name = "Knockout Test",
+        };
+        var round = new Round
+        {
+            MatchType = matchType, // Ensure MatchType is set
+        };
+        var previousmatches = new List<Match>
+        {
+            new Match {FirstPlayer = players[0], SecondPlayer = players[1], Winner = null,Tournament = tournament,Round = round}
+        };
+
+        round.Matches.AddRange(previousmatches);
+        matchType.Rounds.Add(round);
+
+        await Assert.ThrowsAsync<Exception>(() => _createKnockOutMatches.CreateSubsequentMatches(tournament, matchType));
+    }
+
 }
 
