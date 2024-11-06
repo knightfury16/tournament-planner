@@ -2,6 +2,7 @@ using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain;
 using TournamentPlanner.Domain.Entities;
+using TournamentPlanner.Domain.Exceptions;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
 namespace TournamentPlanner.Application.Common;
@@ -35,37 +36,36 @@ public class CreateKnockOutMatches : IKnockout
     {
         if (groupOfPlayerStanding == null || groupOfPlayerStanding.Count == 0) throw new Exception("Group of player standing can not be null or zero");
 
-        var playerPerGroup = groupOfPlayerStanding.First().Value.Count;
-        //need to handle odd player case
+
+        //-- Locking Tournament.WinnerPerGroup to 2. And im creating with formula, group = ceil(Tournament.KnckoutStartNumber/Tournament.WinnerPerGroup)
+        //-- Tournament.KnockoutStartNumber is restricted to power of 2
+        //-- So I will always have even number of group and groupNumber * 2 = will always yeild a power of two
+        //-- But I can have ONE groupOfPlayerStanding with one player like -> this case is not possible since im checking for knockout start number to be less than registered player
+
+
 
         //is the gorupOfPlayerStanding even?
         if (groupOfPlayerStanding.Count % 2 != 0)
         {
-            List<PlayerStanding> byePlayersStanding = new List<PlayerStanding>();
-            for (int i = 0; i < playerPerGroup; i++)
-            {
-
-                byePlayersStanding.Add(new PlayerStanding
-                {
-                    Player = GetByePlayer()
-                });
-            }
-
-            groupOfPlayerStanding.Add("BYE_GROUP", byePlayersStanding);
+            //if im here then my gorup making logic is wrong read the above comment
+            throw new ValidationException("Group of player standing is Odd");
         }
-        //TODO
-        //!! AM writing the code logic with 2 player per group in mind, need to make it dynamic
-        // var numberOfByePlayer = GetNumberOfBye(groupOfPlayerStanding.First().Value.Count);
-        //is the playerStanding per group power of tw0?
+
+        if (groupOfPlayerStanding.Values.Any(group => group.Count < 2))
+        {
+            throw new ValidationException("A group of player standing must contain at least 2 players.");
+        }
 
         //shuffle up th groupOfPlayeStanding
         var random = new Random();
         var groupCount = groupOfPlayerStanding.Count;
         int halfGroupCount = groupCount / 2;
+        var playerPerGroup = groupOfPlayerStanding.First().Value.Count; // lets hope first group is not the group with exception that is 1 player
 
         Round round = GetRound(1, matchType, matchType.Players.Count);
         List<Match> matches = new List<Match>();
 
+        //shuffling group
         groupOfPlayerStanding = groupOfPlayerStanding.OrderBy(gr => random.Next()).ToDictionary();
 
         //per pair of group match from A2-B1, A1-B2... An-B(n-1)
