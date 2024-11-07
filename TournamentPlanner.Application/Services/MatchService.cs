@@ -120,6 +120,12 @@ public class MatchService : IMatchService
             await _matchRepository.ExplicitLoadReferenceAsync(match, m => m.SecondPlayer);
         }
 
+        if (match.FirstPlayer!.Name.ToLower().Contains("bye") && match.SecondPlayer!.Name.ToLower().Contains("bye"))
+        {
+            throw new Exception("Both players cannot be 'bye' in a match.");
+        }
+
+
         if (match.FirstPlayer!.Name.ToLower().Contains("bye") || match.SecondPlayer!.Name.ToLower().Contains("bye"))
         {
             return true;
@@ -127,6 +133,7 @@ public class MatchService : IMatchService
 
         //decide on the score property if the match is complete or not
         if (match.ScoreJson != null) return true;
+
         return false;
     }
 }
