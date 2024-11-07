@@ -59,12 +59,4 @@ public class MakeTournamentMatchScheduleRequestHandler : IRequestHandler<MakeTou
         await _tournamentRepository.SaveAsync();
         return _mapper.Map<IEnumerable<MatchDto>>(scheduledMatches);
     }
-
-    private async Task<bool> CanISchedule(Tournament tourament)
-    {
-        if (tourament.Matches == null || tourament.Matches.Count() == 0 && tourament.Draws != null) return true; //I have made draws but no mathces yet scheduled or played, initial phase
-        if (tourament.Draws == null) return false; //no draws yet created, so can not make schedule
-        return await _drawService.IsDrawsComplete(tourament.Draws); //
-    }
-
 }
