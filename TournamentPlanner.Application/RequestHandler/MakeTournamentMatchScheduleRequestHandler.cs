@@ -19,15 +19,17 @@ public class MakeTournamentMatchScheduleRequestHandler : IRequestHandler<MakeTou
     private readonly IDrawService _drawService;
     private readonly IMatchService _matchService;
     private readonly ITournamentService _tournamentService;
+    private readonly IMatchScheduler _matchScheduler;
 
     public MakeTournamentMatchScheduleRequestHandler(IRepository<Tournament> tournamentRepository, IMapper mapper,
-                                                    IDrawService drawService, IMatchService matchService, ITournamentService tournamentService)
+                                                    IDrawService drawService, IMatchService matchService, ITournamentService tournamentService, IMatchScheduler matchScheduler)
     {
         _tournamentRepository = tournamentRepository;
         _mapper = mapper;
         _drawService = drawService;
         _matchService = matchService;
         _tournamentService = tournamentService;
+        _matchScheduler = matchScheduler;
     }
     public async Task<IEnumerable<MatchDto>?> Handle(MakeTournamentMatchScheduleRequest request, CancellationToken cancellationToken = default)
     {
@@ -44,15 +46,18 @@ public class MakeTournamentMatchScheduleRequestHandler : IRequestHandler<MakeTou
             //ON-TEST: Test this please 29/09/24
         var canISchedule = await _tournamentService.CanISchedule(tournament);
         if(canISchedule == false)throw new BadRequestException("Draws not made or previous draws not complete. Can not make schedule");
-        //got to match servie with all the draws
+
+        //go to match service with all the draws
         var matches = await _matchService.CreateMatches(tournament, request.SchedulingInfo);
+
+        var scheduledMatches = _matchScheduler.DefaultMatchScheduler(matches.ToList(), request.SchedulingInfo);
 
         //ON-TEST 
         //! at worst case will have 20 group with 10 match each, with total 200 matches between them. so cant send all the info. remember it. 
 
-        tournament.Matches.AddRange(matches);
+        tournament.Matches.AddRange(scheduledMatches);
         await _tournamentRepository.SaveAsync();
-        return _mapper.Map<IEnumerable<MatchDto>>(matches);
+        return _mapper.Map<IEnumerable<MatchDto>>(scheduledMatches);
     }
 
     private async Task<bool> CanISchedule(Tournament tourament)
