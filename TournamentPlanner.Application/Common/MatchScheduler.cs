@@ -6,13 +6,13 @@ namespace TournamentPlanner.Application;
 
 public interface IMatchScheduler
 {
-    public IEnumerable<Match> DefaultMatchScheduler(ref List<Match> matches, SchedulingInfo schedulingInfo);
-    public IEnumerable<Match> AdvanceMatchScheduler(ref List<Match> matches, SchedulingInfo schedulingInfo);
+    public IEnumerable<Match> DefaultMatchScheduler(List<Match> matches, SchedulingInfo schedulingInfo);
+    public IEnumerable<Match> AdvanceMatchScheduler(List<Match> matches, SchedulingInfo schedulingInfo);
 }
 public class MatchScheduler : IMatchScheduler
 {
 
-    public IEnumerable<Match> DefaultMatchScheduler(ref List<Match> matches, SchedulingInfo schedulingInfo)
+    public IEnumerable<Match> DefaultMatchScheduler(List<Match> matches, SchedulingInfo schedulingInfo)
     {
         var tournament = matches.First().Tournament; // do i need to send the tournament explicitly here?
 
@@ -46,7 +46,7 @@ public class MatchScheduler : IMatchScheduler
         return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, hour, minute, second).ToUniversalTime(); // setting the start time with start date
     }
 
-    public IEnumerable<Match> AdvanceMatchScheduler(ref List<Match> matches, SchedulingInfo schedulingInfo)
+    public IEnumerable<Match> AdvanceMatchScheduler( List<Match> matches, SchedulingInfo schedulingInfo)
     {
         //a scheduler that takes into accout the following things
         //1. match per day -> end day - start day = day we have to finish all the matches. 
