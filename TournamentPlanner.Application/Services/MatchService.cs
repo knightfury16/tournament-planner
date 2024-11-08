@@ -20,15 +20,17 @@ public class MatchService : IMatchService
     private readonly IKnockout _knockOut;
     private readonly IGameFormatFactory _gameFormatFactory;
     private readonly IRepository<Draw> _drawRepository;
+    private readonly IRepository<Tournament> _tournamentRepository;
     private readonly IRepository<Match> _matchRepository;
 
-    public MatchService(IRepository<Draw> drawRepository, IRepository<Match> matchRepository, IRoundRobin rounRobin, IGameFormatFactory gameFormatFactory, IKnockout knockOut)
+    public MatchService(IRepository<Draw> drawRepository, IRepository<Match> matchRepository, IRoundRobin rounRobin, IGameFormatFactory gameFormatFactory, IKnockout knockOut, IRepository<Tournament> tournamentRepository)
     {
         _drawRepository = drawRepository;
         _matchRepository = matchRepository;
         _rounRobin = rounRobin;
         _gameFormatFactory = gameFormatFactory;
         _knockOut = knockOut;
+        _tournamentRepository = tournamentRepository;
     }
 
     public async Task<IEnumerable<Match>> CreateMatches(Tournament tournament, SchedulingInfo? schedulingInfo)
