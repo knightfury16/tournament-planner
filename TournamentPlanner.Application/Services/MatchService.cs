@@ -87,7 +87,12 @@ public class MatchService : IMatchService
             {
 
                 var groupDraws = tournament.Draws.Where(draw => draw.MatchType is Group);
-                var gameTypeHandler = _gameFormatFactory.GetGameFormat(tournament.GameType.Name);
+                if(tournament.GameType == null)
+                {
+                    await _tournamentRepository.ExplicitLoadReferenceAsync(tournament, t => t.GameType);
+                }
+
+                var gameTypeHandler = _gameFormatFactory.GetGameFormat(tournament.GameType!.Name); //game type cant be null here
                 Dictionary<string, List<PlayerStanding>> groupOfPlayerStanding = new Dictionary<string, List<PlayerStanding>>();
                 foreach (var groupDraw in groupDraws)
                 {
