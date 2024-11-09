@@ -35,6 +35,8 @@ public class MatchService : IMatchService
 
     public async Task<IEnumerable<Match>> CreateMatches(Tournament tournament, SchedulingInfo? schedulingInfo)
     {
+        ArgumentNullException.ThrowIfNull(tournament);
+
         var createdMatches = new List<Match>();
         //if tournament current state knockout  create knocout match
         if (tournament.CurrentState == TournamentState.KnockoutState)
@@ -52,8 +54,6 @@ public class MatchService : IMatchService
 
     private async Task<List<Match>> CreateGroupMatches(Tournament tournament)
     {
-        ArgumentNullException.ThrowIfNull(tournament);
-
         //- I presume all the match type of draws are of the same type
         List<Match> createdMatches = new List<Match>();
          
