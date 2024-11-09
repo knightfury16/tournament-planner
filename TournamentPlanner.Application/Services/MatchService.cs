@@ -52,11 +52,19 @@ public class MatchService : IMatchService
 
     private async Task<List<Match>> CreateGroupMatches(Tournament tournament)
     {
+        ArgumentNullException.ThrowIfNull(tournament);
+
         //- I presume all the match type of draws are of the same type
         List<Match> createdMatches = new List<Match>();
+         
         var draws = tournament.Draws;
+        ArgumentNullException.ThrowIfNull(draws);
+
         foreach (var draw in draws)
         {
+            if(draw.MatchType == null)throw new ArgumentNullException(nameof(draw.MatchType));
+            if(draw.MatchType is KnockOut)throw new ValidationException("Found Knockout matchtype while creating group matches");
+
             var matches = await _rounRobin.CreateMatches(tournament, draw.MatchType);
             createdMatches.AddRange(matches);
         }
