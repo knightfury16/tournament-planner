@@ -54,14 +54,14 @@ public class MatchService : IMatchService
     {
         //- I presume all the match type of draws are of the same type
         List<Match> createdMatches = new List<Match>();
-         
+
         var draws = tournament.Draws;
         ArgumentNullException.ThrowIfNull(draws);
 
         foreach (var draw in draws)
         {
-            if(draw.MatchType == null)throw new ArgumentNullException(nameof(draw.MatchType));
-            if(draw.MatchType is KnockOut)throw new ValidationException("Found Knockout matchtype while creating group matches");
+            if (draw.MatchType == null) throw new ArgumentNullException(nameof(draw.MatchType));
+            if (draw.MatchType is KnockOut) throw new ValidationException("Found Knockout matchtype while creating group matches");
 
             var matches = await _rounRobin.CreateMatches(tournament, draw.MatchType);
             createdMatches.AddRange(matches);
@@ -103,7 +103,7 @@ public class MatchService : IMatchService
                 {
                     await _drawRepository.GetByIdAsync(groupDraw.Id, [allPlayersProperty, allRoundWithMatch]); //populating the draw
                     var groupStanding = gameTypeHandler.GetGroupStanding(tournament, groupDraw.MatchType);
-                    if (groupStanding == null) throw new Exception("Group stading is null. could not determine group stanidng");
+                    if(groupStanding.Count() == 0)throw new Exception("Group standing can not be empty. ");
                     groupOfPlayerStanding.Add(groupDraw.MatchType.Name, groupStanding);
                 }
 
@@ -134,7 +134,7 @@ public class MatchService : IMatchService
 
         if (match.FirstPlayer!.Name.ToLower().Contains("bye") && match.SecondPlayer!.Name.ToLower().Contains("bye"))
         {
-            throw new Exception("Both players cannot be 'bye' in a match.");
+            throw new ValidationException("Both players cannot be 'bye' in a match.");
         }
 
 
