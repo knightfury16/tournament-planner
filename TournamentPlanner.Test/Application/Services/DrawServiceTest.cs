@@ -4,8 +4,9 @@ using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Exceptions;
 using TournamentPlanner.Test.Fixtures;
 using System.Linq.Expressions;
+using TournamentPlanner.Application;
 
-namespace TournamentPlanner.Application.UnitTests.Services;
+namespace TournamentPlanner.Test.Application.Services;
 
 public class DrawServiceTests
 {

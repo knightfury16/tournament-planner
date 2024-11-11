@@ -1,4 +1,4 @@
-﻿namespace TournamentPlanner.Test;
+﻿namespace TournamentPlanner.Test.Application.Common;
 
 using System;
 using System.Collections.Generic;

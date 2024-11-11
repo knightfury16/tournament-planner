@@ -2,7 +2,7 @@
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Test.Fixtures;
 
-namespace TournamentPlanner.Test;
+namespace TournamentPlanner.Test.Application.Common;
 
 public class CreateKnockoutMatchTypeTest
 {

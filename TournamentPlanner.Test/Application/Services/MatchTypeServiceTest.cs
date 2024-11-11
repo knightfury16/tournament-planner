@@ -8,7 +8,7 @@ using TournamentPlanner.Domain.Enum;
 using TournamentPlanner.Test.Fixtures;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
-namespace TournamentPlanner.Test;
+namespace TournamentPlanner.Test.Application.Services;
 
 public class MatchTypeServiceTest
 {

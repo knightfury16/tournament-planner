@@ -13,7 +13,7 @@ using TournamentPlanner.Application.GameTypeHandler;
 using TournamentPlanner.Domain.Exceptions;
 using TournamentPlanner.Application.Helpers;
 
-namespace TournamentPlanner.Application.UnitTests.Services;
+namespace TournamentPlanner.Test.Application.Services;
 
 public class MatchServiceTests
 {

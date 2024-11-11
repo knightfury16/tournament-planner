@@ -5,7 +5,7 @@ using TournamentPlanner.Domain.Exceptions;
 using TournamentPlanner.Test.Fixtures;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
-namespace TournamentPlanner.Test;
+namespace TournamentPlanner.Test.Application.Common;
 
 public class CreateRoundRobinMatchesTest
 {
