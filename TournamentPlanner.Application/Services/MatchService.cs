@@ -20,17 +20,15 @@ public class MatchService : IMatchService
     private readonly IKnockout _knockOut;
     private readonly IGameFormatFactory _gameFormatFactory;
     private readonly IRepository<Draw> _drawRepository;
-    private readonly IRepository<Tournament> _tournamentRepository;
     private readonly IRepository<Match> _matchRepository;
 
-    public MatchService(IRepository<Draw> drawRepository, IRepository<Match> matchRepository, IRoundRobin rounRobin, IGameFormatFactory gameFormatFactory, IKnockout knockOut, IRepository<Tournament> tournamentRepository)
+    public MatchService(IRepository<Draw> drawRepository, IRepository<Match> matchRepository, IRoundRobin rounRobin, IGameFormatFactory gameFormatFactory, IKnockout knockOut)
     {
         _drawRepository = drawRepository;
         _matchRepository = matchRepository;
         _rounRobin = rounRobin;
         _gameFormatFactory = gameFormatFactory;
         _knockOut = knockOut;
-        _tournamentRepository = tournamentRepository;
     }
 
     public async Task<IEnumerable<Match>> CreateMatches(Tournament tournament, SchedulingInfo? schedulingInfo)
@@ -77,10 +75,11 @@ public class MatchService : IMatchService
         //in each tournament i will only have one knockout draw
         var allRoundWithMatch = Utility.NavigationPrpertyCreator(nameof(Draw.MatchType), nameof(MatchType.Rounds), nameof(Round.Matches));
         var allPlayersProperty = Utility.NavigationPrpertyCreator(nameof(Draw.MatchType), nameof(MatchType.Players));
+        var tournamentGameTypeProperty = Utility.NavigationPrpertyCreator(nameof(Draw.Tournament), nameof(Tournament.GameType));
 
         var knockoutDraw = tournament.Draws.Where(draw => draw.MatchType is KnockOut).FirstOrDefault();
         if (knockoutDraw == null) throw new NotFoundException("Could not find knockout draw to create matches");
-        await _drawRepository.GetByIdAsync(knockoutDraw.Id, [allRoundWithMatch]); //populating the knockout draw
+        await _drawRepository.GetByIdAsync(knockoutDraw.Id, [allRoundWithMatch, tournamentGameTypeProperty]); //populating the knockout draw
 
         //check if it is the first round
         if (knockoutDraw.MatchType.Rounds.Count == 0)
@@ -95,10 +94,8 @@ public class MatchService : IMatchService
             {
 
                 var groupDraws = tournament.Draws.Where(draw => draw.MatchType is Group);
-                if(tournament.GameType == null)
-                {
-                    await _tournamentRepository.ExplicitLoadReferenceAsync(tournament, t => t.GameType);
-                }
+                if (groupDraws == null || groupDraws.Count() == 0) throw new BadRequestException("Could not found Draws with Group match type");
+                if (tournament.GameType == null) throw new BadRequestException("Could not determine Tournament Game Type");
 
                 var gameTypeHandler = _gameFormatFactory.GetGameFormat(tournament.GameType!.Name); //game type cant be null here
                 Dictionary<string, List<PlayerStanding>> groupOfPlayerStanding = new Dictionary<string, List<PlayerStanding>>();
