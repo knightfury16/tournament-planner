@@ -8,12 +8,17 @@ using TournamentPlanner.Application.Services;
 using Match = TournamentPlanner.Domain.Entities.Match;
 using TournamentPlanner.Application.Common;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
+using TournamentPlanner.Domain;
+using TournamentPlanner.Application.GameTypeHandler;
+using TournamentPlanner.Domain.Exceptions;
+using TournamentPlanner.Application.Helpers;
+
+namespace TournamentPlanner.Application.UnitTests.Services;
 
 public class MatchServiceTests
 {
     private readonly Mock<IRepository<Draw>> _drawRepositoryMock;
     private readonly Mock<IRepository<Match>> _matchRepositoryMock;
-    private readonly Mock<IRepository<Tournament>> _tournamentRepositoryMock;
     private readonly Mock<IRoundRobin> _roundRobinMock;
     private readonly Mock<IKnockout> _knockoutMock;
     private readonly Mock<IGameFormatFactory> _gameFormatFactoryMock;
@@ -23,7 +28,6 @@ public class MatchServiceTests
     {
         _drawRepositoryMock = new Mock<IRepository<Draw>>();
         _matchRepositoryMock = new Mock<IRepository<Match>>();
-        _tournamentRepositoryMock = new Mock<IRepository<Tournament>>();
         _roundRobinMock = new Mock<IRoundRobin>();
         _knockoutMock = new Mock<IKnockout>();
         _gameFormatFactoryMock = new Mock<IGameFormatFactory>();
@@ -33,8 +37,7 @@ public class MatchServiceTests
             _matchRepositoryMock.Object,
             _roundRobinMock.Object,
             _gameFormatFactoryMock.Object,
-            _knockoutMock.Object,
-            _tournamentRepositoryMock.Object
+            _knockoutMock.Object
         );
     }
 
@@ -76,201 +79,341 @@ public class MatchServiceTests
         _roundRobinMock.Verify(x => x.CreateMatches(tournament, It.IsAny<Group>()), Times.Exactly(2));
     }
 
+    [Fact]
+    public async Task CreateMatches_KnockoutStateAfterGroup_CreatesFirstRoundMatchesAfterGroup()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetPopulatedGroupTournamentFresh(16);
+        tournament.CurrentState = TournamentState.KnockoutState;
+        tournament.TournamentType = TournamentType.GroupStage;
+        var testGroup = GetGroupMatchType(1);
+        var testKnockout = GetKnockoutMatchType();
 
-    // [Fact]
-    // public async Task CreateMatches_KnockoutState_FirstRound_CreateFirstRoundMatches()
-    // {
-    //     // Arrange
-    //     var tournament = TournamentFixtures.GetKnockoutTournament();
-    //     tournament.CurrentState = TournamentState.KnockoutState;
-    //     var knockoutDraw = new Draw
-    //     {
-    //         Id = 1,
-    //         MatchType = new KnockOut { Rounds = new List<Round>() }
-    //     };
-    //     tournament.Draws = new List<Draw> { knockoutDraw };
+        var knockoutDraw = new Draw
+        {
+            Id = 1,
+            Tournament = tournament,
+            MatchType = testKnockout
+        };
+        var groupDraw = new Draw
+        {
+            Id = 2,
+            Tournament = tournament,
+            MatchType = testGroup
+        };
 
-    //     var expectedMatches = new List<Match> { CreateMatch(tournament), CreateMatch(tournament) };
+        tournament.Draws = new List<Draw> { knockoutDraw, groupDraw };
 
-    //     _drawRepositoryMock.Setup(x => x.GetByIdAsync(1, It.IsAny<string[]>()))
-    //         .ReturnsAsync(knockoutDraw);
-    //     _knockoutMock.Setup(x => x.CreateFirstRoundMatches(tournament, knockoutDraw.MatchType))
-    //         .ReturnsAsync(expectedMatches);
+        var expectedMatches = new List<Match> { CreateMatch(tournament, testKnockout), CreateMatch(tournament, testKnockout) };
+        var gameFormatMock = new Mock<TableTennisGameFormat>();
+        var playerStandings = new List<PlayerStanding> { new PlayerStanding { Player = PlayerFixtures.StandardPlayer, Wins = 1, MatchPoints = 2 } };
 
-    //     // Act
-    //     var result = await _matchService.CreateMatches(tournament, null);
+        _drawRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>(), It.IsAny<string[]>()))
+            .ReturnsAsync((int id, string[] props) => tournament.Draws.First(d => d.Id == id));
+        _gameFormatFactoryMock.Setup(x => x.GetGameFormat(tournament.GameType.Name))
+            .Returns(gameFormatMock.Object);
+        gameFormatMock.Setup(x => x.GetGroupStanding(tournament, testGroup, false))
+            .Returns(playerStandings);
+        _knockoutMock.Setup(x => x.CreateFirstRoundMatchesAfterGroup(
+            tournament,
+            knockoutDraw.MatchType,
+            It.IsAny<Dictionary<string, List<PlayerStanding>>>()))
+            .ReturnsAsync(expectedMatches);
 
-    //     // Assert
-    //     Assert.Equal(expectedMatches.Count, result.Count());
-    //     _knockoutMock.Verify(x => x.CreateFirstRoundMatches(tournament, knockoutDraw.MatchType), Times.Once);
-    // }
+        // Act
+        var result = await _matchService.CreateMatches(tournament, null);
 
-    // [Fact]
-    // public async Task CreateMatches_KnockoutState_SubsequentRound_CreatesSubsequentMatches()
-    // {
-    //     // Arrange
-    //     var tournament = TournamentFixtures.GetKnockoutTournament();
-    //     tournament.CurrentState = TournamentState.KnockoutState;
-    //     var knockoutDraw = new Draw
-    //     {
-    //         Id = 1,
-    //         MatchType = new KnockOut
-    //         {
-    //             Rounds = new List<Round> { new Round(), new Round() }
-    //         }
-    //     };
-    //     tournament.Draws = new List<Draw> { knockoutDraw };
+        // Assert
+        Assert.Equal(expectedMatches.Count, result.Count());
+        _knockoutMock.Verify(x => x.CreateFirstRoundMatchesAfterGroup(
+            tournament,
+            knockoutDraw.MatchType,
+            It.IsAny<Dictionary<string, List<PlayerStanding>>>()),
+            Times.Once);
+    }
 
-    //     var expectedMatches = new List<Match> { CreateMatch(tournament) };
+    [Fact]
+    public async Task CreateMatches_CreatesFirstRoundMatchesAfterGroup_WithNoGroupStanding_ThrowException()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetPopulatedGroupTournamentFresh(16);
+        tournament.CurrentState = TournamentState.KnockoutState;
+        tournament.TournamentType = TournamentType.GroupStage;
+        var testGroup = GetGroupMatchType(1);
+        var testKnockout = GetKnockoutMatchType();
 
-    //     _drawRepositoryMock.Setup(x => x.GetByIdAsync(1, It.IsAny<string[]>()))
-    //         .ReturnsAsync(knockoutDraw);
-    //     _knockoutMock.Setup(x => x.CreateSubsequentMatches(tournament, knockoutDraw.MatchType))
-    //         .ReturnsAsync(expectedMatches);
+        var knockoutDraw = new Draw
+        {
+            Id = 1,
+            Tournament = tournament,
+            MatchType = testKnockout
+        };
+        var groupDraw = new Draw
+        {
+            Id = 2,
+            Tournament = tournament,
+            MatchType = testGroup
+        };
 
-    //     // Act
-    //     var result = await _matchService.CreateMatches(tournament, null);
+        tournament.Draws = new List<Draw> { knockoutDraw, groupDraw };
 
-    //     // Assert
-    //     Assert.Equal(expectedMatches.Count, result.Count());
-    //     _knockoutMock.Verify(x => x.CreateSubsequentMatches(tournament, knockoutDraw.MatchType), Times.Once);
-    // }
+        var expectedMatches = new List<Match> { CreateMatch(tournament, testKnockout), CreateMatch(tournament, testKnockout) };
+        var gameFormatMock = new Mock<TableTennisGameFormat>();
+        var playerStandings = new List<PlayerStanding>();
 
-    // [Fact]
-    // public async Task CreateMatches_KnockoutStateAfterGroup_CreatesFirstRoundMatchesAfterGroup()
-    // {
-    //     // Arrange
-    //     var tournament = TournamentFixtures.GetPopulatedGroupTournamentFresh(16);
-    //     tournament.CurrentState = TournamentState.KnockoutState;
-    //     tournament.TournamentType = TournamentType.GroupAndKnockout;
+        _drawRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>(), It.IsAny<string[]>()))
+            .ReturnsAsync((int id, string[] props) => tournament.Draws.First(d => d.Id == id));
+        _gameFormatFactoryMock.Setup(x => x.GetGameFormat(tournament.GameType.Name))
+            .Returns(gameFormatMock.Object);
+        gameFormatMock.Setup(x => x.GetGroupStanding(tournament, testGroup, false))
+            .Returns(playerStandings);
+        _knockoutMock.Setup(x => x.CreateFirstRoundMatchesAfterGroup(
+            tournament,
+            knockoutDraw.MatchType,
+            It.IsAny<Dictionary<string, List<PlayerStanding>>>()))
+            .ReturnsAsync(expectedMatches);
 
-    //     var knockoutDraw = new Draw
-    //     {
-    //         Id = 1,
-    //         MatchType = new KnockOut { Rounds = new List<Round>() }
-    //     };
-    //     var groupDraw = new Draw
-    //     {
-    //         Id = 2,
-    //         MatchType = new Group { Name = "Group A" }
-    //     };
-    //     tournament.Draws = new List<Draw> { knockoutDraw, groupDraw };
+        //Act and  Assert
+        await Assert.ThrowsAsync<Exception>(() => _matchService.CreateMatches(tournament, null));
+    }
 
-    //     var expectedMatches = new List<Match> { CreateMatch(tournament), CreateMatch(tournament) };
-    //     var gameFormatMock = new Mock<IGameFormat>();
-    //     var playerStandings = new List<PlayerStanding> { new PlayerStanding() };
 
-    //     _drawRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>(), It.IsAny<string[]>()))
-    //         .ReturnsAsync((int id, string[] props) => tournament.Draws.First(d => d.Id == id));
-    //     _gameFormatFactoryMock.Setup(x => x.GetGameFormat(tournament.GameType.Name))
-    //         .Returns(gameFormatMock.Object);
-    //     gameFormatMock.Setup(x => x.GetGroupStanding(tournament, It.IsAny<Group>()))
-    //         .Returns(playerStandings);
-    //     _knockoutMock.Setup(x => x.CreateFirstRoundMatchesAfterGroup(
-    //         tournament,
-    //         knockoutDraw.MatchType,
-    //         It.IsAny<Dictionary<string, List<PlayerStanding>>>()))
-    //         .ReturnsAsync(expectedMatches);
 
-    //     // Act
-    //     var result = await _matchService.CreateMatches(tournament, null);
+    [Fact]
+    public async Task CreateMatches_KnockoutStateAfterGroup_WithNoGroupStanding_ThrowsException()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetKnockoutTournament();
+        tournament.CurrentState = TournamentState.KnockoutState;
+        tournament.TournamentType = TournamentType.GroupStage;
+        var testKnockout = GetKnockoutMatchType();
 
-    //     // Assert
-    //     Assert.Equal(expectedMatches.Count, result.Count());
-    //     _knockoutMock.Verify(x => x.CreateFirstRoundMatchesAfterGroup(
-    //         tournament,
-    //         knockoutDraw.MatchType,
-    //         It.IsAny<Dictionary<string, List<PlayerStanding>>>()),
-    //         Times.Once);
-    // }
+        var knockoutDraw = new Draw
+        {
+            Id = 1,
+            Tournament = tournament,
+            MatchType = testKnockout
+        };
+        tournament.Draws = new List<Draw> { knockoutDraw };
 
-    // [Fact]
-    // public async Task IsMatchComplete_WithBothPlayersBye_ThrowsException()
-    // {
-    //     // Arrange
-    //     var tournament = TournamentFixtures.GetTournament();
-    //     var match = CreateMatch(tournament);
-    //     match.FirstPlayer = new Player { Name = "bye" };
-    //     match.SecondPlayer = new Player { Name = "BYE" };
+        _drawRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>(), It.IsAny<string[]>()))
+            .ReturnsAsync((int id, string[] props) => tournament.Draws.First(d => d.Id == id));
 
-    //     // Act & Assert
-    //     await Assert.ThrowsAsync<Exception>(() => _matchService.IsMatchComplete(match));
-    // }
+        // Act & Assert
+        await Assert.ThrowsAsync<BadRequestException>(() => _matchService.CreateMatches(tournament, null));
+    }
 
-    // [Fact]
-    // public async Task IsMatchComplete_WithOnePlayerBye_ReturnsTrue()
-    // {
-    //     // Arrange
-    //     var tournament = TournamentFixtures.GetTournament();
-    //     var match = CreateMatch(tournament);
-    //     match.FirstPlayer = PlayerFixtures.StandardPlayer;
-    //     match.SecondPlayer = new Player { Name = "bye" };
+    [Fact]
+    public async Task CreateMatches_KnockoutStateAfterGroup_WithNoKnockoutDraws_ThrowsException()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetKnockoutTournament();
+        tournament.CurrentState = TournamentState.KnockoutState;
+        tournament.TournamentType = TournamentType.GroupStage;
 
-    //     // Act
-    //     var result = await _matchService.IsMatchComplete(match);
+        var groupDraw = new Draw
+        {
+            Id = 2,
+            Tournament = tournament,
+            MatchType = new Group { Name = "Group A" }
+        };
+        tournament.Draws = new List<Draw> { groupDraw };
 
-    //     // Assert
-    //     Assert.True(result);
-    // }
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => _matchService.CreateMatches(tournament, null));
+    }
 
-    // [Fact]
-    // public async Task IsMatchComplete_WithScoreJson_ReturnsTrue()
-    // {
-    //     // Arrange
-    //     var tournament = TournamentFixtures.GetTournament();
-    //     var match = CreateMatch(tournament);
-    //     match.FirstPlayer = PlayerFixtures.StandardPlayer;
-    //     match.SecondPlayer = PlayerFixtures.HighRatedPlayer;
-    //     match.ScoreJson = new { Score = "21-19" };
+    [Fact]
+    public async Task CreateMatches_KnockoutStateAfterGroup_WithNullGameType_ThrowsException()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetPopulatedGroupTournamentFresh(16);
+        tournament.CurrentState = TournamentState.KnockoutState;
+        tournament.TournamentType = TournamentType.GroupStage;
+        tournament.GameType = null!; // Simulate invalid game type
+        var knockoutTest = GetKnockoutMatchType();
+        var groupTest = GetGroupMatchType(1);
 
-    //     // Act
-    //     var result = await _matchService.IsMatchComplete(match);
+        var knockoutDraw = new Draw
+        {
+            Id = 1,
+            Tournament = tournament,
+            MatchType = knockoutTest
+        };
+        var groupDraw = new Draw
+        {
+            Id = 2,
+            Tournament = tournament,
+            MatchType = groupTest
+        };
+        tournament.Draws = new List<Draw> { knockoutDraw, groupDraw };
 
-    //     // Assert
-    //     Assert.True(result);
-    // }
+        // Act & Assert
+        await Assert.ThrowsAsync<BadRequestException>(() => _matchService.CreateMatches(tournament, null));
+    }
 
-    // [Fact]
-    // public async Task IsMatchComplete_WithNoScoreAndNoByePlayers_ReturnsFalse()
-    // {
-    //     // Arrange
-    //     var tournament = TournamentFixtures.GetTournament();
-    //     var match = CreateMatch(tournament);
-    //     match.FirstPlayer = PlayerFixtures.StandardPlayer;
-    //     match.SecondPlayer = PlayerFixtures.HighRatedPlayer;
 
-    //     // Act
-    //     var result = await _matchService.IsMatchComplete(match);
 
-    //     // Assert
-    //     Assert.False(result);
-    // }
 
-    // [Fact]
-    // public async Task IsMatchComplete_WithNullPlayers_LoadsPlayersAndChecksCompletion()
-    // {
-    //     // Arrange
-    //     var tournament = TournamentFixtures.GetTournament();
-    //     var match = CreateMatch(tournament);
-    //     match.FirstPlayer = null!;
-    //     match.SecondPlayer = null!;
+    [Fact]
+    public async Task CreateMatches_KnockoutState_FirstRound_CreateFirstRoundMatches()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetKnockoutTournament();
+        tournament.CurrentState = TournamentState.KnockoutState;
+        var testKnockout = GetKnockoutMatchType();
+        var knockoutDraw = new Draw
+        {
+            Tournament = tournament,
+            Id = 1,
+            MatchType = testKnockout
+        };
+        tournament.Draws = new List<Draw> { knockoutDraw };
 
-    //     _matchRepositoryMock.Setup(x => x.ExplicitLoadReferenceAsync(match, It.IsAny<Expression<Func<Match, Player?>>>()))
-    //         .Callback<Match, Expression<Func<Match, Player?>>>((m, exp) =>
-    //         {
-    //             if (exp.Body.ToString().Contains("FirstPlayer"))
-    //                 m.FirstPlayer = PlayerFixtures.StandardPlayer;
-    //             else
-    //                 m.SecondPlayer = PlayerFixtures.HighRatedPlayer;
-    //         });
+        var expectedMatches = new List<Match> { CreateMatch(tournament, testKnockout), CreateMatch(tournament, testKnockout) };
 
-    //     // Act
-    //     var result = await _matchService.IsMatchComplete(match);
+        _drawRepositoryMock.Setup(x => x.GetByIdAsync(1, It.IsAny<string[]>()))
+            .ReturnsAsync(knockoutDraw);
+        _knockoutMock.Setup(x => x.CreateFirstRoundMatches(tournament, knockoutDraw.MatchType))
+            .ReturnsAsync(expectedMatches);
 
-    //     // Assert
-    //     Assert.False(result);
-    //     _matchRepositoryMock.Verify(x => x.ExplicitLoadReferenceAsync(match, It.IsAny<Expression<Func<Match, Player?>>>()), Times.Exactly(2));
-    // }
+        // Act
+        var result = await _matchService.CreateMatches(tournament, null);
+
+        // Assert
+        Assert.Equal(expectedMatches.Count, result.Count());
+        _knockoutMock.Verify(x => x.CreateFirstRoundMatches(tournament, knockoutDraw.MatchType), Times.Once);
+    }
+
+    [Fact]
+    public async Task CreateMatches_KnockoutState_SubsequentRound_CreatesSubsequentMatches()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetKnockoutTournament();
+        tournament.CurrentState = TournamentState.KnockoutState;
+        var testKnockout = GetKnockoutMatchType();
+        var testRound1 = new Round { MatchType = testKnockout, RoundName = "first", RoundNumber = 1 };
+        var testRound2 = new Round { MatchType = testKnockout, RoundName = "second", RoundNumber = 2 };
+
+        testKnockout.Rounds.Add(testRound1);
+        testKnockout.Rounds.Add(testRound2);
+
+        var knockoutDraw = new Draw
+        {
+            Id = 1,
+            Tournament = tournament,
+            MatchType = testKnockout
+        };
+        tournament.Draws = new List<Draw> { knockoutDraw };
+
+        var expectedMatches = new List<Match> { CreateMatch(tournament, testKnockout) };
+
+        _drawRepositoryMock.Setup(x => x.GetByIdAsync(1, It.IsAny<string[]>()))
+            .ReturnsAsync(knockoutDraw);
+        _knockoutMock.Setup(x => x.CreateSubsequentMatches(tournament, knockoutDraw.MatchType))
+            .ReturnsAsync(expectedMatches);
+
+        // Act
+        var result = await _matchService.CreateMatches(tournament, null);
+
+        // Assert
+        Assert.Equal(expectedMatches.Count, result.Count());
+        _knockoutMock.Verify(x => x.CreateSubsequentMatches(tournament, knockoutDraw.MatchType), Times.Once);
+    }
+
+    [Fact]
+    public async Task IsMatchComplete_WithBothPlayersBye_ThrowsException()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetTournament();
+        var testGroup = GetGroupMatchType(1);
+        var match = CreateMatch(tournament, testGroup);
+        match.FirstPlayer = new Player { Name = Utility.ByePlayerName, Email = Utility.ByePlayerEmail };
+        match.SecondPlayer = new Player { Name = Utility.ByePlayerName, Email = Utility.ByePlayerEmail };
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ValidationException>(() => _matchService.IsMatchComplete(match));
+    }
+
+    [Fact]
+    public async Task IsMatchComplete_WithOnePlayerBye_ReturnsTrue()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetTournament();
+        var testGroup = GetGroupMatchType(1);
+        var match = CreateMatch(tournament, testGroup);
+
+        match.FirstPlayer = PlayerFixtures.StandardPlayer;
+        match.SecondPlayer = new Player { Name = Utility.ByePlayerName, Email = Utility.ByePlayerEmail };
+
+        // Act
+        var result = await _matchService.IsMatchComplete(match);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task IsMatchComplete_WithScoreJson_ReturnsTrue()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetTournament();
+        var testGroup = GetGroupMatchType(1);
+        var match = CreateMatch(tournament, testGroup);
+        match.FirstPlayer = PlayerFixtures.StandardPlayer;
+        match.SecondPlayer = PlayerFixtures.HighRatedPlayer;
+        match.ScoreJson = new { Score = "21-19" };
+
+        // Act
+        var result = await _matchService.IsMatchComplete(match);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task IsMatchComplete_WithNoScoreAndNoByePlayers_ReturnsFalse()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetTournament();
+        var testGroup = GetGroupMatchType(1);
+        var match = CreateMatch(tournament, testGroup);
+        match.FirstPlayer = PlayerFixtures.StandardPlayer;
+        match.SecondPlayer = PlayerFixtures.HighRatedPlayer;
+
+        // Act
+        var result = await _matchService.IsMatchComplete(match);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public async Task IsMatchComplete_WithNullPlayers_LoadsPlayersAndChecksCompletion()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetTournament();
+        var testGroup = GetGroupMatchType(1);
+        var match = CreateMatch(tournament, testGroup);
+        match.FirstPlayer = null!;
+        match.SecondPlayer = null!;
+
+        _matchRepositoryMock.Setup(x => x.ExplicitLoadReferenceAsync(match, It.IsAny<Expression<Func<Match, Player?>>>()))
+            .Callback<Match, Expression<Func<Match, Player?>>>((m, exp) =>
+            {
+                if (exp.Body.ToString().Contains("FirstPlayer"))
+                    m.FirstPlayer = PlayerFixtures.StandardPlayer;
+                else
+                    m.SecondPlayer = PlayerFixtures.HighRatedPlayer;
+            });
+
+        // Act
+        var result = await _matchService.IsMatchComplete(match);
+
+        // Assert
+        Assert.False(result);
+        _matchRepositoryMock.Verify(x => x.ExplicitLoadReferenceAsync(match, It.IsAny<Expression<Func<Match, Player?>>>()), Times.Exactly(2));
+    }
 
     private Match CreateMatch(Tournament tournament, MatchType matchType)
     {
@@ -288,5 +431,9 @@ public class MatchServiceTests
         {
             Name = $"Test Group {groupNumber}",
         };
+    }
+    private KnockOut GetKnockoutMatchType()
+    {
+        return new KnockOut { Name = "Test Knockout", Rounds = new List<Round>() };
     }
 }
