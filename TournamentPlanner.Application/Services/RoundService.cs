@@ -28,7 +28,7 @@ public class RoundService : IRoundService
 
     public async Task<bool> IsAllRoundComplete(MatchType matchType)
     {
-        if(matchType == null)throw new ArgumentNullException(nameof(matchType));
+        if (matchType == null) throw new ArgumentNullException(nameof(matchType));
 
         if (matchType.Rounds.Count == 0)
         {
@@ -37,17 +37,19 @@ public class RoundService : IRoundService
 
         var rounds = matchType.Rounds;
 
-        if(rounds == null){
+        if (rounds == null)
+        {
             rounds = (await _roundRepository.GetAllAsync(r => r.MatchTypeId == matchType.Id)).ToList();
         }
 
-        if(rounds == null || rounds.Count == 0){
+        if (rounds == null || rounds.Count == 0)
+        {
             return true; //since no round is there so all round is complete
         }
 
         foreach (var round in rounds)
         {
-            if(round.IsCompleted == false)return false;// if any round is not completed than all round is not completed
+            if (round.IsCompleted == false) return false;// if any round is not completed than all round is not completed
         }
 
         // if here then all round is complete
@@ -56,28 +58,37 @@ public class RoundService : IRoundService
 
     public async Task UpdateRoundCompletion(Round round)
     {
-        if(round == null)throw new ArgumentNullException(nameof(round));
+        if (round == null) throw new ArgumentNullException(nameof(round));
+
+        //if its already complete return
+        if (round.IsCompleted)
+        {
+            return;  
+        }
 
         //get all the matches of the round
         var roundWithPopulatedMatches = await _roundRepository.GetByIdAsync(round.Id, [nameof(Round.Matches), nameof(Round.MatchType)]);
 
-        if (roundWithPopulatedMatches == null)throw new NotFoundException(nameof(roundWithPopulatedMatches));
+        if (roundWithPopulatedMatches == null) throw new NotFoundException(nameof(roundWithPopulatedMatches));
 
         var matches = roundWithPopulatedMatches.Matches;
 
         foreach (var match in matches)
         {
             //if any match is not complete round is not complete
-            if(!await _matchService.IsMatchComplete(match)){
+            if (!await _matchService.IsMatchComplete(match))
+            {
                 return;
             }
         }
 
-        //if here then all matches are complete\
+        await CompleteRoundAndUpdateMatchType(round);
+    }
+
+    private async Task CompleteRoundAndUpdateMatchType(Round round)
+    {
         round.IsCompleted = true;
         await _roundRepository.SaveAsync();
-        //call the update matchtype
         await _matchTypeService.UpdateMatchTypeCompletion(round.MatchType);
-
     }
 }
