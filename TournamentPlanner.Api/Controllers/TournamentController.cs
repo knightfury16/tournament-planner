@@ -5,6 +5,7 @@ using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Application.Enums;
 using TournamentPlanner.Application.Request;
 using TournamentPlanner.Domain.Entities;
+using TournamentPlanner.Domain.Enum;
 using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Api.Controllers
@@ -109,6 +110,32 @@ namespace TournamentPlanner.Api.Controllers
 
             return Ok(drawDtos);
         }
+
+        //- Change tournament status
+        [HttpPost("{id}/change-status", Name = nameof(ChangeTournamentStatus))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ChangeTournamentStatus(int id, [FromBody] TournamentStatus tournamentStatus)
+        {
+            if (id <= 0) return BadRequest("Tournament Id invalid");
+
+            if (!Enum.IsDefined(typeof(TournamentStatus), tournamentStatus))
+            {
+                return BadRequest("Invalid tournament status");
+            }
+
+            var request = new ChangeTournamentStatusRequest(tournamentStatus, id);
+
+            var success = await _mediator.Send(request);
+
+            if (!success)
+            {
+                return BadRequest("Could not change tournament status");
+            }
+
+            return Ok("Tournament status changed successfully");
+        }
+
 
 
 
