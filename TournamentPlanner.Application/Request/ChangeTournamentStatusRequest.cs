@@ -8,10 +8,10 @@ public class ChangeTournamentStatusRequest : IRequest<bool>
     public TournamentStatus TournamentStatus { get; set; }
     public int TournamentId { get; set; }
 
-    public ChangeTournamentStatusRequest(TournamentStatus tournamentStatus, int tournamentId)
+    public ChangeTournamentStatusRequest(int tournamentId, TournamentStatus tournamentStatus)
     {
-        TournamentStatus = tournamentStatus;
         TournamentId = tournamentId;
+        TournamentStatus = tournamentStatus;
     }
 
 }

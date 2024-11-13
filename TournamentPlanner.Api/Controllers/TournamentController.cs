@@ -70,7 +70,7 @@ namespace TournamentPlanner.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> MakeMatchTypesOfTournament(int id)
         {
-            if(id <= 0 )return BadRequest("Tournament Id invalid");
+            if (id <= 0) return BadRequest("Tournament Id invalid");
 
             var createMatchTypeRequest = new CreateMatchTypeRequest(id);
 
@@ -124,7 +124,7 @@ namespace TournamentPlanner.Api.Controllers
                 return BadRequest("Invalid tournament status");
             }
 
-            var request = new ChangeTournamentStatusRequest(tournamentStatus, id);
+            var request = new ChangeTournamentStatusRequest(id, tournamentStatus);
 
             var success = await _mediator.Send(request);
 
