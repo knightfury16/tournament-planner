@@ -85,14 +85,14 @@ namespace TournamentPlanner.Tests.Application
             _mockRepository.Setup(r => r.GetAllAsync(It.IsAny<IEnumerable<Expression<Func<Tournament, bool>>>>(), It.IsAny<string[]>()))
                 .ReturnsAsync(tournaments);
             _mockMapper.Setup(m => m.Map<IEnumerable<TournamentDto>>(It.IsAny<IEnumerable<Tournament>>()))
-                .Returns((IEnumerable<Tournament> src) => src.Select(t => new TournamentDto { Id = t.Id, Name = t.Name, Status = t.Status }));
+                .Returns((IEnumerable<Tournament> src) => src.Select(t => new TournamentDto { Id = t.Id, Name = t.Name, Status = t.Status.ToString() }));
 
             // Act
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
             Assert.NotNull(result);
-            Assert.All(result, t => Assert.Equal(TournamentStatus.Ongoing, t.Status));
+            Assert.All(result, t => Assert.Equal(TournamentStatus.Ongoing.ToString(), t.Status));
         }
 
         [Fact]
@@ -262,7 +262,7 @@ namespace TournamentPlanner.Tests.Application
                 {
                     Id = t.Id,
                     Name = t.Name,
-                    Status = t.Status,
+                    Status = t.Status.ToString(),
                     GameTypeDto = _mockMapper.Object.Map<GameTypeDto>(t.GameType), // map GameType to GameTypeDto 
                     StartDate = t.StartDate,
                     EndDate = t.EndDate
@@ -276,7 +276,7 @@ namespace TournamentPlanner.Tests.Application
             Assert.All(result, t =>
             {
                 Assert.Contains("test", t.Name.ToLower());
-                Assert.Equal(TournamentStatus.Ongoing, t.Status);
+                Assert.Equal(TournamentStatus.Ongoing.ToString(), t.Status);
                 Assert.Equal(GameTypeSupported.Chess.ToString(), t.GameTypeDto?.Name);
                 Assert.True(t.StartDate >= request.StartDate);
                 Assert.True(t.EndDate <= request.EndDate);
