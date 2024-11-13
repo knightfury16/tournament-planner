@@ -16,7 +16,7 @@ namespace TournamentPlanner.Application.DTOs
         public string? Venue { get; set; }
         public decimal RegistrationFee { get; set; }
         public int MinimumAgeOfRegistration { get; set; }
-        public TournamentStatus? Status { get; set; }
+        public string? Status { get; set; }
         public GameTypeDto? GameTypeDto { get; set; }
 
         public DateTime CreatedAt { get; set; }

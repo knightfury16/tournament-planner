@@ -15,9 +15,11 @@ namespace TournamentPlanner.Application
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name.ToString()))
             .ReverseMap();
             CreateMap<Tournament, TournamentDto>()
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
             .ForMember(dest => dest.GameTypeDto, opt => opt.MapFrom(src => src.GameType))
             .ReverseMap();
             CreateMap<Tournament, FullTournamentDto>()
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
             .ForMember(dest => dest.GameTypeDto, opt => opt.MapFrom(src => src.GameType))
             .ReverseMap();
             CreateMap<Player, AddPlayerDto>().ReverseMap();
