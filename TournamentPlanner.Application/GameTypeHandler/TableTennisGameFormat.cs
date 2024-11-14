@@ -135,6 +135,7 @@ public class TableTennisGameFormat : GameFormat
                 standings[i].PointsDifference == standings[i - 1].PointsDifference)
             {
                 standings[i].Ranking = standings[i - 1].Ranking;
+                Console.WriteLine($"A tie Exists between Player {standings[i].Player.Name} and {standings[i - 1].Player.Name}");
             }
         }
 
