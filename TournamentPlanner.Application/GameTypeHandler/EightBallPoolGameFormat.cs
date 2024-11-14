@@ -32,7 +32,7 @@ public class EightBallPoolGameFormat : GameFormat
     public override Player DetermineWinner(Player player1, Player player2, IScore score)
     {
         var eightBallPoolScore = (EightBallPoolScore)score;
-        return eightBallPoolScore.Player1Racks > eightBallPoolScore.Player2Racks ? player1 : player2;
+        return eightBallPoolScore.Player1Racks == eightBallPoolScore.RaceTo ? player1 : player2;
     }
 
     public override bool IsValidScore(IScore score)
