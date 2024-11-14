@@ -1,10 +1,9 @@
 using System.Text.Json;
-using TournamentPlanner.Domain.Exceptions;
 using TournamentPlanner.Domain.Interface;
 
 namespace TournamentPlanner.Domain.Entities
 {
-    public abstract class GameFormat
+    public abstract class GameFormat : IGameFormat
     {
         public JsonSerializerOptions JsonOptions { get; }
 
