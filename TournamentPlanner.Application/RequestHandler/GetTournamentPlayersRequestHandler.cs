@@ -2,6 +2,7 @@
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Domain.Entities;
+using TournamentPlanner.Domain.Exceptions;
 using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Application;
@@ -19,13 +20,14 @@ public class GetTournamentPlayersRequestHandler : IRequestHandler<GetTournamentP
 
     public async Task<IEnumerable<PlayerDto>?> Handle(GetTournamentPlayersRequest request, CancellationToken cancellationToken = default)
     {
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request));
-        }
+        ArgumentNullException.ThrowIfNull(request);
 
-        var players = (await _tournamentRepository.GetAllAsync(t => t.Id == request.Id, [nameof(Tournament.Participants)]))
-                    .SelectMany(t => t.Participants);
+        var tournament = await _tournamentRepository.GetByIdAsync(request.TournamentId, [nameof(Tournament.Participants)]);
+
+        if(tournament == null)throw new NotFoundException(nameof(tournament));
+        if(tournament.Participants == null)throw new NullReferenceException(nameof(tournament.Participants));
+
+        var players = tournament.Participants;
 
         return _mapper.Map<IEnumerable<PlayerDto>>(players);
 

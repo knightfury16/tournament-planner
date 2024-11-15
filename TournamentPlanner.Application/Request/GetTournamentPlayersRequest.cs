@@ -5,10 +5,10 @@ namespace TournamentPlanner.Application;
 
 public class GetTournamentPlayersRequest : IRequest<IEnumerable<PlayerDto>>
 {
-    public int Id { get; set; }
+    public int TournamentId { get; set; }
     public GetTournamentPlayersRequest(int Id)
     {
-        this.Id = Id;
+        TournamentId = Id;
     }
 
 }
