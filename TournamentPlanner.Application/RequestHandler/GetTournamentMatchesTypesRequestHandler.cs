@@ -2,6 +2,7 @@
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain.Entities;
+using TournamentPlanner.Domain.Exceptions;
 using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Application;
@@ -23,9 +24,11 @@ public class GetTournamentMatchesTypesRequestHandler : IRequestHandler<GetTourna
         {
             throw new ArgumentNullException(nameof(request));
         }
-        var navigationProperty = Utility.NavigationPrpertyCreator(nameof(Draw.MatchType), nameof(Domain.Entities.MatchType.Players));
-        var navigationProperty2 = Utility.NavigationPrpertyCreator(nameof(Draw.MatchType), nameof(Domain.Entities.MatchType.Rounds));
-        var matchTypes =(await _drawRepository.GetAllAsync(d => d.TournamentId == request.tournamentId,[navigationProperty, navigationProperty2])).Select(d => d.MatchType).ToList();
+        var playerNavigationProperty = Utility.NavigationPrpertyCreator(nameof(Draw.MatchType), nameof(Domain.Entities.MatchType.Players));
+        var roundNavigationProperty = Utility.NavigationPrpertyCreator(nameof(Draw.MatchType), nameof(Domain.Entities.MatchType.Rounds));
+        var matchTypes = (await _drawRepository.GetAllAsync(d => d.TournamentId == request.tournamentId, [playerNavigationProperty, roundNavigationProperty])).Select(d => d.MatchType).ToList();
+
+        if (matchTypes == null || matchTypes.Count == 0) throw new NotFoundException(nameof(matchTypes));
 
         return _mapper.Map<IEnumerable<MatchTypeDto>>(matchTypes);
 
