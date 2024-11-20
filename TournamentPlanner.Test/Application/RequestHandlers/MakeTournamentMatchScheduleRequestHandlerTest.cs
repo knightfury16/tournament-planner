@@ -5,6 +5,7 @@ using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Application.Services;
 using TournamentPlanner.Domain.Entities;
+using TournamentPlanner.Domain.Exceptions;
 using TournamentPlanner.Test.Fixtures;
 using Match = TournamentPlanner.Domain.Entities.Match;
 
@@ -63,52 +64,26 @@ public class MakeTournamentMatchScheduleRequestHandlerTest
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(2, result.Count()); 
+        Assert.Equal(2, result.Count());
     }
 
-    // [Fact]
-    // public async Task Handle_GivenTournamentAlreadyCompleted_ThrowsBadRequestException()
-    // {
-    //     // Arrange
-    //     var tournament = TournamentFixtures.GetTournament();
-    //     tournament.Status = TournamentStatus.Completed;
-    //     _tournamentRepository.GetByIdAsync(tournament.Id, Arg.Any<string[]>()).Returns(Task.FromResult(tournament as Tournament));
+    [Fact]
+    public async Task Handle_TournamentIsNull_ThrowsException()
+    {
+        // Arrange
+        var request = new MakeTournamentMatchScheduleRequest
+        (
+            1,
+            new SchedulingInfo
+            {
+                StartDate = DateTime.UtcNow,
+                EachMatchTime = TimeSpan.FromMinutes(20)
+            }
+        );
 
-    //     var request = new MakeTournamentMatchScheduleRequest
-    //     {
-    //         TournamentId = tournament.Id,
-    //         SchedulingInfo = new SchedulingInfo
-    //         {
-    //             StartDate = DateTime.UtcNow,
-    //             EndDate = DateTime.UtcNow.AddDays(1),
-    //             MatchDuration = TimeSpan.FromHours(1)
-    //         }
-    //     };
+        _tournamentRepository.Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<string[]>())).ReturnsAsync((Tournament)null!);
 
-    //     // Act and Assert
-    //     await Assert.ThrowsAsync<BadRequestException>(() => _handler.Handle(request, CancellationToken.None));
-    // }
-
-    // [Fact]
-    // public async Task Handle_GivenDrawsNotMadeOrPreviousDrawsNotComplete_ThrowsBadRequestException()
-    // {
-    //     // Arrange
-    //     var tournament = TournamentFixtures.GetTournament();
-    //     _tournamentRepository.GetByIdAsync(tournament.Id, Arg.Any<string[]>()).Returns(Task.FromResult(tournament as Tournament));
-    //     _tournamentService.CanISchedule(Arg.Any<Tournament>()).Returns(Task.FromResult(false as bool));
-
-    //     var request = new MakeTournamentMatchScheduleRequest
-    //     {
-    //         TournamentId = tournament.Id,
-    //         SchedulingInfo = new SchedulingInfo
-    //         {
-    //             StartDate = DateTime.UtcNow,
-    //             EndDate = DateTime.UtcNow.AddDays(1),
-    //             MatchDuration = TimeSpan.FromHours(1)
-    //         }
-    //     };
-
-    //     // Act and Assert
-    //     await Assert.ThrowsAsync<BadRequestException>(() => _handler.Handle(request, CancellationToken.None));
-    // }
+        // Act and Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(request, CancellationToken.None));
+    }
 }
