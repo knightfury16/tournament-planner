@@ -1,3 +1,4 @@
+using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Domain.Entities;
 
 namespace TournamentPlanner.Test.Fixtures;
@@ -53,6 +54,19 @@ public static class PlayerFixtures
             });
         }
         return players;
+    }
+
+    public static PlayerDto ToPlayerDto(this Player player)
+    {
+        return new PlayerDto
+        {
+            Id = player.Id,
+            Name = player.Name,
+            Age = player.Age,
+            GamePlayed = player.GamePlayed,
+            GameWon = player.GameWon,
+            WinRatio = player.WinRatio
+        };
     }
 }
 
