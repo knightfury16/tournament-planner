@@ -1,11 +1,18 @@
+using System.Security.Claims;
+using TournamentPlanner.Application.DTOs;
+
 namespace TournamentPlanner.Application.Common.Interfaces;
 
 public interface IIdentityService
 {
-    Task<bool> RegisterApplicationUserAsync(string username, string email, string password);
-    Task<bool> RegisterApplicationUserAndSigninAsync(string username, string email, string password, bool persistent = false);
-    Task<bool> LoginApplicationUserAsync(string email, string password, bool persistent = false);
-    Task<bool> SignoutApplicationUserAsync();
-    Task<bool> AddRoleToApplicationUserAsync(string userId, string roleName);
+    Task<bool> RegisterApplicationUserAsync(ApplicationUserDto applicationUserDto);
+    Task<bool> RegisterApplicationUserAndSigninAsync(ApplicationUserDto applicationUserDto, bool persistent = false);
+    Task<bool> LoginApplicationUserAsync(ApplicationUserDto applicationUserDto, bool persistent = false);
+    Task SignoutApplicationUserAsync();
+    Task AddRoleToApplicationUserAsync(string email, string roleName);
     Task<bool> CreateRoleAsync(string roleName);
+    Task AddClaimToApplicationUserAsync(string email, string claimType, string claimValue);
+    Task<bool> CheckUserClaimAsync(string email, string claimType, string claimValue);
+    Task<List<Claim>> GetAllClaimsOfApplicationUser(string email);
+    Task<List<Claim>> GetAllClaimsOfCurrentApplicationUser();
 }
