@@ -134,4 +134,12 @@ public class IdentityService : IIdentityService
     {
         throw new NotImplementedException();
     }
+    public async Task<List<Claim>> GetAllClaimsOfApplicationUser(ClaimsPrincipal claimsPrincipal)
+    {
+        var user = await _userManager.GetUserAsync(claimsPrincipal);
+        if (user == null) throw new NotFoundException(nameof(user));
+
+        var userClaims = await _userManager.GetClaimsAsync(user);
+        return userClaims.ToList();
+    }
 }

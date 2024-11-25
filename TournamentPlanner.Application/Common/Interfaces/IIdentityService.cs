@@ -14,5 +14,6 @@ public interface IIdentityService
     Task AddClaimToApplicationUserAsync(string email, string claimType, string claimValue);
     Task<bool> CheckUserClaimAsync(string email, string claimType, string claimValue);
     Task<List<Claim>> GetAllClaimsOfApplicationUser(string email);
+    Task<List<Claim>> GetAllClaimsOfApplicationUser(ClaimsPrincipal claimsPrincipal);
     Task<List<Claim>> GetAllClaimsOfCurrentApplicationUser();
 }
