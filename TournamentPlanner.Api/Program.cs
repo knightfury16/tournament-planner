@@ -3,6 +3,9 @@ using TournamentPlanner.Application;
 using TournamentPlanner.Api.Middleware;
 using Serilog;
 using Serilog.Events;
+using TournamentPlanner.Application.Common.Interfaces;
+using TournamentPlanner.Api.Services;
+using TournamentPlanner.Identity;
 
 Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -54,8 +57,10 @@ try
     try
     {
 
-    builder.Services.AddInfrastructureServices(configuration);
-    builder.Services.AddApplicationServices();
+        builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+        builder.Services.AddInfrastructureServices(configuration);
+        builder.Services.AddApplicationServices();
+        builder.Services.AddIdentityServices(configuration);
     }
     catch (Exception ex)
     {
