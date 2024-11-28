@@ -16,4 +16,6 @@ public interface IIdentityService
     Task<List<Claim>> GetAllClaimsOfApplicationUser(string email);
     Task<List<Claim>> GetAllClaimsOfApplicationUser(ClaimsPrincipal claimsPrincipal);
     Task<List<Claim>> GetAllClaimsOfCurrentApplicationUser();
+    Task<List<string>> GetAllRolesOfUser(string email);
+    Task<List<Claim>> GetRoleClaimsOfuser(string email);
 }

@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.DTOs;
+using TournamentPlanner.Domain.Constant;
 using TournamentPlanner.Domain.Exceptions;
 
 namespace TournamentPlanner.Identity;
@@ -35,10 +36,13 @@ public class IdentityService : IIdentityService
             throw new BadRequestException("Failed to create user, errors: " + string.Join(", ", result.Errors.Select(e => e.Description)));
         }
 
+        await AddDefaultApplicationUserCalims(applicationUserDto);
+
         await _signInManager.SignInAsync(user, isPersistent: persistent);
 
         return result.Succeeded;
     }
+
 
     public async Task<bool> LoginApplicationUserAsync(ApplicationUserDto applicationUserDto, bool persistent = false)
     {
@@ -95,6 +99,8 @@ public class IdentityService : IIdentityService
             throw new BadRequestException("Failed to create user, errors: " + string.Join(", ", result.Errors.Select(e => e.Description)));
         }
 
+        await AddDefaultApplicationUserCalims(applicationUserDto);
+
         return result.Succeeded;
     }
 
@@ -141,5 +147,39 @@ public class IdentityService : IIdentityService
 
         var userClaims = await _userManager.GetClaimsAsync(user);
         return userClaims.ToList();
+    }
+    private async Task AddDefaultApplicationUserCalims(ApplicationUserDto applicationUserDto)
+    {
+        await AddClaimToApplicationUserAsync(applicationUserDto.Email, ClaimTypes.Email, applicationUserDto.Email);
+        await AddClaimToApplicationUserAsync(applicationUserDto.Email, ClaimTypes.Name, applicationUserDto.UserName!);
+        if (applicationUserDto.DomainUserId > 0) await AddClaimToApplicationUserAsync(applicationUserDto.Email, DomainClaim.DomainUserIdClaimType, applicationUserDto.DomainUserId.ToString());
+    }
+
+    public async Task<List<string>> GetAllRolesOfUser(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null) throw new NotFoundException(nameof(user));
+
+        var roles = await _userManager.GetRolesAsync(user);
+        return roles.ToList();
+    }
+
+    public async Task<List<Claim>> GetRoleClaimsOfuser(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null) throw new Exception(nameof(user));
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+        var roleClaims = new List<Claim>();
+
+        foreach (var role in userRoles)
+        {
+            var identityRole = await _roleManager.FindByNameAsync(role);
+            if (identityRole == null) continue;
+            var claims = await _roleManager.GetClaimsAsync(identityRole);
+            roleClaims.AddRange(claims);
+        }
+
+        return roleClaims;
     }
 }
