@@ -6,6 +6,8 @@ using Serilog.Events;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Api.Services;
 using TournamentPlanner.Identity;
+using TournamentPlanner.Domain.Constant;
+using TournamentPlanner.Identity.Authorization.AuthorizationRequirement;
 
 Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -53,6 +55,15 @@ try
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+
+    //** Authorization policy config
+    builder.Services.AddAuthorization(options => {
+        foreach(var domainPolicy in Policy.GetAllPolicy())
+        {
+            options.AddPolicy(domainPolicy, policy => policy.AddRequirements(new PermissionRequirement(domainPolicy)));
+        }
+    });
+    //** Authorization policy config
 
     try
     {
