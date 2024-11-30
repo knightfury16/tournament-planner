@@ -42,7 +42,13 @@ public class AddAdminRequestHandler : IRequestHandler<AddAdminRequest, AdminDto>
             DomainUserId = admin.Id
         };
         var result = await _identityService.RegisterApplicationUserAndSigninAsync(applicationUserDto, true);
-        if (!result) throw new InternalServerErrorException("Could not create identity user");
+        if (!result)
+        {
+            //remove the tp admin created
+            await _adminRepository.DeleteByIdAsync(admin.Id);
+            await _adminRepository.SaveAsync();
+            throw new InternalServerErrorException("Could not create identity user");
+        }
 
         //adding the Admin role
         await _identityService.AddRoleToApplicationUserAsync(admin.Email, Role.Admin);
