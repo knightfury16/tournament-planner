@@ -34,12 +34,14 @@ public class TournamentPlannerDataContext : DbContext
         {
             entity.Property(p => p.Age).IsRequired();
             entity.Property(p => p.Weight).IsRequired();
+            entity.HasIndex(a => a.Email).IsUnique();
         });
 
         //* Admin configuration
         modelBuilder.Entity<Admin>(entity =>
         {
             entity.Property(a => a.PhoneNumber).IsRequired();
+            entity.HasIndex(a => a.Email).IsUnique();
         });
 
 
