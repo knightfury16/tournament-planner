@@ -27,6 +27,7 @@ public class SimulateMatchesRequestHandler : IRequestHandler<SimulateMatchesRequ
     }
 
     //- Simulate all the matches that is made but not played
+    //- Development handler
     public async Task<bool> Handle(SimulateMatchesRequest request, CancellationToken cancellationToken = default)
     {
         if (request == null)
