@@ -222,5 +222,15 @@ namespace TournamentPlanner.Infrastructure
             await _dataContext.Entry(entity).Collection(propertyExpression).LoadAsync();
         }
 
+        public async Task<T?> DeleteByIdAsync(int id)
+        {
+            var entity = await _dataContext.Set<T>().FindAsync(id);
+            if (entity == null)
+            {
+                return null;
+            }
+            _dataContext.Remove(entity);
+            return entity;
+        }
     }
 }

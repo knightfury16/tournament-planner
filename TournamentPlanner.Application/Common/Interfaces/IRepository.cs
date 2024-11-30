@@ -121,5 +121,7 @@ namespace TournamentPlanner.Application.Common.Interfaces
         /// <param name="propertyExpression">An expression representing the property to load.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
         Task ExplicitLoadCollectionAsync<TProperty>(T entity, Expression<Func<T, IEnumerable<TProperty>>> propertyExpression) where TProperty : class;
+
+        Task<T?> DeleteByIdAsync(int id);
     }
 }
