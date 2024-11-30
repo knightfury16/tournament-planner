@@ -23,9 +23,8 @@ public class RegisterPlayerInTournamentRequestHandler : IRequestHandler<Register
         }
 
         //check if tournament exists
-        var tournament = (await _tournamentRepository
-        .GetAllAsync(t => t.Id == request.RegistrationInTournamentDto.TournamentId, [nameof(Tournament.Participants)]))
-        .FirstOrDefault();
+        var tournament = await _tournamentRepository
+        .GetByIdAsync(request.RegistrationInTournamentDto.TournamentId, [nameof(Tournament.Participants)]);
 
         if (tournament == null)
         {
