@@ -21,7 +21,7 @@ public class AccountController : ControllerBase
         _currentUser = currentUser;
     }
 
-    [HttpPost]
+    [HttpPost("login")]
     public async Task<ActionResult> Login(LoginDto loginDto)
     {
         var loginRequest = new LoginRequest(loginDto);
