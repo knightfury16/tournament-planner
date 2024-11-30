@@ -55,7 +55,8 @@ namespace TournamentPlanner.Application.RequestHandler
         private async Task<Player> makeTpApplicationPlayer(AddPlayerRequest request)
         {
             var player = _mapper.Map<Player>(request.AddPlayerDto);
-
+            var emailCheck = await _playerRepository.GetAllAsync(a => a.Email == request.AddPlayerDto.Email);
+            if (emailCheck.Any()) throw new BadRequestException("Email already exists");
             await _playerRepository.AddAsync(player);
             await _playerRepository.SaveAsync();
             return player;

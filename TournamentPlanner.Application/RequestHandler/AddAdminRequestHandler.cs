@@ -57,6 +57,8 @@ public class AddAdminRequestHandler : IRequestHandler<AddAdminRequest, AdminDto>
     private async Task<Admin> makeTpApplicationAdmin(AddAdminRequest request)
     {
         var admin = _mapper.Map<Admin>(request.AddAdminDto);
+        var emailCheck = await _adminRepository.GetAllAsync(a => a.Email == request.AddAdminDto.Email);
+        if (emailCheck.Any()) throw new BadRequestException("Email already exists");
         await _adminRepository.AddAsync(admin);
         await _adminRepository.SaveAsync();
         return admin;
