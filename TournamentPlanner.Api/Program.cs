@@ -8,6 +8,7 @@ using TournamentPlanner.Api.Services;
 using TournamentPlanner.Identity;
 using TournamentPlanner.Domain.Constant;
 using TournamentPlanner.Identity.Authorization.AuthorizationRequirement;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -57,13 +58,15 @@ try
     builder.Services.AddSwaggerGen();
 
     //** Authorization policy config
-    builder.Services.AddAuthorization(options => {
-        foreach(var domainPolicy in Policy.GetAllPolicy())
+    builder.Services.AddAuthorization(options =>
+    {
+        foreach (var domainPolicy in Policy.GetAllPolicy())
         {
             options.AddPolicy(domainPolicy, policy => policy.AddRequirements(new PermissionRequirement(domainPolicy)));
         }
     });
     //** Authorization policy config
+
 
     try
     {
@@ -72,6 +75,27 @@ try
         builder.Services.AddInfrastructureServices(configuration);
         builder.Services.AddIdentityServices(configuration);
         builder.Services.AddApplicationServices();
+         
+        //** Application cookie config
+        // Cal this after adding identity where default authentication scheme is being set
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.Events = new CookieAuthenticationEvents
+            {
+                OnRedirectToAccessDenied = context =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    return Task.CompletedTask;
+                },
+                OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                    return Task.CompletedTask;
+
+                }
+            };
+        });
+        //** Application cookie config
     }
     catch (Exception ex)
     {
