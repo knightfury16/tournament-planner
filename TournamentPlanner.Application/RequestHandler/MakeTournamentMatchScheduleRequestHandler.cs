@@ -39,6 +39,7 @@ public class MakeTournamentMatchScheduleRequestHandler : IRequestHandler<MakeTou
         var nagivationProperty = Utility.NavigationPrpertyCreator(nameof(Tournament.Draws), nameof(Draw.MatchType), nameof(MatchType.Players));
         var tournament = await _tournamentRepository.GetByIdAsync(request.TournamentId, [nagivationProperty, nameof(Tournament.Matches)]);
         if(tournament == null)throw new NotFoundException(nameof(tournament));
+        if(!_tournamentService.AmITheCrator(tournament))throw new BadRequestException("You are not the admin");
 
         if(tournament.Status == TournamentStatus.Completed)throw new BadRequestException("Tournament already completed");
 
