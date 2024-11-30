@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TournamentPlanner.Api.Models;
 using TournamentPlanner.Application;
 using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Application.Enums;
 using TournamentPlanner.Application.Request;
+using TournamentPlanner.Domain.Constant;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
 using TournamentPlanner.Mediator;
@@ -21,8 +23,9 @@ namespace TournamentPlanner.Api.Controllers
             _mediator = mediator;
         }
 
-        //- Add tournament
+        //- Add tournament // authorized
         [HttpPost]
+        [Authorize(Roles = Role.Admin)]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Tournament))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddTournament([FromBody] AddTournamentDto addTournamentDto)
@@ -43,9 +46,9 @@ namespace TournamentPlanner.Api.Controllers
             return CreatedAtAction(nameof(GetTournamentById), new { id = tournamentDto.Id }, tournamentDto);
         }
 
-        //- Register player in tournament
-        //TODO: need to verify if a valid player is registering the tournament or not
+        //- Register player in tournament // authorize
         [HttpPost("register", Name = nameof(RegisterPlayerInTournament))]
+        [Authorize(Roles = Role.Player)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RegisterPlayerInTournament([FromBody] RegistrationInTournamentDto registrationDto)
@@ -80,8 +83,9 @@ namespace TournamentPlanner.Api.Controllers
         }
 
 
-        //- Make tournament draw
+        //- Make tournament draw // authorized
         [HttpPost("{id}/make-draw", Name = nameof(MakeTournamentDraw))]
+        [Authorize(Roles = Role.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> MakeTournamentDraw(int id, [FromBody] MakeTournamentDrawDto drawDto)
@@ -94,8 +98,9 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(drawDtos);
         }
 
-        //- Make tournament schedule
+        //- Make tournament schedule // authorized
         [HttpPost("{id}/make-schedule", Name = nameof(MakeTournamentSchedule))]
+        [Authorize(Roles = Role.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> MakeTournamentSchedule(int id)
@@ -111,8 +116,9 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(drawDtos);
         }
 
-        //- Change tournament status
+        //- Change tournament status // authorized
         [HttpPost("{id}/change-status", Name = nameof(ChangeTournamentStatus))]
+        [Authorize(Roles = Role.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ChangeTournamentStatus(int id, [FromBody] TournamentStatus tournamentStatus)
