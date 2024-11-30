@@ -11,11 +11,13 @@ public class AccountController : ControllerBase
 {
     public IMediator _mediator { get; }
     private readonly IIdentityService _identityService;
+    private readonly ICurrentUser _currentUser;
 
-    public AccountController(IMediator mediator, IIdentityService identityService)
+    public AccountController(IMediator mediator, IIdentityService identityService, ICurrentUser currentUser)
     {
         _mediator = mediator;
         _identityService = identityService;
+        _currentUser = currentUser;
     }
 
     [HttpGet("roles")]
@@ -41,5 +43,10 @@ public class AccountController : ControllerBase
     {
         var claims = await _identityService.GetAllClaimsOfApplicationUser(User);
         return Ok(claims);
+    }
+    [HttpGet("current-user")]
+    public ActionResult GetCurrentUser()
+    {
+        return Ok(new { Email = _currentUser.Email, Name = _currentUser.Name, DomainId = _currentUser.DomainUserId });
     }
 }
