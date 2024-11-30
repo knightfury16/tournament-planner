@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
+using TournamentPlanner.Application;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Mediator;
 
@@ -18,6 +19,16 @@ public class AccountController : ControllerBase
         _mediator = mediator;
         _identityService = identityService;
         _currentUser = currentUser;
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> Login(LoginDto loginDto)
+    {
+        var loginRequest = new LoginRequest(loginDto);
+        var result = await _mediator.Send(loginRequest);
+        if (result) return Ok("Login Successful");
+
+        return BadRequest("Login Failed");
     }
 
     [HttpGet("roles")]
