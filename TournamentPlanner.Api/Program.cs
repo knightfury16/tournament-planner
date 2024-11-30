@@ -70,8 +70,8 @@ try
 
         builder.Services.AddScoped<ICurrentUser, CurrentUser>();
         builder.Services.AddInfrastructureServices(configuration);
-        builder.Services.AddApplicationServices();
         builder.Services.AddIdentityServices(configuration);
+        builder.Services.AddApplicationServices();
     }
     catch (Exception ex)
     {
