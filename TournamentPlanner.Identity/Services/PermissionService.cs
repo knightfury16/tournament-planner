@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Domain.Constant;
+using TournamentPlanner.Identity.Model;
 
 namespace TournamentPlanner.Identity.Services;
 

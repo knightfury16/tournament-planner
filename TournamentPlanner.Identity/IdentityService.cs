@@ -4,6 +4,7 @@ using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Domain.Constant;
 using TournamentPlanner.Domain.Exceptions;
+using TournamentPlanner.Identity.Model;
 
 namespace TournamentPlanner.Identity;
 
