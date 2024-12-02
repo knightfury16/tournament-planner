@@ -10,10 +10,12 @@ public class RegisterPlayerInTournamentRequestHandler : IRequestHandler<Register
 {
     private readonly IRepository<Tournament> _tournamentRepository;
     private readonly IRepository<Player> _playerRepository;
-    public RegisterPlayerInTournamentRequestHandler(IRepository<Tournament> tournamentRepository, IRepository<Player> playerRepository)
+    private readonly ICurrentUser _currentUser;
+    public RegisterPlayerInTournamentRequestHandler(IRepository<Tournament> tournamentRepository, IRepository<Player> playerRepository, ICurrentUser currentUser)
     {
         _tournamentRepository = tournamentRepository;
         _playerRepository = playerRepository;
+        _currentUser = currentUser;
     }
     public async Task<bool> Handle(RegisterPlayerInTournamentRequest request, CancellationToken cancellationToken = default)
     {
@@ -51,7 +53,9 @@ public class RegisterPlayerInTournamentRequestHandler : IRequestHandler<Register
 
 
         //check if the player exist
-        var player = await _playerRepository.GetByIdAsync(request.RegistrationInTournamentDto.PlayerId);
+        var currentPlayerId = GetCurrentUserId();
+        if (currentPlayerId == null) throw new NotFoundException("Player cloud not be found");
+        var player = await _playerRepository.GetByIdAsync(currentPlayerId.Value);
 
         if (player == null)
         {
@@ -75,5 +79,10 @@ public class RegisterPlayerInTournamentRequestHandler : IRequestHandler<Register
         await _tournamentRepository.SaveAsync();
 
         return true;
+    }
+
+    private int? GetCurrentUserId()
+    {
+        return _currentUser.DomainUserId.HasValue ? _currentUser.DomainUserId.Value : null;
     }
 }
