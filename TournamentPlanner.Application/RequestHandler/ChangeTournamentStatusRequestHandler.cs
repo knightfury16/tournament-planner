@@ -25,7 +25,7 @@ public class ChangeTournamentStatusRequestHandler : IRequestHandler<ChangeTourna
         var tournament = await _tournamentRepository.GetByIdAsync(request.TournamentId);
 
         if (tournament == null) throw new NotFoundException(nameof(tournament));
-        if (!_tournamentService.AmITheCrator(tournament)) throw new BadRequestException("You are not the admin");
+        if (!_tournamentService.AmITheCrator(tournament)) throw new AdminOwnershipException();
         if (tournament.Status == null) throw new NotFoundException(nameof(tournament.Status));
 
         var currentStatus = tournament.Status;

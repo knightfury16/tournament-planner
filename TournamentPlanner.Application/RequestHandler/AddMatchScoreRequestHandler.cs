@@ -42,7 +42,7 @@ public class AddMatchScoreRequestHandler : IRequestHandler<AddMatchScoreRequest,
 
         if (match == null) throw new NotFoundException(nameof(match));
 
-        if (!_tournamentService.AmITheCrator(match.Tournament)) throw new BadRequestException("You are not the admin of the tournament");
+        if (!_tournamentService.AmITheCrator(match.Tournament)) throw new AdminOwnershipException();
 
         //get the game type handler
         var gameTypeHandler = _gameFormatFactory.GetGameFormat(match.Tournament.GameType.Name);
