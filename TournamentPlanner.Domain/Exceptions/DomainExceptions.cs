@@ -80,3 +80,11 @@ public class DependencyException : Exception
     {
     }
 }
+
+public class AdminOwnershipException : Exception
+{
+    public AdminOwnershipException(string message = "Admin does not have ownership of the content.")
+        : base(message)
+    {
+    }
+}
