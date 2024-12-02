@@ -1,7 +1,9 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TournamentPlanner.Application;
 using TournamentPlanner.Application.Common.Interfaces;
+using TournamentPlanner.Domain.Constant;
 using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Api.Controllers;
@@ -59,5 +61,23 @@ public class AccountController : ControllerBase
     public ActionResult GetCurrentUser()
     {
         return Ok(new { Email = _currentUser.Email, Name = _currentUser.Name, DomainId = _currentUser.DomainUserId });
+    }
+
+    //! Developmental
+    [Authorize(Roles = Role.Admin)]
+    [HttpGet("admin-only")]
+    public IActionResult AdminOnly()
+    {
+        var user = User;
+        return Ok("This is an admin-only area.");
+    }
+
+    //! Developmental
+    [Authorize(Roles = Role.Player)]
+    [HttpGet("player-only")]
+    public IActionResult PlayerOnly()
+    {
+        var user = User;
+        return Ok("This is a player-only area.");
     }
 }
