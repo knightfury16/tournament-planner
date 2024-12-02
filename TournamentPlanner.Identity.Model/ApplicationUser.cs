@@ -1,6 +1,8 @@
 namespace TournamentPlanner.Identity.Model;
 
-public class ApplicationUser
-{
+using Microsoft.AspNetCore.Identity;
 
+public class ApplicationUser : IdentityUser
+{
+    public int DomainUserId { get; set; }
 }
