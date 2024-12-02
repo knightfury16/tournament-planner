@@ -8,7 +8,7 @@ public interface ITournamentService
     public Task<bool> CanIMakeDraw(Tournament tournament);
     public Task<IEnumerable<Draw>> MakeDraws(Tournament tournament, string? matchTypePrefix = null, List<int>? seederPlayers = null);
     public Task<bool> CanISchedule(Tournament tournament);
-    public bool AmITheCrator(Tournament tournament);
+    public bool AmITheCreator(Tournament tournament);
 }
 
 public class TournamentService : ITournamentService
@@ -99,7 +99,7 @@ public class TournamentService : ITournamentService
         };
     }
 
-    public bool AmITheCrator(Tournament tournament)
+    public bool AmITheCreator(Tournament tournament)
     {
         if (_currentUser.DomainUserId == null) return false;
         if (tournament == null) return false;

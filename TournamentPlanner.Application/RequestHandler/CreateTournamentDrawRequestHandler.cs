@@ -36,7 +36,7 @@ public class CreateTournamentDrawRequestHandler : IRequestHandler<CreateTourname
             throw new NotFoundException(nameof(tournament), request.TournamentId);
         }
 
-        if (!_tournamentService.AmITheCrator(tournament)) throw new AdminOwnershipException();
+        if (!_tournamentService.AmITheCreator(tournament)) throw new AdminOwnershipException();
 
         //TODO: Need to check the tournament status
         //only allow if the registration is complete>> if status is completed will not allow to make the draw.
