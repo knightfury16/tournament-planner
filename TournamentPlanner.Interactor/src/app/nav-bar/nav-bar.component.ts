@@ -12,5 +12,6 @@ import { RouterModule } from '@angular/router';
   styleUrl: './nav-bar.component.scss'
 })
 export class NavBarComponent {
+  public ApplicationTitle: string = "TP"
 
 }
