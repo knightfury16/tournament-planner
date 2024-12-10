@@ -3,7 +3,7 @@
     <div>
       <label for="tournamentName"
         >Tournament Name:
-        <input type="text" id="tournamentName"  name="tournamentName" required  [(ngModel)]="tournamentDto.name"/>
+        <input type="text" id="tournamentName"  name="tournamentName" required  [(ngModel)]="addTournamentDto.name"/>
       </label>
     </div>
     <div>
@@ -21,6 +21,6 @@
     <button type="submit" [disabled]="!tournamentAddForm.form.valid" (click)="onClickCreate()">Create Tournament</button>
   </form>
   <p>
-    {{tournamentDto | json}}
+    {{addTournamentDto | json}}
   </p>
 </div>

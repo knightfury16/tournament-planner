@@ -3,7 +3,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { CommonModule } from '@angular/common';
 import { map, Observable } from 'rxjs';
-import { Match } from '../tp-model/TpModel';
+import { MatchDto } from '../tp-model/TpModel';
 
 @Component({
   selector: 'app-tournament-matches',
@@ -21,9 +21,9 @@ export class TournamentMatchesComponent implements OnInit {
     'winner',
     'gameScheduled',
   ];
-  dataSource = new MatTableDataSource<Match>();
+  dataSource = new MatTableDataSource<MatchDto>();
 
-  constructor(private tp: TournamentPlannerService) {}
+  constructor(private tp: TournamentPlannerService) { }
   ngOnInit(): void {
     console.log('From matches component', this.tournamentId);
     // asserting not null here

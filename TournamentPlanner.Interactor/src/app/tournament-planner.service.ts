@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { TP_BASE_URL } from './app.config';
 import { Observable, of, retry } from 'rxjs';
-import { Match, Tournament, TournamentDto } from './tp-model/TpModel';
+import { AddTournamentDto, MatchDto, TournamentDto } from './tp-model/TpModel';
 
 @Injectable({
   providedIn: 'root',
@@ -13,27 +13,27 @@ export class TournamentPlannerService {
     @Inject(TP_BASE_URL) private baseUrl: string
   ) {}
 
-  public getTournament(name: string): Observable<Tournament[]> {
+  public getTournament(name: string): Observable<TournamentDto[]> {
     let params = new HttpParams();
     if (name) {
       params = params.set('name', name);
     }
-    return this.httpClient.get<Tournament[]>(`${this.baseUrl}/tournament`, { params });
+    return this.httpClient.get<TournamentDto[]>(`${this.baseUrl}/tournament`, { params });
   }
 
-  public getMatches(tournamentId: number): Observable<Match[]> {
+  public getMatches(tournamentId: number): Observable<MatchDto[]> {
     let params = new HttpParams();
 
     if (tournamentId) {
       params = params.set('tournamentId', tournamentId);
     }
-    return this.httpClient.get<Match[]>(`${this.baseUrl}/matches`, { params });
+    return this.httpClient.get<MatchDto[]>(`${this.baseUrl}/matches`, { params });
   }
 
-  public addTournament(tournamentDto: TournamentDto): Observable<any[]> {
+  public addTournament(addTournamentDto: AddTournamentDto): Observable<any[]> {
     return this.httpClient.post<any[]>(
       `${this.baseUrl}/tournament`,
-      tournamentDto
+      addTournamentDto
     );
   }
 }

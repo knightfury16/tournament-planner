@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { TournamentDto } from '../tp-model/TpModel';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TimeService } from '../time.service';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { Router } from '@angular/router';
+import { AddTournamentDto, TournamentStatus, GameTypeSupported } from '../tp-model/TpModel';
 
 @Component({
   selector: 'app-add-tournament',
@@ -14,20 +14,25 @@ import { Router } from '@angular/router';
   styleUrl: './add-tournament.component.scss',
 })
 export class AddTournamentComponent {
-  public tournamentDto: TournamentDto;
+  public addTournamentDto: AddTournamentDto;
 
   constructor(
     private tp: TournamentPlannerService,
     private timeService: TimeService,
     private router: Router
   ) {
-    this.tournamentDto = {
+    this.addTournamentDto = {
       name: '',
+      status: TournamentStatus.Draft,
+      startDate: new Date().toUTCString(),
+      endDate: new Date().toUTCString(),
+      gameType: GameTypeSupported.TableTennis,
+      knockOutStartNumber: 8,
     };
   }
 
   onClickCreate() {
-    this.tp.addTournament(this.tournamentDto).subscribe((res) => {
+    this.tp.addTournament(this.addTournamentDto).subscribe((res) => {
       console.log(res);
       this.router.navigate(['/tp'])
     });
@@ -36,11 +41,11 @@ export class AddTournamentComponent {
   onStartDateChange(event: Event) {
     const input = event.target as HTMLInputElement;
     const localDate = input.value;
-    this.tournamentDto.startDate = this.timeService.convertToUTC(localDate);
+    this.addTournamentDto.startDate = this.timeService.convertToUTC(localDate);
   }
   onEndDateChange(event: Event) {
     const input = event.target as HTMLInputElement;
     const localDate = input.value;
-    this.tournamentDto.endDate = this.timeService.convertToUTC(localDate);
+    this.addTournamentDto.endDate = this.timeService.convertToUTC(localDate);
   }
 }
