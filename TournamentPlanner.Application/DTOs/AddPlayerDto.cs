@@ -13,6 +13,11 @@ namespace TournamentPlanner.Application.DTOs
         [EmailAddress]
         public required string Email { get; set; }
 
+        [Required]
+        [MinLength(6, ErrorMessage = "Name should at least 6 character long")]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*\W).{6,}$", ErrorMessage = "Passwords must have at least one non-alphanumeric character, one digit ('0'-'9'), and one uppercase letter ('A'-'Z').")]
+        public required string Password { get; set; }
+
         [Range(0, int.MaxValue, ErrorMessage = "Please enter valid age")]
         public int Age { get; set; }
 

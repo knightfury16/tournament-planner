@@ -1,14 +1,15 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TournamentPlanner.Application;
 using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Application.Request;
-using TournamentPlanner.Domain.Entities;
+using TournamentPlanner.Domain.Constant;
 using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Api.Controllers
 {
     [ApiController]
-    [Route("/api/matches")] 
+    [Route("/api/matches")]
     public class MatchesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -23,7 +24,7 @@ namespace TournamentPlanner.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MatchDto>))]
         public async Task<IActionResult> GetMatch(int matchId)
         {
-            if(matchId < 0) return BadRequest("Invalid Id");
+            if (matchId < 0) return BadRequest("Invalid Id");
 
             var getMatchRequest = new GetMatchRequest(matchId);
             var matchDto = await _mediator.Send(getMatchRequest);
@@ -31,9 +32,9 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(matchDto);
         }
 
-        //TODO: Only admins or the admin that created the T can entry-match-score
-        //TODO: Or we can have Co-Admin under the Admin that created the T and give them permission to do the score entry
+        
         [HttpPost("{matchId}/entry-match-score")]
+        [Authorize(Policy = Policy.AddScore)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> EntryMatchScore(int matchId, [FromBody] AddMatchScoreDto addMatchScoreDto)
@@ -61,7 +62,7 @@ namespace TournamentPlanner.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> SimulateMatches(int tournamentId)
         {
-            if(tournamentId < 0) return BadRequest("Invalid Id");
+            if (tournamentId < 0) return BadRequest("Invalid Id");
 
             var simulateMatchesRequest = new SimulateMatchesRequest(tournamentId);
             await _mediator.Send(simulateMatchesRequest);

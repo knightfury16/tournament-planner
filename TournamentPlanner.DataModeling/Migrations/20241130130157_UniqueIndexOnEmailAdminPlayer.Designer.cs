@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TournamentPlanner.DataModeling;
@@ -11,13 +12,15 @@ using TournamentPlanner.DataModeling;
 namespace TournamentPlanner.DataModeling.Migrations
 {
     [DbContext(typeof(TournamentPlannerDataContext))]
-    partial class TournamentPlannerDataContextModelSnapshot : ModelSnapshot
+    [Migration("20241130130157_UniqueIndexOnEmailAdminPlayer")]
+    partial class UniqueIndexOnEmailAdminPlayer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -35,223 +38,6 @@ namespace TournamentPlanner.DataModeling.Migrations
                     b.HasIndex("PlayersId");
 
                     b.ToTable("MatchTypeParticipants", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex");
-
-                    b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "60ac9dde-deab-43a3-a6a6-912409386fb5",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "c5284c0e-99f1-4bf1-90f6-4ae22c4125dd",
-                            Name = "Moderator",
-                            NormalizedName = "MODERATOR"
-                        },
-                        new
-                        {
-                            Id = "a20a3c80-b958-4187-b8ac-e56d510b0c21",
-                            Name = "Player",
-                            NormalizedName = "PLAYER"
-                        });
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("text");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetRoleClaims", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 4,
-                            ClaimType = "Permission",
-                            ClaimValue = "Read",
-                            RoleId = "60ac9dde-deab-43a3-a6a6-912409386fb5"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ClaimType = "Permission",
-                            ClaimValue = "Edit",
-                            RoleId = "60ac9dde-deab-43a3-a6a6-912409386fb5"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ClaimType = "Permission",
-                            ClaimValue = "Create",
-                            RoleId = "60ac9dde-deab-43a3-a6a6-912409386fb5"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ClaimType = "Permission",
-                            ClaimValue = "Delete",
-                            RoleId = "60ac9dde-deab-43a3-a6a6-912409386fb5"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            ClaimType = "Permission",
-                            ClaimValue = "AddScore",
-                            RoleId = "60ac9dde-deab-43a3-a6a6-912409386fb5"
-                        },
-                        new
-                        {
-                            Id = 1,
-                            ClaimType = "Permission",
-                            ClaimValue = "Read",
-                            RoleId = "c5284c0e-99f1-4bf1-90f6-4ae22c4125dd"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ClaimType = "Permission",
-                            ClaimValue = "Edit",
-                            RoleId = "c5284c0e-99f1-4bf1-90f6-4ae22c4125dd"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ClaimType = "Permission",
-                            ClaimValue = "AddScore",
-                            RoleId = "c5284c0e-99f1-4bf1-90f6-4ae22c4125dd"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            ClaimType = "Permission",
-                            ClaimValue = "Read",
-                            RoleId = "a20a3c80-b958-4187-b8ac-e56d510b0c21"
-                        });
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserLogins", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("text");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("text");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("PlayerTournament", b =>
@@ -359,23 +145,23 @@ namespace TournamentPlanner.DataModeling.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2024, 12, 2, 9, 23, 34, 84, DateTimeKind.Utc).AddTicks(5450),
+                            CreatedAt = new DateTime(2024, 11, 30, 13, 1, 56, 306, DateTimeKind.Utc).AddTicks(1968),
                             Name = "TableTennis",
-                            UpdatedAt = new DateTime(2024, 12, 2, 9, 23, 34, 84, DateTimeKind.Utc).AddTicks(5455)
+                            UpdatedAt = new DateTime(2024, 11, 30, 13, 1, 56, 306, DateTimeKind.Utc).AddTicks(1971)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2024, 12, 2, 9, 23, 34, 84, DateTimeKind.Utc).AddTicks(5463),
+                            CreatedAt = new DateTime(2024, 11, 30, 13, 1, 56, 306, DateTimeKind.Utc).AddTicks(1981),
                             Name = "Chess",
-                            UpdatedAt = new DateTime(2024, 12, 2, 9, 23, 34, 84, DateTimeKind.Utc).AddTicks(5464)
+                            UpdatedAt = new DateTime(2024, 11, 30, 13, 1, 56, 306, DateTimeKind.Utc).AddTicks(1981)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2024, 12, 2, 9, 23, 34, 84, DateTimeKind.Utc).AddTicks(5465),
+                            CreatedAt = new DateTime(2024, 11, 30, 13, 1, 56, 306, DateTimeKind.Utc).AddTicks(1983),
                             Name = "EightBallPool",
-                            UpdatedAt = new DateTime(2024, 12, 2, 9, 23, 34, 84, DateTimeKind.Utc).AddTicks(5465)
+                            UpdatedAt = new DateTime(2024, 11, 30, 13, 1, 56, 306, DateTimeKind.Utc).AddTicks(1983)
                         });
                 });
 
@@ -681,76 +467,6 @@ namespace TournamentPlanner.DataModeling.Migrations
                     b.ToTable("Tournaments");
                 });
 
-            modelBuilder.Entity("TournamentPlanner.Identity.Model.ApplicationUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
-
-                    b.Property<int>("DomainUserId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex");
-
-                    b.ToTable("AspNetUsers", (string)null);
-                });
-
             modelBuilder.Entity("TournamentPlanner.Domain.Entities.Group", b =>
                 {
                     b.HasBaseType("TournamentPlanner.Domain.Entities.MatchType");
@@ -776,57 +492,6 @@ namespace TournamentPlanner.DataModeling.Migrations
                     b.HasOne("TournamentPlanner.Domain.Entities.Player", null)
                         .WithMany()
                         .HasForeignKey("PlayersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.HasOne("TournamentPlanner.Identity.Model.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.HasOne("TournamentPlanner.Identity.Model.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TournamentPlanner.Identity.Model.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.HasOne("TournamentPlanner.Identity.Model.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

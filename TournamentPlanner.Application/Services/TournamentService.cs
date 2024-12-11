@@ -8,6 +8,7 @@ public interface ITournamentService
     public Task<bool> CanIMakeDraw(Tournament tournament);
     public Task<IEnumerable<Draw>> MakeDraws(Tournament tournament, string? matchTypePrefix = null, List<int>? seederPlayers = null);
     public Task<bool> CanISchedule(Tournament tournament);
+    public bool AmITheCreator(Tournament tournament);
 }
 
 public class TournamentService : ITournamentService
@@ -16,14 +17,16 @@ public class TournamentService : ITournamentService
     private readonly IMatchTypeService _matchTypeService;
     private readonly IRoundService _roundService;
     private readonly IRepository<Tournament> _tournamentRepository;
+    private readonly ICurrentUser _currentUser;
 
 
-    public TournamentService(IDrawService drawService, IMatchTypeService matchTypeService, IRepository<Tournament> tornamentRepository, IRoundService roundService)
+    public TournamentService(IDrawService drawService, IMatchTypeService matchTypeService, IRepository<Tournament> tornamentRepository, IRoundService roundService, ICurrentUser currentUser)
     {
         this._drawService = drawService;
         _matchTypeService = matchTypeService;
         _tournamentRepository = tornamentRepository;
         _roundService = roundService;
+        _currentUser = currentUser;
     }
 
     public async Task<bool> CanIMakeDraw(Tournament tournament)
@@ -94,5 +97,17 @@ public class TournamentService : ITournamentService
             Tournament = tournament,
             MatchType = mt
         };
+    }
+
+    public bool AmITheCreator(Tournament tournament)
+    {
+        if (_currentUser.DomainUserId == null) return false;
+        if (tournament == null) return false;
+        if (tournament.AdminId == 0) return false;
+        if (tournament.AdminId != _currentUser.DomainUserId) return false;
+        if (tournament.AdminId == _currentUser.DomainUserId) return true;
+
+        //default false
+        return false;
     }
 }

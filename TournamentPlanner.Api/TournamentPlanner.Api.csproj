@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TournamentPlanner.Infrastructure\TournamentPlanner.Infrastructure.csproj" />
     <ProjectReference Include="..\TournamentPlanner.Application\TournamentPlanner.Application.csproj" />
+    <ProjectReference Include="..\TournamentPlanner.Identity\TournamentPlanner.Identity.csproj" />
   </ItemGroup>
 
   <ItemGroup>

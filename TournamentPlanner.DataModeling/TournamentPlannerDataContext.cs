@@ -1,11 +1,15 @@
 namespace TournamentPlanner.DataModeling;
 
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TournamentPlanner.Domain.Common;
+using TournamentPlanner.Domain.Constant;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
+using TournamentPlanner.Identity.Model;
 
-public class TournamentPlannerDataContext : DbContext
+public class TournamentPlannerDataContext : IdentityDbContext<ApplicationUser>
 {
 
     public DbSet<Player> Players { get; set; }
@@ -21,7 +25,9 @@ public class TournamentPlannerDataContext : DbContext
     public DbSet<Draw> Draws { get; set; }
     public DbSet<SeededPlayer> SeededPlayers { get; set; }
 
-    public TournamentPlannerDataContext(DbContextOptions<TournamentPlannerDataContext> options) : base(options)
+    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
+    public TournamentPlannerDataContext(DbContextOptions options) : base(options)
     {
 
     }
@@ -29,17 +35,26 @@ public class TournamentPlannerDataContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
+        //for identity integration
+        base.OnModelCreating(modelBuilder);
+
+        //* Application User configuration
+        // Email as primary key
+        modelBuilder.Entity<ApplicationUser>().HasIndex(u => u.Email).IsUnique();
+
         //* Player configuration
         modelBuilder.Entity<Player>(entity =>
         {
             entity.Property(p => p.Age).IsRequired();
             entity.Property(p => p.Weight).IsRequired();
+            entity.HasIndex(a => a.Email).IsUnique();
         });
 
         //* Admin configuration
         modelBuilder.Entity<Admin>(entity =>
         {
             entity.Property(a => a.PhoneNumber).IsRequired();
+            entity.HasIndex(a => a.Email).IsUnique();
         });
 
 
@@ -182,16 +197,8 @@ public class TournamentPlannerDataContext : DbContext
 
         });
 
-        // Some default Seed Data for GameType
-        var gameTypes = Enum.GetValues(typeof(GameTypeSupported)).Cast<GameTypeSupported>()
-                        .Select((gameType, index) => new GameType
-                        {
-                            Id = index + 1,
-                            Name = gameType,
-                            CreatedAt = DateTime.UtcNow,
-                            UpdatedAt = DateTime.UtcNow,
-                        }).ToArray();
-        modelBuilder.Entity<GameType>().HasData(gameTypes);
+        SeedDefaultGameType(modelBuilder);
+        SeedDefaultRoleWithClaim(modelBuilder);
 
         //making all CreatedAt and UpdatedAt filed of all entity that inherit from BaseEntity
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
@@ -206,6 +213,20 @@ public class TournamentPlannerDataContext : DbContext
 
 
 
+    }
+
+    private static void SeedDefaultGameType(ModelBuilder modelBuilder)
+    {
+        // Some default Seed Data for GameType
+        var gameTypes = Enum.GetValues(typeof(GameTypeSupported)).Cast<GameTypeSupported>()
+                        .Select((gameType, index) => new GameType
+                        {
+                            Id = index + 1,
+                            Name = gameType,
+                            CreatedAt = DateTime.UtcNow,
+                            UpdatedAt = DateTime.UtcNow,
+                        }).ToArray();
+        modelBuilder.Entity<GameType>().HasData(gameTypes);
     }
 
     public override int SaveChanges()
@@ -258,5 +279,85 @@ public class TournamentPlannerDataContext : DbContext
         }
     }
 
+    private void SeedDefaultRoleWithClaim(ModelBuilder modelBuilder)
+    {
+        var defaultRoles = new List<IdentityRole>
+        {
+            new IdentityRole { Name = Role.Admin.ToString(), NormalizedName = Role.Admin.ToString().ToUpper() },
+            new IdentityRole { Name = Role.Moderator.ToString(), NormalizedName = Role.Moderator.ToString().ToUpper() },
+            new IdentityRole { Name = Role.Player.ToString(), NormalizedName = Role.Player.ToString().ToUpper() }
+        };
+
+        // Check if roles already exist
+        foreach (var role in defaultRoles)
+        {
+            var existingRole = modelBuilder.Entity<IdentityRole>().Metadata.FindPrimaryKey()?.Properties
+                .FirstOrDefault(r => r.Name == role.Name);
+            if (existingRole == null)
+            {
+                Console.WriteLine($"Creating role: {role.Name}");
+                modelBuilder.Entity<IdentityRole>().HasData(role);
+            }
+        }
+
+
+        var identityRoleClaim = new List<IdentityRoleClaim<string>>();
+        // Log the created roles for debugging
+        foreach (var role in defaultRoles)
+        {
+            Console.WriteLine($"Creating role: {role.Name} with ID: {role.Id}");
+        }
+
+        foreach (var role in defaultRoles)
+        {
+            if (role.Name == Role.Admin.ToString()) AddAdminPermission(identityRoleClaim, role);
+            if (role.Name == Role.Moderator.ToString()) AddModeratorPermission(identityRoleClaim, role);
+            if (role.Name == Role.Player.ToString()) AddPlayerPermission(identityRoleClaim, role);
+        }
+        foreach (var claim in identityRoleClaim)
+        {
+            Console.WriteLine($"Role ID: {claim.RoleId}, Claim Type: {claim.ClaimType}, Claim Value: {claim.ClaimValue}");
+        }
+
+        modelBuilder.Entity<IdentityRoleClaim<string>>().HasData(identityRoleClaim);
+    }
+
+    private void AddModeratorPermission(List<IdentityRoleClaim<string>> identityRoleClaim, IdentityRole role)
+    {
+        identityRoleClaim.Add(
+            new IdentityRoleClaim<string> { Id = 1, RoleId = role.Id, ClaimType = DomainClaim.PermissionClaimType, ClaimValue = Policy.Read }
+        );
+        identityRoleClaim.Add(
+            new IdentityRoleClaim<string> { Id = 2, RoleId = role.Id, ClaimType = DomainClaim.PermissionClaimType, ClaimValue = Policy.Edit }
+        );
+        identityRoleClaim.Add(
+            new IdentityRoleClaim<string> { Id = 3, RoleId = role.Id, ClaimType = DomainClaim.PermissionClaimType, ClaimValue = Policy.AddScore }
+        );
+    }
+
+    private void AddAdminPermission(List<IdentityRoleClaim<string>> identityRoleClaim, IdentityRole role)
+    {
+        identityRoleClaim.Add(
+            new IdentityRoleClaim<string> { Id = 4, RoleId = role.Id, ClaimType = DomainClaim.PermissionClaimType, ClaimValue = Policy.Read }
+        );
+        identityRoleClaim.Add(
+            new IdentityRoleClaim<string> { Id = 5, RoleId = role.Id, ClaimType = DomainClaim.PermissionClaimType, ClaimValue = Policy.Edit }
+        );
+        identityRoleClaim.Add(
+            new IdentityRoleClaim<string> { Id = 6, RoleId = role.Id, ClaimType = DomainClaim.PermissionClaimType, ClaimValue = Policy.Create }
+        );
+        identityRoleClaim.Add(
+            new IdentityRoleClaim<string> { Id = 7, RoleId = role.Id, ClaimType = DomainClaim.PermissionClaimType, ClaimValue = Policy.Delete }
+        );
+        identityRoleClaim.Add(
+            new IdentityRoleClaim<string> { Id = 8, RoleId = role.Id, ClaimType = DomainClaim.PermissionClaimType, ClaimValue = Policy.AddScore }
+        );
+    }
+    private void AddPlayerPermission(List<IdentityRoleClaim<string>> identityRoleClaim, IdentityRole role)
+    {
+        identityRoleClaim.Add(
+            new IdentityRoleClaim<string> { Id = 9, RoleId = role.Id, ClaimType = DomainClaim.PermissionClaimType, ClaimValue = Policy.Read }
+        );
+    }
 
 }

@@ -31,6 +31,7 @@ public static class Factory
             var player = new PlayerBuilder()
 
                 .WithName($"{name} Player " + (i + 1).ToString())
+                .WithEmail($"testplayer-{i}@gmail.com")
                 .Build();
             players.Add(player);
         }
@@ -43,6 +44,7 @@ public static class Factory
         for (int i = 0; i <= numOfAdmin; i++)
         {
             var admin = new AdminBuilder().WithName($"{name} Admin " + (i + 1).ToString())
+                .WithEmail($"testadmin-{i}@gmail.com")
                 .Build();
             admins.Add(admin);
         }

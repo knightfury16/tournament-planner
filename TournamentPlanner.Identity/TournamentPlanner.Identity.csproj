@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\TournamentPlanner.Application\TournamentPlanner.Application.csproj" />
+    <ProjectReference Include="..\TournamentPlanner.DataModeling\TournamentPlanner.DataModeling.csproj" />
+    <ProjectReference Include="..\TournamentPlanner.Identity.Model\TournamentPlanner.Identity.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+
+</Project>
