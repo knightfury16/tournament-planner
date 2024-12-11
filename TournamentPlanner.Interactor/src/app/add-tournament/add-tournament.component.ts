@@ -15,6 +15,8 @@ import { AddTournamentDto, TournamentStatus, GameTypeSupported } from '../tp-mod
 })
 export class AddTournamentComponent {
   public addTournamentDto: AddTournamentDto;
+  public readonly gameTypeSupported = Object.values(GameTypeSupported);
+  public readonly tournamentStatus = Object.values(TournamentStatus);
 
   constructor(
     private tp: TournamentPlannerService,

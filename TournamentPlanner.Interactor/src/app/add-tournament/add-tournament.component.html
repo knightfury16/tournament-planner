@@ -1,24 +1,86 @@
 <div class="form-wrapper">
   <form #tournamentAddForm="ngForm">
     <div>
-      <label for="tournamentName"
-        >Tournament Name:
-        <input type="text" id="tournamentName"  name="tournamentName" required  [(ngModel)]="addTournamentDto.name"/>
+      <label for="tournamentName">Tournament Name:
+        <input type="text" id="tournamentName" name="tournamentName" required [(ngModel)]="addTournamentDto.name" />
       </label>
     </div>
     <div>
-      <label for="startDate"
-        >Start Date:
-        <input type="datetime-local" name="startDate" id="startDate"  (change)="onStartDateChange($event)"/>
+      <label for="startDate">Start Date:
+        <input type="datetime-local" name="startDate" id="startDate" required [(ngModel)]="addTournamentDto.startDate"
+          (change)="onStartDateChange($event)" />
       </label>
     </div>
     <div>
-      <label for="endDate"
-        >End Date:
-        <input type="datetime-local" name="endDate" id="endDate" (change)="onEndDateChange($event)"/>
+      <label for="endDate">End Date:
+        <input type="datetime-local" name="endDate" id="endDate" required [(ngModel)]="addTournamentDto.endDate"
+          (change)="onEndDateChange($event)" />
       </label>
     </div>
-    <button type="submit" [disabled]="!tournamentAddForm.form.valid" (click)="onClickCreate()">Create Tournament</button>
+    <div>
+      <label for="gameType">
+        Game Type:
+        <select name="gameType" id="gameType" [(ngModel)]="addTournamentDto.gameType">
+          <option *ngFor="let type of gameTypeSupported" [ngValue]="type">{{ type }}</option>
+        </select>
+      </label>
+    </div>
+    <div>
+      <label for="status">
+        Status:
+        <select name="status" id="status" [(ngModel)]="addTournamentDto.status">
+          <option *ngFor="let status of tournamentStatus" [value]="status">{{ status }}</option>
+        </select>
+      </label>
+    </div>
+    <div>
+      <label for="registrationLastDate">
+        Registration Last Date:
+        <input type="datetime-local" name="registrationLastDate" id="registrationLastDate"
+          [(ngModel)]="addTournamentDto.registrationLastDate" />
+      </label>
+    </div>
+    <div>
+      <label for="maxParticipant">
+        Max Participants:
+        <input type="number" name="maxParticipant" id="maxParticipant" [(ngModel)]="addTournamentDto.maxParticipant" />
+      </label>
+    </div>
+    <div>
+      <label for="venue">
+        Venue:
+        <input type="text" name="venue" id="venue" [(ngModel)]="addTournamentDto.venue" />
+      </label>
+    </div>
+    <div>
+      <label for="registrationFee">
+        Registration Fee:
+        <input type="number" name="registrationFee" id="registrationFee"
+          [(ngModel)]="addTournamentDto.registrationFee" />
+      </label>
+    </div>
+    <div>
+      <label for="minimumAgeOfRegistration">
+        Minimum Age of Registration:
+        <input type="number" name="minimumAgeOfRegistration" id="minimumAgeOfRegistration"
+          [(ngModel)]="addTournamentDto.minimumAgeOfRegistration" />
+      </label>
+    </div>
+    <div>
+      <label for="winnerPerGroup">
+        Winner Per Group:
+        <input type="number" name="winnerPerGroup" id="winnerPerGroup" [(ngModel)]="addTournamentDto.winnerPerGroup" />
+      </label>
+    </div>
+    <div>
+      <label for="knockOutStartNumber">
+        Knockout Start Number:
+        <input type="number" name="knockOutStartNumber" id="knockOutStartNumber"
+          [(ngModel)]="addTournamentDto.knockOutStartNumber" />
+      </label>
+    </div>
+    <button type="submit" [disabled]="!tournamentAddForm.form.valid" (click)="onClickCreate()">Create
+      Tournament</button>
   </form>
   <p>
     {{addTournamentDto | json}}
