@@ -7,6 +7,7 @@ import { AirportsListComponent } from './airports-list/airports-list.component';
 import { TournamentListComponent } from './tournament-list/tournament-list.component';
 import { TournamentMatchesComponent } from './tournament-matches/tournament-matches.component';
 import { AddTournamentComponent } from './add-tournament/add-tournament.component';
+import { LoginComponent } from './login/login.component';
 
 export const routes: Routes = [ 
     {path:'', redirectTo:'people', pathMatch:'full'},
@@ -18,4 +19,5 @@ export const routes: Routes = [
     {path:'tp/:tournamentId/matches', component:TournamentMatchesComponent},
     {path:'tp', component:TournamentListComponent},
     {path:'tp/add-tournament', component:AddTournamentComponent},
+    {path:'login', component:LoginComponent},
 ];
