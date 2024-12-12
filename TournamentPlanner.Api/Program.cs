@@ -45,9 +45,10 @@ try
         options.AddPolicy("AllowAll",
             policy =>
             {
-                policy.AllowAnyOrigin()
+                policy.WithOrigins("http://localhost:4200")
                       .AllowAnyHeader()
-                      .AllowAnyMethod();
+                      .AllowAnyMethod()
+                      .AllowCredentials();
             });
     });
 
