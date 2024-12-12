@@ -24,11 +24,11 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult> Login(LoginDto loginDto)
+    public async Task<ActionResult> Login([FromBody] LoginDto loginDto)
     {
         var loginRequest = new LoginRequest(loginDto);
-        var result = await _mediator.Send(loginRequest);
-        if (result) return Ok("Login Successful");
+        var userInfo = await _mediator.Send(loginRequest);
+        if (userInfo != null) return Ok(userInfo);
 
         return BadRequest("Login Failed");
     }
