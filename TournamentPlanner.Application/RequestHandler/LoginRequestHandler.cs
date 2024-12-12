@@ -5,16 +5,18 @@ using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Application;
 
-public class LoginRequestHandler : IRequestHandler<LoginRequest, bool>
+public class LoginRequestHandler : IRequestHandler<LoginRequest, UserInfoDto>
 {
   private readonly IIdentityService _identityService;
+  private readonly ICurrentUser _currentUser;
 
-  public LoginRequestHandler(IIdentityService identityService)
+  public LoginRequestHandler(IIdentityService identityService, ICurrentUser currentUser)
   {
     _identityService = identityService;
+    _currentUser = currentUser;
   }
 
-  public async Task<bool> Handle(LoginRequest request, CancellationToken cancellationToken = default)
+  public async Task<UserInfoDto?> Handle(LoginRequest request, CancellationToken cancellationToken = default)
   {
     ArgumentNullException.ThrowIfNull(request);
 
@@ -28,6 +30,13 @@ public class LoginRequestHandler : IRequestHandler<LoginRequest, bool>
 
     if (!result) throw new BadRequestException("Loign failed. Please provide valid email and password");
 
-    return result;
+    var userInfo = new UserInfoDto
+    {
+      Email = _currentUser.Email!,
+      Name = _currentUser.Name!,
+      Role = _currentUser.Role!,
+    };
+
+    return userInfo;
   }
 }
