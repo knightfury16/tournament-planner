@@ -94,3 +94,31 @@ export interface AddTournamentDto {
   participantResolutionStrategy?: ResolutionStrategy;
   tournamentType?: TournamentType;
 }
+
+export type AddPlayerDto =
+  {
+    name: string,
+    email: string,
+    password: string,
+    age?: number,
+    weight?: number
+  }
+
+export type AddAdminDto =
+  {
+    name: string,
+    email: string,
+    password: string,
+    phoneNumber: string
+  }
+
+export type LoginDto =
+  {
+    email: string,
+    password: string
+  }
+
+export enum DomainRole {
+  Admin = "Admin",
+  Player = "Player"
+}
