@@ -4,16 +4,22 @@
       <span class="title"><a [routerLink]="'/'">{{ApplicationTitle}}</a></span>
       <span class="spacer"></span>
       <button mat-button><a [routerLink]="'tp'">Home</a></button>
-      <button mat-button *ngIf="userRole === 'admin'"><a [routerLink]="'tp/manage-tournaments'">Manage
-          Tournaments</a></button>
-      <button mat-button *ngIf="userRole === 'admin'"><a [routerLink]="'tp/add-tournament'">Add Tournament</a></button>
-      <button mat-button *ngIf="userRole === 'player'"><a [routerLink]="'tp/manage-profile'">Manage Profile</a></button>
-      <button mat-button *ngIf="userRole">
-        <a [routerLink]="'/profile'">{{userRole}} Profile</a>
-        <span>&nbsp;</span>
-        <a [routerLink]="'/signout'">Sign Out</a>
-      </button>
-      <button mat-button *ngIf="!userRole"><a [routerLink]="'/login'">Sign In</a></button> <!-- Redirect to login -->
+      <ng-container *ngIf="isCurrentUserAdmin()">
+        <button mat-button><a [routerLink]="'tp/manage-tournaments'">Manage Tournaments</a></button>
+        <button mat-button><a [routerLink]="'tp/add-tournament'">Add Tournament</a></button>
+      </ng-container>
+      <ng-container *ngIf="isCurrentUserAdmin() || isCurrentUserPlayer()">
+        <button mat-button><a [routerLink]="'tp/manage-profile'">Manage Profile</a></button>
+        <button mat-button>
+          <a [routerLink]="'/profile'">{{getCurrentUser()?.name}} Profile</a>
+        </button>
+        <button (click)="signOut()">
+          SignOut
+        </button>
+      </ng-container>
+      <ng-container *ngIf="!(isCurrentUserAdmin() || isCurrentUserPlayer())">
+        <button mat-button><a [routerLink]="'/login'">Sign In</a></button>
+      </ng-container>
     </mat-toolbar-row>
   </mat-toolbar>
 </div>
