@@ -1,26 +1,28 @@
-<div>
+<nav>
   <mat-toolbar color="accent"> <!-- Changed color to 'accent' for a more professional look -->
     <mat-toolbar-row>
       <span class="title"><a [routerLink]="'/'">{{ApplicationTitle}}</a></span>
       <span class="spacer"></span>
-      <button mat-button><a [routerLink]="'tp'">Home</a></button>
-      <ng-container *ngIf="isCurrentUserAdmin()">
-        <button mat-button><a [routerLink]="'tp/manage-tournaments'">Manage Tournaments</a></button>
-        <button mat-button><a [routerLink]="'tp/add-tournament'">Add Tournament</a></button>
-      </ng-container>
-      <ng-container *ngIf="isCurrentUserAdmin() || isCurrentUserPlayer()">
-        <button mat-button><a [routerLink]="'tp/manage-profile'">Manage Profile</a></button>
-        <button mat-button>
-          <a [routerLink]="'/profile'">{{getCurrentUser()?.name}} Profile</a>
-        </button>
-        <button (click)="signOut()">
-          SignOut
-        </button>
-      </ng-container>
-      <ng-container *ngIf="!(isCurrentUserAdmin() || isCurrentUserPlayer())">
-        <button mat-button><a [routerLink]="'/login'">Sign In</a></button>
-      </ng-container>
+      <a mat-button [routerLink]="'tp'">Home</a>
+      @if (!(isCurrentUserAdmin() || isCurrentUserPlayer())){
+      <a mat-button [routerLink]="'/login'">Sign In</a>
+      }
+      @else {
+      <button mat-button [mat-menu-trigger-for]="profileMenu">{{getCurrentUser()?.name}}</button>
+      }
     </mat-toolbar-row>
   </mat-toolbar>
-</div>
+</nav>
 <hr>
+
+<!-- Profile menu options -->
+<ng-container>
+  <mat-menu #profileMenu="matMenu">
+    <button mat-menu-item [routerLink]="'/manage-profile'">Profile</button>
+    @if (isCurrentUserAdmin()) {
+    <button mat-menu-item [routerLink]="'tp/add-tournament'">Add Tournament</button>
+    <button mat-menu-item [routerLink]="'/manage-tournament'">Manage Tournament</button>
+    }
+    <button mat-menu-item (click)="signOut()">Sign out</button>
+  </mat-menu>
+</ng-container>
