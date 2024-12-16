@@ -15,4 +15,6 @@ public class CurrentUser : ICurrentUser
     public string? Email => _httpcontextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Email)?.Value;
     public int? DomainUserId => _httpcontextAccessor.HttpContext?.User?.FindFirst("DomainUserId")?.Value != null ? int.Parse(_httpcontextAccessor.HttpContext.User.FindFirst("DomainUserId")!.Value) : null;
     public string? Role => _httpcontextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Role)?.Value;
+
+    public bool IsAuthenticated => _httpcontextAccessor.HttpContext?.User?.Identity?.IsAuthenticated?? false;
 }

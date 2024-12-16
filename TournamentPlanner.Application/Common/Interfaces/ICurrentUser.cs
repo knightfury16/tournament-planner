@@ -6,4 +6,6 @@ public interface ICurrentUser
     public string? Email { get; }
     public int? DomainUserId { get; }
     public string? Role { get; }
+    public bool IsAuthenticated { get; }
+    
 }
