@@ -33,6 +33,24 @@ public class AccountController : ControllerBase
         return BadRequest("Login Failed");
     }
 
+    [HttpPost("logout")]
+    public async Task<ActionResult> Logout()
+    {
+        var logoutRequest = new LogoutRequest();
+        var logoutSuccessful = await _mediator.Send(logoutRequest);
+        if (logoutSuccessful) return Ok("Logout successful");
+
+        return BadRequest("Logout Failed");
+    }
+
+    [HttpGet("userInfo")]
+    public async Task<ActionResult> GetUserInfo()
+    {
+        var getUserInfoRequest = new GetUserInfoRequest();
+        var userInfo = await _mediator.Send(getUserInfoRequest);
+        return Ok(userInfo);
+    }
+
     [HttpGet("roles")]
     public async Task<ActionResult<IEnumerable<string>>> GetUserRole()
     {
