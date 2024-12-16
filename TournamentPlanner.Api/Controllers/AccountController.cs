@@ -38,7 +38,7 @@ public class AccountController : ControllerBase
     {
         var logoutRequest = new LogoutRequest();
         var logoutSuccessful = await _mediator.Send(logoutRequest);
-        if (logoutSuccessful) return Ok("Logout successful");
+        if (logoutSuccessful) return Ok(new { message = "Logout successful"});
 
         return BadRequest("Logout Failed");
     }
