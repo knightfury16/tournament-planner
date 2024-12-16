@@ -48,8 +48,7 @@ export class NavBarComponent {
   public isCurrentUserPlayer(): boolean {
     return this.getCurrentUserRole() === DomainRole.Player.toString();
   }
-  public signOut() {
-    this.authService.singOut();
+  public async signOut() {
+    await this.authService.singOut();
   }
-
 }
