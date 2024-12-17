@@ -4,17 +4,19 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService, UserInfo } from '../../Shared/auth.service';
 import { LoginDto } from '../tp-model/TpModel';
 import { LoadingService } from '../../Shared/loading.service';
+import {MatInputModule} from '@angular/material/input';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, RouterModule, CommonModule,
-    MatFormFieldModule, FormsModule, ReactiveFormsModule],
+  imports: [ MatButtonModule,RouterModule, CommonModule,
+    MatFormFieldModule,MatInputModule, FormsModule, ReactiveFormsModule,MatCardModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -33,7 +35,7 @@ export class LoginComponent implements OnInit {
     // Any initialization logic can go here
   }
 
-  onSubmit(): void {
+  login(): void {
     if (this.loginForm.valid) {
       // Handle login request here
       var loginDto: LoginDto = {

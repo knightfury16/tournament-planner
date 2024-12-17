@@ -1,11 +1,32 @@
-div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.container{
+    width: 500px;
+    min-width: 300px;
+    display: grid;
+    grid-template-rows: 1fr 3fr 1fr 1fr;
+    grid-template-columns: auto;
     align-items: center;
-    padding-top: 20px;
+    justify-items: center;
 }
 
-button {
-    margin-top: 10px;
+.form-field{
+    width: 300px;
+}
+
+form { 
+    display: flex;
+    flex-direction: column;
+} 
+     
+
+.footer{
+    justify-self: end;
+    column-gap: 5px;
+    align-self: center;
+}
+
+.my-button
+{
+    font-style: italic;
+    text-decoration: underline;
+    margin-right: 10px;
 }
