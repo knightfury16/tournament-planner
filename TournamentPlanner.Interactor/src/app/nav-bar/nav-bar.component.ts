@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService, UserInfo } from '../../Shared/auth.service';
 import { DomainRole } from '../tp-model/TpModel';
@@ -25,6 +25,7 @@ import { DomainRole } from '../tp-model/TpModel';
 export class NavBarComponent {
   public ApplicationTitle: string = "Tournament Planner"
   public userRole: string | null = null; // Define userRole variable
+  private router = inject(Router);
 
   constructor(private authService: AuthService) {
     // Example: Set userRole based on some logic
@@ -50,5 +51,6 @@ export class NavBarComponent {
   }
   public async signOut() {
     await this.authService.singOut();
+    this.router.navigate(['/tp']);
   }
 }
