@@ -7,6 +7,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService, UserInfo } from '../../Shared/auth.service';
 import { DomainRole } from '../tp-model/TpModel';
+import { LoadingService } from '../../Shared/loading.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -23,9 +24,10 @@ import { DomainRole } from '../tp-model/TpModel';
   styleUrl: './nav-bar.component.scss',
 })
 export class NavBarComponent {
-  public ApplicationTitle: string = "Tournament Planner"
+  public ApplicationTitle: string = "TP"
   public userRole: string | null = null; // Define userRole variable
   private router = inject(Router);
+  private loading = inject(LoadingService);
 
   constructor(private authService: AuthService) {
     // Example: Set userRole based on some logic
@@ -50,7 +52,9 @@ export class NavBarComponent {
     return this.getCurrentUserRole() === DomainRole.Player.toString();
   }
   public async signOut() {
+    this.loading.show();
     await this.authService.singOut();
     this.router.navigate(['/tp']);
+    this.loading.hide();
   }
 }
