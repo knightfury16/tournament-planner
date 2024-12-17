@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,6 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService, UserInfo } from '../../Shared/auth.service';
 import { LoginDto } from '../tp-model/TpModel';
+import { LoadingService } from '../../Shared/loading.service';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ import { LoginDto } from '../tp-model/TpModel';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  private laodingService = inject(LoadingService);
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.fb.group({
@@ -40,11 +42,13 @@ export class LoginComponent implements OnInit {
       }
       console.log(loginDto);
 
+      this.laodingService.show();
       this.authService.login(loginDto).subscribe(
         (response: UserInfo) => {
           // Handle successful login here
           this.authService.currentUser.set(response);
           console.log(this.authService.currentUser());
+          this.laodingService.hide();
           // Redirect to home page
           this.router.navigate(['/tp']);
         },
