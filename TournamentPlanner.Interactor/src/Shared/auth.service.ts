@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable, signal } from '@angular/core';
+import { inject, Inject, Injectable, signal } from '@angular/core';
 import { TP_BASE_URL } from '../app/app.config';
 import { firstValueFrom, Observable } from 'rxjs';
 import { AddAdminDto, AddPlayerDto, LoginDto } from '../app/tp-model/TpModel';
+import { LoadingService } from './loading.service';
 
 export interface UserInfo {
   email: string;
@@ -18,10 +19,13 @@ export class AuthService {
 
   public currentUser = signal<UserInfo | null>(null);
   private accountBaseUrl: string;
+  private loadingService = inject(LoadingService);
 
   constructor(private httpClient: HttpClient, @Inject(TP_BASE_URL) private baseUrl: string) {
     this.accountBaseUrl = baseUrl + "/identity/account";
+    this.loadingService.show();
     this.initializeUserInfo();
+    this.loadingService.hide();
   }
 
   public login(loginDto: LoginDto): Observable<UserInfo> {
