@@ -54,8 +54,8 @@ export class LoginComponent implements OnInit {
       this.authService.login(loginDto).subscribe(
         (response: UserInfo) => {
           // Handle successful login here
-          this.authService.currentUser.set(response);
-          console.log(this.authService.currentUser());
+          this.authService.setCurrentUser(response);
+          console.log(this.authService.getCurrentUser());
           this.laodingService.hide();
           // Redirect to home page
           this.router.navigate(['/tp']);

@@ -17,7 +17,7 @@ export interface UserInfo {
 
 export class AuthService {
 
-  public currentUser = signal<UserInfo | null>(null);
+  private currentUser = signal<UserInfo | null>(null);
   private accountBaseUrl: string;
   private loadingService = inject(LoadingService);
 
@@ -26,6 +26,14 @@ export class AuthService {
     this.loadingService.show();
     this.initializeUserInfo();
     this.loadingService.hide();
+  }
+
+  public getCurrentUser() {
+    return this.currentUser();
+  }
+
+  public setCurrentUser(userInfo: UserInfo | null) {
+    this.currentUser.set(userInfo);
   }
 
   public login(loginDto: LoginDto): Observable<UserInfo> {

@@ -37,11 +37,11 @@ export class NavBarComponent {
   }
 
   public getCurrentUser(): UserInfo | null {
-    return this.authService.currentUser();
+    return this.authService.getCurrentUser();
   }
 
   public getCurrentUserRole(): string | undefined {
-    return this.authService.currentUser()?.role;
+    return this.authService.getCurrentUser()?.role;
   }
 
   public isCurrentUserAdmin(): boolean {
