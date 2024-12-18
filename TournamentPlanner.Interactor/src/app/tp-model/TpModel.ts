@@ -46,6 +46,7 @@ export interface GameTypeDto {
 export interface PlayerDto {
   id: number;
   name: string;
+  email: string;
   age?: number | null;
   gamePlayed?: number | null;
   gameWon?: number | null;
