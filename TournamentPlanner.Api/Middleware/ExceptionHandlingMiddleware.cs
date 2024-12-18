@@ -63,7 +63,7 @@ namespace TournamentPlanner.Api.Middleware
             }
 
 
-            var result = JsonSerializer.Serialize(new { error = message });
+            var result = JsonSerializer.Serialize(new { Error = message });
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
             return context.Response.WriteAsync(result);
