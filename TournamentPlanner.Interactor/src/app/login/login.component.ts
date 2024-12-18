@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Inject, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,6 +11,11 @@ import { AuthService, UserInfo } from '../../Shared/auth.service';
 import { LoginDto } from '../tp-model/TpModel';
 import { LoadingService } from '../../Shared/loading.service';
 import {MatInputModule} from '@angular/material/input';
+import { HttpErrorResponse } from '@angular/common/http';
+
+export type LoginErrorType = {
+  Error: string
+};
 
 @Component({
   selector: 'app-login',
@@ -22,6 +27,7 @@ import {MatInputModule} from '@angular/material/input';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  public loginError = signal<string | null>(null);
   private laodingService = inject(LoadingService);
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
@@ -54,9 +60,10 @@ export class LoginComponent implements OnInit {
           // Redirect to home page
           this.router.navigate(['/tp']);
         },
-        (error) => {
+        (error: HttpErrorResponse) => {
           // Handle login error here
-          console.log(error);
+          this.laodingService.hide();
+          this.loginError.set(error.error.Error)
         }
       )
 
