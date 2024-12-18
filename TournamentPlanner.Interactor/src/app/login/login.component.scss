@@ -1,6 +1,6 @@
 .container {
-    width: 500px;
-    min-width: 300px;
+    width: var(--form-width);
+    min-width: var(--form-min-width);
     display: grid;
     grid-template-rows: 1fr 3fr 1fr 1fr;
     grid-template-columns: auto;
