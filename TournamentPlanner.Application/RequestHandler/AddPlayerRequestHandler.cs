@@ -40,13 +40,16 @@ namespace TournamentPlanner.Application.RequestHandler
                 UserName = player.Name,
                 DomainUserId = player.Id
             };
-            var result = await _identityService.RegisterApplicationUserAndSigninAsync(applicationUserDto, true);
-            if (!result)
+            try
+            {
+                var result = await _identityService.RegisterApplicationUserAndSigninAsync(applicationUserDto, true);
+            }
+            catch (Exception ex)
             {
                 //remove the tp admin created
                 await _playerRepository.DeleteByIdAsync(player.Id);
                 await _playerRepository.SaveAsync();
-                throw new InternalServerErrorException("Could not create identity user.");
+                throw;
             }
 
             await _identityService.AddRoleToApplicationUserAsync(player.Email, Role.Player);
