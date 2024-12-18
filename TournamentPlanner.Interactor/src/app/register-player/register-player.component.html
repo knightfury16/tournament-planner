@@ -35,6 +35,6 @@
         </form>
     </mat-card-content>
     <mat-card-actions class="card-actions">
-        <button class="action-button" mat-stroked-button (click)="register()" [disabled]="this.registerPlayerForm.valid">Register</button>
+        <button class="action-button" mat-stroked-button (click)="register()" [disabled]="!this.registerPlayerForm.valid">Register</button>
     </mat-card-actions>
 </mat-card>

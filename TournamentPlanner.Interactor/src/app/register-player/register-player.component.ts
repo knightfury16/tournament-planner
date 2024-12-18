@@ -1,10 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { AddPlayerDto, DomainRole, PlayerDto } from '../tp-model/TpModel';
+import { AuthService, UserInfo } from '../../Shared/auth.service';
+import { LoadingService } from '../../Shared/loading.service';
+import { firstValueFrom } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register-player',
@@ -15,8 +20,12 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class RegisterPlayerComponent {
 
+  private authService = inject(AuthService);
+  private loadingService = inject(LoadingService);
+  private router = inject(Router);
+
   public registerPlayerForm = new FormGroup({
-    name: new FormControl('', [Validators.minLength(5), Validators.required,]), 
+    name: new FormControl('', [Validators.minLength(5), Validators.required,]),
     age: new FormControl(),
     weight: new FormControl(),
     email: new FormControl('', [Validators.required]),
@@ -24,8 +33,35 @@ export class RegisterPlayerComponent {
   });
 
 
-  public register() {
+  public async register() {
     console.log(this.registerPlayerForm);
+    var addPlayerDto: AddPlayerDto = {
+      name: this.registerPlayerForm.value.name ?? '',
+      email: this.registerPlayerForm.value.email ?? '',
+      password: this.registerPlayerForm.value.password ?? '',
+      age: this.registerPlayerForm.value.age ?? 0,
+      weight: this.registerPlayerForm.value.weight ?? 0
+    }
+
+    try {
+      console.log(addPlayerDto);
+      this.loadingService.show();
+      var playerDto = await firstValueFrom(this.authService.registerPlayer(addPlayerDto));
+      this.setUserInfo(playerDto);
+      this.router.navigate(['/tp']);
+      this.loadingService.hide();
+    } catch (error) {
+      this.loadingService.hide();
+      console.log(error);
+    }
+  }
+  setUserInfo(playerDto: PlayerDto) {
+    var userInfo: UserInfo = {
+      name: playerDto.name,
+      email: playerDto.email,
+      role: DomainRole.Player
+    }
+    this.authService.setCurrentUser(userInfo);
   }
 
 }
