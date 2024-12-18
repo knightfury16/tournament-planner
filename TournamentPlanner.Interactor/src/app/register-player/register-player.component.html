@@ -32,6 +32,11 @@
                 <mat-error *ngIf="this.registerPlayerForm.get('password')!.hasError('required')">Password is
                     required.</mat-error>
             </mat-form-field>
+            @if (this.errors()) {
+                @for (error of errors(); track $index) {
+                    <mat-error class="error">{{error}}</mat-error>
+                }
+            }
         </form>
     </mat-card-content>
     <mat-card-actions class="card-actions">

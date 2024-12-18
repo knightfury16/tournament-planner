@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -23,6 +23,8 @@ export class RegisterPlayerComponent {
   private authService = inject(AuthService);
   private loadingService = inject(LoadingService);
   private router = inject(Router);
+
+  public errors = signal<string[] | null>(null);
 
   public registerPlayerForm = new FormGroup({
     name: new FormControl('', [Validators.minLength(5), Validators.required,]),
@@ -50,9 +52,10 @@ export class RegisterPlayerComponent {
       this.setUserInfo(playerDto);
       this.router.navigate(['/tp']);
       this.loadingService.hide();
-    } catch (error) {
+    } catch (error: any) {
+      const errors = error.error?.errors ? Object.values(error.error.errors).flat() : error.error?.Error ? [error.error.Error] : [];
+      this.errors.set(errors);
       this.loadingService.hide();
-      console.log(error);
     }
   }
   setUserInfo(playerDto: PlayerDto) {
