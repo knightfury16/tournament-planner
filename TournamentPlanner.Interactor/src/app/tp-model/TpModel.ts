@@ -89,9 +89,9 @@ export interface MatchDto {
 
 export interface AddTournamentDto {
   name: string;
-  startDate: string;
-  endDate: string;
-  gameType: GameTypeSupported;
+  startDate: Date | null;
+  endDate: Date | null;
+  gameType: GameTypeDto | null;
   status?: TournamentStatus;
   registrationLastDate?: Date;
   maxParticipant?: number;
