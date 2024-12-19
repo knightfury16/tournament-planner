@@ -44,7 +44,7 @@
         <mat-datepicker #registrationLastDatePicker></mat-datepicker>
         <mat-error
           *ngIf="addTournamentForm.get('registrationLastDate')!.hasError('invalidRegistrationLastDate')">Registration
-          Last Date must be after the start date.</mat-error>
+          Last Date must be after today and before the start date.</mat-error>
       </mat-form-field>
       <mat-form-field class="form-field">
         <mat-label>Max Participant</mat-label>
