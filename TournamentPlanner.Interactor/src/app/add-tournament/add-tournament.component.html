@@ -1,5 +1,5 @@
 <mat-card class="container">
-  <mat-card-header class="card-header">
+  <mat-card-header class="header">
     <mat-card-title class="card-title">Add Tournament</mat-card-title>
   </mat-card-header>
   <mat-card-content class="card-content">
@@ -73,6 +73,6 @@
     </form>
   </mat-card-content>
   <mat-card-actions class="card-actions">
-    <button mat-button [disabled]="!this.addTournamentForm.valid">Add Tournament</button>
+    <button mat-stroked-button class="my-button" (click)="this.onClickCreate()" [disabled]="!this.addTournamentForm.valid">Add Tournament</button>
   </mat-card-actions>
 </mat-card>

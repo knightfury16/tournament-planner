@@ -1,16 +1,25 @@
 .container {
     width: var(--form-width);
     min-width: var(--form-min-width);
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: 1fr 5fr auto;
 }
 
-.card-header {
-    justify-self: center;
+.header{
+    margin-bottom: 10px;
+    align-self: center;
+}
+
+.card-actions{
+    align-self: flex-end;
+    margin: 10px;
+}
+
+.my-button{
+    padding: 10px;
+    font-size: large;
 }
 
 .add-tournament-form {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
