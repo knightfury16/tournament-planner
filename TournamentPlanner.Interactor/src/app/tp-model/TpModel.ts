@@ -53,6 +53,14 @@ export interface PlayerDto {
   winRatio?: number | null;
 }
 
+export interface AdminDto {
+  id: number;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  createdTournament?: TournamentDto[];
+}
+
 export interface RoundDto {
   id: number;
   roundName: string | null;
