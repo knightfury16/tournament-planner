@@ -1,88 +1,81 @@
-<div class="form-wrapper">
-  <form #tournamentAddForm="ngForm">
-    <div>
-      <label for="tournamentName">Tournament Name:
-        <input type="text" id="tournamentName" name="tournamentName" required [(ngModel)]="addTournamentDto.name" />
-      </label>
-    </div>
-    <div>
-      <label for="startDate">Start Date:
-        <input type="datetime-local" name="startDate" id="startDate" required [(ngModel)]="addTournamentDto.startDate"
-          (change)="onStartDateChange($event)" />
-      </label>
-    </div>
-    <div>
-      <label for="endDate">End Date:
-        <input type="datetime-local" name="endDate" id="endDate" required [(ngModel)]="addTournamentDto.endDate"
-          (change)="onEndDateChange($event)" />
-      </label>
-    </div>
-    <div>
-      <label for="gameType">
-        Game Type:
-        <select name="gameType" id="gameType" [(ngModel)]="addTournamentDto.gameType">
-          <option *ngFor="let type of gameTypeSupported" [ngValue]="type">{{ type }}</option>
-        </select>
-      </label>
-    </div>
-    <div>
-      <label for="status">
-        Status:
-        <select name="status" id="status" [(ngModel)]="addTournamentDto.status">
-          <option *ngFor="let status of tournamentStatus" [value]="status">{{ status }}</option>
-        </select>
-      </label>
-    </div>
-    <div>
-      <label for="registrationLastDate">
-        Registration Last Date:
-        <input type="datetime-local" name="registrationLastDate" id="registrationLastDate"
-          [(ngModel)]="addTournamentDto.registrationLastDate" />
-      </label>
-    </div>
-    <div>
-      <label for="maxParticipant">
-        Max Participants:
-        <input type="number" name="maxParticipant" id="maxParticipant" [(ngModel)]="addTournamentDto.maxParticipant" />
-      </label>
-    </div>
-    <div>
-      <label for="venue">
-        Venue:
-        <input type="text" name="venue" id="venue" [(ngModel)]="addTournamentDto.venue" />
-      </label>
-    </div>
-    <div>
-      <label for="registrationFee">
-        Registration Fee:
-        <input type="number" name="registrationFee" id="registrationFee"
-          [(ngModel)]="addTournamentDto.registrationFee" />
-      </label>
-    </div>
-    <div>
-      <label for="minimumAgeOfRegistration">
-        Minimum Age of Registration:
-        <input type="number" name="minimumAgeOfRegistration" id="minimumAgeOfRegistration"
-          [(ngModel)]="addTournamentDto.minimumAgeOfRegistration" />
-      </label>
-    </div>
-    <div>
-      <label for="winnerPerGroup">
-        Winner Per Group:
-        <input type="number" name="winnerPerGroup" id="winnerPerGroup" [(ngModel)]="addTournamentDto.winnerPerGroup" />
-      </label>
-    </div>
-    <div>
-      <label for="knockOutStartNumber">
-        Knockout Start Number:
-        <input type="number" name="knockOutStartNumber" id="knockOutStartNumber"
-          [(ngModel)]="addTournamentDto.knockOutStartNumber" />
-      </label>
-    </div>
-    <button type="submit" [disabled]="!tournamentAddForm.form.valid" (click)="onClickCreate()">Create
-      Tournament</button>
-  </form>
+<mat-card class="container">
+  <mat-card-header class="card-header">
+    <mat-card-title class="card-title">Add</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="card-content">
+    <form [formGroup]="addTournamentForm" class="add-tournament-form">
+      <mat-form-field>
+        <mat-label>Tournament Name</mat-label>
+        <input matInput type="text" formControlName="name">
+        <mat-error *ngIf="addTournamentForm.get('name')!.hasError('required')">Name is required.</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Select start and end Date</mat-label>
+        <mat-date-range-input [rangePicker]="duration">
+          <input matStartDate placeholder="Start date" formControlName="startDate">
+          <input matEndDate placeholder="End date" formControlName="endDate">
+        </mat-date-range-input>
+        <mat-hint>MM/DD/YYYY–MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="duration"></mat-datepicker-toggle>
+        <mat-date-range-picker #duration></mat-date-range-picker>
+        <mat-error *ngIf="addTournamentForm.get('startDate')!.hasError('required')">Start Date is required.</mat-error>
+        <mat-error *ngIf="addTournamentForm.get('endDate')!.hasError('required')">End Date is required.</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Game Type</mat-label>
+        <mat-select formControlName="gameType">
+          <mat-option *ngFor="let type of gameTypeSupported | keyvalue" [value]="type.key">{{type.value}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="addTournamentForm.get('gameType')!.hasError('required')">Game Type is required.</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option *ngFor="let status of tournamentStatus | keyvalue"
+            [value]="status.key">{{status.value}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="addTournamentForm.get('status')!.hasError('required')">Status is required.</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Registration Last Date</mat-label>
+        <input matInput [matDatepicker]="registrationLastDatePicker" formControlName="registrationLastDate">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="registrationLastDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #registrationLastDatePicker></mat-datepicker>
+        <mat-error
+          *ngIf="addTournamentForm.get('registrationLastDate')!.hasError('invalidRegistrationLastDate')">Registration
+          Last Date must be after the start date.</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Max Participant</mat-label>
+        <input matInput type="number" formControlName="maxParticipant">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Venue</mat-label>
+        <input matInput type="text" formControlName="venue">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Registration Fee</mat-label>
+        <input matInput type="number" placeholder="In USD" formControlName="registrationFee">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Minimum Age of Registration</mat-label>
+        <input matInput type="number" formControlName="minimumAgeOfRegistration">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Knock Out Start Number</mat-label>
+        <input matInput type="number" formControlName="knockOutStartNumber">
+        <mat-error *ngIf="addTournamentForm.get('knockOutStartNumber')!.hasError('required')">Knock Out Start Number is
+          required.</mat-error>
+        <mat-error *ngIf="addTournamentForm.get('knockOutStartNumber')!.hasError('invalidPowerOfTwo')">Knock Out Start
+          Number must be a power of 2.</mat-error>
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+  <mat-card-actions class="card-actions">
+    <button mat-button [disabled]="!this.addTournamentForm.valid">Add Tournament</button>
+  </mat-card-actions>
   <p>
-    {{addTournamentDto | json}}
+    {{this.addTournamentForm.value | json}}
   </p>
-</div>
+</mat-card>
