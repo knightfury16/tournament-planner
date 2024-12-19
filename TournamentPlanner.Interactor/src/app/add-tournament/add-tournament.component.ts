@@ -4,7 +4,7 @@ import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModu
 import { TimeService } from '../time.service';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { Router } from '@angular/router';
-import { AddTournamentDto, TournamentStatus, GameTypeSupported } from '../tp-model/TpModel';
+import { AddTournamentDto, TournamentStatus, GameTypeSupported, ResolutionStrategy, TournamentType } from '../tp-model/TpModel';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -27,6 +27,8 @@ export class AddTournamentComponent {
   public addTournamentDto: AddTournamentDto | null = null;
   public readonly gameTypeSupported = GameTypeSupported;
   public readonly tournamentStatus = TournamentStatus;
+  public readonly tournamentType = TournamentType;
+
 
   constructor(
     private tp: TournamentPlannerService,
@@ -46,6 +48,7 @@ export class AddTournamentComponent {
     registrationFee: new FormControl<string>(''),
     minimumAgeOfRegistration: new FormControl<number | null>(null),
     knockOutStartNumber: new FormControl<number>(8, [Validators.required, this.powerOfTwoValidator]),
+    tournamentType: new FormControl<TournamentType>(this.tournamentType.GroupStage, [Validators.required]),
   });
 
   public onClickCreate() {
