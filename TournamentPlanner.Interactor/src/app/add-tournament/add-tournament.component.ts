@@ -24,7 +24,7 @@ import { MatSelectModule } from '@angular/material/select';
   styleUrl: './add-tournament.component.scss',
 })
 export class AddTournamentComponent {
-  public addTournamentDto: AddTournamentDto;
+  public addTournamentDto: AddTournamentDto | null = null;
   public readonly gameTypeSupported = GameTypeSupported;
   public readonly tournamentStatus = TournamentStatus;
 
@@ -32,16 +32,7 @@ export class AddTournamentComponent {
     private tp: TournamentPlannerService,
     private timeService: TimeService,
     private router: Router
-  ) {
-    this.addTournamentDto = {
-      name: '',
-      status: TournamentStatus.Draft,
-      startDate: new Date().toUTCString(),
-      endDate: new Date().toUTCString(),
-      gameType: GameTypeSupported.TableTennis,
-      knockOutStartNumber: 8,
-    };
-  }
+  ) { }
 
   public addTournamentForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -57,23 +48,10 @@ export class AddTournamentComponent {
     knockOutStartNumber: new FormControl<number>(8, [Validators.required, this.powerOfTwoValidator]),
   });
 
-  onClickCreate() {
-    this.tp.addTournament(this.addTournamentDto).subscribe((res) => {
-      console.log(res);
-      this.router.navigate(['/tp'])
-    });
+  public onClickCreate() {
+    console.log(this.addTournamentForm.value);
   }
 
-  onStartDateChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const localDate = input.value;
-    this.addTournamentDto.startDate = this.timeService.convertToUTC(localDate);
-  }
-  onEndDateChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const localDate = input.value;
-    this.addTournamentDto.endDate = this.timeService.convertToUTC(localDate);
-  }
 
   private registrationLastDateValidator(control: AbstractControl) {
     const registrationLastDate = control.value
