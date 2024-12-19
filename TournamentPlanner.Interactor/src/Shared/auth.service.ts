@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Inject, Injectable, signal } from '@angular/core';
 import { TP_BASE_URL } from '../app/app.config';
 import { firstValueFrom, Observable } from 'rxjs';
-import { AddAdminDto, AddPlayerDto, LoginDto, PlayerDto } from '../app/tp-model/TpModel';
+import { AddAdminDto, AddPlayerDto, AdminDto, LoginDto, PlayerDto } from '../app/tp-model/TpModel';
 import { LoadingService } from './loading.service';
 
 export interface UserInfo {
@@ -44,8 +44,8 @@ export class AuthService {
     return this.httpClient.post<PlayerDto>(`${this.baseUrl}/players`, addPlayerDto, { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
   }
 
-  public registerAdmin(addAdminDto: AddAdminDto): Observable<UserInfo> {
-    return this.httpClient.post<UserInfo>(`${this.baseUrl}/admins`, addAdminDto, { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
+  public registerAdmin(addAdminDto: AddAdminDto): Observable<AdminDto> {
+    return this.httpClient.post<AdminDto>(`${this.baseUrl}/admins`, addAdminDto, { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
   }
 
   public async singOut(): Promise<string> {
