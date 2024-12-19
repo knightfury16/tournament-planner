@@ -16,15 +16,15 @@ export interface TournamentDto {
 
 
 export enum TournamentStatus {
-  Draft,
-  RegistrationOpen,
-  RegistrationClosed,
-  Ongoing,
-  Completed
+  Draft = "Draft",
+  RegistrationOpen = "Registration Open",
+  RegistrationClosed  = "Registration Closed",
+  Ongoing = "Ongoing",
+  Completed = "Completed"
 }
 export enum TournamentType {
-  GroupStage,
-  Knockout
+  GroupStage = "Group Stage",
+  Knockout = "Knockout"
 }
 
 export enum ResolutionStrategy {
@@ -34,8 +34,8 @@ export enum ResolutionStrategy {
 }
 
 export enum GameTypeSupported {
-  TableTennis,
-  EightBallPool
+  TableTennis = 'Table Tennis',
+  EightBallPool = 'Eight Ball Pool'
 }
 
 
@@ -91,14 +91,14 @@ export interface AddTournamentDto {
   name: string;
   startDate: string;
   endDate: string;
-  gameType: GameTypeSupported | null;
+  gameType: GameTypeSupported;
   status?: TournamentStatus;
   registrationLastDate?: Date;
   maxParticipant?: number;
   venue?: string;
   registrationFee?: number;
   minimumAgeOfRegistration?: number;
-  winnerPerGroup?: number;
+  winnerPerGroup?: number; // will lock this field and set it to 2 by force
   knockOutStartNumber?: number;
   participantResolutionStrategy?: ResolutionStrategy;
   tournamentType?: TournamentType;
