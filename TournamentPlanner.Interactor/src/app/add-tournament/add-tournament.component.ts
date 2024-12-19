@@ -5,18 +5,28 @@ import { TimeService } from '../time.service';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { Router } from '@angular/router';
 import { AddTournamentDto, TournamentStatus, GameTypeSupported } from '../tp-model/TpModel';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatOptionModule, provideNativeDateAdapter } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-add-tournament',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  providers: [provideNativeDateAdapter()],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule,
+    MatFormFieldModule, MatButtonModule,
+    MatCardModule, MatInputModule, MatDatepickerModule, MatOptionModule, MatSelectModule],
   templateUrl: './add-tournament.component.html',
   styleUrl: './add-tournament.component.scss',
 })
 export class AddTournamentComponent {
   public addTournamentDto: AddTournamentDto;
-  public readonly gameTypeSupported = Object.values(GameTypeSupported);
-  public readonly tournamentStatus = Object.values(TournamentStatus);
+  public readonly gameTypeSupported = GameTypeSupported;
+  public readonly tournamentStatus = TournamentStatus;
 
   constructor(
     private tp: TournamentPlannerService,
@@ -32,6 +42,20 @@ export class AddTournamentComponent {
       knockOutStartNumber: 8,
     };
   }
+
+  public addTournamentForm = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    startDate: new FormControl<Date>(new Date(), [Validators.required]),
+    endDate: new FormControl<Date>(new Date(), [Validators.required]),
+    gameType: new FormControl<GameTypeSupported | null>(null, [Validators.required]),
+    status: new FormControl<TournamentStatus>(TournamentStatus.Draft, [Validators.required]),
+    registrationLastDate: new FormControl<Date | null>(null, [this.registrationLastDateValidator]),
+    maxParticipant: new FormControl<string>(''),
+    venue: new FormControl<string>(''),
+    registrationFee: new FormControl<string>(''),
+    minimumAgeOfRegistration: new FormControl<number | null>(null),
+    knockOutStartNumber: new FormControl<number>(8, [Validators.required, this.powerOfTwoValidator]),
+  });
 
   onClickCreate() {
     this.tp.addTournament(this.addTournamentDto).subscribe((res) => {
