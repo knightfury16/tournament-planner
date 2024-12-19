@@ -9,6 +9,7 @@ import { TournamentMatchesComponent } from './tournament-matches/tournament-matc
 import { AddTournamentComponent } from './add-tournament/add-tournament.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterPlayerComponent } from './register-player/register-player.component';
+import { RegisterAdminComponent } from './register-admin/register-admin.component';
 
 export const routes: Routes = [ 
     {path:'', redirectTo:'people', pathMatch:'full'},
@@ -22,4 +23,5 @@ export const routes: Routes = [
     {path:'tp/add-tournament', component:AddTournamentComponent},
     {path:'login', component:LoginComponent},
     {path:'register-player', component:RegisterPlayerComponent},
+    {path:'register-admin', component:RegisterAdminComponent},
 ];
