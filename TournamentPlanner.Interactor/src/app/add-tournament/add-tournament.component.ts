@@ -4,7 +4,7 @@ import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModu
 import { TimeService } from '../time.service';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { Router } from '@angular/router';
-import { AddTournamentDto, TournamentStatus, GameTypeSupported, ResolutionStrategy, TournamentType } from '../tp-model/TpModel';
+import { AddTournamentDto, TournamentStatus, GameTypeSupported, ResolutionStrategy, TournamentType, GameTypeDto } from '../tp-model/TpModel';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -52,7 +52,34 @@ export class AddTournamentComponent {
   });
 
   public onClickCreate() {
-    console.log(this.addTournamentForm.value);
+    if (this.addTournamentForm.valid) {
+      this.addTournamentDto = {
+        name: this.addTournamentForm.value.name ?? "",
+        startDate: this.addTournamentForm.value.startDate ?? null,
+        endDate: this.addTournamentForm.value.endDate ?? null,
+        gameType: this.getGameTypeDto(this.addTournamentForm.value.gameType ?? null),
+        status: this.addTournamentForm.value.status ?? undefined,
+        registrationLastDate: this.addTournamentForm.value.registrationLastDate ?? undefined,
+        maxParticipant: this.addTournamentForm.value.maxParticipant ? parseInt(this.addTournamentForm.value.maxParticipant) : undefined,
+        venue: this.addTournamentForm.value.venue ?? undefined,
+        registrationFee: this.addTournamentForm.value.registrationFee ? parseInt(this.addTournamentForm.value.registrationFee) : undefined,
+        minimumAgeOfRegistration: this.addTournamentForm.value.minimumAgeOfRegistration ? this.addTournamentForm.value.minimumAgeOfRegistration : undefined,
+        knockOutStartNumber: this.addTournamentForm.value.knockOutStartNumber ?? undefined,
+        winnerPerGroup: 2, // locking it to 2
+        participantResolutionStrategy: ResolutionStrategy.StatBased, // Assuming a default strategy
+        tournamentType: this.addTournamentForm.value.tournamentType ?? this.tournamentType.GroupStage,
+      };
+
+      console.log(this.addTournamentDto);
+    }
+  }
+  getGameTypeDto(gameType: GameTypeSupported | null): GameTypeDto | null {
+    if (gameType) {
+      return {
+        name: gameType
+      };
+    }
+    return null;
   }
 
 
