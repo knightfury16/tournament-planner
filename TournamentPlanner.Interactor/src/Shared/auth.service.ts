@@ -24,8 +24,7 @@ export class AuthService {
   constructor(private httpClient: HttpClient, @Inject(TP_BASE_URL) private baseUrl: string) {
     this.accountBaseUrl = baseUrl + "/identity/account";
     this.loadingService.show();
-    this.initializeUserInfo();
-    this.loadingService.hide();
+    this.initializeUserInfo().then(() => this.loadingService.hide());
   }
 
   public getCurrentUser() {
@@ -56,7 +55,9 @@ export class AuthService {
   }
 
 
-  private async initializeUserInfo(): Promise<void> {
+  //making it pulblic so that i can initialize it before reading current user in authGuard, adminGuard
+  public async initializeUserInfo(): Promise<void> {
+    if (this.currentUser()) return;
     const user = await this.getUserInfo();
     if (user) { this.currentUser.set(user); }
   }
