@@ -10,18 +10,20 @@ import { AddTournamentComponent } from './add-tournament/add-tournament.componen
 import { LoginComponent } from './login/login.component';
 import { RegisterPlayerComponent } from './register-player/register-player.component';
 import { RegisterAdminComponent } from './register-admin/register-admin.component';
+import { authGuard } from '../guards/authGuard';
+import { adminGuard } from '../guards/adminGuard';
 
-export const routes: Routes = [ 
-    {path:'', redirectTo:'people', pathMatch:'full'},
-    {path:'digit', component:NumberDisplayTestComponent, pathMatch:'full'},
-    {path:'cash-register', component:CashRegisterComponent},
-    {path:'people', component:PeopleListComponent},
-    {path:'airports', component:AirportsListComponent},
-    {path:'people/:userName/trips', component:TripListComponent},
-    {path:'tp/:tournamentId/matches', component:TournamentMatchesComponent},
-    {path:'tp', component:TournamentListComponent},
-    {path:'tp/add-tournament', component:AddTournamentComponent},
-    {path:'login', component:LoginComponent},
-    {path:'register-player', component:RegisterPlayerComponent},
-    {path:'register-admin', component:RegisterAdminComponent},
+export const routes: Routes = [
+    { path: '', redirectTo: 'people', pathMatch: 'full' },
+    { path: 'digit', component: NumberDisplayTestComponent, pathMatch: 'full' },
+    { path: 'cash-register', component: CashRegisterComponent },
+    { path: 'people', component: PeopleListComponent },
+    { path: 'airports', component: AirportsListComponent },
+    { path: 'people/:userName/trips', component: TripListComponent },
+    { path: 'tp/:tournamentId/matches', component: TournamentMatchesComponent },
+    { path: 'tp', component: TournamentListComponent },
+    { path: 'tp/add-tournament', component: AddTournamentComponent, canActivate: [authGuard, adminGuard] },
+    { path: 'login', component: LoginComponent },
+    { path: 'register-player', component: RegisterPlayerComponent },
+    { path: 'register-admin', component: RegisterAdminComponent },
 ];
