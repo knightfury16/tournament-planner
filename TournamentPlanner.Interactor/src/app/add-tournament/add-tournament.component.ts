@@ -48,7 +48,7 @@ export class AddTournamentComponent {
     registrationFee: new FormControl<string>(''),
     minimumAgeOfRegistration: new FormControl<number | null>(null),
     knockOutStartNumber: new FormControl<number>(8, [Validators.required, this.powerOfTwoValidator]),
-    tournamentType: new FormControl<TournamentType>(this.tournamentType.GroupStage, [Validators.required]),
+    tournamentType: new FormControl<TournamentType | null>(null, [Validators.required]),
   });
 
   public onClickCreate() {
