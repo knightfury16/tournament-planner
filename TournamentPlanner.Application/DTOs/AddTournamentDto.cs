@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using TournamentPlanner.Application.Common.Attributes;
 using TournamentPlanner.Domain.Enum;
 
@@ -22,6 +23,8 @@ public class AddTournamentDto
 
     [Required]
     public required GameTypeDto GameType { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public TournamentStatus Status { get; set; } = TournamentStatus.Draft;
     //TODO: make a validator or extends the current validator to check for Registration last date 
     public DateTime? RegistrationLastDate { get; set; }
@@ -39,6 +42,8 @@ public class AddTournamentDto
     [PowerOfTwo] // I am being fancy here, could just make it enum and only allow those values
     public int KnockOutStartNumber { get; set; } = 16; // Default value 16
     public ResolutionStrategy? ParticipantResolutionStrategy { get; set; } = ResolutionStrategy.StatBased; // Default value StatBased
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public required TournamentType? TournamentType { get; set; } = Domain.Enum.TournamentType.GroupStage; // Default value GroupStage
 
 }
