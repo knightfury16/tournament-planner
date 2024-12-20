@@ -30,10 +30,7 @@ export class TournamentPlannerService {
     return this.httpClient.get<MatchDto[]>(`${this.baseUrl}/matches`, { params });
   }
 
-  public addTournament(addTournamentDto: AddTournamentDto): Observable<any[]> {
-    return this.httpClient.post<any[]>(
-      `${this.baseUrl}/tournament`,
-      addTournamentDto
-    );
+  public addTournament(addTournamentDto: AddTournamentDto): Observable<TournamentDto> {
+    return this.httpClient.post<TournamentDto>(`${this.baseUrl}/tournament`, addTournamentDto, { withCredentials: true })
   }
 }
