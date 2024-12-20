@@ -78,6 +78,11 @@
         <mat-error *ngIf="addTournamentForm.get('tournamentType')!.hasError('required')">Tournament Type is
           required.</mat-error>
       </mat-form-field>
+      @if (this.errors()) {
+          @for (error of errors(); track $index) {
+              <mat-error class="error">{{error}}</mat-error>
+          }
+      }
     </form>
   </mat-card-content>
   <mat-card-actions class="card-actions">

@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TimeService } from '../time.service';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { Router } from '@angular/router';
 import { AddTournamentDto, TournamentStatus, GameTypeSupported, ResolutionStrategy, TournamentType, GameTypeDto } from '../tp-model/TpModel';
@@ -12,6 +11,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatOptionModule, provideNativeDateAdapter } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { LoadingService } from '../../Shared/loading.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-add-tournament',
@@ -28,11 +29,12 @@ export class AddTournamentComponent {
   public readonly gameTypeSupported = GameTypeSupported;
   public readonly tournamentStatus = TournamentStatus;
   public readonly tournamentType = TournamentType;
+  public loadingService = inject(LoadingService);
+  public errors = signal<string[] | null>(null);
 
 
   constructor(
     private tp: TournamentPlannerService,
-    private timeService: TimeService,
     private router: Router
   ) { }
 
@@ -51,7 +53,7 @@ export class AddTournamentComponent {
     tournamentType: new FormControl<TournamentType | null>(null, [Validators.required]),
   });
 
-  public onClickCreate() {
+  public async onClickCreate() {
     if (this.addTournamentForm.valid) {
       this.addTournamentDto = {
         name: this.addTournamentForm.value.name ?? "",
@@ -69,8 +71,24 @@ export class AddTournamentComponent {
         participantResolutionStrategy: ResolutionStrategy.StatBased, // Assuming a default strategy
         tournamentType: this.addTournamentForm.value.tournamentType ?? this.tournamentType.GroupStage,
       };
+      console.log(JSON.stringify(this.addTournamentDto));
+
+      await this.createTournament(this.addTournamentDto);
+      this.router.navigate(['/tp']);
 
       console.log(this.addTournamentDto);
+    }
+  }
+  async createTournament(addTournamentDto: AddTournamentDto) {
+    this.loadingService.show();
+    try {
+      await firstValueFrom(this.tp.addTournament(addTournamentDto))
+      this.loadingService.hide();
+      this.addTournamentForm.reset();
+    } catch (error: any) {
+      const errors = error.error?.errors ? Object.values(error.error.errors).flat() : error.error?.Error ? [error.error.Error] : [];
+      this.errors.set(errors);
+      this.loadingService.hide();
     }
   }
   getGameTypeDto(gameType: GameTypeSupported | null): GameTypeDto | null {
