@@ -55,11 +55,11 @@ export class AddTournamentComponent {
     if (this.addTournamentForm.valid) {
       this.addTournamentDto = {
         name: this.addTournamentForm.value.name ?? "",
-        startDate: this.addTournamentForm.value.startDate ?? null,
-        endDate: this.addTournamentForm.value.endDate ?? null,
+        startDate: this.addTournamentForm.value.startDate?.toISOString() ?? null,
+        endDate: this.addTournamentForm.value.endDate?.toISOString() ?? null,
         gameType: this.getGameTypeDto(this.addTournamentForm.value.gameType ?? null),
         status: this.addTournamentForm.value.status ?? undefined,
-        registrationLastDate: this.addTournamentForm.value.registrationLastDate ?? undefined,
+        registrationLastDate: this.addTournamentForm.value.registrationLastDate?.toISOString() ?? undefined,
         maxParticipant: this.addTournamentForm.value.maxParticipant ? parseInt(this.addTournamentForm.value.maxParticipant) : undefined,
         venue: this.addTournamentForm.value.venue ?? undefined,
         registrationFee: this.addTournamentForm.value.registrationFee ? parseInt(this.addTournamentForm.value.registrationFee) : undefined,
