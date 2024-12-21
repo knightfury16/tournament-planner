@@ -1,19 +1,35 @@
-<div>
-  <form>
-    <label for="name">Enter Name: </label>
-    <input type="text" id="name" [formControl]="nameInput">
-  </form>
+<div class="container">
+  <div class="search">
+    <form class="search-form">
+      <mat-form-field appearance="outline">
+        <input matInput type="text" placeholder="Enter name..." [formControl]="nameInput">
+      </mat-form-field>
+    </form>
+  </div>
+  <div>
+    <ng-container *ngIf="{tournaments : data$ | async} as vm">
+      <mat-list *ngIf="vm.tournaments; else loading">
+        <li *ngFor="let item of vm.tournaments">
+          <a [routerLink]="['/tournament-detail', item.id]">
+            <mat-card appearance="outlined">
+              <mat-card-header>
+                <mat-card-title>{{item.name}}</mat-card-title>
+                <mat-card-header matSuffix>{{item.gameTypeDto?.name}}</mat-card-header>
+              </mat-card-header>
+              <mat-card-content>
+                <p>Venue: {{item.venue?? "unknown"}}</p>
+                <p>{{item.startDate}} - {{item.endDate}}</p>
+              </mat-card-content>
+            </mat-card>
+          </a>
+        </li>
+      </mat-list>
+      <ng-template #loading>
+        <div>
+          Loading...
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
 
-  <ng-container *ngIf="{matches : data$ | async} as vm" >
-    <ul *ngIf="vm.matches; else loading">
-      <li *ngFor="let item of vm.matches">
-        <a [routerLink]="item.id+'/matches/'">{{item.name}}</a>
-      </li>
-    </ul>
-    <ng-template #loading>
-      <div>
-        Loading...
-      </div>
-    </ng-template>
-  </ng-container>
 </div>
