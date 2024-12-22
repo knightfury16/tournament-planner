@@ -1,3 +1,16 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+// Default app style
+app-root {
+  max-width: 1024px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
 /* You can add global styles to this file, and also import other style files */
 :root {
   --rd-color: red;
@@ -12,36 +25,7 @@
 
   --form-width: 600px;
   --form-min-width: 300px;
+  --form-height: 500px;
 }
 
-app-root {
-  max-width: 1024px;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-}
 
-label {
-  margin-right: 10px;
-}
-
-.result-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-
-  div {
-    padding: 10px;
-  }
-
-  .header {
-    font-weight: bold;
-    display: contents;
-
-    div {
-      background-color: lightgray;
-    }
-  }
-}
-
-html, body { height: 100%; }
-body { font-family: Roboto, "Helvetica Neue", sans-serif; }
