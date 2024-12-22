@@ -1,26 +1,28 @@
-<mat-card appearance="outlined" class="container">
-    <mat-card-header>
-        <mat-card-title>Login</mat-card-title>
-    </mat-card-header>
-    <mat-card-content class="card-content">
-        <form [formGroup]="loginForm">
-            <mat-form-field class="form-field email-field">
-                <mat-label>Email: </mat-label>
-                <input matInput type="email" formControlName="email">
-            </mat-form-field>
-            <mat-form-field class="form-field password-field">
-                <mat-label>Password: </mat-label>
-                <input matInput type="password" formControlName="password">
-            </mat-form-field>
-            @if (this.loginError()) {
+<div class="al-container">
+    <mat-card appearance="raised" class="container">
+        <mat-card-header>
+            <mat-card-title>Login to your account</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="card-content">
+            <form [formGroup]="loginForm">
+                <mat-form-field class="form-field email-field">
+                    <mat-label>Email: </mat-label>
+                    <input matInput type="email" formControlName="email">
+                </mat-form-field>
+                <mat-form-field class="form-field password-field">
+                    <mat-label>Password: </mat-label>
+                    <input matInput type="password" formControlName="password">
+                </mat-form-field>
+                @if (this.loginError()) {
                 <mat-error class="login-error">{{this.loginError()}}</mat-error>
-            }
-        </form>
-    </mat-card-content>
-    <mat-card-actions>
-        <button mat-stroked-button [disabled]="!loginForm.valid" (click)="this.login()">Login</button>
-    </mat-card-actions>
-    <mat-card-footer class="footer">
-        <button class="my-button" mat-flat-button [routerLink]="'/register-player'">Not a member? Register</button>
-    </mat-card-footer>
-</mat-card>
+                }
+            </form>
+        </mat-card-content>
+        <mat-card-actions class="card-actions">
+            <button mat-stroked-button class="login-btn" [disabled]="!loginForm.valid" (click)="this.login()">Login</button>
+        </mat-card-actions>
+        <mat-card-footer class="footer">
+            <button class="my-button" mat-flat-button [routerLink]="'/register-player'">Not a member? Register</button>
+        </mat-card-footer>
+    </mat-card>
+</div>

@@ -1,15 +1,23 @@
+.al-container {
+    height: 100%;
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+}
+
 .container {
     width: var(--form-width);
     min-width: var(--form-min-width);
+    height: var(--form-height);
     display: grid;
-    grid-template-rows: 1fr 3fr 1fr 1fr;
+    grid-template-rows: 1fr 2fr 1fr auto;
     grid-template-columns: auto;
     align-items: center;
     justify-items: center;
 }
 
 .form-field {
-    width: 300px;
+    width: 400px;
 }
 
 form {
@@ -24,13 +32,23 @@ form {
     align-self: center;
 }
 
+.login-btn {
+    font-size: large;
+}
+
+.card-actions {
+    align-self: start;
+}
+
 .my-button {
     font-style: italic;
+
     text-decoration: underline;
     margin-right: 10px;
+    margin-bottom: 10px;
 }
 
 .login-error {
     font-style: italic;
-    font-size: small;
+    font-size: medium;
 }
