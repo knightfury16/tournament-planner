@@ -1,0 +1,25 @@
+.container {
+    border: 1px solid black;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // gap: 3rem;
+    // flex-wrap: wrap;
+    // align-content: center; //align content only aplicable when flex-wrap set to wrap
+}
+
+.item {
+    width: 200px;
+    height: 200px;
+    border: 1px solid red;
+}
+
+.t3 {
+    // flex-grow: 1;
+    // flex-shrink: 0;
+    // flex-basis: 0;
+    // flex: 1; //short hand for all three above, flex: 1 2 0
+    align-self: center; //override the align-items in .container
+    // order: -1; //value of all the order by default is 0
+}
