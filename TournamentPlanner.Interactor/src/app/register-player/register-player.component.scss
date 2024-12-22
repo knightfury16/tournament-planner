@@ -1,3 +1,10 @@
+.al-container{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+ 
 .container{
     width: var(--form-width);
     min-width: var(--form-min-width);
@@ -31,6 +38,6 @@
 }
 .error {
     font-style: italic;
-    font-size: small;
+    font-size: medium;
     margin-left: 20px;
 }
