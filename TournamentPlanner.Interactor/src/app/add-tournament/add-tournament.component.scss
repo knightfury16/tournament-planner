@@ -1,6 +1,7 @@
 .container {
-    width: var(--form-width);
-    min-width: var(--form-min-width);
+    height: 100%;
+    // border: 1px solid red;
+    overflow: auto;
 }
 
 .header{
@@ -9,8 +10,9 @@
 }
 
 .card-actions{
-    align-self: flex-end;
-    margin: 10px;
+    align-self: center;
+    font-size: large;
+    
 }
 
 .my-button{
@@ -21,5 +23,9 @@
 .add-tournament-form {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-evenly;
+}
+.form-field{
+    align-self: center;
+    width: 80%;
 }
