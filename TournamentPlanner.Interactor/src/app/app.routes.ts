@@ -12,6 +12,7 @@ import { RegisterPlayerComponent } from './register-player/register-player.compo
 import { RegisterAdminComponent } from './register-admin/register-admin.component';
 import { authGuard } from '../guards/authGuard';
 import { adminGuard } from '../guards/adminGuard';
+import { TestComponent } from './test/test.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -26,4 +27,5 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'register-player', component: RegisterPlayerComponent },
     { path: 'register-admin', component: RegisterAdminComponent },
+    { path: 'test', component: TestComponent },
 ];
