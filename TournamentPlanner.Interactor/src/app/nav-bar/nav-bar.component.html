@@ -1,4 +1,4 @@
-<nav>
+<nav class="navbar">
   <mat-toolbar > <!-- Changed color to 'accent' for a more professional look -->
     <mat-toolbar-row>
       <span class="title"><a [routerLink]="'/'">{{ApplicationTitle}}</a></span>
@@ -13,12 +13,12 @@
     </mat-toolbar-row>
   </mat-toolbar>
 </nav>
-<hr>
+<hr class="horizontal-line">
 
 <!-- Profile menu options -->
 <ng-container>
   <mat-menu #profileMenu="matMenu">
-    <button mat-menu-item [routerLink]="'/manage-profile'">Profile</button>
+    <button mat-menu-item [routerLink]="'/tp/add-tournament'">Profile</button>
     @if (isCurrentUserAdmin()) {
     <button mat-menu-item [routerLink]="'tp/add-tournament'">Add Tournament</button>
     <button mat-menu-item [routerLink]="'/manage-tournament'">Manage Tournament</button>
