@@ -7,14 +7,24 @@
     </mat-card-content>
 </mat-card> -->
 <div class="container">
-    <div class="item t1">
+    <mat-tab-group [selectedIndex]="mytabIndex" (selectedTabChange)="tabChange($event)">
+        <mat-tab style="margin: 10px;" label="Cash App"><app-tournament-list></app-tournament-list> </mat-tab>
+        <mat-tab label="Second"> Content 2 </mat-tab>
+        <mat-tab label="Third"> Content 3 </mat-tab>
+    </mat-tab-group>
+
+    <div>
+        {{this.fromTabChange}}
+    </div>
+
+    <!-- <div class="item t1">
         <div>
             Testing....
         </div>
         <div>
             <p>Lorem ipsum dolor sit amet.</p>
         </div>
-    </div>
+    </div> -->
 
     <!-- <div class="item t2">
         <div>
