@@ -9,19 +9,8 @@
   <div>
     <ng-container *ngIf="{tournaments : data$ | async} as vm">
       <mat-list *ngIf="vm.tournaments; else loading">
-        <li *ngFor="let item of vm.tournaments">
-          <a [routerLink]="['/tournament-detail', item.id]">
-            <mat-card appearance="outlined">
-              <mat-card-header>
-                <mat-card-title>{{item.name}}</mat-card-title>
-                <mat-card-header matSuffix>{{item.gameTypeDto?.name}}</mat-card-header>
-              </mat-card-header>
-              <mat-card-content>
-                <p>Venue: {{item.venue?? "unknown"}}</p>
-                <p>{{item.startDate}} - {{item.endDate}}</p>
-              </mat-card-content>
-            </mat-card>
-          </a>
+        <li class="li-items" *ngFor="let item of vm.tournaments">
+          <app-tournament-card [tournament]="item"></app-tournament-card>
         </li>
       </mat-list>
       <ng-template #loading>

@@ -21,12 +21,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { TournamentDto } from '../tp-model/TpModel';
 import { MatCardModule } from '@angular/material/card';
+import { TournamentCardComponent } from "../tournament-card/tournament-card.component";
 
 @Component({
   selector: 'app-tournament-list',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule, MatFormFieldModule,
-    MatInputModule,MatListModule, MatCardModule, MatIconModule, MatButtonModule, MatTabsModule],
+    MatInputModule, MatListModule, MatCardModule, MatIconModule, MatButtonModule, MatTabsModule, TournamentCardComponent],
   templateUrl: './tournament-list.component.html',
   styleUrl: './tournament-list.component.scss'
 })
