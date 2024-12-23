@@ -2,6 +2,12 @@
     flex-direction: row; //mat card by default is display: flex
 }
 
+a {
+    text-decoration: none;
+    color: inherit;
+
+}
+
 .img-div {
     padding: 1em;
     align-self: center;

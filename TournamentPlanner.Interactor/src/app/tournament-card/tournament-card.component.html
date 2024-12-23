@@ -1,12 +1,18 @@
 <mat-card class="mat-card" appearance="raised">
     <div class="img-div">
-        <img mat-card-sm-image src="../../assets/tt.jpg">
+        <a [routerLink]="['/tournament-detail', tournament?.id]">
+            <img mat-card-sm-image src="../../assets/tt.jpg">
+        </a>
     </div>
     <div class="content-div">
         <div class="title-div">
-            <mat-card-title>{{tournament?.name}}</mat-card-title>
+            <mat-card-title>
+                <a [routerLink]="['/tournament-detail', tournament?.id]">
+                    {{tournament?.name}}
+                </a>
+            </mat-card-title>
             @if (getGameType()) {
-                <mat-chip>{{tournament?.gameTypeDto?.name}}</mat-chip>
+            <mat-chip>{{getGameType()}}</mat-chip>
             }
         </div>
         <div class="venue-div">
