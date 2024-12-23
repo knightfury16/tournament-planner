@@ -1,13 +1,13 @@
 <mat-card class="mat-card" appearance="raised">
     <div class="img-div">
-        <a [routerLink]="['/tournament-detail', tournament?.id]">
+        <a [routerLink]="['tournament-details', tournament?.id]">
             <img mat-card-sm-image src="../../assets/tt.jpg">
         </a>
     </div>
     <div class="content-div">
         <div class="title-div">
             <mat-card-title>
-                <a [routerLink]="['/tournament-detail', tournament?.id]">
+                <a [routerLink]="['tournament-details', tournament?.id]">
                     {{tournament?.name}}
                 </a>
             </mat-card-title>
