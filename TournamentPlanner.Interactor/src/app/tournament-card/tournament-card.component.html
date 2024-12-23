@@ -1,0 +1,19 @@
+<mat-card class="mat-card" appearance="raised">
+    <div class="img-div">
+        <img mat-card-sm-image src="../../assets/tt.jpg">
+    </div>
+    <div class="content-div">
+        <div class="title-div">
+            <mat-card-title>{{tournament?.name}}</mat-card-title>
+            @if (getGameType()) {
+                <mat-chip>{{tournament?.gameTypeDto?.name}}</mat-chip>
+            }
+        </div>
+        <div class="venue-div">
+            <h4 class="venue-header">{{this.getVenue()}}</h4>
+        </div>
+        <div class="time-div">
+            <p>{{tournament?.startDate}} - {{tournament?.endDate}}</p>
+        </div>
+    </div>
+</mat-card>

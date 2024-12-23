@@ -1,0 +1,33 @@
+.mat-card {
+    flex-direction: row; //mat card by default is display: flex
+}
+
+.img-div {
+    padding: 1em;
+    align-self: center;
+}
+
+.content-div {
+    flex-grow: 1;
+    padding: 1rem;
+    align-self: center;
+}
+
+.title-div {
+    display: flex;
+    justify-content: space-between;
+}
+
+.venue-div {
+    margin-bottom: 5px;
+
+    .venue-header {
+        color: #9E5FAA;
+    }
+}
+
+.time-div {
+    p {
+        font-style: italic;
+    }
+}
