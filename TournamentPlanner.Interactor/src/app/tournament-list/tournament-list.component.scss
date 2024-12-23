@@ -3,3 +3,11 @@ a {
     text-decoration: none;
     color: inherit;
 }
+
+.search-input {
+    width: 11em;
+}
+
+mat-form-field.mat-focused{
+    width: 17em;
+}
