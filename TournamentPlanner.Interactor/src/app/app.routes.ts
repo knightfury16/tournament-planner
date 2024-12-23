@@ -13,7 +13,7 @@ import { RegisterAdminComponent } from './register-admin/register-admin.componen
 import { authGuard } from '../guards/authGuard';
 import { adminGuard } from '../guards/adminGuard';
 import { TestComponent } from './test/test.component';
-import { TournamentDetailsComponent } from './tournament-details/tournament-details.component';
+import { TournamentDetailsHomepageComponent } from './tournament-details-homepage/tournament-details-homepage.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -24,7 +24,7 @@ export const routes: Routes = [
     { path: 'people/:userName/trips', component: TripListComponent },
     { path: 'tp/:tournamentId/matches', component: TournamentMatchesComponent },
     { path: 'tp', component: TournamentListComponent },
-    { path: 'tp/tournament-details/:tournamentId', component: TournamentDetailsComponent },
+    { path: 'tp/tournament-details-homepage/:tournamentId', component: TournamentDetailsHomepageComponent},
     { path: 'tp/add-tournament', component: AddTournamentComponent, canActivate: [authGuard, adminGuard] },
     { path: 'login', component: LoginComponent },
     { path: 'register-player', component: RegisterPlayerComponent },
