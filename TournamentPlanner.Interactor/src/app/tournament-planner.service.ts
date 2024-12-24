@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { TP_BASE_URL } from './app.config';
-import { Observable, of, retry } from 'rxjs';
-import { AddTournamentDto, MatchDto, TournamentDto } from './tp-model/TpModel';
+import { firstValueFrom, Observable, of, retry } from 'rxjs';
+import { AddTournamentDto, MatchDto, PlayerDto, TournamentDto } from './tp-model/TpModel';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ export class TournamentPlannerService {
   constructor(
     private httpClient: HttpClient,
     @Inject(TP_BASE_URL) private baseUrl: string
-  ) {}
+  ) { }
 
   public getTournament(name: string): Observable<TournamentDto[]> {
     let params = new HttpParams();
@@ -32,5 +32,9 @@ export class TournamentPlannerService {
 
   public addTournament(addTournamentDto: AddTournamentDto): Observable<TournamentDto> {
     return this.httpClient.post<TournamentDto>(`${this.baseUrl}/tournament`, addTournamentDto, { withCredentials: true })
+  }
+
+  public getTournamentPlayers(tournamentId: string): Promise<PlayerDto[]> {
+    return firstValueFrom(this.httpClient.get<PlayerDto[]>(`${this.baseUrl}/tournament/${tournamentId}/players`, { withCredentials: true }));
   }
 }
