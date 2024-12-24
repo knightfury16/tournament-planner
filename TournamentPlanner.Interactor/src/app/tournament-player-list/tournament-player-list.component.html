@@ -1,16 +1,19 @@
 @if (players() && players()?.length) {
-<mat-list class="mat-list">
+<div class="mat-list">
     @for (player of players(); track player.id) {
-    <mat-card class="mat-card">
-        <mat-card-title>
-            <mat-list-item>
-
-                <button mat-flat-button  (click)="emitTabViewChangeEvent()">{{player.name}}</button>
-            </mat-list-item>
-        </mat-card-title>
-    </mat-card>
+    <mat-expansion-panel class="expan-panel">
+        <mat-expansion-panel-header>
+            <mat-panel-title> {{player.name}}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div>
+            <p>{{player.age}}</p>
+            <p>{{player.gamePlayed}}</p>
+            <p>{{player.gameWon}}</p>
+            <p>{{player.winRatio}}</p>
+        </div>
+    </mat-expansion-panel>
     }
-</mat-list>
+</div>
 }
 @else if(players() == undefined) {
 <div>
