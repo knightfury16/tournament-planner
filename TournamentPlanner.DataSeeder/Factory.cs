@@ -3,6 +3,13 @@ using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
 namespace TournamentPlanner.DataSeeder;
 
+public static class SeedDataDefault
+{
+    public const string TestPlayer = "TestPlayer";
+    public const string TestAdmin = "TestAdmin";
+    public const string TestTournament = "TestTournament";
+    public const string TestRound = "TestRound";
+}
 
 public static class Factory
 {
@@ -13,7 +20,7 @@ public static class Factory
         for (int i = 0; i < numberOfTournament; i++)
         {
             var tour = new TournamentBuilder()
-                .WithName($"{name} Tournament " + (i + 1).ToString())
+                .WithName($"{name} {SeedDataDefault.TestTournament} " + (i + 1).ToString())
                 .Build();
             tounaments.Add(tour);
 
@@ -31,7 +38,7 @@ public static class Factory
             var player = new PlayerBuilder()
 
                 .WithName($"{name} Player " + (i + 1).ToString())
-                .WithEmail($"testplayer-{i}@gmail.com")
+                .WithEmail($"{SeedDataDefault.TestPlayer}-{i}@gmail.com")
                 .Build();
             players.Add(player);
         }
@@ -44,7 +51,7 @@ public static class Factory
         for (int i = 0; i <= numOfAdmin; i++)
         {
             var admin = new AdminBuilder().WithName($"{name} Admin " + (i + 1).ToString())
-                .WithEmail($"testadmin-{i}@gmail.com")
+                .WithEmail($"{SeedDataDefault.TestAdmin}-{i}@gmail.com")
                 .Build();
             admins.Add(admin);
         }
