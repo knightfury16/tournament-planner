@@ -150,9 +150,11 @@ public static class Data
     public static void RemoveAllDataBeforeSeedAndSave(TournamentPlannerDataContext context)
     {
         // Clear existing data
-        context.Tournaments.RemoveRange(context.Tournaments);
-        context.Players.RemoveRange(context.Players);
-        context.Admins.RemoveRange(context.Admins);
+        RemoveTournamentsOnlyCreatedBySeeder(context);
+        RemovePlayersOnlyCreatedBySeeder(context);
+        RemoveAdminsOnlyCreatedBySeeder(context);
+
+        //TODO: convert this remove to remove seed data only
         context.Rounds.RemoveRange(context.Rounds);
         context.Matches.RemoveRange(context.Matches);
         context.MatchTypes.RemoveRange(context.MatchTypes);
@@ -162,4 +164,21 @@ public static class Data
 
     }
 
+    private static void RemoveTournamentsOnlyCreatedBySeeder(TournamentPlannerDataContext context)
+    {
+        var seederTournaments = context.Tournaments.Where(t => t.Name.Contains(SeedDataDefault.TestTournament));
+        context.RemoveRange(seederTournaments);
+    }
+
+    private static void RemoveAdminsOnlyCreatedBySeeder(TournamentPlannerDataContext context)
+    {
+        var seederAdmins = context.Admins.Where(a => a.Email.Contains(SeedDataDefault.TestAdmin));
+        context.Admins.RemoveRange(seederAdmins);
+    }
+
+    private static void RemovePlayersOnlyCreatedBySeeder(TournamentPlannerDataContext context)
+    {
+        var players = context.Players.Where(p => p.Email.Contains(SeedDataDefault.TestPlayer));
+        context.Players.RemoveRange(players);
+    }
 }
