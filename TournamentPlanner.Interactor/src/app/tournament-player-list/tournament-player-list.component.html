@@ -1,1 +1,19 @@
-<p>tournament-player-list works!</p>
+@if (players() && players()?.length) {
+<mat-list class="mat-list">
+    @for (player of players(); track player.id) {
+    <mat-card class="mat-card">
+        <mat-card-title>
+            <mat-list-item>
+
+                <button mat-flat-button  (click)="emitTabViewChangeEvent()">{{player.name}}</button>
+            </mat-list-item>
+        </mat-card-title>
+    </mat-card>
+    }
+</mat-list>
+}
+@else if(players() == undefined) {
+<div>
+    Loading...
+</div>
+}
