@@ -6,11 +6,17 @@
             <mat-panel-title> {{player.name}}</mat-panel-title>
         </mat-expansion-panel-header>
         <div>
-            <p>{{player.age}}</p>
-            <p>{{player.gamePlayed}}</p>
-            <p>{{player.gameWon}}</p>
-            <p>{{player.winRatio}}</p>
+            <ng-template [ngTemplateOutlet]="playerDetails"></ng-template>
         </div>
+
+        <ng-template #playerDetails>
+            <p><strong>Age:</strong> {{player.age}}</p>
+            <p><strong>Games Played:</strong> {{player.gamePlayed}}</p>
+            <p><strong>Games Won:</strong> {{player.gameWon}}</p>
+            <p><strong>Win Ratio:</strong> {{ this.getRoundWinRatio(player.winRatio)}}</p>
+            <button mat-button (click)="emitTabViewChangeEvent()">See More Details</button>
+        </ng-template>
+
     </mat-expansion-panel>
     }
 </div>
