@@ -10,9 +10,19 @@ public static class Data
 {
     public static async Task SeedData(TournamentPlannerDataContext context, int playerCount = 16)
     {
-        // Create admins
-        var admins = Factory.CreateAdmin(3);
-        context.Admins.AddRange(admins);
+        List<Admin> admins = new List<Admin>();
+        //search admin in the db with ID-1,  will make all the seed data with id 1
+        var admin = await context.Admins.FindAsync(1);
+        if (admin != null)
+        {
+            admins.Add(admin);
+        }
+        else
+        {
+            // Create admins
+            admins.AddRange(Factory.CreateAdmin(3));
+            context.Admins.AddRange(admins);
+        }
 
         // Create Players
         var players = Factory.CreatePlayers(playerCount);
@@ -22,7 +32,7 @@ public static class Data
         // Create tournament
         var tableTennisGameType = await context.GameTypes.FirstOrDefaultAsync(gt => gt.Name == GameTypeSupported.TableTennis);
         var tournament = new TournamentBuilder()
-            .WithName("Inter Group championship")
+            .WithName($"{SeedDataDefault.TestTournament} Inter Group championship")
             .WithAdmin(admins[0])
             .WithStatus(TournamentStatus.RegistrationClosed)
             .WithGameType(tableTennisGameType!)
