@@ -15,17 +15,20 @@ import { CommonModule } from '@angular/common';
   templateUrl: './tournament-player-list.component.html',
   styleUrl: './tournament-player-list.component.scss'
 })
-export class TournamentPlayerListComponent implements OnInit {
+export class TournamentPlayerListComponent {
   @Input({ required: true }) tournamentId?: string;
+  @Input() players?: PlayerDto[];
   @Output() playerTabChangeEvent = new EventEmitter<PlayerTabViewType>();
 
-  public players = signal<PlayerDto[] | undefined>(undefined);
   public tpServive = inject(TournamentPlannerService);
 
-  async ngOnInit() {
-    var playerResponse = await this.tpServive.getTournamentPlayers(this.tournamentId!);
-    this.players.set(playerResponse);
-  }
+  //Im getting the tournament participants through the torunament details calls
+  // public players = signal<PlayerDto[] | undefined>(this.participantsPlayer);
+  // async ngOnInit() {
+  // var playerResponse = await this.tpServive.getTournamentPlayers(this.tournamentId!);
+  // this.players.set(this.participantsPlayer);
+  // }
+
   //From the list view i will always trigger the detail view
   public emitTabViewChangeEvent(): void {
     this.playerTabChangeEvent.emit(PlayerTabViewType.DetailView);

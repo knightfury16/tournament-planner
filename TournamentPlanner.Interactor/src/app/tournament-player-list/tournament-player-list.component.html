@@ -1,6 +1,6 @@
-@if (players() && players()?.length) {
+@if (players && players.length) {
 <div class="mat-list">
-    @for (player of players(); track player.id) {
+    @for (player of players; track player.id) {
     <mat-expansion-panel class="expan-panel">
         <mat-expansion-panel-header>
             <mat-panel-title> {{player.name}}</mat-panel-title>
@@ -21,7 +21,7 @@
     }
 </div>
 }
-@else if(players() == undefined) {
+@else if(players == undefined) {
 <div>
     Loading...
 </div>
