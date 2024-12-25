@@ -2,5 +2,8 @@
     @if (this.tournamentDetails() != null) {
         <div>{{this.tournamentDetails()?.name}}</div>
         <div>{{this.tournamentDetails()?.status}}</div>
+        <div>
+            <button mat-stroked-button (click)="registerInTournament()" [disabled]="!canRegister">Register in the tournament</button>
+        </div>
     }
 </div>
