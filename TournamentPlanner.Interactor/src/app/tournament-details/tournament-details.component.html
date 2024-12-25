@@ -1,1 +1,6 @@
-<p>{{tournamentId}}</p>
+<div>
+    @if (this.tournamentDetails() != null) {
+        <div>{{this.tournamentDetails()?.name}}</div>
+        <div>{{this.tournamentDetails()?.status}}</div>
+    }
+</div>
