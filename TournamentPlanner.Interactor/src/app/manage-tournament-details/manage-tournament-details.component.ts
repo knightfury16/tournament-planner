@@ -1,6 +1,7 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { TournamentDto } from '../tp-model/TpModel';
 import { TournamentPlannerService } from '../tournament-planner.service';
+import { transformTournamentIsoDate } from '../../Shared/Utility/dateTimeUtility';
 
 @Component({
   selector: 'app-manage-tournament-details',
@@ -20,7 +21,8 @@ export class ManageTournamentDetailsComponent implements OnInit {
   async ngOnInit() {
     if (this.tournamentId == undefined) { this.emitADummyName(); return }
     var tourDetail = await this._tpService.getTournamentById(this.tournamentId)
-    this.tournamentDetails.set(tourDetail);
+    var transformDateTournament = transformTournamentIsoDate(tourDetail);
+    this.tournamentDetails.set(transformDateTournament);
     this.emitTournamentName(tourDetail.name);
   }
   emitTournamentName(tournamentName: string) {
