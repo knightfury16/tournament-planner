@@ -50,7 +50,7 @@ export class TournamentListComponent {
     map((tournaments) =>
       tournaments.sort(
         (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
       )
     ),
     map((tournaments) =>
