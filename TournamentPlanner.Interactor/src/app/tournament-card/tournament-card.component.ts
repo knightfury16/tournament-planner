@@ -34,11 +34,10 @@ export class TournamentCardComponent {
   }
 
   public getLink(tournamentId: number | undefined): string | any[] | null | undefined {
-    if (tournamentId) {
-      return ['/tp/tournament-details-homepage', tournamentId];
-    } else {
-      return null;
-    }
+    if (tournamentId == null) return;
+    if (this.manage) return ['/tp/manage-tournament-homepage', tournamentId];
+
+    return ['/tp/tournament-details-homepage', tournamentId];
   }
 
   public getLinkDiableValue(): boolean {
