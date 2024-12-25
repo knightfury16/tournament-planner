@@ -13,11 +13,14 @@ import { startWith } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { AdminTournamentService } from '../../Shared/admin-tournament.service';
 import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-admin-created-tournament-list',
   standalone: true,
-  imports: [MatFormFieldModule, MatCardModule, MatListModule, TournamentCardComponent, CommonModule, ReactiveFormsModule],
+  imports: [MatFormFieldModule, MatCardModule, MatListModule, MatButtonModule, RouterModule,
+    TournamentCardComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './admin-created-tournament-list.component.html',
   styleUrl: './admin-created-tournament-list.component.scss'
 })

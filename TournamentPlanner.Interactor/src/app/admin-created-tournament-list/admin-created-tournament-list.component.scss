@@ -28,3 +28,13 @@ mat-form-field.mat-focused {
     background-color: #E5E3D4;
     padding: 10px
 }
+.empty
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: auto;
+    margin: 2rem;
+    gap: 10px;
+}

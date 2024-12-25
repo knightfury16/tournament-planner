@@ -5,6 +5,7 @@
         </mat-card-title>
     </mat-card-header>
     <mat-card-content>
+        @if (tournaments() && tournaments()?.length! > 0) {
         <div>
             <mat-list *ngIf="tournaments(); else loading">
                 <li class="li-items" *ngFor="let item of tournaments()">
@@ -17,6 +18,17 @@
                 </div>
             </ng-template>
         </div>
+        }
+        @else {
+        <div class="empty">
+            <div>
+                Such Empty....
+            </div>
+            <a [routerLink]="['/tp/add-tournament']">
+                <button mat-raised-button>Add Tournament</button>
+            </a>
+        </div>
+        }
     </mat-card-content>
 
 
