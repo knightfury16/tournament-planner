@@ -40,4 +40,9 @@ export class TournamentPlannerService {
   public getTournamentPlayers(tournamentId: string): Promise<PlayerDto[]> {
     return firstValueFrom(this.httpClient.get<PlayerDto[]>(`${this.baseUrl}/tournament/${tournamentId}/players`, { withCredentials: true }));
   }
+
+
+  public registerPlayerInTournament(tournamentId: string): Promise<string> {
+    return firstValueFrom(this.httpClient.post<string>(`${this.baseUrl}/tournament/register`, { tournamentId }, { withCredentials: true }));
+  }
 }
