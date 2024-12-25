@@ -133,3 +133,8 @@ export enum DomainRole {
   Admin = "Admin",
   Player = "Player"
 }
+
+export type TournamentStatusChangeDto =
+  {
+    tournamentStatus: string;
+  }
