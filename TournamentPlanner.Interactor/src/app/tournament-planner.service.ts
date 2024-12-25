@@ -20,6 +20,9 @@ export class TournamentPlannerService {
     }
     return this.httpClient.get<TournamentDto[]>(`${this.baseUrl}/tournament`, { params });
   }
+  public getTournamentById(id: string): Promise<TournamentDto> {
+    return firstValueFrom(this.httpClient.get<TournamentDto>(`${this.baseUrl}/tournament/${id}`));
+  }
 
   public getMatches(tournamentId: number): Observable<MatchDto[]> {
     let params = new HttpParams();
