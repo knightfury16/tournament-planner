@@ -4,6 +4,7 @@ export interface TournamentDto {
   startDate?: string | null;
   endDate?: string | null;
   registrationLastDate?: string | null;
+  participants?: PlayerDto[];
   venue?: string | null;
   registrationFee: number;
   minimumAgeOfRegistration: number;
@@ -18,7 +19,7 @@ export interface TournamentDto {
 export enum TournamentStatus {
   Draft = "Draft",
   RegistrationOpen = "Registration Open",
-  RegistrationClosed  = "Registration Closed",
+  RegistrationClosed = "Registration Closed",
   Ongoing = "Ongoing",
   Completed = "Completed"
 }
