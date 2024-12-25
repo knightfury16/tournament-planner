@@ -11,8 +11,8 @@ export interface TournamentDto {
   maxParticipants: number;
   status?: string | null;
   gameTypeDto?: GameTypeDto | null;
-  createdAt: string;
-  updateAt: string;
+  createdAt?: string | null;
+  updateAt?: string | null;
 
 }
 

@@ -20,11 +20,15 @@ export function transformTournamentIsoDate(value: TournamentDto | null): Tournam
     const startDate = value.startDate ? getDateStringInFormat(new Date(value.startDate)) : null;
     const endDate = value.endDate ? getDateStringInFormat(new Date(value.endDate)) : null;
     const registrationLastDate = value.registrationLastDate ? getDateStringInFormat(new Date(value.registrationLastDate)) : null;
+    const createdAt = value.createdAt ? getDateStringInFormat(new Date(value.createdAt)) : null;
+    const updateAt = value.updateAt ? getDateStringInFormat(new Date(value.updateAt)) : null;
     return {
         ...value,
         startDate: startDate,
         endDate: endDate,
-        registrationLastDate
+        registrationLastDate,
+        createdAt,
+        updateAt
     };
 }
 
