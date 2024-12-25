@@ -49,3 +49,9 @@ a {
     margin-top: 0.5rem;
     align-self: flex-end;
 }
+
+.disabled-link{
+    pointer-events: none;
+    cursor: not-allowed;
+
+}

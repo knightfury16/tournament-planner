@@ -1,13 +1,13 @@
 <mat-card class="mat-card" appearance="raised">
     <div class="img-div">
-        <a [routerLink]="['tournament-details-homepage', tournament?.id]">
+        <a [ngClass]="{'disabled-link': this.getLinkDiableValue()}"  [routerLink]="getLink(tournament?.id)">
             <img mat-card-sm-image src="../../assets/tt.jpg">
         </a>
     </div>
     <div class="content-div">
         <div class="title-div">
             <mat-card-title>
-                <a [routerLink]="['tournament-details-homepage',  tournament?.id]">
+                <a [ngClass]="{'disabled-link': this.getLinkDiableValue()}" [routerLink]="getLink(tournament?.id)">
                     {{tournament?.name}}
                 </a>
             </mat-card-title>
@@ -23,10 +23,10 @@
         </div>
         @if(manage){
         <div class="manage-div">
-            <button mat-button class="manage-button">
+            <a mat-button class="manage-button" [routerLink]="this.getLink(tournament?.id)">
                 Manage Tournament
                 <mat-icon iconPositionEnd class="manage-arrow-icon">arrow_forward</mat-icon>
-            </button>
+            </a>
         </div>
         }
     </div>

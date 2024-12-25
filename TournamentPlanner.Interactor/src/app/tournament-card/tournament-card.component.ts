@@ -7,11 +7,12 @@ import { mapStringToEnum } from '../../Shared/Utility/stringUtility';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-tournament-card',
   standalone: true,
-  imports: [MatIconModule, MatCardModule, MatButtonModule, MatChipsModule, RouterModule],
+  imports: [MatIconModule, MatCardModule, MatButtonModule, MatChipsModule, RouterModule, CommonModule],
   templateUrl: './tournament-card.component.html',
   styleUrl: './tournament-card.component.scss'
 })
@@ -32,5 +33,17 @@ export class TournamentCardComponent {
     return null;
   }
 
+  public getLink(tournamentId: number | undefined): string | any[] | null | undefined {
+    if (tournamentId) {
+      return ['/tp/tournament-details-homepage', tournamentId];
+    } else {
+      return null;
+    }
+  }
+
+  public getLinkDiableValue(): boolean {
+    //will disable the link from admin view
+    return this.manage;
+  }
 
 }
