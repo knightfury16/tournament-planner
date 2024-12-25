@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { TournamentCardComponent } from '../tournament-card/tournament-card.component';
@@ -11,44 +11,28 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { startWith } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
+import { AdminTournamentService } from '../../Shared/admin-tournament.service';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-admin-created-tournament-list',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatListModule, TournamentCardComponent, CommonModule, ReactiveFormsModule],
+  imports: [MatFormFieldModule, MatCardModule, MatListModule, TournamentCardComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './admin-created-tournament-list.component.html',
   styleUrl: './admin-created-tournament-list.component.scss'
 })
-export class AdminCreatedTournamentListComponent {
+export class AdminCreatedTournamentListComponent implements OnInit {
 
   nameInput = new FormControl();
-  public tournaments: TournamentDto[] = [];
+  private _adminTPService = inject(AdminTournamentService);
+  public tournaments = signal<TournamentDto[] | undefined>(undefined);
 
-  constructor(private tp: TournamentPlannerService) {
+  async ngOnInit() {
+    try {
+      var response = await this._adminTPService.getAdminTournaments();
+      this.tournaments.set(response);
+    } catch (error) {
+      console.log(error)
+    }
   }
-
-
-
-
-
-  public data$ = this.nameInput.valueChanges.pipe(
-    startWith(''),
-    debounceTime(500),
-    distinctUntilChanged(),
-    switchMap((name) => this.tp.getTournament(name)),
-    map((tournaments) =>
-      tournaments.sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      )
-    ),
-    map((tournaments) =>
-      tournaments.filter((tor) => {
-        if (tor.endDate) {
-          return new Date(tor.endDate) >= new Date();
-        }
-        return true;
-      })
-    )
-  );
 }

@@ -8,10 +8,23 @@ a {
     width: 11em;
 }
 
-mat-form-field.mat-focused{
+mat-form-field.mat-focused {
     width: 17em;
 }
 
-.li-items{
+.li-items {
     margin-bottom: 10px;
+}
+
+.container {
+    min-height: 100vh;
+}
+
+.card-title {
+    font-size: 2rem;
+}
+
+.card-header {
+    background-color: #E5E3D4;
+    padding: 10px
 }
