@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="search">
+        <form class="search-form">
+            <mat-form-field class="search-input" appearance="outline">
+                <input matInput type="text" placeholder="Enter name..." [formControl]="nameInput">
+            </mat-form-field>
+        </form>
+    </div>
+    <div>
+        <ng-container *ngIf="{tournaments : data$ | async} as vm">
+            <mat-list *ngIf="vm.tournaments; else loading">
+                <li class="li-items" *ngFor="let item of vm.tournaments">
+                    <app-tournament-card [tournament]="item"></app-tournament-card>
+                </li>
+            </mat-list>
+            <ng-template #loading>
+                <div>
+                    Loading...
+                </div>
+            </ng-template>
+        </ng-container>
+    </div>
+
+</div>

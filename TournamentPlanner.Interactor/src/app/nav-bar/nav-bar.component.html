@@ -21,7 +21,7 @@
     <button mat-menu-item [routerLink]="'/tp/add-tournament'">Profile</button>
     @if (isCurrentUserAdmin()) {
     <button mat-menu-item [routerLink]="'tp/add-tournament'">Add Tournament</button>
-    <button mat-menu-item [routerLink]="'/manage-tournament'">Manage Tournament</button>
+    <button mat-menu-item [routerLink]="'tp/admin-created-tournament-list'">Manage Tournament</button>
     }
     <button mat-menu-item (click)="signOut()">Sign out</button>
   </mat-menu>
