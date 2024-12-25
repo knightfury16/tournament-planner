@@ -215,6 +215,25 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(tournamentDto);
         }
 
+
+        //- Get tournament created by an admin(id)
+        [Authorize(Roles = Role.Admin)]
+        [HttpGet("created/admin", Name = nameof(GetTournamentCreatedByAnAdmin))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TournamentDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetTournamentCreatedByAnAdmin()
+        {
+            var getTournamentsByAdmin = new GetAdminCreatedTournamentsRequest();
+            var tournamentsDto = await _mediator.Send(getTournamentsByAdmin);
+
+            if (tournamentsDto == null)
+            {
+                return NotFound();
+            }
+            return Ok(tournamentsDto);
+        }
+
+
         //- Get tournament players
         [HttpGet("{id}/players", Name = nameof(GetTournamentPlayers))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PlayerDto>))]
