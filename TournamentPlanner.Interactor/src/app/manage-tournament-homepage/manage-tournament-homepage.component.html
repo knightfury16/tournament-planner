@@ -1,1 +1,27 @@
-<p>manage-tournament-homepage works!</p>
+<mat-card appearance="outlined" class="mat-card">
+    <mat-card-header class="card-header">
+        <mat-card-title class="card-title">{{this.tournamentName()}}</mat-card-title>
+    </mat-card-header>
+    <mat-tab-group>
+        <mat-tab label="Details">
+            <div class="tab-container">
+                <app-manage-tournament-details [tournamentId]="tournamentId"
+                     (tournamentNameEE)="tournamentNameEC($event)">
+                </app-manage-tournament-details>
+            </div>
+        </mat-tab>
+        <mat-tab label="Make Draws">
+            hello
+        </mat-tab>
+        <mat-tab label="Matches">
+            <div class="tab-container">
+                Matches: {{tournamentId}}
+            </div>
+        </mat-tab>
+        <mat-tab label="Add Score">
+            <div class="tab-container">
+                Draws: {{tournamentId}}
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</mat-card>
