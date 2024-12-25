@@ -9,6 +9,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { mapStringToEnum } from '../../Shared/Utility/stringUtility';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { SnackbarService } from '../../Shared/snackbar.service';
+import { AdminTournamentService } from '../../Shared/admin-tournament.service';
 
 @Component({
   selector: 'app-manage-tournament-details',
@@ -31,9 +33,11 @@ export class ManageTournamentDetailsComponent implements OnInit {
 
   public tournamentStatus = TournamentStatus;
   private _tpService = inject(TournamentPlannerService);
+  private _adminTpService = inject(AdminTournamentService);
+  private _snackBarService = inject(SnackbarService);
 
   public tournamentDetails = signal<TournamentDto | null>(null);
-  public selectedStatus = TournamentStatus.Draft;
+  public selectedStatus: TournamentStatus | undefined = undefined;
   public statusFormControl = new FormControl();
 
   async ngOnInit() {
@@ -71,6 +75,18 @@ export class ManageTournamentDetailsComponent implements OnInit {
       }
     )
     return status;
+  }
+  public async changeStatus() {
+    try {
+      var changedStatus = this.statusFormControl.value;
+      var statusChangeResponse = await this._adminTpService.changeTournamentStatus(this.tournamentId!, changedStatus);
+      console.log(statusChangeResponse);
+      this._snackBarService.showMessage(statusChangeResponse.message);
+    } catch (error : any) {
+      console.log(error!.error);
+      this._snackBarService.showError((error as any).error ?? (error as any).error?.Error ?? "An unknown error occurred.");
+
+    }
   }
 
 }

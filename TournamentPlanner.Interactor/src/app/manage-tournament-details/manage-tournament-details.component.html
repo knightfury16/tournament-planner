@@ -16,14 +16,14 @@
         <mat-card-content>
             <mat-form-field class="form-field">
                 <mat-label>Status</mat-label>
-                <mat-select [(value)]="this.selectedStatus">
-                    <mat-option *ngFor="let status of getTournamentStatusString()"
+                <mat-select [formControl]="statusFormControl" [(value)]="this.selectedStatus" >
+                    <mat-option *ngFor="let status of this.getTournamentStatusString()"
                         [value]="status">{{status}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </mat-card-content>
         <mat-card-actions class="mat-action">
-            <button mat-stroked-button class="status-btn">Change Status</button>
+            <button mat-stroked-button class="status-btn" (click)="this.changeStatus()" [disabled]="!statusFormControl.touched">Change Status</button>
         </mat-card-actions>
     </mat-card>
 </div>
