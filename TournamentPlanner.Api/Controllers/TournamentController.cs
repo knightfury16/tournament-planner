@@ -134,7 +134,7 @@ namespace TournamentPlanner.Api.Controllers
                 return BadRequest("Could not change tournament status");
             }
 
-            return Ok("Tournament status changed successfully");
+            return Ok(new { message = "Tournament status changed successfully" });
         }
 
 
