@@ -62,7 +62,7 @@ namespace TournamentPlanner.Api.Controllers
 
             var result = await _mediator.Send(registerPlayerInTournamentRequest);
 
-            return result ? Ok("Player successfully registered for the tournament") : BadRequest("Player registration failed");
+            return result ? Ok(new {message = "Player successfully registered for the tournament" }) : BadRequest(new { message = "Player registration failed" });
         }
 
 
