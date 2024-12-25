@@ -27,7 +27,7 @@ export const routes: Routes = [
     { path: 'tp/:tournamentId/matches', component: TournamentMatchesComponent },
     { path: 'tp', component: TournamentListComponent },
     { path: 'tp/tournament-details-homepage/:tournamentId', component: TournamentDetailsHomepageComponent },
-    { path: 'tp/manage-tournament-homepage/:tournamentId', component: ManageTournamentHomepageComponent },
+    { path: 'tp/manage-tournament-homepage/:tournamentId', component: ManageTournamentHomepageComponent, canActivate: [authGuard, adminGuard] },
     { path: 'tp/add-tournament', component: AddTournamentComponent, canActivate: [authGuard, adminGuard] },
     { path: 'tp/admin-created-tournament-list', component: AdminCreatedTournamentListComponent, canActivate: [authGuard, adminGuard] },
     { path: 'login', component: LoginComponent },
