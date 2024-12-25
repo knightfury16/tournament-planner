@@ -8,6 +8,7 @@ export interface TournamentDto {
   venue?: string | null;
   registrationFee: number;
   minimumAgeOfRegistration: number;
+  maxParticipants: number;
   status?: string | null;
   gameTypeDto?: GameTypeDto | null;
   createdAt: string;

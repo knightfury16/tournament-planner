@@ -17,6 +17,7 @@ namespace TournamentPlanner.Application.DTOs
         public decimal RegistrationFee { get; set; }
         public int MinimumAgeOfRegistration { get; set; }
         public string? Status { get; set; }
+        public int MaxParticipant { get; set; } // Default: 26 Group (A-Z) * 4 per group = 104
         public GameTypeDto? GameTypeDto { get; set; }
         public List<PlayerDto>? Participants { get; set; }
         public DateTime CreatedAt { get; set; }
