@@ -8,7 +8,7 @@
         <div>
             <mat-list *ngIf="tournaments(); else loading">
                 <li class="li-items" *ngFor="let item of tournaments()">
-                    <app-tournament-card [tournament]="item"></app-tournament-card>
+                    <app-tournament-card [tournament]="item" [manage]="true"></app-tournament-card>
                 </li>
             </mat-list>
             <ng-template #loading>
