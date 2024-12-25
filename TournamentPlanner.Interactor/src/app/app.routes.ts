@@ -15,6 +15,7 @@ import { adminGuard } from '../guards/adminGuard';
 import { TestComponent } from './test/test.component';
 import { TournamentDetailsHomepageComponent } from './tournament-details-homepage/tournament-details-homepage.component';
 import { AdminCreatedTournamentListComponent } from './admin-created-tournament-list/admin-created-tournament-list.component';
+import { ManageTournamentHomepageComponent } from './manage-tournament-homepage/manage-tournament-homepage.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'people', pathMatch: 'full' },
@@ -25,7 +26,8 @@ export const routes: Routes = [
     { path: 'people/:userName/trips', component: TripListComponent },
     { path: 'tp/:tournamentId/matches', component: TournamentMatchesComponent },
     { path: 'tp', component: TournamentListComponent },
-    { path: 'tp/tournament-details-homepage/:tournamentId', component: TournamentDetailsHomepageComponent},
+    { path: 'tp/tournament-details-homepage/:tournamentId', component: TournamentDetailsHomepageComponent },
+    { path: 'tp/manage-tournament-homepage/:tournamentId', component: ManageTournamentHomepageComponent },
     { path: 'tp/add-tournament', component: AddTournamentComponent, canActivate: [authGuard, adminGuard] },
     { path: 'tp/admin-created-tournament-list', component: AdminCreatedTournamentListComponent, canActivate: [authGuard, adminGuard] },
     { path: 'login', component: LoginComponent },
