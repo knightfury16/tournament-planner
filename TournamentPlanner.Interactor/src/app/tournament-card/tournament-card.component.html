@@ -21,5 +21,13 @@
         <div class="time-div">
             <p>{{tournament?.startDate}} - {{tournament?.endDate}}</p>
         </div>
+        @if(manage){
+        <div class="manage-div">
+            <button mat-button class="manage-button">
+                Manage Tournament
+                <mat-icon iconPositionEnd class="manage-arrow-icon">arrow_forward</mat-icon>
+            </button>
+        </div>
+        }
     </div>
 </mat-card>

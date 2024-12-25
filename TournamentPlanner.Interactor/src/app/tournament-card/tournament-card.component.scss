@@ -17,6 +17,8 @@ a {
     flex-grow: 1;
     padding: 1rem;
     align-self: center;
+    display: flex;
+    flex-direction: column;
 }
 
 .title-div {
@@ -36,4 +38,14 @@ a {
     p {
         font-style: italic;
     }
+}
+
+.manage-button {
+    padding: 10px;
+    background-color: aquamarine;
+}
+
+.manage-div{
+    margin-top: 0.5rem;
+    align-self: flex-end;
 }
