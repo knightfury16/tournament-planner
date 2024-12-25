@@ -22,6 +22,7 @@ public class GetUserInfoRequestHandler : IRequestHandler<GetUserInfoRequest, Use
         Email = _currentUser.Email!,
         Name = _currentUser.Name!,
         Role = _currentUser.Role!,
+        DomainUserId = _currentUser.DomainUserId
       };
     }
     else

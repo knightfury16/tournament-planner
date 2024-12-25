@@ -9,6 +9,7 @@ export interface UserInfo {
   email: string;
   name: string;
   role: string;
+  domainUserId: string;
 }
 
 @Injectable({

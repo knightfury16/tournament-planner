@@ -35,6 +35,7 @@ public class LoginRequestHandler : IRequestHandler<LoginRequest, UserInfoDto>
       Email = _currentUser.Email!,
       Name = _currentUser.Name!,
       Role = _currentUser.Role!,
+      DomainUserId = _currentUser.DomainUserId,
     };
 
     return userInfo;

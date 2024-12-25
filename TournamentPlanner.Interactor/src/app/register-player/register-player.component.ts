@@ -62,7 +62,8 @@ export class RegisterPlayerComponent {
     var userInfo: UserInfo = {
       name: playerDto.name,
       email: playerDto.email,
-      role: DomainRole.Player
+      role: DomainRole.Player,
+      domainUserId: playerDto.id.toString()
     }
     this.authService.setCurrentUser(userInfo);
   }

@@ -60,7 +60,8 @@ export class RegisterAdminComponent {
     var userInfo: UserInfo = {
       name: adminDto.name,
       email: adminDto.email,
-      role: DomainRole.Admin
+      role: DomainRole.Admin,
+      domainUserId: adminDto.id.toString()
     }
     this.authService.setCurrentUser(userInfo);
   }
