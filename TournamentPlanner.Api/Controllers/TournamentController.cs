@@ -121,17 +121,17 @@ namespace TournamentPlanner.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ChangeTournamentStatus(int id, [FromBody] string tournamentStatusString)
+        public async Task<IActionResult> ChangeTournamentStatus(int id, [FromBody] ChangeStatusDto changeStatusDto)
         {
             if (id <= 0) return BadRequest("Tournament Id invalid");
 
-            var request = new ChangeTournamentStatusRequest(id, tournamentStatusString);
+            var request = new ChangeTournamentStatusRequest(id, changeStatusDto.TournamentStatus);
 
             var success = await _mediator.Send(request);
 
             if (!success)
             {
-                return BadRequest("Could not change tournament status");
+                return BadRequest(new { message = "Could not change tournament status" });
             }
 
             return Ok(new { message = "Tournament status changed successfully" });
