@@ -1,6 +1,6 @@
 export interface TournamentDto {
   id: number;
-  name: string;
+  name: string | undefined;
   startDate?: string | null;
   endDate?: string | null;
   registrationLastDate?: string | null;
@@ -138,3 +138,18 @@ export type TournamentStatusChangeDto =
   {
     tournamentStatus: string;
   }
+export interface MatchTypeDto {
+  id: number;
+  name: string | undefined;
+  rounds: RoundDto[];
+  players: PlayerDto[];
+  isCompleted: boolean;
+}
+
+export type DrawDto = {
+  createdAt: string | undefined;
+  updatedAt: string | undefined;
+  tournament: TournamentDto;
+  matchType: MatchTypeDto;
+}
+
