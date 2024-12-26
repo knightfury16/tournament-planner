@@ -45,7 +45,7 @@ export class ManageTournamentDetailsComponent implements OnInit {
     var tourDetail = await this._tpService.getTournamentById(this.tournamentId)
     var transformDateTournament = transformTournamentIsoDate(tourDetail);
     this.tournamentDetails.set(transformDateTournament);
-    this.emitTournamentName(tourDetail.name);
+    this.emitTournamentName(tourDetail.name!);// name will be here
     this.setSelectedStatus();
   }
 
@@ -85,7 +85,6 @@ export class ManageTournamentDetailsComponent implements OnInit {
     } catch (error : any) {
       console.log(error!.error);
       this._snackBarService.showError((error as any).error ?? (error as any).error?.Error ?? "An unknown error occurred.");
-
     }
   }
 

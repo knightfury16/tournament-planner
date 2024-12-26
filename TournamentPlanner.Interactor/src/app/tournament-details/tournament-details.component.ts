@@ -31,7 +31,7 @@ export class TournamentDetailsComponent implements OnInit {
     if (this.tournamentId == undefined) { this.emitADummyName(); return }
     var tourDetail = await this._tpService.getTournamentById(this.tournamentId)
     this.tournamentDetails.set(tourDetail);
-    this.emitTournamentName(tourDetail.name);
+    this.emitTournamentName(tourDetail.name!); //name will be here
     this.emitToutnamentParticipants(tourDetail.participants);
     this.setCanRegister();
 
