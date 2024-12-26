@@ -1,3 +1,13 @@
-<p>tournament-draw-details works!</p>
-<div>{{this.drawId}}</div>
-<button  (click)="this.emitDrawTabChangeEvent()">Go back to list view</button>
+<div class="container">
+  <mat-card class="mat-card">
+    <div class="btn-div">
+      <button mat-icon-button class="back-btn" (click)="emitDrawTabChangeEvent()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    </div>
+    <mat-card-header class="mat-card-header">
+      <mat-card-title class="mat-card-title">Hello Gorup</mat-card-title>
+    </mat-card-header>
+  </mat-card>
+
+</div>
