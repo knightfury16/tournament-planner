@@ -5,7 +5,9 @@
         <mat-card-header class="my-mat-header">
             <div class="title-container">
                 <mat-card-title class="mat-title">
-                    {{item.matchType.name}}
+                    <a class="link" (click)="this.emitDrawTabViewChangeEvent(item.matchType.id)">
+                        {{item.matchType.name}}
+                    </a>
                 </mat-card-title>
             </div>
             <div class="chip-container">
