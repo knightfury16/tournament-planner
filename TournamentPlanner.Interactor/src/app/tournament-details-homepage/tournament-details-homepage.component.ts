@@ -37,7 +37,7 @@ export class TournamentDetailsHomepageComponent {
 
   public playerTabView = signal<PlayerTabViewType>(PlayerTabViewType.ListView);
   public drawTabView = signal<DrawTabViewType>(DrawTabViewType.ListView);
-  public drawId = signal<number | undefined> (undefined);
+  public matchTypeId = signal<number | undefined> (undefined);
 
 
   public togglePlayerTabView(view: PlayerTabViewType) {
@@ -55,8 +55,8 @@ export class TournamentDetailsHomepageComponent {
     this.tournamentParticipants.set(participants);
   }
 
-  public catchDrawIdEC(drawId: number){
-    this.drawId.set(drawId);
+  public catchMatchTypeId(matchType: number){
+    this.matchTypeId.set(matchType);
   }
 
 

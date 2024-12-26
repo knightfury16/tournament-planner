@@ -13,8 +13,8 @@ import { CommonModule } from '@angular/common';
   templateUrl: './tournament-draw-details.component.html',
   styleUrl: './tournament-draw-details.component.scss',
 })
-export class TournamentDrawDetailsComponent {
-  @Input({ required: true }) public drawId?: number;
+export class TournamentDrawDetailsComponent implements OnInit {
+  @Input({ required: true }) public matchTypeId?: number;
   @Output() drawTabChangeEvent = new EventEmitter<DrawTabViewType>();
 
   public emitDrawTabChangeEvent() {

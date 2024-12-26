@@ -35,7 +35,7 @@ import { DrawTabViewType } from '../tournament-details-homepage/tournament-detai
 export class TournamentDrawListComponent implements OnInit {
   @Input({ required: true }) public tournamentId?: string;
   @Output() drawTabChangeEvent = new EventEmitter<DrawTabViewType>();
-  @Output() drawId = new EventEmitter<number>();
+  @Output() matchTypeId = new EventEmitter<number>();
   private _tpService = inject(TournamentPlannerService);
   public draws = signal<DrawDto[] | undefined>(undefined);
 
@@ -67,8 +67,8 @@ export class TournamentDrawListComponent implements OnInit {
     return getDateStringInFormat(new Date(draw.createdAt!));
   }
 
-  emitDrawTabViewChangeEvent(drawId: number) {
+  emitDrawTabViewChangeEvent(matchTypeId: number) {
     this.drawTabChangeEvent.emit(DrawTabViewType.DetailView);
-    this.drawId.emit(drawId);
+    this.matchTypeId.emit(matchTypeId);
   }
 }
