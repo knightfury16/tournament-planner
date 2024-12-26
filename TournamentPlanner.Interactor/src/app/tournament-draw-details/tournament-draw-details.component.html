@@ -45,4 +45,20 @@
 
 <ng-template #matchesTab>
   <p>Matches content goes here.</p>
+  @for (round of this.rounds(); track round.id) {
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          {{round.roundName}}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        @for (match of round.matches; track match.id) {
+          <div>{{match.firstPlayer.name}} vs. {{match.secondPlayer.name}}</div>
+          <div>{{match.winner ?? "Not Played"}}</div>
+          <div>{{match.gameScheduled}}</div>
+        }
+      </mat-card-content>
+    </mat-card>
+  }
 </ng-template>
