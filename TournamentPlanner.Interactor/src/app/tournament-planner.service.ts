@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { TP_BASE_URL } from './app.config';
 import { firstValueFrom, Observable, of, retry } from 'rxjs';
-import { AddTournamentDto, DrawDto, MatchDto, PlayerDto, TournamentDto } from './tp-model/TpModel';
+import { AddTournamentDto, DrawDto, MatchDto, MatchTypeDto, PlayerDto, TournamentDto } from './tp-model/TpModel';
 
 @Injectable({
   providedIn: 'root',
@@ -48,6 +48,11 @@ export class TournamentPlannerService {
   public getTournamentDraws(tournamentId: string): Promise<DrawDto[]> {
     return firstValueFrom(this.httpClient.get<DrawDto[]>(`${this.baseUrl}/tournament/${tournamentId}/get-draws`));
 
+  }
+
+  //match type means like GROUP-A, GROUP-B
+  public getMatchType(matchTypeId: string): Promise<MatchTypeDto> {
+    return firstValueFrom(this.httpClient.get<MatchTypeDto>(`${this.baseUrl}/match-type/${matchTypeId}`))
   }
 
 }
