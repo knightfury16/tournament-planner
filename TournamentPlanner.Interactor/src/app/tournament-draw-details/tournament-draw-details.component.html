@@ -6,7 +6,7 @@
       </button>
     </div>
     <mat-card-header class="mat-card-header">
-      <mat-card-title class="mat-card-title">Hello Gorup</mat-card-title>
+      <mat-card-title class="mat-card-title">{{this.matchType()?.name}}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
@@ -24,6 +24,23 @@
 
 <ng-template #detailsTab>
   <p>Details content goes here.</p>
+  @if (this.players() != undefined) {
+  <div>
+    <mat-card-title>
+      Players
+    </mat-card-title>
+    <mat-list>
+      @for (player of players(); track player.id) {
+      <mat-list-item>{{player.name}}</mat-list-item>
+      }
+    </mat-list>
+  </div>
+  <div>
+    <mat-card-title>
+      Group Standing
+    </mat-card-title>
+  </div>
+  }
 </ng-template>
 
 <ng-template #matchesTab>

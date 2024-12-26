@@ -17,6 +17,8 @@ import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { MatchTypeDto } from '../tp-model/TpModel';
 import { TournamentPlannerService } from '../tournament-planner.service';
+import { MatTableModule } from '@angular/material/table';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-tournament-draw-details',
@@ -27,6 +29,8 @@ import { TournamentPlannerService } from '../tournament-planner.service';
     CommonModule,
     MatCardModule,
     MatButtonModule,
+    MatTableModule,
+    MatListModule
   ],
   templateUrl: './tournament-draw-details.component.html',
   styleUrl: './tournament-draw-details.component.scss',
