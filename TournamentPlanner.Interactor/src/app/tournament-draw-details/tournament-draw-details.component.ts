@@ -3,11 +3,13 @@ import { DrawTabViewType } from '../tournament-details-homepage/tournament-detai
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-tournament-draw-details',
   standalone: true,
-  imports: [MatIconModule, MatCardModule, MatButtonModule],
+  imports: [MatIconModule,MatTabsModule,CommonModule, MatCardModule, MatButtonModule],
   templateUrl: './tournament-draw-details.component.html',
   styleUrl: './tournament-draw-details.component.scss',
 })

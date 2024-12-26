@@ -8,6 +8,24 @@
     <mat-card-header class="mat-card-header">
       <mat-card-title class="mat-card-title">Hello Gorup</mat-card-title>
     </mat-card-header>
-  </mat-card>
+    <mat-card-content>
+      <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
+        <mat-tab label="Details">
+          <ng-container *ngTemplateOutlet="detailsTab"></ng-container>
+        </mat-tab>
+        <mat-tab label="Matches">
+          <ng-container *ngTemplateOutlet="matchesTab"></ng-container>
+        </mat-tab>
+      </mat-tab-group>
 
+    </mat-card-content>
+  </mat-card>
 </div>
+
+<ng-template #detailsTab>
+  <p>Details content goes here.</p>
+</ng-template>
+
+<ng-template #matchesTab>
+  <p>Matches content goes here.</p>
+</ng-template>
