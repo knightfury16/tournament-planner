@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { TournamentPlayerListComponent } from "../tournament-player-list/tournament-player-list.component";
 import { TournamentPlayerDetailsComponent } from '../tournament-player-details/tournament-player-details.component';
 import { TournamentDetailsComponent } from "../tournament-details/tournament-details.component";
+import { TournamentDrawListComponent } from "../tournament-draw-list/tournament-draw-list.component";
 
 export enum PlayerTabViewType {
   ListView = "List View",
@@ -15,7 +16,8 @@ export enum PlayerTabViewType {
 @Component({
   selector: 'app-tournament-details-homepage',
   standalone: true,
-  imports: [MatTabsModule, CommonModule, MatCardModule, TournamentPlayerListComponent, TournamentPlayerDetailsComponent, TournamentDetailsComponent],
+  imports: [MatTabsModule, CommonModule, MatCardModule, TournamentPlayerListComponent,
+    TournamentPlayerDetailsComponent, TournamentDetailsComponent, TournamentDrawListComponent],
   templateUrl: './tournament-details-homepage.component.html',
   styleUrl: './tournament-details-homepage.component.scss'
 })
