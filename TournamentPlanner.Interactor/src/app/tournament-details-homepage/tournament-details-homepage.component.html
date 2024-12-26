@@ -17,7 +17,16 @@
         </mat-tab>
         <mat-tab label="Draws">
             <div class="tab-container">
-                <app-tournament-draw-list [tournamentId]="tournamentId"></app-tournament-draw-list>
+                @if (this.drawTabView() == drawTabViewType.ListView) {
+                    <app-tournament-draw-list 
+                    (drawTabChangeEvent)="toggleDrawTabView($event)" 
+                    (drawId)="catchDrawIdEC($event)"
+                    [tournamentId]="tournamentId"></app-tournament-draw-list>
+                }
+                @else if (this.drawTabView() == drawTabViewType.DetailView) {
+                    <app-tournament-draw-details 
+                    (drawTabChangeEvent)="toggleDrawTabView($event)" [drawId]="this.drawId()"></app-tournament-draw-details>
+                }
             </div>
         </mat-tab>
         <mat-tab label="Players">
