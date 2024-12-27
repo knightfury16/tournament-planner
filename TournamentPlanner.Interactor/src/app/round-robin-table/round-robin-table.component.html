@@ -1,0 +1,20 @@
+<mat-card appearance="outlined">
+  <table>
+    <thead>
+      <th style="border: 1px solid red;">&nbsp;</th>
+      @for (player of this.players; track player) {
+      <th style="border: 1px solid black;">{{player.name}}</th>
+      }
+    </thead>
+    <tbody>
+      @for (player of this.players; track player; let columnIdx = $index) {
+      <tr>
+        <td style="border: 1px solid purple;">{{player.name}}</td>
+        @for (player of [].constructor(this.players?.length); track player; let rowIdx = $index) {
+        <td style="border: 1px solid purple;">{{this.getTableRowData(rowIdx,columnIdx)}}</td>
+        }
+      </tr>
+      }
+    </tbody>
+  </table>
+</mat-card>
