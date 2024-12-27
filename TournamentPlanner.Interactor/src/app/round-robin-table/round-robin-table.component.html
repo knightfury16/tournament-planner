@@ -1,17 +1,22 @@
-<mat-card appearance="outlined">
-  <table>
-    <thead>
-      <th style="border: 1px solid red;">&nbsp;</th>
+<mat-card appearance="outlined" class="mat-card">
+  <mat-card-header class="card-header">
+    <mat-card-title class="title">
+      Round Robin Match Table
+    </mat-card-title>
+  </mat-card-header>
+  <table class="table">
+    <thead class="tb-head">
+      <th class="header">&nbsp;</th>
       @for (player of this.players; track player) {
-      <th style="border: 1px solid black;">{{player.name}}</th>
+      <th class="header">{{player.name}}</th>
       }
     </thead>
-    <tbody>
+    <tbody class="tb-body">
       @for (player of this.players; track player; let columnIdx = $index) {
-      <tr>
-        <td style="border: 1px solid purple;">{{player.name}}</td>
+      <tr class="row">
+        <td class="tb-data tb-data-name">{{player.name}}</td>
         @for (player of [].constructor(this.players?.length); track player; let rowIdx = $index) {
-        <td style="border: 1px solid purple;">{{this.getTableRowData(rowIdx,columnIdx)}}</td>
+        <td class="tb-data">{{this.getTableRowData(rowIdx,columnIdx)}}</td>
         }
       </tr>
       }
