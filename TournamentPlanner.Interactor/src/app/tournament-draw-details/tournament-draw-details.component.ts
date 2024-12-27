@@ -19,6 +19,7 @@ import { GameTypeDto, MatchDto, MatchTypeDto, PlayerMatches } from '../tp-model/
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatListModule } from '@angular/material/list';
+import { RoundRobinTableComponent } from "../round-robin-table/round-robin-table.component";
 
 @Component({
   selector: 'app-tournament-draw-details',
@@ -30,8 +31,9 @@ import { MatListModule } from '@angular/material/list';
     MatCardModule,
     MatButtonModule,
     MatTableModule,
-    MatListModule
-  ],
+    MatListModule,
+    RoundRobinTableComponent
+],
   templateUrl: './tournament-draw-details.component.html',
   styleUrl: './tournament-draw-details.component.scss',
 })
@@ -44,6 +46,16 @@ export class TournamentDrawDetailsComponent implements OnInit {
   public matchType = signal<MatchTypeDto | undefined>(undefined);
   public players = computed(() => this.matchType()?.players ?? undefined);
   public rounds = computed(() => this.matchType()?.rounds ?? undefined);
+  public matches = computed<MatchDto[]>(() => {
+    var matches: MatchDto[] = [];
+    if (this.rounds() == undefined) return matches;
+
+    this.rounds()!.forEach((round) => {
+      if (round.matches == undefined || round.matches.length == 0) return;
+      matches = [...matches, ...round.matches];
+    });
+    return matches;
+  });
 
   async ngOnInit() {
     try {

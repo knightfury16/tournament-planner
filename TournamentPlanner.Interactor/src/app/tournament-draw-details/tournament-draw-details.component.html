@@ -26,14 +26,8 @@
   <p>Details content goes here.</p>
   @if (this.players() != undefined) {
   <div>
-    <mat-card-title>
-      Players
-    </mat-card-title>
-    <mat-list>
-      @for (player of players(); track player.id) {
-      <mat-list-item>{{player.name}}</mat-list-item>
-      }
-    </mat-list>
+    <app-round-robin-table [players]="this.players()" [matches]="this.matches()" [gameType]="this.gameType">
+    </app-round-robin-table>
   </div>
   <div>
     <mat-card-title>
