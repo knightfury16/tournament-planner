@@ -15,7 +15,7 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
-import { MatchTypeDto } from '../tp-model/TpModel';
+import { GameTypeDto, MatchDto, MatchTypeDto, PlayerMatches } from '../tp-model/TpModel';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatListModule } from '@angular/material/list';
@@ -37,6 +37,7 @@ import { MatListModule } from '@angular/material/list';
 })
 export class TournamentDrawDetailsComponent implements OnInit {
   @Input({ required: true }) public matchTypeId?: number;
+  @Input({required:true}) public gameType?: GameTypeDto | null;
   @Output() drawTabChangeEvent = new EventEmitter<DrawTabViewType>();
   private _tpService = inject(TournamentPlannerService);
 

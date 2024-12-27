@@ -25,7 +25,7 @@
                 }
                 @else if (this.drawTabView() == drawTabViewType.DetailView) {
                     <app-tournament-draw-details 
-                    (drawTabChangeEvent)="toggleDrawTabView($event)" [matchTypeId]="this.matchTypeId()"></app-tournament-draw-details>
+                    (drawTabChangeEvent)="toggleDrawTabView($event)" [matchTypeId]="this.matchTypeId()" [gameType]="this.tournament()?.gameTypeDto"></app-tournament-draw-details>
                 }
             </div>
         </mat-tab>
