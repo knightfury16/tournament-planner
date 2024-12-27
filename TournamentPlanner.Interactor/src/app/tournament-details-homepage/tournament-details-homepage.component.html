@@ -1,12 +1,12 @@
 <mat-card appearance="outlined" class="mat-card">
     <mat-card-header class="card-header">
-        <mat-card-title class="card-title">{{this.tournamentName()}}</mat-card-title>
+        <mat-card-title class="card-title">{{this.tournament()?.name}}</mat-card-title>
     </mat-card-header>
     <mat-tab-group>
         <mat-tab label="Details">
             <div class="tab-container">
                 <app-tournament-details [tournamentId]="tournamentId"
-                    (participantsEE)="tournamentParticipantsEC($event)" (tournamentNameEE)="tournamentNameEC($event)">
+                    (participantsEE)="tournamentParticipantsEC($event)" (tournamentEE)="tournamentEC($event)">
                 </app-tournament-details>
             </div>
         </mat-tab>

@@ -16,7 +16,7 @@ import { SnackbarService } from '../../Shared/snackbar.service';
 export class TournamentDetailsComponent implements OnInit {
   @Input({required: true}) public tournamentId?: string;
 
-  @Output() public tournamentNameEE = new EventEmitter<string>();
+  @Output() public tournamentEE = new EventEmitter<TournamentDto>();
   @Output() public participantsEE = new EventEmitter<PlayerDto[]>();
 
   private _tpService = inject(TournamentPlannerService);
@@ -28,10 +28,10 @@ export class TournamentDetailsComponent implements OnInit {
   public canRegister = false;
 
   async ngOnInit() {
-    if (this.tournamentId == undefined) { this.emitADummyName(); return }
+    if (this.tournamentId == undefined) { return }
     var tourDetail = await this._tpService.getTournamentById(this.tournamentId)
     this.tournamentDetails.set(tourDetail);
-    this.emitTournamentName(tourDetail.name!); //name will be here
+    this.emtiTournament(tourDetail); //name will be here
     this.emitToutnamentParticipants(tourDetail.participants);
     this.setCanRegister();
 
@@ -49,13 +49,10 @@ export class TournamentDetailsComponent implements OnInit {
       this.participantsEE.emit(participants);
     }
   }
-  emitTournamentName(tournamentName: string) {
-    this.tournamentNameEE.emit(tournamentName);
+  emtiTournament(tournament: TournamentDto) {
+    this.tournamentEE.emit(tournament);
   }
 
-  emitADummyName() {
-    this.tournamentNameEE.emit("Undefined Tournament");
-  }
 
   public async registerInTournament() {
     try {

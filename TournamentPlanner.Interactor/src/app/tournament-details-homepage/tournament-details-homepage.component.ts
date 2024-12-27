@@ -30,7 +30,7 @@ export enum DrawTabViewType{
 export class TournamentDetailsHomepageComponent {
   @Input() public tournamentId?: string;
 
-  public tournamentName = signal('');
+  public tournament = signal<TournamentDto | undefined>(undefined);
   public tournamentParticipants = signal<PlayerDto[] | undefined>(undefined);
   public playerTabViewType = PlayerTabViewType;
   public drawTabViewType = DrawTabViewType;
@@ -47,8 +47,8 @@ export class TournamentDetailsHomepageComponent {
     this.drawTabView.set(view);
   }
 
-  public tournamentNameEC(tournamentName: string) {
-    this.tournamentName.set(tournamentName);
+  public tournamentEC(tournament: TournamentDto) {
+    this.tournament.set(tournament);
   }
 
   public tournamentParticipantsEC(participants: PlayerDto[]) {
