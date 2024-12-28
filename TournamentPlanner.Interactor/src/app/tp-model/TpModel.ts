@@ -153,3 +153,17 @@ export type DrawDto = {
   matchType: MatchTypeDto;
 }
 
+
+export type PlayerStandingDto = {
+  player: PlayerDto;
+  matchPoints: number;
+  wins: number;
+  losses: number;
+  gamesWon: number;
+  gamesLost: number;
+  gameDifference: number;
+  pointsWon: number;
+  pointsLost: number;
+  pointsDifference: number;
+  ranking: number;
+}
