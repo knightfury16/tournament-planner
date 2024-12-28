@@ -23,8 +23,8 @@ export class RoundRobinTableComponent {
   ): string | undefined {
     if (this.players == undefined) return;
     if (rowIndex == columnIndex) return '_';
-    var firstPlayer = this.players[rowIndex];
-    var secondPlayer = this.players[columnIndex];
+    var firstPlayer = this.players[columnIndex];
+    var secondPlayer = this.players[rowIndex];
     var match = this.getMatch(firstPlayer, secondPlayer);
     return `${secondPlayer.name} vs. ${firstPlayer.name}`;
   }
