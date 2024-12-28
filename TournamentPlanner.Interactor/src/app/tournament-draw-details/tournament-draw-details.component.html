@@ -24,6 +24,7 @@
 
 <ng-template #detailsTab>
   @if (this.players() != undefined) {
+    <!-- //TODO: dynamically show groupmatchtype and knockout matchtype component here -->
   <div>
     <app-round-robin-table [players]="this.players()" [matches]="this.matches()" [gameType]="this.gameType">
     </app-round-robin-table>
