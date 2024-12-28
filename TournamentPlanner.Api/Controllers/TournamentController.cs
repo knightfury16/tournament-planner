@@ -244,13 +244,13 @@ namespace TournamentPlanner.Api.Controllers
         //- Get tournament matches
         //getTournamentMatches(id)
         [HttpGet("{id}/matches", Name = nameof(GetTournamentMatches))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<MatchDto>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DrawDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetTournamentMatches(int id)
         {
             var getTournamentMatchesRequest = new GetTournamentMatchesRequest(id);
-            var matchesDto = await _mediator.Send(getTournamentMatchesRequest);
-            return Ok(matchesDto);
+            var drawDtos = await _mediator.Send(getTournamentMatchesRequest);
+            return Ok(drawDtos);
         }
 
         //getTournamentMatchTypes(id)
