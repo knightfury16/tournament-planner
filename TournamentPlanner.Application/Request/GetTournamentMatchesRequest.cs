@@ -2,8 +2,8 @@
 using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Application;
-
-public class GetTournamentMatchesRequest : IRequest<IEnumerable<MatchDto>>
+//Getting the matches through populated Draws
+public class GetTournamentMatchesRequest : IRequest<IEnumerable<DrawDto>>
 {
     public int Id { get; set; }
     public GetTournamentMatchesRequest(int Id)
