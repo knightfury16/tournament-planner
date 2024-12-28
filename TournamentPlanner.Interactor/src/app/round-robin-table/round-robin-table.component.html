@@ -1,7 +1,7 @@
 <mat-card appearance="outlined" class="mat-card">
   <mat-card-header class="card-header">
     <mat-card-title class="title">
-      Round Robin Match Table
+      Round Robin Matches Table
     </mat-card-title>
   </mat-card-header>
   <table class="table">
@@ -14,9 +14,9 @@
     <tbody class="tb-body">
       @for (player of this.players; track player; let columnIdx = $index) {
       <tr class="row">
-        <td class="tb-data tb-data-name">{{player.name}}</td>
+        <td  class="tb-data tb-data-name">{{player.name}}</td>
         @for (player of [].constructor(this.players?.length); track player; let rowIdx = $index) {
-        <td class="tb-data">{{this.getTableRowData(rowIdx,columnIdx)}}</td>
+        <td [ngClass]="this.getTableClass(rowIdx, columnIdx)" class="tb-data">{{this.getTableRowData(rowIdx,columnIdx)}}</td>
         }
       </tr>
       }

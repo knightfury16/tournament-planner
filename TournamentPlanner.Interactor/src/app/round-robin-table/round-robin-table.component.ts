@@ -2,11 +2,12 @@ import { Component, inject, input, Input } from '@angular/core';
 import { GameTypeDto, MatchDto, PlayerDto } from '../tp-model/TpModel';
 import { MatCardModule } from '@angular/material/card';
 import { GameTypeService } from '../../Shared/game-type.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-round-robin-table',
   standalone: true,
-  imports: [MatCardModule],
+  imports: [CommonModule, MatCardModule],
   templateUrl: './round-robin-table.component.html',
   styleUrl: './round-robin-table.component.scss',
 })
@@ -26,6 +27,7 @@ export class RoundRobinTableComponent {
   ): string | undefined {
     if (this.players == undefined) return;
     if (rowIndex == columnIndex) return '_';
+    //!! remember this order
     var firstPlayer = this.players[columnIndex];
     var secondPlayer = this.players[rowIndex];
     var match = this.getMatch(firstPlayer, secondPlayer);
@@ -49,5 +51,17 @@ export class RoundRobinTableComponent {
       (match.firstPlayer.id == secondPlayer.id &&
         match.secondPlayer.id == firstPlayer.id)
     );
+  }
+
+  public getTableClass(rowIndex: number, columnIndex: number): string | undefined{
+    if (this.players == undefined) return;
+    //!! remember this order
+    var firstPlayer = this.players[columnIndex];
+    var secondPlayer = this.players[rowIndex];
+    var match = this.getMatch(firstPlayer, secondPlayer);
+    if(match?.winner == null || match?.winner == undefined)return 'not-played';
+    if(match.winner.id == firstPlayer.id)return 'won';
+    return 'lost'
+    
   }
 }
