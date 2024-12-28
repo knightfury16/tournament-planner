@@ -3,11 +3,12 @@ import { GameTypeDto, MatchDto, PlayerDto } from '../tp-model/TpModel';
 import { MatCardModule } from '@angular/material/card';
 import { GameTypeService } from '../../Shared/game-type.service';
 import { CommonModule } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-round-robin-table',
   standalone: true,
-  imports: [CommonModule, MatCardModule],
+  imports: [CommonModule, MatCardModule, MatTableModule],
   templateUrl: './round-robin-table.component.html',
   styleUrl: './round-robin-table.component.scss',
 })
@@ -18,7 +19,13 @@ export class RoundRobinTableComponent {
   @Input({ required: true }) gameType?: GameTypeDto | null;
 
   private _gameTypeService = inject(GameTypeService);
+  displayedColumns: string[] = [];
 
+  ngOnInit() {
+    if (this.players) {
+      this.displayedColumns = ['player', ...this.players.map((_, i) => 'player' + i)];
+    }
+  }
 
 
   public getTableRowData(

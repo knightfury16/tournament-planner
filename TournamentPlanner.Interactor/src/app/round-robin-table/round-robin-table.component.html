@@ -4,22 +4,29 @@
       Round Robin Matches Table
     </mat-card-title>
   </mat-card-header>
-  <table class="table">
-    <thead class="tb-head">
-      <th class="header">&nbsp;</th>
-      @for (player of this.players; track player) {
-      <th class="header">{{player.name}}</th>
-      }
-    </thead>
-    <tbody class="tb-body">
-      @for (player of this.players; track player; let columnIdx = $index) {
-      <tr class="row">
-        <td  class="tb-data tb-data-name">{{player.name}}</td>
-        @for (player of [].constructor(this.players?.length); track player; let rowIdx = $index) {
-        <td [ngClass]="this.getTableClass(rowIdx, columnIdx)" class="tb-data">{{this.getTableRowData(rowIdx,columnIdx)}}</td>
-        }
-      </tr>
-      }
-    </tbody>
-  </table>
+  <mat-card-content>
+        <div class="table-container">
+          <table mat-table [dataSource]="players || []" class="mat-elevation-z0">
+            <!-- Header Column -->
+            <ng-container matColumnDef="player">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell class="tb-data-name" *matCellDef="let row">{{row.name}}</td>
+            </ng-container>
+
+            <!-- Dynamic Columns -->
+            <ng-container *ngFor="let player of players; let i = index">
+              <ng-container [matColumnDef]="'player' + i">
+                <th mat-header-cell *matHeaderCellDef>{{player.name}}</th>
+                <td mat-cell *matCellDef="let row; let j = index" 
+                    [ngClass]="getTableClass(i, j)">
+                  {{getTableRowData(i, j)}}
+                </td>
+              </ng-container>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+  </mat-card-content>
 </mat-card>

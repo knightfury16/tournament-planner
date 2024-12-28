@@ -12,7 +12,7 @@
 }
 
 .tb-data-name {
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .tb-data {
@@ -21,20 +21,30 @@
 
 th,
 td {
-  padding: 10px;
-  text-align: center; /* Center content horizontally */
-  vertical-align: middle; /* Center content vertically */
+  border: 1px solid #e0e0e0;
+  padding: 12px;
+  text-align: center;
 }
 
-.won{
+.won {
   background-color: var(--tp-ok-color);
 }
 
-.lost{
+.lost {
   background-color: var(--tp-warn-color);
 }
 
-.not-played{
+.not-played {
   background-color: var(--tp-cream-color);
 }
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
 
