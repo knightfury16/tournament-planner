@@ -25,6 +25,9 @@ td {
   padding: 12px;
   text-align: center;
 }
+table{
+  border: 1px solid #e0e0e0;
+}
 
 .won {
   background-color: var(--tp-ok-color);
@@ -45,6 +48,10 @@ td {
 table {
   width: 100%;
   border-collapse: collapse;
+}
+
+.title{
+  margin-bottom: 5px;
 }
 
 
