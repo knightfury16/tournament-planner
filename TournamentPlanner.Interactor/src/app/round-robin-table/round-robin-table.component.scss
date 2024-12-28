@@ -1,20 +1,27 @@
-.mat-card{
+.mat-card {
   padding: 5px;
 }
 
-.header{
-  border: 1px solid #7E99A3;
+.header {
+  border: 1px solid #7e99a3;
 }
 
-.card-header{
+.card-header {
   display: flex;
   justify-content: center;
 }
 
-.tb-data-name{
+.tb-data-name {
   font-weight: bold;
 }
 
-.tb-data{
-  border: 1px solid #7E99A3;
+.tb-data {
+  border: 1px solid #7e99a3;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: center; /* Center content horizontally */
+  vertical-align: middle; /* Center content vertically */
 }
