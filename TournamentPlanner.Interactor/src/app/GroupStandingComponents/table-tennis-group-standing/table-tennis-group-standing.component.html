@@ -1,13 +1,46 @@
-<p>table-tennis-group-standing works!</p>
-@if (this.playerStandings) {
-  @for (item of this.playerStandings; track $index) {
-    <div>{{item.player.name}}</div>
-    <div>Point: {{item.matchPoints}}</div>
-    <div>played: {{item.wins + item.losses}}</div>
-    <div>matches: {{item.wins}} - {{item.losses}}</div>
-    <div>games: {{item.gamesWon}} - {{item.gamesLost}}</div>
-    <div>point: {{item.pointsWon}} - {{item.pointsLost}}</div>
-    <hr>
+<table mat-table [dataSource]="playerStandings!" class="w-full">
+      <!-- Rank Column -->
+      <ng-container matColumnDef="ranking">
+        <th mat-header-cell *matHeaderCellDef> # </th>
+        <td mat-cell *matCellDef="let player"> {{player.ranking}} </td>
+      </ng-container>
 
-  }
-}
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td class="td-data-name" mat-cell *matCellDef="let player"> {{player.player.name}} </td>
+      </ng-container>
+
+      <!-- Points Column -->
+      <ng-container matColumnDef="points">
+        <th mat-header-cell *matHeaderCellDef> Points </th>
+        <td mat-cell *matCellDef="let player"> {{player.matchPoints}} </td>
+      </ng-container>
+
+      <!-- Matches Played Column -->
+      <ng-container matColumnDef="matchesPlayed">
+        <th mat-header-cell *matHeaderCellDef> Played </th>
+        <td mat-cell *matCellDef="let player"> {{player.wins + player.losses}} </td>
+      </ng-container>
+
+      <!-- Match Record Column -->
+      <ng-container matColumnDef="matchRecord">
+        <th mat-header-cell *matHeaderCellDef> Matches </th>
+        <td mat-cell *matCellDef="let player"> {{player.wins}} - {{player.losses}} </td>
+      </ng-container>
+
+      <!-- Games Record Column -->
+      <ng-container matColumnDef="gamesRecord">
+        <th mat-header-cell *matHeaderCellDef> Games </th>
+        <td mat-cell *matCellDef="let player"> {{player.gamesWon}} - {{player.gamesLost}} </td>
+      </ng-container>
+
+      <!-- Points Record Column -->
+      <ng-container matColumnDef="pointsRecord">
+        <th mat-header-cell *matHeaderCellDef> Points </th>
+        <td mat-cell *matCellDef="let player"> {{player.pointsWon}} - {{player.pointsLost}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
