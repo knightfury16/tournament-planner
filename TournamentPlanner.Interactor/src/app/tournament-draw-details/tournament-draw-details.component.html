@@ -30,9 +30,7 @@
     </app-round-robin-table>
   </div>
   <div>
-    <mat-card-title>
-      Group Standing
-    </mat-card-title>
+    <app-group-standing-provider [gameType]="this.gameType" [matchTypeId]="this.matchType()?.id"></app-group-standing-provider>
   </div>
   }
 </ng-template>

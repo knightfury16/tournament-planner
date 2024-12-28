@@ -20,6 +20,7 @@ import { TournamentPlannerService } from '../tournament-planner.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatListModule } from '@angular/material/list';
 import { RoundRobinTableComponent } from "../round-robin-table/round-robin-table.component";
+import { GroupStandingProviderComponent } from "../group-standing-provider/group-standing-provider.component";
 
 @Component({
   selector: 'app-tournament-draw-details',
@@ -32,7 +33,8 @@ import { RoundRobinTableComponent } from "../round-robin-table/round-robin-table
     MatButtonModule,
     MatTableModule,
     MatListModule,
-    RoundRobinTableComponent
+    RoundRobinTableComponent,
+    GroupStandingProviderComponent
 ],
   templateUrl: './tournament-draw-details.component.html',
   styleUrl: './tournament-draw-details.component.scss',
