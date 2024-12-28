@@ -1,1 +1,13 @@
 <p>table-tennis-group-standing works!</p>
+@if (this.playerStandings) {
+  @for (item of this.playerStandings; track $index) {
+    <div>{{item.player.name}}</div>
+    <div>Point: {{item.matchPoints}}</div>
+    <div>played: {{item.wins + item.losses}}</div>
+    <div>matches: {{item.wins}} - {{item.losses}}</div>
+    <div>games: {{item.gamesWon}} - {{item.gamesLost}}</div>
+    <div>point: {{item.pointsWon}} - {{item.pointsLost}}</div>
+    <hr>
+
+  }
+}
