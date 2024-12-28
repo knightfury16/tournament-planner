@@ -1,11 +1,11 @@
 .chip-completed {
-    background-color:#ECE852;
-    color: #FFFDEC
+    background-color:var(--tp-ok-color);
+    color: var(--tp-cream-color);
 }
 
 .chip-incompleted {
-    background-color: #FB4141;
-    color: #FFFDEC
+    background-color: var(--tp-warn-color);
+    color: var(--tp-cream-color);
 }
 
 .my-chip {

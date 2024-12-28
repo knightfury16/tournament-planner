@@ -25,3 +25,16 @@ td {
   text-align: center; /* Center content horizontally */
   vertical-align: middle; /* Center content vertically */
 }
+
+.won{
+  background-color: var(--tp-ok-color);
+}
+
+.lost{
+  background-color: var(--tp-warn-color);
+}
+
+.not-played{
+  background-color: var(--tp-cream-color);
+}
+
