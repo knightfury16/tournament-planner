@@ -4,11 +4,12 @@ import { MatCardModule } from '@angular/material/card';
 import { GameTypeDto, NotAvailable } from '../tp-model/TpModel';
 import { GameTypeService } from '../../Shared/game-type.service';
 import { getDateAndTimeStringInFormat } from '../../Shared/Utility/dateTimeUtility';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-tournament-match',
   standalone: true,
-  imports: [MatCardModule],
+  imports: [MatCardModule,MatIconModule],
   templateUrl: './tournament-match.component.html',
   styleUrl: './tournament-match.component.scss'
 })
