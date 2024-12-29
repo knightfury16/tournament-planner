@@ -1,7 +1,10 @@
 <mat-grid-list cols="2" rowHeight="2:1">
+    <mat-card-header class="header">
+        <h2 class="title">Tournament Matches List</h2>
+    </mat-card-header>
     @for (match of this.matchCardModels(); track match) {
-        <mat-grid-tile>
-            <app-tournament-match [gameType]="gameType" [match]="match"></app-tournament-match>
-        </mat-grid-tile>
+    <mat-grid-tile>
+        <app-tournament-match [gameType]="gameType" [match]="match"></app-tournament-match>
+    </mat-grid-tile>
     }
 </mat-grid-list>
