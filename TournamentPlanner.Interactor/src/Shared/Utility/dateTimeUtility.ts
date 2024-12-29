@@ -15,6 +15,16 @@ export function getDateStringInFormat(date: Date): string {
 }
 
 
+export function getDateAndTimeStringInFormat(date: Date): string {
+    const year = date.getFullYear();
+    const month = date.toLocaleString('default', { month: 'short' });
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+    const seconds = date.getUTCSeconds().toString().padStart(2, '0');
+    return `${day} ${month} ${year} ${hours}:${minutes} (UTC)`;
+}
+
 export function transformTournamentIsoDate(value: TournamentDto | null): TournamentDto | null {
     if (!value) return null;
     const startDate = value.startDate ? getDateStringInFormat(new Date(value.startDate)) : null;
