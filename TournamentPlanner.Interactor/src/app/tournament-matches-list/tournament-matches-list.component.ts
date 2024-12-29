@@ -4,14 +4,17 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { LoadingService } from '../../Shared/loading.service';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { TournamentMatchComponent } from "../tournament-match/tournament-match.component";
 
 
 export type MatchModel = {
   roundName: string | undefined | null;
   matchTypeName: string | undefined;
   matchPlayed: Date | string | undefined | null;
-  firstPlayerName: PlayerDto | undefined;
-  secondPlayerName: PlayerDto | undefined;
+  matchScheduled: Date | string | undefined | null;
+  firstPlayer: PlayerDto | undefined;
+  secondPlayer: PlayerDto | undefined;
   winner: PlayerDto | undefined | null;
   scoreJson: string | undefined | null;
   court: string | undefined | null;
@@ -27,7 +30,7 @@ export type MatchModel = {
 @Component({
   selector: 'app-tournament-matches-list',
   standalone: true,
-  imports: [MatCardModule, MatTabsModule],
+  imports: [MatCardModule, MatTabsModule, MatGridListModule, TournamentMatchComponent],
   templateUrl: './tournament-matches-list.component.html',
   styleUrl: './tournament-matches-list.component.scss'
 })
@@ -69,16 +72,20 @@ export class TournamentMatchesListComponent implements OnInit {
   getMatchCardModels(): MatchModel[] {
     return this.draws()!.flatMap(draw => 
       draw.matchType.rounds.flatMap(round => 
-        round.matches.map(match  => ({
-          firstPlayerName: match.firstPlayer,
-          secondPlayerName: match.secondPlayer,
-          winner: match.winner,
-          matchPlayed: match.gamePlayed,
-          roundName: round.roundName,
-          matchTypeName: draw.matchType.name,
-          scoreJson: match.scoreJson,
-          court: match.courtName
-        }))
+        round.matches.map(match  => {
+          const matchCardModel: MatchModel = {
+            firstPlayer: match.firstPlayer,
+            secondPlayer: match.secondPlayer,
+            winner: match.winner,
+            matchPlayed: match.gamePlayed,
+            matchScheduled: match.gameScheduled,
+            roundName: round.roundName,
+            matchTypeName: draw.matchType.name,
+            scoreJson: match.scoreJson,
+            court: match.courtName
+          };
+          return matchCardModel;
+        })
       ))
   }
 }

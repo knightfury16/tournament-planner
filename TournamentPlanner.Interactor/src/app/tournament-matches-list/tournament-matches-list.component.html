@@ -1,5 +1,7 @@
-<mat-card>
-    <p>{{this.tournamentId}}</p>
-    <mat-tab-group  mat-stretch-tabs="false" mat-align-tabs="center">
-    </mat-tab-group>
-</mat-card>
+<mat-grid-list cols="2" rowHeight="2:1">
+    @for (match of this.matchCardModels(); track match) {
+        <mat-grid-tile>
+            <app-tournament-match [gameType]="gameType" [match]="match"></app-tournament-match>
+        </mat-grid-tile>
+    }
+</mat-grid-list>
