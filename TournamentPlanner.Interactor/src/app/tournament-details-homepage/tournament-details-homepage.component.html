@@ -12,7 +12,7 @@
         </mat-tab>
         <mat-tab label="Matches">
             <div class="tab-container">
-                <app-tournament-matches-list [tournamentId]="this.tournament()?.id"></app-tournament-matches-list>
+                <app-tournament-matches-list [gameType]="this.tournament()?.gameTypeDto" [tournamentId]="this.tournamentId"></app-tournament-matches-list>
             </div>
         </mat-tab>
         <mat-tab label="Draws">

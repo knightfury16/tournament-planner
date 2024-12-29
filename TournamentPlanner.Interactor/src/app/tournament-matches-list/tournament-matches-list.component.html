@@ -1,7 +1,5 @@
 <mat-card>
+    <p>{{this.tournamentId}}</p>
     <mat-tab-group  mat-stretch-tabs="false" mat-align-tabs="center">
-        @for (item of this.myCounter; track $index) {
-            <mat-tab [label]="item">{{item}}</mat-tab>
-        }
     </mat-tab-group>
 </mat-card>

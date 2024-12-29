@@ -1,7 +1,28 @@
-import { Component, Input } from '@angular/core';
-import { TournamentDto } from '../tp-model/TpModel';
+import { Component, computed, effect, inject, Input, OnInit, signal } from '@angular/core';
+import { DrawDto, GameTypeDto, PlayerDto, TournamentDto } from '../tp-model/TpModel';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
+import { TournamentPlannerService } from '../tournament-planner.service';
+import { LoadingService } from '../../Shared/loading.service';
+
+
+export type MatchModel = {
+  roundName: string | undefined | null;
+  matchTypeName: string | undefined;
+  matchPlayed: Date | string | undefined | null;
+  firstPlayerName: PlayerDto | undefined;
+  secondPlayerName: PlayerDto | undefined;
+  winner: PlayerDto | undefined | null;
+  scoreJson: string | undefined | null;
+  court: string | undefined | null;
+}
+
+// export type MatchCardModel = {
+//   gameScheduled: string | undefined | null;
+//   matches: MatchModel[];
+// }
+
+
 
 @Component({
   selector: 'app-tournament-matches-list',
@@ -10,9 +31,54 @@ import { MatTabsModule } from '@angular/material/tabs';
   templateUrl: './tournament-matches-list.component.html',
   styleUrl: './tournament-matches-list.component.scss'
 })
-export class TournamentMatchesListComponent {
-  @Input({required: true}) public tournamentId?: number;
+export class TournamentMatchesListComponent implements OnInit {
+  @Input({required: true}) public tournamentId?: string;
+  @Input({required: true}) public gameType?: GameTypeDto | null;
 
-  public myCounter = ["a","b","c"];
+  private _tpService = inject(TournamentPlannerService);
+  private _loadingService = inject(LoadingService);
 
+  public draws = signal< DrawDto[] | undefined>(undefined);
+
+  public matchCardModels = computed<MatchModel[] | undefined>(() => {
+    if(this.draws() == undefined)return;
+    return this.getMatchCardModels();
+  });
+
+  constructor(){
+    effect(() =>{
+      console.log("MATCHCARDMODLESSSSSS:::", this.matchCardModels());
+    })
+  }
+
+
+  async ngOnInit(){
+    try {
+      this._loadingService.show()
+      var response = await this._tpService.getTournamentMatches(this.tournamentId!.toString());
+      this.draws.set(response);
+      this._loadingService.hide();
+      
+    } catch (error: any) {
+      this._loadingService.hide();
+      console.log(error);
+    }
+  }
+
+
+  getMatchCardModels(): MatchModel[] {
+    return this.draws()!.flatMap(draw => 
+      draw.matchType.rounds.flatMap(round => 
+        round.matches.map(match  => ({
+          firstPlayerName: match.firstPlayer,
+          secondPlayerName: match.secondPlayer,
+          winner: match.winner,
+          matchPlayed: match.gamePlayed,
+          roundName: round.roundName,
+          matchTypeName: draw.matchType.name,
+          scoreJson: match.scoreJson,
+          court: match.courtName
+        }))
+      ))
+  }
 }
