@@ -1,0 +1,25 @@
+<mat-card>
+    <p class="sub-header">{{match?.matchTypeName}} - {{match?.roundName}}</p>
+    <hr>
+    <mat-card-header>
+        <mat-card-title>
+            {{this.getFirstPlayerName()}} Vs. {{this.getSecondPlayerName()}}
+        </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+        <div>
+            Score : <span class="score-span">{{this.getMatchScore()}}</span>
+        </div>
+        <div>
+            Scheduled: {{this.getMatchScheduledDate()}}
+        </div>
+        <div>
+            Played: {{this.getMatchPlayedDate()}}
+        </div>
+        <div>
+            Court: {{this.getMatchCourtName()}}
+        </div>
+    </mat-card-content>
+
+</mat-card>
