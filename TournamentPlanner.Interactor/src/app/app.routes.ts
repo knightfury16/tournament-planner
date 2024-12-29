@@ -5,7 +5,6 @@ import { PeopleListComponent } from './people-list/people-list.component';
 import { TripListComponent } from './trip-list/trip-list.component';
 import { AirportsListComponent } from './airports-list/airports-list.component';
 import { TournamentListComponent } from './tournament-list/tournament-list.component';
-import { TournamentMatchesComponent } from './tournament-matches/tournament-matches.component';
 import { AddTournamentComponent } from './add-tournament/add-tournament.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterPlayerComponent } from './register-player/register-player.component';
@@ -24,7 +23,6 @@ export const routes: Routes = [
     { path: 'people', component: PeopleListComponent },
     { path: 'airports', component: AirportsListComponent },
     { path: 'people/:userName/trips', component: TripListComponent },
-    { path: 'tp/:tournamentId/matches', component: TournamentMatchesComponent },
     { path: 'tp', component: TournamentListComponent },
     { path: 'tp/tournament-details-homepage/:tournamentId', component: TournamentDetailsHomepageComponent },
     { path: 'tp/manage-tournament-homepage/:tournamentId', component: ManageTournamentHomepageComponent, canActivate: [authGuard, adminGuard] },
