@@ -1,9 +1,11 @@
 import { IScore } from './IScore';
 
+//!! REMEMBER to match the casing of the DTO or else cant parse
+
 export interface SetScore {
   // Define the properties of SetScore based on your requirements
-  player1Points: number;
-  player2Points: number;
+  Player1Points: number;
+  Player2Points: number;
 }
 
 //!! Experimental
