@@ -1,3 +1,4 @@
+export const  NotAvailable = "N/A";
 export interface TournamentDto {
   id: number;
   name: string | undefined;
