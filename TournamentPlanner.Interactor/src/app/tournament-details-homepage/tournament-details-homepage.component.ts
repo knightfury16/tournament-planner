@@ -8,6 +8,7 @@ import { TournamentPlayerDetailsComponent } from '../tournament-player-details/t
 import { TournamentDetailsComponent } from "../tournament-details/tournament-details.component";
 import { TournamentDrawListComponent } from "../tournament-draw-list/tournament-draw-list.component";
 import { TournamentDrawDetailsComponent } from '../tournament-draw-details/tournament-draw-details.component';
+import { TournamentMatchesListComponent } from "../tournament-matches-list/tournament-matches-list.component";
 
 export enum PlayerTabViewType {
   ListView = "List View",
@@ -23,7 +24,7 @@ export enum DrawTabViewType{
   selector: 'app-tournament-details-homepage',
   standalone: true,
   imports: [MatTabsModule, CommonModule, MatCardModule, TournamentPlayerListComponent,
-    TournamentPlayerDetailsComponent,TournamentDrawDetailsComponent, TournamentDetailsComponent, TournamentDrawListComponent],
+    TournamentPlayerDetailsComponent, TournamentDrawDetailsComponent, TournamentDetailsComponent, TournamentDrawListComponent, TournamentMatchesListComponent],
   templateUrl: './tournament-details-homepage.component.html',
   styleUrl: './tournament-details-homepage.component.scss'
 })
