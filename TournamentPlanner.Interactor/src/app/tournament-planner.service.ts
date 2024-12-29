@@ -24,13 +24,9 @@ export class TournamentPlannerService {
     return firstValueFrom(this.httpClient.get<TournamentDto>(`${this.baseUrl}/tournament/${id}`));
   }
 
-  public getMatches(tournamentId: number): Observable<MatchDto[]> {
-    let params = new HttpParams();
-
-    if (tournamentId) {
-      params = params.set('tournamentId', tournamentId);
-    }
-    return this.httpClient.get<MatchDto[]>(`${this.baseUrl}/matches`, { params });
+  //getting the matches by the draw populated
+  public getTournamentMatches(tournamentId: string): Promise<DrawDto[]> {
+    return firstValueFrom(this.httpClient.get<DrawDto[]>(`${this.baseUrl}/tournament/${tournamentId}/matches`));
   }
 
   public addTournament(addTournamentDto: AddTournamentDto): Observable<TournamentDto> {
