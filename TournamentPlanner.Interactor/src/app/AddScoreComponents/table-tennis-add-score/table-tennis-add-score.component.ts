@@ -142,7 +142,7 @@ export class TableTennisAddScoreComponent extends BaseAddScoreComponent {
     return index + 1;
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.addScoreForm.valid) {
       const formValue = this.scoreForm?.value;
       const score: TableTennisScoreType = {
@@ -175,7 +175,8 @@ export class TableTennisAddScoreComponent extends BaseAddScoreComponent {
 
       // TODO: Send to backend
       console.log('Submitting score:', score);
-      this.matchTabChangeEE.emit();
+
+      await this.addMatchScore(score);
     }
   }
 
