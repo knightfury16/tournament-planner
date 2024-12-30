@@ -22,7 +22,7 @@ public class GetMatchRequestHandler : IRequestHandler<GetMatchRequest, MatchDto>
     {
         if(request == null )throw new ArgumentException(nameof(request));
 
-        var match = await _matchRepository.GetByIdAsync(request.MatchId, [nameof(Match.FirstPlayer)]);
+        var match = await _matchRepository.GetByIdAsync(request.MatchId, [nameof(Match.FirstPlayer), nameof(Match.SecondPlayer)]);
         if(match == null)throw new NotFoundException(nameof(match));
 
         return _mapper.Map<MatchDto>(match);
