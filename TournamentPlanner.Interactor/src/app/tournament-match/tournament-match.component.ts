@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { MatchModel } from '../tournament-matches-list/tournament-matches-list.component';
 import { MatCardModule } from '@angular/material/card';
 import { GameTypeDto, NotAvailable } from '../tp-model/TpModel';
@@ -18,6 +18,7 @@ export class TournamentMatchComponent {
   @Input({ required: true }) public match?: MatchModel;
   @Input({ required: true }) public gameType?: GameTypeDto | null;
   @Input() public manage: boolean = false;
+  @Output() public matchSelectedEE = new EventEmitter<number>();
 
   private _gameTypeService = inject(GameTypeService);
 
@@ -63,5 +64,9 @@ export class TournamentMatchComponent {
   public isGamePlayed():boolean{
     if(this.match?.winner)return true;
     return false;
+  }
+  public addScoreTabChangeView()
+  {
+    this.matchSelectedEE.emit(this.match?.matchId);
   }
 }
