@@ -59,4 +59,9 @@ export class TournamentMatchComponent {
     if(this.match?.matchScheduled == null)return NotAvailable;
     return getDateAndTimeStringInFormat(new Date(this.match.matchScheduled));
   }
+
+  public isGamePlayed():boolean{
+    if(this.match?.winner)return true;
+    return false;
+  }
 }
