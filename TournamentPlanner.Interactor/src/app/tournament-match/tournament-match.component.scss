@@ -8,3 +8,13 @@
     font-style: italic;
     font-weight: 700;
 }
+
+.card-action{
+    justify-content: end;
+    margin-right: 10px;
+}
+.add-score-link{
+    padding: 5px;
+    background-color: var(--tp-cream-color);
+    border:0.5px solid blanchedalmond;
+}
