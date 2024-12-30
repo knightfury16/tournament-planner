@@ -24,33 +24,26 @@
 
 <ng-template #detailsTab>
   @if (this.players() != undefined) {
-    <!-- //TODO: dynamically show groupmatchtype and knockout matchtype component here -->
+  <!-- //TODO: dynamically show groupmatchtype and knockout matchtype component here -->
   <div>
     <app-round-robin-table [players]="this.players()" [matches]="this.matches()" [gameType]="this.gameType">
     </app-round-robin-table>
   </div>
   <div>
-    <app-group-standing-provider [gameType]="this.gameType" [matchTypeId]="this.matchType()?.id"></app-group-standing-provider>
+    <app-group-standing-provider [gameType]="this.gameType"
+      [matchTypeId]="this.matchType()?.id"></app-group-standing-provider>
   </div>
   }
 </ng-template>
 
 <ng-template #matchesTab>
-  <p>Matches content goes here.</p>
   @for (round of this.rounds(); track round.id) {
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>
-          {{round.roundName}}
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        @for (match of round.matches; track match.id) {
-          <div>{{match.firstPlayer.name}} vs. {{match.secondPlayer.name}}</div>
-          <div>{{match.winner ?? "Not Played"}}</div>
-          <div>{{match.gameScheduled}}</div>
-        }
-      </mat-card-content>
-    </mat-card>
+  <mat-grid-list cols="2" rowHeight="2:1">
+    @for (match of round.matches; track match.id) {
+    <mat-grid-tile>
+      <app-tournament-match [match]="this.getMatchModel(match, round)" [gameType]="this.gameType"></app-tournament-match>
+    </mat-grid-tile>
+    }
+  </mat-grid-list>
   }
 </ng-template>

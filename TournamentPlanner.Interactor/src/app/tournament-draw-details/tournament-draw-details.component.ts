@@ -15,12 +15,15 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
-import { GameTypeDto, MatchDto, MatchTypeDto, PlayerMatches } from '../tp-model/TpModel';
+import { GameTypeDto, MatchDto, MatchTypeDto, RoundDto } from '../tp-model/TpModel';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatListModule } from '@angular/material/list';
 import { RoundRobinTableComponent } from "../round-robin-table/round-robin-table.component";
 import { GroupStandingProviderComponent } from "../group-standing-provider/group-standing-provider.component";
+import { MatGridListModule } from '@angular/material/grid-list';
+import { TournamentMatchComponent } from '../tournament-match/tournament-match.component';
+import { MatchModel } from '../tournament-matches-list/tournament-matches-list.component';
 
 @Component({
   selector: 'app-tournament-draw-details',
@@ -34,14 +37,16 @@ import { GroupStandingProviderComponent } from "../group-standing-provider/group
     MatTableModule,
     MatListModule,
     RoundRobinTableComponent,
-    GroupStandingProviderComponent
-],
+    GroupStandingProviderComponent,
+    MatGridListModule,
+    TournamentMatchComponent
+  ],
   templateUrl: './tournament-draw-details.component.html',
   styleUrl: './tournament-draw-details.component.scss',
 })
 export class TournamentDrawDetailsComponent implements OnInit {
   @Input({ required: true }) public matchTypeId?: number;
-  @Input({required:true}) public gameType?: GameTypeDto | null;
+  @Input({ required: true }) public gameType?: GameTypeDto | null;
   @Output() drawTabChangeEvent = new EventEmitter<DrawTabViewType>();
   private _tpService = inject(TournamentPlannerService);
 
@@ -70,13 +75,27 @@ export class TournamentDrawDetailsComponent implements OnInit {
       console.log(error);
       console.log(
         (error as any).error ??
-          (error as any).error?.Error ??
-          'An unknown error occurred.'
+        (error as any).error?.Error ??
+        'An unknown error occurred.'
       );
     }
   }
 
   public emitDrawTabChangeEvent() {
     this.drawTabChangeEvent.emit(DrawTabViewType.ListView);
+  }
+  getMatchModel(match: MatchDto, round: RoundDto): MatchModel {
+    return {
+      firstPlayer: match.firstPlayer,
+      secondPlayer: match.secondPlayer,
+      matchId: match.id,
+      court: match.courtName,
+      matchPlayed: match.gamePlayed,
+      matchScheduled: match.gameScheduled,
+      scoreJson: match.scoreJson,
+      matchTypeName: this.matchType()?.name,
+      roundName: round.roundName,
+      winner: match.winner
+    }
   }
 }
