@@ -10,7 +10,7 @@ import { PlayerDto, TournamentDto } from '../tp-model/TpModel';
 import { ManageTournamentDetailsComponent } from "../manage-tournament-details/manage-tournament-details.component";
 import { TournamentMatchesListComponent } from "../tournament-matches-list/tournament-matches-list.component";
 
-export enum AdminMatchTabViewType{
+export enum MatchTabViewType{
   MatchView = "MatchView",
   AddScoreView = "AddScoreView"
 }
@@ -30,16 +30,16 @@ export class ManageTournamentHomepageComponent {
   public tournamentParticipants = signal<PlayerDto[] | undefined>(undefined);
   public playerTabViewType = PlayerTabViewType;
 
-  public matchTabViewType = AdminMatchTabViewType;
+  public matchTabViewType = MatchTabViewType;
 
   public playerTabView = signal<PlayerTabViewType>(PlayerTabViewType.ListView);
-  public matchTabView = signal<AdminMatchTabViewType>(AdminMatchTabViewType.MatchView);
+  public matchTabView = signal<MatchTabViewType>(MatchTabViewType.MatchView);
 
 
   public togglePlayerTabView(view: PlayerTabViewType) {
     this.playerTabView.set(view);
   }
-  public toggleMatchViewType(view: AdminMatchTabViewType) {
+  public toggleMatchViewType(view: MatchTabViewType) {
     this.matchTabView.set(view);
   }
 
