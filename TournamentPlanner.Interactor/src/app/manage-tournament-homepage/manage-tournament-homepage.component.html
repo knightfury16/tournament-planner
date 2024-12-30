@@ -26,6 +26,11 @@
                 }
             </div>
         </mat-tab>
+        <mat-tab label="Make Schedule">
+            <div class="tab-container">
+                Draws: {{tournamentId}}
+            </div>
+        </mat-tab>
         <mat-tab label="Matches">
             <div class="tab-container">
                 @if (this.matchTabView() == this.matchTabViewType.MatchView) {
@@ -34,11 +39,6 @@
                 @else if (this.matchTabView() == this.matchTabViewType.AddScoreView) {
                     <app-add-match-score (matchTabViewChangeEvent)="this.tabChangeToListView()" [matchId]="this.matchId()" [gameType]="this.tournament()?.gameTypeDto"></app-add-match-score>
                 }
-            </div>
-        </mat-tab>
-        <mat-tab label="Add Score">
-            <div class="tab-container">
-                Draws: {{tournamentId}}
             </div>
         </mat-tab>
     </mat-tab-group>
