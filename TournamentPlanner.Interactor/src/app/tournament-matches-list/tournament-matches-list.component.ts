@@ -7,7 +7,7 @@ import { LoadingService } from '../../Shared/loading.service';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { TournamentMatchComponent } from "../tournament-match/tournament-match.component";
 import { CommonModule } from '@angular/common';
-import { MatchTabViewType } from '../manage-tournament-homepage/manage-tournament-homepage.component';
+import { MatchTabViewType } from '../tp-model/types';
 
 
 export type MatchModel = {

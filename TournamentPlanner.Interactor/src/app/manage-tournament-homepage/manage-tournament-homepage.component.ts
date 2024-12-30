@@ -9,11 +9,7 @@ import { PlayerTabViewType } from '../tournament-details-homepage/tournament-det
 import { PlayerDto, TournamentDto } from '../tp-model/TpModel';
 import { ManageTournamentDetailsComponent } from "../manage-tournament-details/manage-tournament-details.component";
 import { TournamentMatchesListComponent } from "../tournament-matches-list/tournament-matches-list.component";
-
-export enum MatchTabViewType{
-  MatchView = "MatchView",
-  AddScoreView = "AddScoreView"
-}
+import { MatchTabViewType } from '../tp-model/types';
 
 @Component({
   selector: 'app-manage-tournament-homepage',

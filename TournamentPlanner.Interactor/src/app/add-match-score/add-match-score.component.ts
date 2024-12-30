@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { GameTypeDto } from '../tp-model/TpModel';
-import { MatchTabViewType } from '../manage-tournament-homepage/manage-tournament-homepage.component';
+import { MatchTabViewType } from '../tp-model/types';
 
 @Component({
   selector: 'app-add-match-score',
