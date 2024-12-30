@@ -91,7 +91,7 @@ export class TournamentMatchesListComponent implements OnInit {
 
   public emitMatchTabChangeEvent()
   {
-    // this.matchTabChangeEventWithSelectedMatchId.emit({ viewType:MatchTabViewType.AddScoreView, matchId: this.matchSelectedId()! })
+    this.matchTabChangeEventWithSelectedMatchId.emit({ viewType:MatchTabViewType.AddScoreView, matchId: this.matchSelectedId()! })
   }
 
   getMatchCardModels(): MatchModel[] {
