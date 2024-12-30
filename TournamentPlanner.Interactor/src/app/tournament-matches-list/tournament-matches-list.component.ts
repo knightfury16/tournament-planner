@@ -85,13 +85,13 @@ export class TournamentMatchesListComponent implements OnInit {
     this.matchSelectedId.set(matchId);
     //if from manage then change match tab view to addscore
     if(this.manage){
-      this.emitMatchTabChangeEvent(matchId);
+      this.emitMatchTabChangeEvent();
     }
   }
 
-  public emitMatchTabChangeEvent(matchId: number)
+  public emitMatchTabChangeEvent()
   {
-    this.matchTabChangeEventWithSelectedMatchId.emit({viewType: MatchTabViewType.AddScoreView, matchId})
+    // this.matchTabChangeEventWithSelectedMatchId.emit({ viewType:MatchTabViewType.AddScoreView, matchId: this.matchSelectedId()! })
   }
 
   getMatchCardModels(): MatchModel[] {
