@@ -6,6 +6,7 @@ import { TournamentPlannerService } from '../tournament-planner.service';
 import { LoadingService } from '../../Shared/loading.service';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { TournamentMatchComponent } from "../tournament-match/tournament-match.component";
+import { CommonModule } from '@angular/common';
 
 
 export type MatchModel = {
@@ -30,7 +31,7 @@ export type MatchModel = {
 @Component({
   selector: 'app-tournament-matches-list',
   standalone: true,
-  imports: [MatCardModule, MatTabsModule, MatGridListModule, TournamentMatchComponent],
+  imports: [MatCardModule, MatTabsModule, MatGridListModule, TournamentMatchComponent, CommonModule],
   templateUrl: './tournament-matches-list.component.html',
   styleUrl: './tournament-matches-list.component.scss'
 })
@@ -43,9 +44,14 @@ export class TournamentMatchesListComponent implements OnInit {
 
   public draws = signal< DrawDto[] | undefined>(undefined);
 
-  public matchCardModels = computed<MatchModel[] | undefined>(() => {
-    if(this.draws() == undefined)return;
-    return this.getMatchCardModels();
+  public matchCardModels = computed<{[roundName: string]: MatchModel[]}>(() => {
+    if(this.draws() == undefined) return {};
+    return this.getMatchCardModels().reduce((acc: {[roundName: string]: MatchModel[]}, match) => {
+      const roundName = match.roundName || 'Default';
+      if (!acc[roundName]) acc[roundName] = [];
+      acc[roundName].push(match);
+      return acc;
+    }, {});
   });
 
   constructor(){
