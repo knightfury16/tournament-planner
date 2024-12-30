@@ -9,12 +9,13 @@ import { PlayerTabViewType } from '../tournament-details-homepage/tournament-det
 import { PlayerDto, TournamentDto } from '../tp-model/TpModel';
 import { ManageTournamentDetailsComponent } from "../manage-tournament-details/manage-tournament-details.component";
 import { TournamentMatchesListComponent } from "../tournament-matches-list/tournament-matches-list.component";
+import { AddMatchScoreComponent } from '../add-match-score/add-match-score.component';
 import { MatchTabViewType } from '../tp-model/types';
 
 @Component({
   selector: 'app-manage-tournament-homepage',
   standalone: true,
-  imports: [MatTabsModule, CommonModule, MatCardModule, TournamentPlayerListComponent, TournamentPlayerDetailsComponent, ManageTournamentDetailsComponent, TournamentMatchesListComponent],
+  imports: [MatTabsModule,AddMatchScoreComponent, CommonModule, MatCardModule, TournamentPlayerListComponent, TournamentPlayerDetailsComponent, ManageTournamentDetailsComponent, TournamentMatchesListComponent],
   templateUrl: './manage-tournament-homepage.component.html',
   styleUrl: './manage-tournament-homepage.component.scss'
 })
