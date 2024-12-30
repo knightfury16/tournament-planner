@@ -22,5 +22,10 @@
             Court: {{this.getMatchCourtName()}}
         </div>
     </mat-card-content>
+    @if (this.showAddScore()) {
+        <mat-card-actions class="card-action">
+            <a mat-stroked-button class="add-score-link">Add Score</a>
+        </mat-card-actions>
+    }
 
 </mat-card>

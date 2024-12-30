@@ -5,17 +5,19 @@ import { GameTypeDto, NotAvailable } from '../tp-model/TpModel';
 import { GameTypeService } from '../../Shared/game-type.service';
 import { getDateAndTimeStringInFormat } from '../../Shared/Utility/dateTimeUtility';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-tournament-match',
   standalone: true,
-  imports: [MatCardModule,MatIconModule],
+  imports: [MatButtonModule,MatCardModule,MatIconModule],
   templateUrl: './tournament-match.component.html',
   styleUrl: './tournament-match.component.scss'
 })
 export class TournamentMatchComponent {
   @Input({ required: true }) public match?: MatchModel;
   @Input({ required: true }) public gameType?: GameTypeDto | null;
+  @Input() public manage: boolean = false;
 
   private _gameTypeService = inject(GameTypeService);
 
@@ -27,6 +29,11 @@ export class TournamentMatchComponent {
   public getSecondPlayerName() {
     if (this.match?.winner != null && this.match.winner.id == this.match.secondPlayer?.id) return this.getPlayerNameWithWinnerIcon(this.match.secondPlayer.name);
     return this.match?.secondPlayer?.name;
+  }
+
+  public showAddScore(): boolean
+  {
+    return this.manage;
   }
 
   getPlayerNameWithWinnerIcon(name: string) {
