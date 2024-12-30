@@ -19,7 +19,7 @@
                     <app-tournament-matches-list (matchTabChangeEventWithSelectedMatchId)="this.tabViewChangeToAddScoreWithMatchId($event)" [tournamentId]="this.tournamentId" [gameType]="this.tournament()?.gameTypeDto" [manage]="true"></app-tournament-matches-list>
                 }
                 @else if (this.matchTabView() == this.matchTabViewType.AddScoreView) {
-                    <app-add-match-score [matchId]="this.matchId()" [gameType]="this.tournament()?.gameTypeDto"></app-add-match-score>
+                    <app-add-match-score (matchTabViewChangeEvent)="this.tabChangeToListView()" [matchId]="this.matchId()" [gameType]="this.tournament()?.gameTypeDto"></app-add-match-score>
                 }
             </div>
         </mat-tab>

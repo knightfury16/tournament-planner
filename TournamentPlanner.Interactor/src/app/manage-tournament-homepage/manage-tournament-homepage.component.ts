@@ -54,4 +54,8 @@ export class ManageTournamentHomepageComponent {
     this.matchId.set(event.matchId);
   }
 
+  public tabChangeToListView(){
+    this.matchTabView.set(MatchTabViewType.MatchView);
+  }
+
 }
