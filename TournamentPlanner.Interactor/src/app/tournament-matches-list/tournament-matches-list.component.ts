@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 
 
 export type MatchModel = {
+  matchId: number;
   roundName: string | undefined | null;
   matchTypeName: string | undefined;
   matchPlayed: Date | string | undefined | null;
@@ -80,6 +81,7 @@ export class TournamentMatchesListComponent implements OnInit {
       draw.matchType.rounds.flatMap(round => 
         round.matches.map(match  => {
           const matchCardModel: MatchModel = {
+            matchId: match.id,
             firstPlayer: match.firstPlayer,
             secondPlayer: match.secondPlayer,
             winner: match.winner,
