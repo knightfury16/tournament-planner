@@ -29,6 +29,10 @@ export class TournamentPlannerService {
     return firstValueFrom(this.httpClient.get<DrawDto[]>(`${this.baseUrl}/tournament/${tournamentId}/matches`));
   }
 
+  public getMatchById(matchId: string):Promise<MatchDto>{
+    return firstValueFrom(this.httpClient.get<MatchDto>(`${this.baseUrl}/matches/${matchId}`))
+  }
+
   public addTournament(addTournamentDto: AddTournamentDto): Observable<TournamentDto> {
     return this.httpClient.post<TournamentDto>(`${this.baseUrl}/tournament`, addTournamentDto, { withCredentials: true })
   }
