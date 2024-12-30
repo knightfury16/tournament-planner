@@ -40,6 +40,8 @@ export class TournamentMatchesListComponent implements OnInit {
   @Input({required: true}) public tournamentId?: string;
   @Input({required: true}) public gameType?: GameTypeDto | null;
 
+  @Input() public manage: boolean = false;
+
   private _tpService = inject(TournamentPlannerService);
   private _loadingService = inject(LoadingService);
 
