@@ -35,6 +35,7 @@ export class ManageTournamentHomepageComponent {
   public playerTabView = signal<PlayerTabViewType>(PlayerTabViewType.ListView);
   public matchTabView = signal<MatchTabViewType>(MatchTabViewType.MatchView);
 
+  public matchId = signal<number | undefined>(undefined);
 
   public togglePlayerTabView(view: PlayerTabViewType) {
     this.playerTabView.set(view);
@@ -49,6 +50,11 @@ export class ManageTournamentHomepageComponent {
 
   public tournamentParticipantsEC(participants: PlayerDto[]) {
     this.tournamentParticipants.set(participants);
+  }
+
+  public tabViewChangeToAddScoreWithMatchId(event: {viewType: MatchTabViewType, matchId: number}){
+    this.matchTabView.set(event.viewType);
+    this.matchId.set(event.matchId);
   }
 
 }
