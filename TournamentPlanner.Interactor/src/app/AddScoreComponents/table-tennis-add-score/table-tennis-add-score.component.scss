@@ -1,0 +1,66 @@
+.score-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title{
+    margin-bottom: 10px;
+}
+.player-holder{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+
+.add-set-btn{
+    margin: 10px;
+}
+
+.settings-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+
+  mat-form-field {
+    flex: 1;
+  }
+}
+
+.sets-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.set-row {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  padding: 16px;
+  background-color: #fafafa;
+
+  .set-header {
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: rgba(0, 0, 0, 0.87);
+  }
+}
+
+.points-inputs {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+
+  mat-form-field {
+    flex: 1;
+  }
+}
+
+.set-status {
+  color: #4caf50;
+  font-size: 24px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

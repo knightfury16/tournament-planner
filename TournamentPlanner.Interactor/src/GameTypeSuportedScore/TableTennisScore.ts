@@ -24,5 +24,5 @@ export type TableTennisScoreType = {
   SetsToWin: number; // default 3
   PointsPerSet: number; // default 11
   SetScores: SetScore[];
-  IsComplete: boolean;
+  IsComplete?: boolean;
 };

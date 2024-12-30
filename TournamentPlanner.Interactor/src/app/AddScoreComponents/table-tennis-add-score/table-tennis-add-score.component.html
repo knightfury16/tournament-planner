@@ -1,1 +1,99 @@
-<p>table-tennis-add-score works!</p>
+<div class="score-container mat-elevation-z2">
+    <form [formGroup]="this.scoreForm!" (ngSubmit)="onSubmit()">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title class="title">Table Tennis Score</mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+                <!-- Match Settings -->
+                <div class="settings-row">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Sets to Win</mat-label>
+                        <input matInput type="number" formControlName="setsToWin" min="1" max="7">
+                        <mat-error *ngIf="addScoreForm.get('setsToWin')?.hasError('required')">
+                            Sets to win is required
+                        </mat-error>
+                        <mat-error
+                            *ngIf="addScoreForm.get('setsToWin')?.hasError('min') || addScoreForm.get('setsToWin')?.hasError('max')">
+                            Sets must be between 1 and 7
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Points Per Set</mat-label>
+                        <input matInput type="number" formControlName="pointsPerSet" min="1">
+                        <mat-error *ngIf="addScoreForm.get('pointsPerSet')?.hasError('required')">
+                            Points per set is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <div class="player-holder">
+                        <h3>Player 1: {{match?.firstPlayer?.name}}</h3>
+                        <h3>Player 2: {{match?.secondPlayer?.name}}</h3>
+                    </div>
+                    <!-- Sets Scoring -->
+                    <div formArrayName="sets" class="sets-container">
+                        <div *ngFor="let set of getSets(); let i = index" [formGroupName]="i" class="set-row">
+                            <div class="set-header">Set {{getSetNumber(i)}}</div>
+
+                            <div class="points-inputs">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Player 1 Points</mat-label>
+                                    <input matInput type="number" formControlName="player1Points" min="0">
+                                    <mat-error *ngIf="set.get('player1Points')?.hasError('required')">
+                                        Points required
+                                    </mat-error>
+                                    <mat-error *ngIf="set.get('player1Points')?.hasError('insufficientDifference')">
+                                        2 point difference required to win
+                                    </mat-error>
+                                    <mat-error *ngIf="set.get('player1Points')?.hasError('excessivePoints')">
+                                        Points exceed maximum allowed
+                                    </mat-error>
+                                    <mat-error *ngIf="set.get('player1Points')?.hasError('minimumPointsNotReached')">
+                                        Either player must need minimum {{this.getPointsPerSetValue()}} points
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Player 2 Points</mat-label>
+                                    <input matInput type="number" formControlName="player2Points" min="0">
+                                    <mat-error *ngIf="set.get('player2Points')?.hasError('required')">
+                                        Points required
+                                    </mat-error>
+                                    <mat-error *ngIf="set.get('player2Points')?.hasError('insufficientDifference')">
+                                        2 point difference required to win
+                                    </mat-error>
+                                    <mat-error *ngIf="set.get('player2Points')?.hasError('excessivePoints')">
+                                        Points exceed maximum allowed
+                                    </mat-error>
+                                    <mat-error *ngIf="set.get('player2Points')?.hasError('minimumPointsNotReached')">
+                                        Either player must need minimum {{this.getPointsPerSetValue()}} points
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <div class="set-status" *ngIf="isSetComplete(set)">✓</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- set score input ends -->
+                     @if (this.scoreError()) {
+                        <mat-error>{{this.scoreError()}}</mat-error>
+                     }
+                </div>
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+                <button class="add-set-btn" mat-raised-button color="primary" (click)="this.addInput()"
+                    [disabled]="this.getAddInputDisable()">
+                    Add Set
+                </button>
+
+                <button mat-raised-button color="primary" type="submit" [disabled]="!scoreForm!.valid">
+                    Submit Score
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </form>
+</div>
