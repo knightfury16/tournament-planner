@@ -23,12 +23,10 @@ export class TournamentMatchComponent {
   private _gameTypeService = inject(GameTypeService);
 
   public getFirstPlayerName() {
-    if (this.match?.winner != null && this.match.winner.id == this.match.firstPlayer?.id) return this.getPlayerNameWithWinnerIcon(this.match.firstPlayer.name);
     return this.match?.firstPlayer?.name;
   }
 
   public getSecondPlayerName() {
-    if (this.match?.winner != null && this.match.winner.id == this.match.secondPlayer?.id) return this.getPlayerNameWithWinnerIcon(this.match.secondPlayer.name);
     return this.match?.secondPlayer?.name;
   }
 
@@ -37,14 +35,22 @@ export class TournamentMatchComponent {
     return this.manage;
   }
 
-  getPlayerNameWithWinnerIcon(name: string) {
-    return `Winner - name`
-  }
 
   public getMatchScore(): string {
     if (this.match?.winner == null || this.gameType == null || this.match.scoreJson == null) return NotAvailable;
     var scoreString = this._gameTypeService.getFullDisplayeScore(this.gameType, this.match.scoreJson);
     return scoreString;
+  }
+
+  public isFirstPlayerWinner(){
+    if (this.match?.winner == null || this.gameType == null || this.match.scoreJson == null) return false;
+    if(this.match.winner.id == this.match.firstPlayer?.id)return true;
+    return false;
+  }
+  public isSecondPlayerWinner(){
+    if (this.match?.winner == null || this.gameType == null || this.match.scoreJson == null) return false;
+    if(this.match.winner.id == this.match.secondPlayer?.id)return true;
+    return false;
   }
 
   getMatchCourtName(): string {

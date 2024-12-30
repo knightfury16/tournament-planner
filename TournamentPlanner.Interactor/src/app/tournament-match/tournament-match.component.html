@@ -3,8 +3,18 @@
         {{match?.matchTypeName}} - {{match?.roundName}}
     </div>
     <mat-card-header>
-        <mat-card-title>
-            {{this.getFirstPlayerName()}} Vs. {{this.getSecondPlayerName()}}
+        <mat-card-title class="player-title">
+            <div class="player-name-container">
+                <mat-icon class="winner-dot" [class.visible]="isFirstPlayerWinner()"
+                    color="accent">fiber_manual_record</mat-icon>
+                <span>{{getFirstPlayerName()}}</span>
+            </div>
+            <span class="vs">Vs.</span>
+            <div class="player-name-container">
+                <span>{{getSecondPlayerName()}}</span>
+                <mat-icon class="winner-dot" [class.visible]="isSecondPlayerWinner()"
+                    color="accent">fiber_manual_record</mat-icon>
+            </div>
         </mat-card-title>
     </mat-card-header>
 
@@ -23,9 +33,10 @@
         </div>
     </mat-card-content>
     @if (this.showAddScore()) {
-        <mat-card-actions class="card-action">
-            <button mat-stroked-button (click)="this.addScoreTabChangeView()" [disabled]="this.isGamePlayed()" class="add-score-link">Add Score</button>
-        </mat-card-actions>
+    <mat-card-actions class="card-action">
+        <button mat-stroked-button (click)="this.addScoreTabChangeView()" [disabled]="this.isGamePlayed()"
+            class="add-score-link">Add Score</button>
+    </mat-card-actions>
     }
 
 </mat-card>
