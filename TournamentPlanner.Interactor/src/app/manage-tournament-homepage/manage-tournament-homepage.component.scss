@@ -1,14 +1,28 @@
 .mat-card {
     min-height: 100vh;
 }
-.card-header{
+
+.card-header {
     background-color: #E5E3D4;
 }
-.card-title{
+
+.card-title {
     padding: 1rem 1rem 1rem 0;
 }
 
 .tab-container {
     padding: 10px;
     margin: 10px;
+}
+
+.draw-btn {
+    background-color: #FAC67A;
+    size: 500px;
+}
+
+.action {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }

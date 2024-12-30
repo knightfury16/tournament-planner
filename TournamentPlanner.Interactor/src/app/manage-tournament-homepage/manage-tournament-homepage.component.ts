@@ -5,17 +5,22 @@ import { MatCardModule } from '@angular/material/card';
 import { TournamentPlayerListComponent } from '../tournament-player-list/tournament-player-list.component';
 import { TournamentPlayerDetailsComponent } from '../tournament-player-details/tournament-player-details.component';
 import { TournamentDetailsComponent } from '../tournament-details/tournament-details.component';
-import { PlayerTabViewType } from '../tournament-details-homepage/tournament-details-homepage.component';
+import { DrawTabViewType, PlayerTabViewType } from '../tournament-details-homepage/tournament-details-homepage.component';
 import { PlayerDto, TournamentDto } from '../tp-model/TpModel';
 import { ManageTournamentDetailsComponent } from "../manage-tournament-details/manage-tournament-details.component";
 import { TournamentMatchesListComponent } from "../tournament-matches-list/tournament-matches-list.component";
 import { AddMatchScoreComponent } from '../add-match-score/add-match-score.component';
 import { MatchTabViewType } from '../tp-model/types';
+import { TournamentDrawListComponent } from '../tournament-draw-list/tournament-draw-list.component';
+import { TournamentDrawDetailsComponent } from '../tournament-draw-details/tournament-draw-details.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-manage-tournament-homepage',
   standalone: true,
-  imports: [MatTabsModule,AddMatchScoreComponent, CommonModule, MatCardModule, TournamentPlayerListComponent, TournamentPlayerDetailsComponent, ManageTournamentDetailsComponent, TournamentMatchesListComponent],
+  imports: [MatTabsModule, AddMatchScoreComponent, CommonModule, MatCardModule,
+    TournamentPlayerListComponent, TournamentPlayerDetailsComponent, ManageTournamentDetailsComponent,
+    TournamentMatchesListComponent, TournamentDrawListComponent,MatButtonModule, TournamentDrawDetailsComponent],
   templateUrl: './manage-tournament-homepage.component.html',
   styleUrl: './manage-tournament-homepage.component.scss'
 })
@@ -24,8 +29,11 @@ export class ManageTournamentHomepageComponent {
   @Input() public tournamentId?: string;
 
   public tournament = signal<TournamentDto | undefined>(undefined);
+  public drawTabView = signal<DrawTabViewType>(DrawTabViewType.ListView);
+  public matchTypeId = signal<number | undefined> (undefined);
   public tournamentParticipants = signal<PlayerDto[] | undefined>(undefined);
   public playerTabViewType = PlayerTabViewType;
+  public drawTabViewType = DrawTabViewType;
 
   public matchTabViewType = MatchTabViewType;
 
@@ -49,13 +57,19 @@ export class ManageTournamentHomepageComponent {
     this.tournamentParticipants.set(participants);
   }
 
-  public tabViewChangeToAddScoreWithMatchId(event: {viewType: MatchTabViewType, matchId: number}){
+  public tabViewChangeToAddScoreWithMatchId(event: { viewType: MatchTabViewType, matchId: number }) {
     this.matchTabView.set(event.viewType);
     this.matchId.set(event.matchId);
   }
 
-  public tabChangeToListView(){
+  public tabChangeToListView() {
     this.matchTabView.set(MatchTabViewType.MatchView);
   }
+  public toggleDrawTabView(view: DrawTabViewType) {
+    this.drawTabView.set(view);
+  }
 
+  public catchMatchTypeId(matchType: number){
+    this.matchTypeId.set(matchType);
+  }
 }
