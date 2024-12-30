@@ -1,4 +1,4 @@
-export const  NotAvailable = "N/A";
+export const NotAvailable = "N/A";
 export interface TournamentDto {
   id: number;
   name: string | undefined;
@@ -167,4 +167,9 @@ export type PlayerStandingDto = {
   pointsLost: number;
   pointsDifference: number;
   ranking: number;
+}
+
+export type AddMatchScoreDto = {
+  gamePlayed: Date | string | undefined;
+  gameSpecificScore: any | object
 }
