@@ -29,7 +29,7 @@ import { AdminTournamentService } from '../../Shared/admin-tournament.service';
 export class ManageTournamentDetailsComponent implements OnInit {
 
   @Input({ required: true }) public tournamentId?: string;
-  @Output() public tournamentNameEE = new EventEmitter<string>();
+  @Output() public tournamentEE = new EventEmitter<TournamentDto>();
 
   public tournamentStatus = TournamentStatus;
   private _tpService = inject(TournamentPlannerService);
@@ -41,24 +41,21 @@ export class ManageTournamentDetailsComponent implements OnInit {
   public statusFormControl = new FormControl();
 
   async ngOnInit() {
-    if (this.tournamentId == undefined) { this.emitADummyName(); return }
+    if (this.tournamentId == undefined) { return; }
     var tourDetail = await this._tpService.getTournamentById(this.tournamentId)
     var transformDateTournament = transformTournamentIsoDate(tourDetail);
     this.tournamentDetails.set(transformDateTournament);
-    this.emitTournamentName(tourDetail.name!);// name will be here
+    this.emitTournament(tourDetail);// name will be here
     this.setSelectedStatus();
   }
 
   setSelectedStatus() {
     this.selectedStatus = this.getStatusValue();
   }
-  emitTournamentName(tournamentName: string) {
-    this.tournamentNameEE.emit(tournamentName);
+  emitTournament(tournament: TournamentDto) {
+    this.tournamentEE.emit(tournament);
   }
 
-  emitADummyName() {
-    this.tournamentNameEE.emit("Undefined Tournament");
-  }
   getStatusValue(): TournamentStatus {
     var status = this.tournamentDetails()?.status ?? TournamentStatus.Draft.toString();
     return mapStringToEnum(TournamentStatus, status);

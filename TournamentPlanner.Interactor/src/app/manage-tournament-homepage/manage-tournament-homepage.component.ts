@@ -6,7 +6,7 @@ import { TournamentPlayerListComponent } from '../tournament-player-list/tournam
 import { TournamentPlayerDetailsComponent } from '../tournament-player-details/tournament-player-details.component';
 import { TournamentDetailsComponent } from '../tournament-details/tournament-details.component';
 import { PlayerTabViewType } from '../tournament-details-homepage/tournament-details-homepage.component';
-import { PlayerDto } from '../tp-model/TpModel';
+import { PlayerDto, TournamentDto } from '../tp-model/TpModel';
 import { ManageTournamentDetailsComponent } from "../manage-tournament-details/manage-tournament-details.component";
 
 @Component({
@@ -20,7 +20,7 @@ export class ManageTournamentHomepageComponent {
 
   @Input() public tournamentId?: string;
 
-  public tournamentName = signal('');
+  public tournament = signal<TournamentDto | undefined>(undefined);
   public tournamentParticipants = signal<PlayerDto[] | undefined>(undefined);
   public playerTabViewType = PlayerTabViewType;
 
@@ -31,8 +31,8 @@ export class ManageTournamentHomepageComponent {
     this.playerTabView.set(view);
   }
 
-  public tournamentNameEC(tournamentName: string) {
-    this.tournamentName.set(tournamentName);
+  public tournamentEC(tournament: TournamentDto) {
+    this.tournament.set(tournament);
   }
 
   public tournamentParticipantsEC(participants: PlayerDto[]) {
