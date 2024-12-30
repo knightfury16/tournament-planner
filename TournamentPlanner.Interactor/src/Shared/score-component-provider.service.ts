@@ -1,4 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Type } from '@angular/core';
+import { GameTypeDto, GameTypeSupported } from '../app/tp-model/TpModel';
+import { BaseAddScoreComponent } from '../app/AddScoreComponents/base-add-score/base-add-score.component';
+import { TableTennisAddScoreComponent } from '../app/AddScoreComponents/table-tennis-add-score/table-tennis-add-score.component';
+import { trimAllSpace } from './Utility/stringUtility';
 
 @Injectable({
   providedIn: 'root'
@@ -6,4 +10,9 @@ import { Injectable } from '@angular/core';
 export class ScoreComponentProviderService {
 
   constructor() { }
+
+  public porvideGameScoreComponentBasedOnGameType(gameType: GameTypeDto): Type<BaseAddScoreComponent>{
+    if(gameType.name == trimAllSpace(GameTypeSupported.TableTennis))return TableTennisAddScoreComponent;
+    return BaseAddScoreComponent;
+  }
 }
