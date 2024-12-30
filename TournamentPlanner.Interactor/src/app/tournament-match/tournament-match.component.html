@@ -1,6 +1,7 @@
-<mat-card>
-    <p class="sub-header">{{match?.matchTypeName}} - {{match?.roundName}}</p>
-    <hr>
+<mat-card class="mat-card">
+    <div class="sub-header">
+        {{match?.matchTypeName}} - {{match?.roundName}}
+    </div>
     <mat-card-header>
         <mat-card-title>
             {{this.getFirstPlayerName()}} Vs. {{this.getSecondPlayerName()}}
