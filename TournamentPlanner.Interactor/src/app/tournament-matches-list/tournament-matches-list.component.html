@@ -7,7 +7,8 @@
         <mat-grid-list cols="2" rowHeight="2:1">
             <ng-container *ngFor="let match of item.value">
                 <mat-grid-tile>
-                    <app-tournament-match [manage]="this.manage" [gameType]="gameType" [match]="match"></app-tournament-match>
+                    <app-tournament-match [manage]="this.manage" [gameType]="gameType"
+                     [match]="match" (matchSelectedEE)="this.matchSelectedEC($event)"></app-tournament-match>
                 </mat-grid-tile>
             </ng-container>
         </mat-grid-list>

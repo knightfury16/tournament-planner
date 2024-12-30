@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { DrawDto, GameTypeDto, PlayerDto, TournamentDto } from '../tp-model/TpModel';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -7,6 +7,7 @@ import { LoadingService } from '../../Shared/loading.service';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { TournamentMatchComponent } from "../tournament-match/tournament-match.component";
 import { CommonModule } from '@angular/common';
+import { MatchTabViewType } from '../manage-tournament-homepage/manage-tournament-homepage.component';
 
 
 export type MatchModel = {
@@ -42,10 +43,13 @@ export class TournamentMatchesListComponent implements OnInit {
 
   @Input() public manage: boolean = false;
 
+  @Output() public matchTabChangeEventWithSelectedMatchId = new EventEmitter<{viewType: MatchTabViewType, matchId: number}>();
+
   private _tpService = inject(TournamentPlannerService);
   private _loadingService = inject(LoadingService);
 
   public draws = signal< DrawDto[] | undefined>(undefined);
+  public matchSelectedId = signal<number | undefined>(undefined);
 
   public matchCardModels = computed<{[roundName: string]: MatchModel[]}>(() => {
     if(this.draws() == undefined) return {};
@@ -77,6 +81,18 @@ export class TournamentMatchesListComponent implements OnInit {
     }
   }
 
+  public matchSelectedEC(matchId: number){
+    this.matchSelectedId.set(matchId);
+    //if from manage then change match tab view to addscore
+    if(this.manage){
+      this.emitMatchTabChangeEvent(matchId);
+    }
+  }
+
+  public emitMatchTabChangeEvent(matchId: number)
+  {
+    this.matchTabChangeEventWithSelectedMatchId.emit({viewType: MatchTabViewType.AddScoreView, matchId})
+  }
 
   getMatchCardModels(): MatchModel[] {
     return this.draws()!.flatMap(draw => 
