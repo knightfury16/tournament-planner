@@ -175,6 +175,7 @@ export class TableTennisAddScoreComponent extends BaseAddScoreComponent {
 
       // TODO: Send to backend
       console.log('Submitting score:', score);
+      this.matchTabChangeEE.emit();
     }
   }
 
