@@ -1,7 +1,22 @@
 .title {
+    margin-bottom: 5px;
 }
 
 .header {
     display: flex;
     justify-content: center;
+}
+
+mat-grid-tile {
+//   background: lightblue;
+}
+
+.round-name{
+    display: flex;
+    justify-content: center;
+    // background-color: ;
+}
+
+.round-container{
+    margin-bottom: 5px
 }
