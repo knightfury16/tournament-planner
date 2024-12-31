@@ -1,7 +1,7 @@
 <div class="container">
     @if (this.manage) {
     <mat-card-actions class="action">
-        <button mat-stroked-button class="action-btn">Make Draw</button>
+        <button [disabled]="!this.canIMakeDraw()" mat-stroked-button class="action-btn">Make Draw</button>
     </mat-card-actions>
     }
     @if (this.draws() != undefined && this.draws()!.length > 0 ) {

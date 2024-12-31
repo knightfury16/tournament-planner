@@ -17,6 +17,7 @@ import { CommonModule } from '@angular/common';
 import { getDateStringInFormat } from '../../Shared/Utility/dateTimeUtility';
 import { RouterModule } from '@angular/router';
 import { DrawTabViewType } from '../tournament-details-homepage/tournament-details-homepage.component';
+import { LoadingService } from '../../Shared/loading.service';
 
 @Component({
   selector: 'app-tournament-draw-list',
@@ -38,17 +39,21 @@ export class TournamentDrawListComponent implements OnInit {
   @Output() drawTabChangeEvent = new EventEmitter<DrawTabViewType>();
   @Output() matchTypeId = new EventEmitter<number>();
   private _tpService = inject(TournamentPlannerService);
+  private _loadingService = inject(LoadingService);
+  public canIMakeDraw = signal(false);
   public draws = signal<DrawDto[] | undefined>(undefined);
 
   async ngOnInit() {
     try {
+      this._loadingService.show();
       var reqResponse = await this._tpService.getTournamentDraws(
         this.tournamentId!
       );
-      console.log(reqResponse);
       this.draws.set(reqResponse);
-      console.log(this.draws());
+      await this.checkIfICanMakeDraw();
+      this._loadingService.hide();
     } catch (error) {
+      this._loadingService.hide();
       console.log(error);
       console.log(
         (error as any).error ??
@@ -56,6 +61,9 @@ export class TournamentDrawListComponent implements OnInit {
           'An unknown error occurred.'
       );
     }
+  }
+  async checkIfICanMakeDraw() {
+    
   }
 
   getClassName(matchType: MatchTypeDto): string {
