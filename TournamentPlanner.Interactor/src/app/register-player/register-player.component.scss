@@ -1,43 +1,46 @@
-.al-container{
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
- 
-.container{
-    width: var(--form-width);
-    min-width: var(--form-min-width);
-    display: grid;
-    grid-template-rows: repeat(3);
-    grid-template-columns: auto;
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 
-.header{
-    justify-self: center;
+.error-message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 4px;
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.error-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  mat-icon {
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+  }
+}
+.auth-container {
+  min-height: calc(100vh - 128px); // Adjust based on your navbar/footer height
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+.auth-card{
+    padding: 2rem;
+}
+
+.auth-header{
     margin-bottom: 10px;
 }
 
-.form-field{
-    margin-left: 20px;
-    margin-right: 20px;
-}
-
-.register-player-form{
-    display: flex;
-    flex-direction: column;
-}
-.card-actions{
-    justify-self: center;
-}
-
-.action-button{
-    font-size: large;
-    padding-left: 20px;
-    padding-right: 20px;
-}
-.error {
-    font-style: italic;
-    font-size: medium;
-    margin-left: 20px;
+.card-action{
+    padding: 0px;
 }

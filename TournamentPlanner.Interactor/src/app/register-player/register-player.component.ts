@@ -9,12 +9,13 @@ import { AddPlayerDto, DomainRole, PlayerDto } from '../tp-model/TpModel';
 import { AuthService, UserInfo } from '../../Shared/auth.service';
 import { LoadingService } from '../../Shared/loading.service';
 import { firstValueFrom } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-register-player',
   standalone: true,
-  imports: [MatCardModule, ReactiveFormsModule, MatFormField, MatInputModule, MatButtonModule, CommonModule],
+  imports: [MatCardModule, ReactiveFormsModule, MatFormField, MatInputModule, MatButtonModule, CommonModule, MatIconModule, RouterLink],
   templateUrl: './register-player.component.html',
   styleUrl: './register-player.component.scss'
 })
@@ -23,6 +24,7 @@ export class RegisterPlayerComponent {
   private authService = inject(AuthService);
   private loadingService = inject(LoadingService);
   private router = inject(Router);
+  public hidePassword = true;
 
   public errors = signal<string[] | null>(null);
 
