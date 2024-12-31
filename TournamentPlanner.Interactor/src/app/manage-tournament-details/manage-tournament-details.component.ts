@@ -30,6 +30,7 @@ export class ManageTournamentDetailsComponent implements OnInit {
 
   @Input({ required: true }) public tournamentId?: string;
   @Output() public tournamentEE = new EventEmitter<TournamentDto>();
+  @Output() public statusChangeEE = new EventEmitter();
 
   public tournamentStatus = TournamentStatus;
   private _tpService = inject(TournamentPlannerService);
@@ -77,6 +78,7 @@ export class ManageTournamentDetailsComponent implements OnInit {
     try {
       var changedStatus = this.statusFormControl.value;
       var statusChangeResponse = await this._adminTpService.changeTournamentStatus(this.tournamentId!, changedStatus);
+      this.statusChangeEE.emit();
       console.log(statusChangeResponse);
       this._snackBarService.showMessage(statusChangeResponse.message);
     } catch (error : any) {
