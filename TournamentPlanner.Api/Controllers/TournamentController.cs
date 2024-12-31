@@ -138,7 +138,7 @@ namespace TournamentPlanner.Api.Controllers
         }
 
         //- Check if an admin can make draw request // authorized
-        [HttpPost("{id}/can-make-draw")]
+        [HttpGet("{id}/can-make-draw")]
         [Authorize(Roles = Role.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
