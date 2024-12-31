@@ -1,24 +1,102 @@
-<div class="container">
-  <div class="search">
-    <form class="search-form">
-      <mat-form-field class="search-input" appearance="outline">
-        <input matInput type="text" placeholder="Enter name..." [formControl]="nameInput">
-      </mat-form-field>
-    </form>
-  </div>
-  <div>
-    <ng-container *ngIf="{tournaments : data$ | async} as vm">
-      <mat-list *ngIf="vm.tournaments; else loading">
-        <li class="li-items" *ngFor="let item of vm.tournaments">
-          <app-tournament-card [tournament]="item"></app-tournament-card>
-        </li>
-      </mat-list>
-      <ng-template #loading>
-        <div>
-          Loading...
-        </div>
-      </ng-template>
-    </ng-container>
+<div class="tournament-container">
+  <div class="search-section">
+    <mat-card>
+      <mat-card-content>
+        <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+          <!-- Basic Search -->
+          <div class="basic-search">
+            <mat-form-field class="search-input">
+              <mat-label>Search Tournaments</mat-label>
+              <input matInput formControlName="name" placeholder="Enter tournament name...">
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+            <div class="search-buttons">
+              <button mat-raised-button color="primary" type="submit">
+                Search
+              </button>
+              <button mat-button type="button" (click)="clearSearch()">
+                Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- Advanced Search Panel -->
+          <mat-expansion-panel class="advanced-search">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Advanced Search Options
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="advanced-search-grid">
+              <mat-form-field>
+                <mat-label>Category</mat-label>
+                <mat-select formControlName="searchCategory">
+                  <mat-option value="">All Categories</mat-option>
+                  <mat-option value="1">Category 1</mat-option>
+                  <mat-option value="2">Category 2</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status">
+                  <mat-option value="">All Statuses</mat-option>
+                  <mat-option value="1">Active</mat-option>
+                  <mat-option value="2">Upcoming</mat-option>
+                  <mat-option value="3">Completed</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Game Type</mat-label>
+                <mat-select formControlName="gameType">
+                  <mat-option value="">All Games</mat-option>
+                  <mat-option value="1">Single Elimination</mat-option>
+                  <mat-option value="2">Double Elimination</mat-option>
+                  <mat-option value="3">Round Robin</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Start Date</mat-label>
+                <input matInput [matDatepicker]="startPicker" formControlName="startDate">
+                <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                <mat-datepicker #startPicker></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>End Date</mat-label>
+                <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+                <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                <mat-datepicker #endPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </mat-expansion-panel>
+        </form>
+      </mat-card-content>
+    </mat-card>
   </div>
 
+  <!-- Results Section -->
+  <div class="results-section">
+    <ng-container *ngIf="tournaments$ | async as tournaments">
+      <div *ngIf="tournaments.length > 0; else noResults" class="tournaments-grid">
+        <app-tournament-card 
+          *ngFor="let tournament of tournaments" 
+          [tournament]="tournament">
+        </app-tournament-card>
+      </div>
+      <ng-template #noResults>
+        <mat-card class="no-results">
+          <mat-icon>search_off</mat-icon>
+          <p>No tournaments found matching your criteria</p>
+        </mat-card>
+      </ng-template>
+    </ng-container>
+
+    <div *ngIf="loading" class="loading-spinner">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  </div>
 </div>

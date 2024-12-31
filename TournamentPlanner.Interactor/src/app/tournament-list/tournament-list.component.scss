@@ -1,17 +1,87 @@
-a {
-    /* add styles here */
-    text-decoration: none;
-    color: inherit;
+.tournament-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+
+  .search-section {
+    margin-bottom: 24px;
+
+    .basic-search {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 16px;
+
+      .search-input {
+        flex-grow: 1;
+      }
+
+      .search-buttons {
+        display: flex;
+        gap: 8px;
+      }
+    }
+
+    .advanced-search {
+      margin-top: 16px;
+
+      .advanced-search-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+        margin-top: 16px;
+      }
+    }
+  }
+
+  .results-section {
+    position: relative;
+    min-height: 200px;
+
+    .tournaments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 48px;
+      color: rgba(0, 0, 0, 0.6);
+
+      mat-icon {
+        font-size: 48px;
+        height: 48px;
+        width: 48px;
+        margin-bottom: 16px;
+      }
+    }
+
+    .loading-spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.8);
+      padding: 16px;
+      border-radius: 8px;
+    }
+  }
 }
 
-.search-input {
-    width: 11em;
-}
+@media (max-width: 600px) {
+  .tournament-container {
+    padding: 16px;
 
-mat-form-field.mat-focused{
-    width: 17em;
-}
-
-.li-items{
-    margin-bottom: 10px;
+    .basic-search {
+      flex-direction: column;
+      
+      .search-buttons {
+        width: 100%;
+        button {
+          flex: 1;
+        }
+      }
+    }
+  }
 }
