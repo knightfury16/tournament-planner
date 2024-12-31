@@ -21,7 +21,7 @@ public class CanIMakeDrawRequestHandler : IRequestHandler<CanIMakeDrawRequest, C
         _tournamentService = tournamentService;
     }
 
-    public async Task<CanIDrawDto> Handle(CanIMakeDrawRequest request, CancellationToken cancellationToken = default)
+    public async Task<CanIDrawDto?> Handle(CanIMakeDrawRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
 
