@@ -1,4 +1,5 @@
 ﻿using TournamentPlanner.Application.Common.Interfaces;
+using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
@@ -7,7 +8,7 @@ using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Application;
 
-public class CanIMakeDrawRequestHandler : IRequestHandler<CanIMakeDrawRequest, bool>
+public class CanIMakeDrawRequestHandler : IRequestHandler<CanIMakeDrawRequest, CanIDrawDto>
 {
 
     private readonly IRepository<Tournament> _tournamentRepository;
@@ -20,7 +21,7 @@ public class CanIMakeDrawRequestHandler : IRequestHandler<CanIMakeDrawRequest, b
         _tournamentService = tournamentService;
     }
 
-    public async Task<bool> Handle(CanIMakeDrawRequest request, CancellationToken cancellationToken = default)
+    public async Task<CanIDrawDto> Handle(CanIMakeDrawRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
 
@@ -39,11 +40,19 @@ public class CanIMakeDrawRequestHandler : IRequestHandler<CanIMakeDrawRequest, b
         //only allow if the registration is complete>> if status is completed will not allow to make the draw.
         if (tournament.Status <= TournamentStatus.RegistrationOpen)
         {
-            return false;
+            return new CanIDrawDto
+            {
+                Success = false,
+                Message = "Close the tournament Registration to Make Draw"
+            };
         }
         //can i make draw? 
         var canIDarw = await _tournamentService.CanIMakeDraw(tournament);
 
-        return canIDarw;
+        return new CanIDrawDto
+        {
+            Success = canIDarw
+        };
+
     }
 }
