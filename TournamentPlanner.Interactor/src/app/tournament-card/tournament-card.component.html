@@ -1,33 +1,51 @@
-<mat-card class="mat-card" appearance="raised">
-    <div class="img-div">
-        <a [ngClass]="{'disabled-link': this.getLinkDiableValue()}"  [routerLink]="getLink(tournament?.id)">
-            <img mat-card-sm-image src="../../assets/tt.jpg">
+<mat-card class="tournament-card" appearance="outlined">
+    <div class="card-status-indicator" [style.background-color]="getStatusColor()" [matTooltip]="getStatus()">
+    </div>
+
+    <div class="tournament-image">
+        <a [ngClass]="{'disabled-link': getLinkDisableValue()}" [routerLink]="getLink(tournament?.id)">
+            <img src="../../assets/tt.jpg" alt="Tournament">
         </a>
     </div>
-    <div class="content-div">
-        <div class="title-div">
-            <mat-card-title>
-                <a [ngClass]="{'disabled-link': this.getLinkDiableValue()}" [routerLink]="getLink(tournament?.id)">
+
+    <mat-card-content class="tournament-content">
+        <div class="tournament-header">
+            <h2 class="tournament-title">
+                <a [ngClass]="{'disabled-link': getLinkDisableValue()}" [routerLink]="getLink(tournament?.id)">
                     {{tournament?.name}}
                 </a>
-            </mat-card-title>
+            </h2>
             @if (getGameType()) {
-            <mat-chip>{{getGameType()}}</mat-chip>
+            <mat-chip-set>
+                <mat-chip highlighted>{{getGameType()}}</mat-chip>
+            </mat-chip-set>
             }
         </div>
-        <div class="venue-div">
-            <h4 class="venue-header">{{this.getVenue()}}</h4>
+
+        <div class="tournament-details">
+            <div class="detail-item">
+                <mat-icon>location_on</mat-icon>
+                <span>{{getVenue()}}</span>
+            </div>
+            <div class="detail-item">
+                <mat-icon>event</mat-icon>
+                <span>{{tournament?.startDate}} - {{tournament?.endDate}}</span>
+            </div>
+            @if (tournament?.maxParticipant) {
+            <div class="detail-item">
+                <mat-icon>group</mat-icon>
+                <span>Max Participants: {{tournament?.maxParticipant}}</span>
+            </div>
+            }
         </div>
-        <div class="time-div">
-            <p>{{tournament?.startDate}} - {{tournament?.endDate}}</p>
-        </div>
-        @if(manage){
-        <div class="manage-div">
-            <a mat-button class="manage-button" [routerLink]="this.getLink(tournament?.id)">
+
+        @if(manage) {
+        <div class="manage-section">
+            <a mat-flat-button color="primary" [routerLink]="getLink(tournament?.id)">
                 Manage Tournament
-                <mat-icon iconPositionEnd class="manage-arrow-icon">arrow_forward</mat-icon>
+                <mat-icon>arrow_forward</mat-icon>
             </a>
         </div>
         }
-    </div>
+    </mat-card-content>
 </mat-card>

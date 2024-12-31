@@ -1,57 +1,140 @@
-.mat-card {
-    flex-direction: row; //mat card by default is display: flex
-}
+.tournament-card {
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
-a {
-    text-decoration: none;
-    color: inherit;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 
-}
+    .tournament-image img {
+      transform: scale(1.05);
+    }
+  }
 
-.img-div {
-    padding: 1em;
-    align-self: center;
-}
+  .card-status-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    z-index: 1;
+  }
 
-.content-div {
+  .tournament-image {
+    position: relative;
+    padding-top: 56.25%; // 16:9 aspect ratio
+    overflow: hidden;
+    background-color: #f5f5f5;
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+    }
+  }
+
+  .tournament-content {
     flex-grow: 1;
-    padding: 1rem;
-    align-self: center;
     display: flex;
     flex-direction: column;
-}
+    padding: 16px;
+    gap: 16px;
+  }
 
-.title-div {
+  .tournament-header {
+    .tournament-title {
+      margin: 0 0 8px 0;
+      font-size: 1.25rem;
+      font-weight: 500;
+      line-height: 1.4;
+
+      a {
+        color: inherit;
+        text-decoration: none;
+        
+        &:hover {
+          color: primary;
+        }
+      }
+    }
+
+    mat-chip-set {
+      margin-top: 8px;
+    }
+  }
+
+  .tournament-details {
+    flex-grow: 1;
     display: flex;
-    justify-content: space-between;
-}
+    flex-direction: column;
+    gap: 12px;
 
-.venue-div {
-    margin-bottom: 5px;
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(0, 0, 0, 0.7);
 
-    .venue-header {
-        color: #9E5FAA;
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: rgba(0, 0, 0, 0.5);
+      }
+
+      span {
+        font-size: 0.9rem;
+      }
     }
-}
+  }
 
-.time-div {
-    p {
-        font-style: italic;
+  .manage-section {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+
+    a {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
     }
+  }
 }
 
-.manage-button {
-    padding: 10px;
-    background-color: aquamarine;
+.disabled-link {
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.7;
 }
 
-.manage-div{
-    margin-top: 0.5rem;
-    align-self: flex-end;
-}
+// Add these styles to your global styles.scss or within your component with ::ng-deep
+::ng-deep {
+  .mat-mdc-card {
+    --mdc-elevated-card-container-color: white;
+  }
 
-.disabled-link{
-    pointer-events: none;
-    cursor: not-allowed;
-
+  .mat-mdc-chip.mat-mdc-standard-chip {
+    --mdc-chip-container-height: 24px;
+    font-size: 0.8rem;
+  }
 }

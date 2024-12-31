@@ -8,41 +8,62 @@ import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-tournament-card',
   standalone: true,
-  imports: [MatIconModule, MatCardModule, MatButtonModule, MatChipsModule, RouterModule, CommonModule],
+  imports: [MatIconModule, MatCardModule, MatButtonModule, MatChipsModule, RouterModule, CommonModule,MatTooltipModule],
   templateUrl: './tournament-card.component.html',
   styleUrl: './tournament-card.component.scss'
 })
 export class TournamentCardComponent {
 
-  @Input({ required: true, transform: transformTournamentIsoDate }) tournament: TournamentDto | null = null;
+   @Input({ required: true, transform: transformTournamentIsoDate }) tournament: TournamentDto | null = null;
   @Input() manage: boolean = false;
 
-  public getVenue() {
-    return this.tournament?.venue ?? 'N/A'
+  getVenue() {
+    return this.tournament?.venue ?? 'N/A';
   }
 
-  public getGameType(): GameTypeSupported | null {
-    var gameType = this.tournament?.gameTypeDto?.name;
-    var gameTypeSupport = mapStringToEnum(GameTypeSupported, gameType!);
-    if (gameType) return gameTypeSupport;
-
-    return null;
+  getGameType(): GameTypeSupported | null {
+    const gameType = this.tournament?.gameTypeDto?.name;
+    return gameType ? mapStringToEnum(GameTypeSupported, gameType) : null;
   }
 
-  public getLink(tournamentId: number | undefined): string | any[] | null | undefined {
+  getLink(tournamentId: number | undefined): string | any[] | null | undefined {
     if (tournamentId == null) return;
-    if (this.manage) return ['/tp/manage-tournament-homepage', tournamentId];
-
-    return ['/tp/tournament-details-homepage', tournamentId];
+    return this.manage 
+      ? ['/tp/manage-tournament-homepage', tournamentId]
+      : ['/tp/tournament-details-homepage', tournamentId];
   }
 
-  public getLinkDiableValue(): boolean {
-    //will disable the link from admin view
+  getLinkDisableValue(): boolean {
     return this.manage;
+  }
+
+  getStatusColor(): string {
+    const currentDate = new Date();
+    const startDate = this.tournament?.startDate ? new Date(this.tournament.startDate) : null;
+    const endDate = this.tournament?.endDate ? new Date(this.tournament.endDate) : null;
+
+    if (!startDate || !endDate) return 'gray';
+    
+    if (currentDate < startDate) return '#2196F3'; // Upcoming - Blue
+    if (currentDate > endDate) return '#FF5722'; // Completed - Orange
+    return '#4CAF50'; // Active - Green
+  }
+
+  getStatus(): string {
+    const currentDate = new Date();
+    const startDate = this.tournament?.startDate ? new Date(this.tournament.startDate) : null;
+    const endDate = this.tournament?.endDate ? new Date(this.tournament.endDate) : null;
+
+    if (!startDate || !endDate) return 'Unknown';
+    
+    if (currentDate < startDate) return 'Upcoming';
+    if (currentDate > endDate) return 'Completed';
+    return 'Active';
   }
 
 }
