@@ -11,11 +11,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
+import { trimAllSpace } from '../../Shared/Utility/stringUtility';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-tournament-details',
   standalone: true,
-  imports: [MatButtonModule, MatCardModule, MatChipsModule, MatIconModule, MatDividerModule, MatTooltipModule, CommonModule],
+  imports: [RouterModule, MatButtonModule, MatCardModule, MatChipsModule, MatIconModule, MatDividerModule, MatTooltipModule, CommonModule],
   templateUrl: './tournament-details.component.html',
   styleUrl: './tournament-details.component.scss'
 })
@@ -92,7 +94,7 @@ export class TournamentDetailsComponent implements OnInit {
   tournamentParticipantsFull(): boolean {
     const tournamentDetails = this.tournamentDetails();
     if (tournamentDetails && tournamentDetails.participants) {
-      return tournamentDetails.participants.length >= tournamentDetails.maxParticipants;
+      return tournamentDetails.participants.length >= tournamentDetails.maxParticipant;
     }
     return false;
   }
@@ -115,9 +117,9 @@ export class TournamentDetailsComponent implements OnInit {
     switch (status) {
       case TournamentStatus.Draft:
         return 'gray';
-      case TournamentStatus.RegistrationOpen:
+      case trimAllSpace(TournamentStatus.RegistrationOpen):
         return 'green';
-      case TournamentStatus.RegistrationClosed:
+      case trimAllSpace(TournamentStatus.RegistrationClosed):
         return 'orange';
       case TournamentStatus.Ongoing:
         return 'blue';
@@ -130,7 +132,7 @@ export class TournamentDetailsComponent implements OnInit {
   getParticipantsProgress(): number {
     const tournament = this.tournamentDetails();
     if (!tournament) return 0;
-    return ((tournament.participants?.length || 0) / tournament.maxParticipants) * 100;
+    return ((tournament.participants?.length || 0) / tournament.maxParticipant) * 100;
   }
   formatDate(date: string | null | undefined): string {
     if (!date) return 'Not set';

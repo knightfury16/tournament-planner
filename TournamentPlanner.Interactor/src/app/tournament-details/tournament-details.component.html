@@ -1,12 +1,16 @@
 <div class="tournament-container" *ngIf="tournamentDetails() as tournament">
   <mat-card class="main-card">
+    <div class="btn-div">
+      <a mat-icon-button class="back-btn" [routerLink]="['/tp']">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+    </div>
     <mat-card-header>
       <mat-card-title-group>
         <mat-card-title class="tournament-title">
           {{tournament.name}}
           <mat-chip-set>
-            <mat-chip [style.background-color]="getStatusColor(tournament.status)"
-                     [style.color]="'white'">
+            <mat-chip [style.background-color]="getStatusColor(tournament.status)" [style.color]="'white'">
               {{tournament.status}}
             </mat-chip>
           </mat-chip-set>
@@ -46,7 +50,7 @@
           <div class="info-item">
             <mat-icon>group</mat-icon>
             <span class="label">Participants:</span>
-            <span>{{tournament.participants?.length || 0}} / {{tournament.maxParticipants}}</span>
+            <span>{{tournament.participants?.length || 0}} / {{tournament.maxParticipant}}</span>
           </div>
           <div class="info-item">
             <mat-icon>payment</mat-icon>
@@ -84,18 +88,16 @@
           <mat-icon>people_outline</mat-icon>
           Participants Progress
         </h3>
-        <div class="progress-bar" 
-             [style.background]="'linear-gradient(to right, #4CAF50 ' + getParticipantsProgress() + '%, #e0e0e0 0%)'"
-             matTooltip="{{tournament.participants?.length || 0}} out of {{tournament.maxParticipants}} participants">
+        <div class="progress-bar"
+          [style.background]="'linear-gradient(to right, #4CAF50 ' + getParticipantsProgress() + '%, #e0e0e0 0%)'"
+          matTooltip="{{tournament.participants?.length || 0}} out of {{tournament.maxParticipant}} participants">
         </div>
       </div>
     </mat-card-content>
 
     <mat-card-actions align="end">
-      <button mat-stroked-button
-              [disabled]="!canRegister"
-              (click)="registerInTournament()"
-              matTooltip="{{!canRegister ? 'You must be logged in as a player to register' : 'Click to register for this tournament'}}">
+      <button mat-stroked-button [disabled]="!canRegister" (click)="registerInTournament()"
+        matTooltip="{{!canRegister ? 'You must be logged in as a player to register' : 'Click to register for this tournament'}}">
         <mat-icon>how_to_reg</mat-icon>
         Register in the tournament
       </button>
