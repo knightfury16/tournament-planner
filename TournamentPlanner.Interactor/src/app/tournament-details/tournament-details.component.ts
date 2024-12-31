@@ -1,20 +1,26 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, output, signal } from '@angular/core';
 import { TournamentPlannerService } from '../tournament-planner.service';
-import { DomainRole, PlayerDto, TournamentDto } from '../tp-model/TpModel';
+import { DomainRole, PlayerDto, TournamentDto, TournamentStatus } from '../tp-model/TpModel';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../Shared/auth.service';
 import { LoadingService } from '../../Shared/loading.service';
 import { SnackbarService } from '../../Shared/snackbar.service';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-tournament-details',
   standalone: true,
-  imports: [MatButtonModule],
+  imports: [MatButtonModule, MatCardModule, MatChipsModule, MatIconModule, MatDividerModule, MatTooltipModule, CommonModule],
   templateUrl: './tournament-details.component.html',
   styleUrl: './tournament-details.component.scss'
 })
 export class TournamentDetailsComponent implements OnInit {
-  @Input({required: true}) public tournamentId?: string;
+  @Input({ required: true }) public tournamentId?: string;
 
   @Output() public tournamentEE = new EventEmitter<TournamentDto>();
   @Output() public participantsEE = new EventEmitter<PlayerDto[]>();
@@ -44,8 +50,7 @@ export class TournamentDetailsComponent implements OnInit {
   }
 
   emitToutnamentParticipants(participants: PlayerDto[] | undefined) {
-    if(participants && participants.length > 0)
-    {
+    if (participants && participants.length > 0) {
       this.participantsEE.emit(participants);
     }
   }
@@ -105,4 +110,34 @@ export class TournamentDetailsComponent implements OnInit {
     return false;
   }
 
+  getStatusColor(status: string | null | undefined): string {
+    if (!status) return '';
+    switch (status) {
+      case TournamentStatus.Draft:
+        return 'gray';
+      case TournamentStatus.RegistrationOpen:
+        return 'green';
+      case TournamentStatus.RegistrationClosed:
+        return 'orange';
+      case TournamentStatus.Ongoing:
+        return 'blue';
+      case TournamentStatus.Completed:
+        return 'purple';
+      default:
+        return 'gray';
+    }
+  }
+  getParticipantsProgress(): number {
+    const tournament = this.tournamentDetails();
+    if (!tournament) return 0;
+    return ((tournament.participants?.length || 0) / tournament.maxParticipants) * 100;
+  }
+  formatDate(date: string | null | undefined): string {
+    if (!date) return 'Not set';
+    return new Date(date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
 }

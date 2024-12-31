@@ -1,9 +1,104 @@
-<div>
-    @if (this.tournamentDetails() != null) {
-        <div>{{this.tournamentDetails()?.name}}</div>
-        <div>{{this.tournamentDetails()?.status}}</div>
-        <div>
-            <button mat-stroked-button (click)="registerInTournament()" [disabled]="!canRegister">Register in the tournament</button>
+<div class="tournament-container" *ngIf="tournamentDetails() as tournament">
+  <mat-card class="main-card">
+    <mat-card-header>
+      <mat-card-title-group>
+        <mat-card-title class="tournament-title">
+          {{tournament.name}}
+          <mat-chip-set>
+            <mat-chip [style.background-color]="getStatusColor(tournament.status)"
+                     [style.color]="'white'">
+              {{tournament.status}}
+            </mat-chip>
+          </mat-chip-set>
+        </mat-card-title>
+        <mat-card-subtitle>
+          <mat-icon class="info-icon">sports_tennis</mat-icon>
+          {{tournament.gameTypeDto?.name || 'Game type not specified'}}
+        </mat-card-subtitle>
+      </mat-card-title-group>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="info-grid">
+        <div class="info-section">
+          <h3>Tournament Details</h3>
+          <div class="info-item">
+            <mat-icon>event</mat-icon>
+            <span class="label">Start Date:</span>
+            <span>{{formatDate(tournament.startDate)}}</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>event_busy</mat-icon>
+            <span class="label">End Date:</span>
+            <span>{{formatDate(tournament.endDate)}}</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>how_to_reg</mat-icon>
+            <span class="label">Registration Deadline:</span>
+            <span>{{formatDate(tournament.registrationLastDate)}}</span>
+          </div>
         </div>
-    }
+
+        <mat-divider vertical></mat-divider>
+
+        <div class="info-section">
+          <h3>Participation Details</h3>
+          <div class="info-item">
+            <mat-icon>group</mat-icon>
+            <span class="label">Participants:</span>
+            <span>{{tournament.participants?.length || 0}} / {{tournament.maxParticipants}}</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>payment</mat-icon>
+            <span class="label">Registration Fee:</span>
+            <span>${{tournament.registrationFee}}</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>person</mat-icon>
+            <span class="label">Minimum Age:</span>
+            <span>{{tournament.minimumAgeOfRegistration}} years</span>
+          </div>
+        </div>
+
+        <mat-divider vertical></mat-divider>
+
+        <div class="info-section">
+          <h3>Venue Information</h3>
+          <div class="info-item">
+            <mat-icon>location_on</mat-icon>
+            <span class="label">Venue:</span>
+            <span>{{tournament.venue || 'To be announced'}}</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>update</mat-icon>
+            <span class="label">Created:</span>
+            <span>{{formatDate(tournament.createdAt)}}</span>
+          </div>
+        </div>
+      </div>
+
+      <mat-divider class="section-divider"></mat-divider>
+
+      <div class="participants-section">
+        <h3>
+          <mat-icon>people_outline</mat-icon>
+          Participants Progress
+        </h3>
+        <div class="progress-bar" 
+             [style.background]="'linear-gradient(to right, #4CAF50 ' + getParticipantsProgress() + '%, #e0e0e0 0%)'"
+             matTooltip="{{tournament.participants?.length || 0}} out of {{tournament.maxParticipants}} participants">
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-stroked-button
+              [disabled]="!canRegister"
+              (click)="registerInTournament()"
+              matTooltip="{{!canRegister ? 'You must be logged in as a player to register' : 'Click to register for this tournament'}}">
+        <mat-icon>how_to_reg</mat-icon>
+        Register in the tournament
+      </button>
+    </mat-card-actions>
+  </mat-card>
 </div>
