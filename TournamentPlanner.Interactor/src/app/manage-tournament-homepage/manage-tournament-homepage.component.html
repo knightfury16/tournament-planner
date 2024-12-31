@@ -6,7 +6,7 @@
         <mat-tab label="Details">
             <div class="tab-container">
                 <app-manage-tournament-details [tournamentId]="tournamentId"
-                     (tournamentEE)="tournamentEC($event)">
+                     (tournamentEE)="tournamentEC($event)" (statusChangeEE)="this.tournamentStatusChangeEC()">
                 </app-manage-tournament-details>
             </div>
         </mat-tab>

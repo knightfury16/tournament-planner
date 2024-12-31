@@ -1,4 +1,4 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, EventEmitter, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
@@ -30,6 +30,7 @@ export class ManageTournamentHomepageComponent {
 
   public tournament = signal<TournamentDto | undefined>(undefined);
   public drawTabView = signal<DrawTabViewType>(DrawTabViewType.ListView);
+  public tournamentStatusChange = signal(false);
   public matchTypeId = signal<number | undefined> (undefined);
   public tournamentParticipants = signal<PlayerDto[] | undefined>(undefined);
   public playerTabViewType = PlayerTabViewType;
@@ -71,5 +72,10 @@ export class ManageTournamentHomepageComponent {
 
   public catchMatchTypeId(matchType: number){
     this.matchTypeId.set(matchType);
+  }
+
+  public tournamentStatusChangeEC()
+  {
+    this.tournamentStatusChange.update(old => !old); //just triggering it
   }
 }
