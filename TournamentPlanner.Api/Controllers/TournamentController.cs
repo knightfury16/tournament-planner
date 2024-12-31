@@ -137,6 +137,21 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(new { message = "Tournament status changed successfully" });
         }
 
+        //- Check if an admin can make draw request // authorized
+        [HttpPost("{id}/can-make-draw")]
+        [Authorize(Roles = Role.Admin)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ChangeIMakeDraw(int id)
+        {
+            if (id <= 0) return BadRequest("Tournament Id invalid");
+
+            var request = new CanIMakeDrawRequest(id);
+            var response = await _mediator.Send(request);
+
+            return Ok(response);
+        }
+
 
 
 
