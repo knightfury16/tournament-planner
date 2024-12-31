@@ -12,12 +12,8 @@
         </mat-tab>
         <mat-tab label="Make Draws">
             <div class="tab-container draw-container">
-                <mat-card-actions class="action">
-                    <button class="draw-btn" mat-stroked-button >Make Draw</button>
-                </mat-card-actions>
-                <hr>
                 @if (this.drawTabView() == drawTabViewType.ListView) {
-                <app-tournament-draw-list (drawTabChangeEvent)="toggleDrawTabView($event)"
+                <app-tournament-draw-list (drawTabChangeEvent)="toggleDrawTabView($event)" [manage]="true"
                     (matchTypeId)="catchMatchTypeId($event)" [tournamentId]="tournamentId"></app-tournament-draw-list>
                 }
                 @else if (this.drawTabView() == drawTabViewType.DetailView) {

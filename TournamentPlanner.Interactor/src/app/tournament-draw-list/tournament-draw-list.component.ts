@@ -34,6 +34,7 @@ import { DrawTabViewType } from '../tournament-details-homepage/tournament-detai
 })
 export class TournamentDrawListComponent implements OnInit {
   @Input({ required: true }) public tournamentId?: string;
+  @Input() public manage: boolean = false;
   @Output() drawTabChangeEvent = new EventEmitter<DrawTabViewType>();
   @Output() matchTypeId = new EventEmitter<number>();
   private _tpService = inject(TournamentPlannerService);

@@ -1,6 +1,11 @@
-@if (this.draws() != undefined && this.draws()!.length > 0 ) {
-@for (item of this.draws(); track item ) {
 <div class="container">
+    @if (this.manage) {
+    <mat-card-actions class="action">
+        <button mat-stroked-button class="action-btn">Make Draw</button>
+    </mat-card-actions>
+    }
+    @if (this.draws() != undefined && this.draws()!.length > 0 ) {
+    @for (item of this.draws(); track item ) {
     <mat-card class="mat-card">
         <mat-card-header class="my-mat-header">
             <div class="title-container">
@@ -20,11 +25,9 @@
             Created At: {{this.getCreatedAtDate(item)}}
         </mat-card-content>
     </mat-card>
-</div>
-}
-}
-@else {
-<div class="container">
+    }
+    }
+    @else {
     <div>Such Empty...</div>
+    }
 </div>
-}
