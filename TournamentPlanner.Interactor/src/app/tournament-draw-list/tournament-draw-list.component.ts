@@ -1,7 +1,9 @@
 import {
   Component,
+  effect,
   EventEmitter,
   inject,
+  input,
   Input,
   OnInit,
   Output,
@@ -18,6 +20,7 @@ import { getDateStringInFormat } from '../../Shared/Utility/dateTimeUtility';
 import { RouterModule } from '@angular/router';
 import { DrawTabViewType } from '../tournament-details-homepage/tournament-details-homepage.component';
 import { LoadingService } from '../../Shared/loading.service';
+import { AdminTournamentService } from '../../Shared/admin-tournament.service';
 
 @Component({
   selector: 'app-tournament-draw-list',
@@ -36,12 +39,23 @@ import { LoadingService } from '../../Shared/loading.service';
 export class TournamentDrawListComponent implements OnInit {
   @Input({ required: true }) public tournamentId?: string;
   @Input() public manage: boolean = false;
+  @Input() public tournamentStatusChange = false;
   @Output() drawTabChangeEvent = new EventEmitter<DrawTabViewType>();
   @Output() matchTypeId = new EventEmitter<number>();
   private _tpService = inject(TournamentPlannerService);
+  private _adminService = inject(AdminTournamentService);
   private _loadingService = inject(LoadingService);
   public canIMakeDraw = signal(false);
   public draws = signal<DrawDto[] | undefined>(undefined);
+
+  constructor() {
+    if (this.manage) {
+      effect(async () => {
+        console.log("CALING CAN I DRAW REQ")
+        await this.checkIfICanMakeDraw();
+      });
+    }
+  }
 
   async ngOnInit() {
     try {
@@ -51,19 +65,25 @@ export class TournamentDrawListComponent implements OnInit {
       );
       this.draws.set(reqResponse);
       await this.checkIfICanMakeDraw();
+      console.log("CALING CAN I DRAW REQ from ONINIT")
       this._loadingService.hide();
     } catch (error) {
       this._loadingService.hide();
       console.log(error);
       console.log(
         (error as any).error ??
-          (error as any).error?.Error ??
-          'An unknown error occurred.'
+        (error as any).error?.Error ??
+        'An unknown error occurred.'
       );
     }
   }
   async checkIfICanMakeDraw() {
-    
+    try {
+      var canIDrawDto = await this._adminService.canIDraw(this.tournamentId!.toString());
+      this.canIMakeDraw.set(canIDrawDto.success);
+    } catch (err: any) {
+      throw new Error(err);
+    }
   }
 
   getClassName(matchType: MatchTypeDto): string {
