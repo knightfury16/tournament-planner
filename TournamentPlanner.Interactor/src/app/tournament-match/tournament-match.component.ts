@@ -6,11 +6,13 @@ import { GameTypeService } from '../../Shared/game-type.service';
 import { getDateAndTimeStringInFormat } from '../../Shared/Utility/dateTimeUtility';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-tournament-match',
   standalone: true,
-  imports: [MatButtonModule,MatCardModule,MatIconModule],
+  imports: [MatButtonModule,MatCardModule,MatIconModule, MatChipsModule, MatTooltipModule],
   templateUrl: './tournament-match.component.html',
   styleUrl: './tournament-match.component.scss'
 })
@@ -19,60 +21,78 @@ export class TournamentMatchComponent {
   @Input({ required: true }) public gameType?: GameTypeDto | null;
   @Input() public manage: boolean = false;
   @Output() public matchSelectedEE = new EventEmitter<number>();
+  public notAvailable = NotAvailable;
 
   private _gameTypeService = inject(GameTypeService);
 
-  public getFirstPlayerName() {
-    return this.match?.firstPlayer?.name;
+  getFirstPlayerName() {
+    return this.match?.firstPlayer?.name || 'TBD';
   }
 
-  public getSecondPlayerName() {
-    return this.match?.secondPlayer?.name;
+  getSecondPlayerName() {
+    return this.match?.secondPlayer?.name || 'TBD';
   }
 
-  public showAddScore(): boolean
-  {
+  showAddScore(): boolean {
     return this.manage;
   }
 
-
-  public getMatchScore(): string {
-    if (this.match?.winner == null || this.gameType == null || this.match.scoreJson == null) return NotAvailable;
-    var scoreString = this._gameTypeService.getFullDisplayeScore(this.gameType, this.match.scoreJson);
-    return scoreString;
+  getMatchScore(): string {
+    if (this.match?.winner == null || this.gameType == null || this.match.scoreJson == null) 
+      return NotAvailable;
+    return this._gameTypeService.getFullDisplayeScore(this.gameType, this.match.scoreJson);
   }
 
-  public isFirstPlayerWinner(){
-    if (this.match?.winner == null || this.gameType == null || this.match.scoreJson == null) return false;
-    if(this.match.winner.id == this.match.firstPlayer?.id)return true;
-    return false;
+  isFirstPlayerWinner() {
+    if (this.match?.winner == null || this.gameType == null || this.match.scoreJson == null) 
+      return false;
+    return this.match.winner.id === this.match.firstPlayer?.id;
   }
-  public isSecondPlayerWinner(){
-    if (this.match?.winner == null || this.gameType == null || this.match.scoreJson == null) return false;
-    if(this.match.winner.id == this.match.secondPlayer?.id)return true;
-    return false;
+
+  isSecondPlayerWinner() {
+    if (this.match?.winner == null || this.gameType == null || this.match.scoreJson == null) 
+      return false;
+    return this.match.winner.id === this.match.secondPlayer?.id;
   }
 
   getMatchCourtName(): string {
-    if(this.match?.court == null)return NotAvailable;
-    return this.match.court;
+    return this.match?.court || this.notAvailable;
   }
+
   getMatchPlayedDate() {
-    if(this.match?.matchPlayed == null)return NotAvailable;
+    if (!this.match?.matchPlayed) return NotAvailable;
     return getDateAndTimeStringInFormat(new Date(this.match.matchPlayed));
   }
 
   getMatchScheduledDate() {
-    if(this.match?.matchScheduled == null)return NotAvailable;
+    if (!this.match?.matchScheduled) return NotAvailable;
     return getDateAndTimeStringInFormat(new Date(this.match.matchScheduled));
   }
 
-  public isGamePlayed():boolean{
-    if(this.match?.winner)return true;
-    return false;
+  isGamePlayed(): boolean {
+    return !!this.match?.winner;
   }
-  public addScoreTabChangeView()
-  {
+
+  addScoreTabChangeView() {
     this.matchSelectedEE.emit(this.match?.matchId);
+  }
+
+  getMatchStatus(): { text: string; color: string } {
+    if (this.isGamePlayed()) {
+      return { text: 'Completed', color: 'accent' };
+    }
+    if (this.match?.matchScheduled) {
+      const now = new Date();
+      const scheduled = new Date(this.match.matchScheduled);
+      if (scheduled < now) {
+        return { text: 'In Progress', color: 'primary' };
+      }
+      return { text: 'Scheduled', color: 'warn' };
+    }
+    return { text: 'Pending', color: 'default' };
+  }
+
+  hasValidScore(): boolean {
+    return this.match?.scoreJson != null && this.getMatchScore() !== NotAvailable;
   }
 }

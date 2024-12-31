@@ -1,47 +1,149 @@
-.sub-header{
+.match-card {
+  border-radius: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin: 8px 0;
+  background: white;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  &.completed {
+    border-left: 4px solid #4caf50;
+  }
+
+  .match-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+    mat-chip-set {
+      gap: 8px;
+    }
+  }
+
+  .players-section {
     display: flex;
-    justify-content: center;
-    background-color: var(--tp-grey-color);
-    font-weight: 400;
-}
-.score-span{
-    font-style: italic;
-    font-weight: 700;
-}
-
-.card-action{
-    justify-content: end;
-    margin-right: 10px;
-}
-.add-score-link{
-    padding: 5px;
-    background-color: var(--tp-cream-color);
-    border:0.5px solid blanchedalmond;
-}
-
-.player-title {
-  width: 100%;
-  
-  .player-name-container {
-    display: inline-flex;
     align-items: center;
-    gap: 8px;
+    padding: 24px 16px;
+    gap: 16px;
+    background: #f8f9fa;
+
+    .player {
+      flex: 1;
+      padding: 16px;
+      border-radius: 8px;
+      background: white;
+      transition: all 0.3s ease;
+
+      &.winner {
+        background: #e8f5e9;
+        border: 1px solid #4caf50;
+      }
+
+      &.loser {
+        opacity: 0.7;
+      }
+
+      .player-name {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.1rem;
+        font-weight: 500;
+
+        .winner-icon {
+          font-size: 20px;
+          height: 20px;
+          width: 20px;
+        }
+      }
+    }
+
+    .vs-separator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      
+      .score-badge {
+        background: #2196f3;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      span {
+        font-weight: 600;
+        color: #757575;
+      }
+    }
   }
 
-  .vs {
-    margin: 0 16px;
+  .match-details {
+    padding: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(0, 0, 0, 0.7);
+      font-size: 0.9rem;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: rgba(0, 0, 0, 0.5);
+      }
+    }
   }
 
-  .winner-dot {
-    font-size: 15px;
-    height: 15px;
-    width: 15px;
-    opacity: 0;
-    color: green;
-    transition: opacity 0.3s ease;
+  .match-actions {
+    padding: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: flex-end;
 
-    &.visible {
-      opacity: 1;
+    .add-score-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      &:disabled {
+        opacity: 0.7;
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .match-card {
+    .players-section {
+      flex-direction: column;
+      gap: 8px;
+      
+      .player {
+        width: 100%;
+      }
+      
+      .vs-separator {
+        width: 100%;
+        height: 40px;
+      }
+    }
+    
+    .match-details {
+      flex-direction: column;
+      gap: 12px;
     }
   }
 }
