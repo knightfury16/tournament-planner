@@ -100,4 +100,17 @@ export class TournamentDrawListComponent implements OnInit {
     this.drawTabChangeEvent.emit(DrawTabViewType.DetailView);
     this.matchTypeId.emit(matchTypeId);
   }
+
+  public async makeDraw() {
+    try {
+      this._loadingService.show();
+      var response = await this._adminService.makeDraws(this.tournamentId!.toString());
+      await this.checkIfICanMakeDraw();
+      this.draws.set(response);
+      this._loadingService.hide();
+    } catch (error) {
+      this._loadingService.hide();
+      console.log(error);
+    }
+  }
 }
