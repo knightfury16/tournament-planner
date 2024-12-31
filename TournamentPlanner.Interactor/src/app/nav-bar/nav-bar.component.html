@@ -1,28 +1,53 @@
-<nav class="navbar">
-  <mat-toolbar > <!-- Changed color to 'accent' for a more professional look -->
-    <mat-toolbar-row>
-      <span class="title"><a [routerLink]="'/'">{{ApplicationTitle}}</a></span>
-      <span class="spacer"></span>
-      <a mat-button [routerLink]="'tp'">Home</a>
-      @if (!(isCurrentUserAdmin() || isCurrentUserPlayer())){
-      <a mat-button [routerLink]="'/login'">Sign In</a>
+<mat-toolbar class="nav-toolbar">
+  <mat-toolbar-row>
+    <a class="brand" [routerLink]="'/'">
+      <span class="brand-text">{{ApplicationTitle}}</span>
+    </a>
+    
+    <span class="spacer"></span>
+    
+    <div class="nav-links">
+      <a mat-button [routerLink]="'tp'" class="nav-link">
+        <mat-icon>home</mat-icon>
+        <span>Home</span>
+      </a>
+      
+      @if (!(isCurrentUserAdmin() || isCurrentUserPlayer())) {
+        <a mat-raised-button color="primary" [routerLink]="'/login'" class="auth-button">
+          <mat-icon>login</mat-icon>
+          <span>Sign In</span>
+        </a>
+      } @else {
+        <button mat-button [matMenuTriggerFor]="profileMenu" class="profile-button">
+          <mat-icon>account_circle</mat-icon>
+          <span>{{getCurrentUser()?.name}}</span>
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
       }
-      @else {
-      <button mat-button [mat-menu-trigger-for]="profileMenu">{{getCurrentUser()?.name}}</button>
-      }
-    </mat-toolbar-row>
-  </mat-toolbar>
-</nav>
-<hr class="horizontal-line">
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
 
-<!-- Profile menu options -->
-<ng-container>
-  <mat-menu #profileMenu="matMenu">
-    <button mat-menu-item [routerLink]="'/tp/add-tournament'">Profile</button>
-    @if (isCurrentUserAdmin()) {
-    <button mat-menu-item [routerLink]="'tp/add-tournament'">Add Tournament</button>
-    <button mat-menu-item [routerLink]="'tp/admin-created-tournament-list'">Manage Tournament</button>
-    }
-    <button mat-menu-item (click)="signOut()">Sign out</button>
-  </mat-menu>
-</ng-container>
+<mat-menu #profileMenu="matMenu" class="profile-menu">
+  <button mat-menu-item [routerLink]="'/tp/profile'">
+    <mat-icon>person</mat-icon>
+    <span>Profile</span>
+  </button>
+  
+  @if (isCurrentUserAdmin()) {
+    <button mat-menu-item [routerLink]="'tp/add-tournament'">
+      <mat-icon>add_circle</mat-icon>
+      <span>Add Tournament</span>
+    </button>
+    <button mat-menu-item [routerLink]="'tp/admin-created-tournament-list'">
+      <mat-icon>list</mat-icon>
+      <span>Manage Tournament</span>
+    </button>
+  }
+  
+  <mat-divider></mat-divider>
+  <button mat-menu-item (click)="signOut()" class="signout-button">
+    <mat-icon>logout</mat-icon>
+    <span>Sign out</span>
+  </button>
+</mat-menu>

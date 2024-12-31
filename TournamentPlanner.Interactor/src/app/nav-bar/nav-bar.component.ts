@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService, UserInfo } from '../../Shared/auth.service';
 import { DomainRole } from '../tp-model/TpModel';
 import { LoadingService } from '../../Shared/loading.service';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-nav-bar',
@@ -18,7 +19,8 @@ import { LoadingService } from '../../Shared/loading.service';
     MatIconModule,
     RouterModule,
     CommonModule,
-    MatMenuModule
+    MatMenuModule,
+    MatDividerModule
   ],
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.scss',
