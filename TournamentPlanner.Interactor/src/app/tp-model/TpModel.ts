@@ -173,3 +173,8 @@ export type AddMatchScoreDto = {
   gamePlayed: Date | string | undefined;
   gameSpecificScore: any | object
 }
+
+export type CanIDrawDto = {
+  success: boolean;
+  message: string | undefined | null;
+}
