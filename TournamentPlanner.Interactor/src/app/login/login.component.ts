@@ -21,12 +21,13 @@ export type LoginErrorType = {
   selector: 'app-login',
   standalone: true,
   imports: [ MatButtonModule,RouterModule, CommonModule,
-    MatFormFieldModule,MatInputModule, FormsModule, ReactiveFormsModule,MatCardModule],
+    MatFormFieldModule,MatInputModule, FormsModule, ReactiveFormsModule,MatCardModule,MatIconModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  hidePassword = true;
   public loginError = signal<string | null>(null);
   private laodingService = inject(LoadingService);
 

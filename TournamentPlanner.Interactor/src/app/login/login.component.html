@@ -1,28 +1,47 @@
-<div class="al-container">
-    <mat-card appearance="raised" class="container">
-        <mat-card-header>
-            <mat-card-title>Login to your account</mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="card-content">
-            <form [formGroup]="loginForm">
-                <mat-form-field class="form-field email-field">
-                    <mat-label>Email: </mat-label>
-                    <input matInput type="email" formControlName="email">
-                </mat-form-field>
-                <mat-form-field class="form-field password-field">
-                    <mat-label>Password: </mat-label>
-                    <input matInput type="password" formControlName="password">
-                </mat-form-field>
-                @if (this.loginError()) {
-                <mat-error class="login-error">{{this.loginError()}}</mat-error>
-                }
-            </form>
-        </mat-card-content>
-        <mat-card-actions class="card-actions">
-            <button mat-stroked-button class="login-btn" [disabled]="!loginForm.valid" (click)="this.login()">Login</button>
-        </mat-card-actions>
-        <mat-card-footer class="footer">
-            <button class="my-button" mat-flat-button [routerLink]="'/register-player'">Not a member? Register</button>
-        </mat-card-footer>
-    </mat-card>
+<div class="auth-container">
+  <mat-card class="auth-card">
+    <div class="auth-header">
+      <mat-icon class="auth-icon">lock_outline</mat-icon>
+      <h1>Welcome Back</h1>
+      <p>Please sign in to continue</p>
+    </div>
+
+    <form [formGroup]="loginForm" class="auth-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <mat-icon matPrefix>email</mat-icon>
+        <input matInput type="email" formControlName="email" placeholder="your@email.com">
+        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Email is required</mat-error>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Please enter a valid email</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <mat-icon matPrefix>lock</mat-icon>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
+      </mat-form-field>
+
+      @if (loginError()) {
+        <div class="error-message">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{loginError()}}</span>
+        </div>
+      }
+
+      <button mat-raised-button color="primary" class="submit-button" 
+              [disabled]="!loginForm.valid" (click)="login()">
+        <span>Sign In</span>
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <span>Don't have an account?</span>
+      <a mat-button color="accent" [routerLink]="'/register-player'">Create Account</a>
+    </div>
+  </mat-card>
 </div>
