@@ -6,11 +6,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
-import { mapStringToEnum } from '../../Shared/Utility/stringUtility';
+import { mapStringToEnum, trimAllSpace } from '../../Shared/Utility/stringUtility';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { SnackbarService } from '../../Shared/snackbar.service';
 import { AdminTournamentService } from '../../Shared/admin-tournament.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-manage-tournament-details',
@@ -21,7 +24,10 @@ import { AdminTournamentService } from '../../Shared/admin-tournament.service';
     CommonModule,
     MatSelectModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule,
+    MatDividerModule,
+    MatChipsModule
   ],
   templateUrl: './manage-tournament-details.component.html',
   styleUrl: './manage-tournament-details.component.scss'
@@ -43,11 +49,16 @@ export class ManageTournamentDetailsComponent implements OnInit {
 
   async ngOnInit() {
     if (this.tournamentId == undefined) { return; }
-    var tourDetail = await this._tpService.getTournamentById(this.tournamentId)
-    var transformDateTournament = transformTournamentIsoDate(tourDetail);
-    this.tournamentDetails.set(transformDateTournament);
+    var tourDetail = await this.fetchTournament(this.tournamentId);
     this.emitTournament(tourDetail);// name will be here
     this.setSelectedStatus();
+  }
+
+  async fetchTournament(tournamentId: string) {
+    var tourDetail = await this._tpService.getTournamentById(tournamentId)
+    var transformDateTournament = transformTournamentIsoDate(tourDetail);
+    this.tournamentDetails.set(transformDateTournament);
+    return tourDetail;
   }
 
   setSelectedStatus() {
@@ -69,7 +80,7 @@ export class ManageTournamentDetailsComponent implements OnInit {
     Object.keys(TournamentStatus).forEach(
       key => {
         if (!isNaN(Number(key))) return;
-        status.push(TournamentStatus[key as keyof typeof TournamentStatus].toString());
+        status.push(trimAllSpace(TournamentStatus[key as keyof typeof TournamentStatus]));
       }
     )
     return status;
@@ -80,11 +91,40 @@ export class ManageTournamentDetailsComponent implements OnInit {
       var statusChangeResponse = await this._adminTpService.changeTournamentStatus(this.tournamentId!, changedStatus);
       this.statusChangeEE.emit();
       console.log(statusChangeResponse);
+      await this.fetchTournament(this.tournamentId!);
+      this.statusFormControl.reset();
       this._snackBarService.showMessage(statusChangeResponse.message);
-    } catch (error : any) {
+    } catch (error: any) {
       console.log(error!.error);
       this._snackBarService.showError((error as any).error ?? (error as any).error?.Error ?? "An unknown error occurred.");
     }
   }
 
+  formatDate(date: string | null | undefined): string {
+    if (!date) return 'Not set';
+    return new Date(date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  getStatusColor(status: string): string {
+    switch (status) {
+      case TournamentStatus.Draft:
+        return 'gray';
+      case trimAllSpace(TournamentStatus.RegistrationOpen):
+        return '#4CAF50';
+      case trimAllSpace(TournamentStatus.RegistrationClosed):
+        return '#FF9800';
+      case TournamentStatus.Ongoing:
+        return '#2196F3';
+      case TournamentStatus.Completed:
+        return '#9C27B0';
+      default:
+        return 'gray';
+    }
+  }
 }
