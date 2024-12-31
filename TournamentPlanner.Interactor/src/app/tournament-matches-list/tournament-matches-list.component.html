@@ -1,17 +1,29 @@
-<div>
-    <mat-card-header class="header">
-        <h1 class="title">Tournament Matches List</h1>
+<mat-card class="tournament-container">
+    <mat-card-header>
+        <mat-card-title class="tournament-title">
+            <h1>Tournament Brackets</h1>
+        </mat-card-title>
     </mat-card-header>
-    <div class="round-container" *ngFor="let item of matchCardModels() | keyvalue">
-        <h2 class="round-name">{{ item.key }}</h2>
-        <mat-grid-list cols="2" rowHeight="2:1">
-            <ng-container *ngFor="let match of item.value">
-                <mat-grid-tile>
-                    <app-tournament-match [manage]="this.manage" [gameType]="gameType"
-                     [match]="match" (matchSelectedEE)="this.matchSelectedEC($event)"></app-tournament-match>
-                </mat-grid-tile>
-            </ng-container>
-        </mat-grid-list>
-        <hr>
-    </div>
-</div>
+
+    <mat-card-content>
+        <div class="rounds-container">
+            <div class="round" *ngFor="let item of matchCardModels() | keyvalue">
+                <div class="round-header">
+                    <div class="round-badge">
+                        <mat-icon>emoji_events</mat-icon>
+                        <h2>{{ item.key }}</h2>
+                    </div>
+                    <mat-divider></mat-divider>
+                </div>
+
+                <div class="matches-grid">
+                    <div class="match-wrapper" *ngFor="let match of item.value">
+                        <app-tournament-match [manage]="manage" [gameType]="gameType" [match]="match"
+                            (matchSelectedEE)="matchSelectedEC($event)">
+                        </app-tournament-match>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

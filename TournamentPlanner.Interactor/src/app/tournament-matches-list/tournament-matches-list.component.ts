@@ -8,6 +8,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { TournamentMatchComponent } from "../tournament-match/tournament-match.component";
 import { CommonModule } from '@angular/common';
 import { MatchTabViewType } from '../tp-model/types';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
 
 
 export type MatchModel = {
@@ -33,7 +35,7 @@ export type MatchModel = {
 @Component({
   selector: 'app-tournament-matches-list',
   standalone: true,
-  imports: [MatCardModule, MatTabsModule, MatGridListModule, TournamentMatchComponent, CommonModule],
+  imports: [MatCardModule, MatTabsModule, MatGridListModule, TournamentMatchComponent, CommonModule,MatDividerModule, MatIconModule],
   templateUrl: './tournament-matches-list.component.html',
   styleUrl: './tournament-matches-list.component.scss'
 })
