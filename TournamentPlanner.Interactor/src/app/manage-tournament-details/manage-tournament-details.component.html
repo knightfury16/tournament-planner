@@ -45,6 +45,27 @@
             <span class="value">{{formatDate(tournament.registrationLastDate)}}</span>
           </div>
         </div>
+
+        <mat-divider vertical></mat-divider>
+
+        <div class="info-section">
+          <h3>Participation Details</h3>
+          <div class="info-item">
+            <mat-icon>group</mat-icon>
+            <span class="label">Participants:</span>
+            <span>{{tournament.participants?.length || 0}} / {{tournament.maxParticipant}}</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>payment</mat-icon>
+            <span class="label">Registration Fee:</span>
+            <span>${{tournament.registrationFee}}</span>
+          </div>
+          <div class="info-item">
+            <mat-icon>person</mat-icon>
+            <span class="label">Minimum Age:</span>
+            <span>{{tournament.minimumAgeOfRegistration}} years</span>
+          </div>
+        </div>
       </div>
     </mat-card-content>
   </mat-card>
@@ -63,8 +84,7 @@
         <div class="current-status">
           <h3>Current Status</h3>
           <mat-chip-set>
-            <mat-chip [style.background-color]="getStatusColor(tournament.status || '')"
-                     [style.color]="'white'">
+            <mat-chip [style.background-color]="getStatusColor(tournament.status || '')" [style.color]="'white'">
               {{tournament.status}}
             </mat-chip>
           </mat-chip-set>
@@ -75,9 +95,8 @@
           <mat-form-field appearance="outline" class="status-select">
             <mat-label>New Status</mat-label>
             <mat-select [formControl]="statusFormControl" [(value)]="selectedStatus">
-              <mat-option *ngFor="let status of getTournamentStatusString()"
-                         [value]="status"
-                         [style.borderLeft]="'4px solid ' + getStatusColor(status)">
+              <mat-option *ngFor="let status of getTournamentStatusString()" [value]="status"
+                [style.borderLeft]="'4px solid ' + getStatusColor(status)">
                 {{status}}
               </mat-option>
             </mat-select>
@@ -87,11 +106,8 @@
     </mat-card-content>
 
     <mat-card-actions>
-      <button mat-raised-button 
-              color="primary" 
-              class="status-btn" 
-              (click)="changeStatus()" 
-              [disabled]="!statusFormControl.touched">
+      <button mat-raised-button color="primary" class="status-btn" (click)="changeStatus()"
+        [disabled]="!statusFormControl.touched">
         <mat-icon>update</mat-icon>
         Update Status
       </button>
