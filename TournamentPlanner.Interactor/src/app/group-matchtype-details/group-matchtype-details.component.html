@@ -1,0 +1,10 @@
+<div>
+    <div>
+        <app-round-robin-table [players]="this.players" [matches]="this.matches" [gameType]="this.gameType">
+        </app-round-robin-table>
+    </div>
+    <div>
+        <app-group-standing-provider [gameType]="this.gameType"
+            [matchTypeId]="this.matchTypeId"></app-group-standing-provider>
+    </div>
+</div>
