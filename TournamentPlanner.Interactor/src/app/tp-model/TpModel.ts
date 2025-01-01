@@ -179,3 +179,8 @@ export type CanIDrawDto = {
   success: boolean;
   message: string | undefined | null;
 }
+
+export enum MatchTypeTypes{
+  Group = "Group",
+  KnockOut = "KnockOut"
+}
