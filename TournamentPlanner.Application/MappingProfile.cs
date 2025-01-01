@@ -28,7 +28,9 @@ namespace TournamentPlanner.Application
             CreateMap<Tournament, AddTournamentDto>().ReverseMap();
             CreateMap<Match, MatchDto>().ReverseMap();
             CreateMap<Round, RoundDto>().ReverseMap();
-            CreateMap<Domain.Entities.MatchType, MatchTypeDto>().ReverseMap();
+            CreateMap<Domain.Entities.MatchType, MatchTypeDto>()
+            .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src is Group ? "Group" : src is KnockOut ? "KnockOut" : "Unknown"))
+            .ReverseMap();
             CreateMap<Draw, DrawDto>().ReverseMap();
             CreateMap<PlayerStanding, PlayerStandingDto>().ReverseMap();
 
