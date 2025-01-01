@@ -12,4 +12,5 @@ public class MatchTypeDto
     public List<PlayerDto> Players { get; set; } = new();
     // public List<MatchDto> Matches { get; set; } = new();
     public bool IsCompleted { get; set; }
+    public string? Type { get; set; }
 }

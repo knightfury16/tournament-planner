@@ -145,6 +145,7 @@ export interface MatchTypeDto {
   rounds: RoundDto[];
   players: PlayerDto[];
   isCompleted: boolean;
+  type: string | undefined;
 }
 
 export type DrawDto = {
