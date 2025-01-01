@@ -64,7 +64,7 @@ export class TournamentDrawListComponent implements OnInit {
         this.tournamentId!
       );
       this.draws.set(reqResponse);
-      await this.checkIfICanMakeDraw();
+      if(this.manage)await this.checkIfICanMakeDraw();
       console.log("CALING CAN I DRAW REQ from ONINIT")
       this._loadingService.hide();
     } catch (error) {
