@@ -24,15 +24,13 @@
 
 <ng-template #detailsTab>
   @if (this.players() != undefined) {
-  <!-- //TODO: dynamically show groupmatchtype and knockout matchtype component here -->
-  <div>
-    <app-round-robin-table [players]="this.players()" [matches]="this.matches()" [gameType]="this.gameType">
-    </app-round-robin-table>
-  </div>
-  <div>
-    <app-group-standing-provider [gameType]="this.gameType"
-      [matchTypeId]="this.matchType()?.id"></app-group-standing-provider>
-  </div>
+  @if (this.matchType()?.type == matchTypeTypes.Group) {
+  <app-group-matchtype-details [players]="this.players()" [matches]="this.matches()" [gameType]="this.gameType"
+    [matchTypeId]="this.matchType()?.id"></app-group-matchtype-details>
+  }
+  @else if (this.matchType()?.type == matchTypeTypes.KnockOut) {
+  <app-knockout-matchtype-details></app-knockout-matchtype-details>
+  }
   }
 </ng-template>
 
@@ -41,7 +39,8 @@
   <mat-grid-list cols="2" rowHeight="2:1">
     @for (match of round.matches; track match.id) {
     <mat-grid-tile>
-      <app-tournament-match [match]="this.getMatchModel(match, round)" [gameType]="this.gameType"></app-tournament-match>
+      <app-tournament-match [match]="this.getMatchModel(match, round)"
+        [gameType]="this.gameType"></app-tournament-match>
     </mat-grid-tile>
     }
   </mat-grid-list>

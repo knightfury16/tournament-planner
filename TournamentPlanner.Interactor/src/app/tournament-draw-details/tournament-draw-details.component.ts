@@ -4,26 +4,25 @@ import {
   EventEmitter,
   inject,
   Input,
-  input,
   OnInit,
   Output,
   signal,
 } from '@angular/core';
 import { DrawTabViewType } from '../tournament-details-homepage/tournament-details-homepage.component';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
-import { MatButton, MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import {  MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
+import {  MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
-import { GameTypeDto, MatchDto, MatchTypeDto, RoundDto } from '../tp-model/TpModel';
+import { GameTypeDto, MatchDto, MatchTypeDto, MatchTypeTypes, RoundDto } from '../tp-model/TpModel';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatListModule } from '@angular/material/list';
-import { RoundRobinTableComponent } from "../round-robin-table/round-robin-table.component";
-import { GroupStandingProviderComponent } from "../group-standing-provider/group-standing-provider.component";
 import { MatGridListModule } from '@angular/material/grid-list';
 import { TournamentMatchComponent } from '../tournament-match/tournament-match.component';
 import { MatchModel } from '../tournament-matches-list/tournament-matches-list.component';
+import { GroupMatchtypeDetailsComponent } from '../group-matchtype-details/group-matchtype-details.component';
+import { KnockoutMatchtypeDetailsComponent } from '../knockout-matchtype-details/knockout-matchtype-details.component';
 
 @Component({
   selector: 'app-tournament-draw-details',
@@ -36,10 +35,10 @@ import { MatchModel } from '../tournament-matches-list/tournament-matches-list.c
     MatButtonModule,
     MatTableModule,
     MatListModule,
-    RoundRobinTableComponent,
-    GroupStandingProviderComponent,
     MatGridListModule,
-    TournamentMatchComponent
+    TournamentMatchComponent,
+    GroupMatchtypeDetailsComponent,
+    KnockoutMatchtypeDetailsComponent
   ],
   templateUrl: './tournament-draw-details.component.html',
   styleUrl: './tournament-draw-details.component.scss',
@@ -50,6 +49,7 @@ export class TournamentDrawDetailsComponent implements OnInit {
   @Output() drawTabChangeEvent = new EventEmitter<DrawTabViewType>();
   private _tpService = inject(TournamentPlannerService);
 
+  public matchTypeTypes = MatchTypeTypes;
   public matchType = signal<MatchTypeDto | undefined>(undefined);
   public players = computed(() => this.matchType()?.players ?? undefined);
   public rounds = computed(() => this.matchType()?.rounds ?? undefined);
