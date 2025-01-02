@@ -1,33 +1,42 @@
-<div class="container">
-    @if (this.manage) {
-    <mat-card-actions class="action">
-        <button [disabled]="!this.canIMakeDraw()" (click)="this.makeDraw()" mat-stroked-button class="action-btn">Make Draw</button>
+<div class="page-container">
+    @if (manage) {
+    <mat-card-actions>
+        <button mat-raised-button color="primary" [disabled]="!canIMakeDraw()" (click)="makeDraw()">
+            <mat-icon>casino</mat-icon>
+            Make Draw
+        </button>
     </mat-card-actions>
     }
-    @if (this.draws() != undefined && this.draws()!.length > 0 ) {
-    @for (item of this.draws(); track item ) {
-    <mat-card class="mat-card">
-        <mat-card-header class="my-mat-header">
-            <div class="title-container">
-                <mat-card-title class="mat-title">
-                    <a class="link" (click)="this.emitDrawTabViewChangeEvent(item.matchType.id)">
+
+    <div class="draw-list">
+        @if (draws() && draws()!.length > 0) {
+        @for (item of draws(); track item) {
+        <mat-card appearance="outlined">
+            <mat-card-header>
+                <mat-card-title>
+                    <button mat-button class="title-link" (click)="emitDrawTabViewChangeEvent(item.matchType.id)">
+                        <mat-icon>emoji_events</mat-icon>
                         {{item.matchType.name}}
-                    </a>
+                    </button>
                 </mat-card-title>
-            </div>
-            <div class="chip-container">
-                <div class="my-chip" [ngClass]="this.getClassName(item.matchType)">
-                    {{item.matchType.isCompleted ? 'Completed' : 'Incomplete'}}
-                </div>
-            </div>
-        </mat-card-header>
-        <mat-card-content class="mat-content">
-            Created At: {{this.getCreatedAtDate(item)}}
-        </mat-card-content>
-    </mat-card>
-    }
-    }
-    @else {
-    <div>Such Empty...</div>
-    }
+
+                <mat-chip [class]="getClassName(item.matchType)">
+                    <mat-icon>{{item.matchType.isCompleted ? 'check_circle' : 'pending'}}</mat-icon>
+                    {{item.matchType.isCompleted ? 'Completed' : 'In Progress'}}
+                </mat-chip>
+            </mat-card-header>
+
+            <mat-card-content>
+                <mat-icon>calendar_today</mat-icon>
+                {{getCreatedAtDate(item)}}
+            </mat-card-content>
+        </mat-card>
+        }
+        } @else {
+        <div class="empty-state">
+            <mat-icon>sports</mat-icon>
+            <p>No draws available</p>
+        </div>
+        }
+    </div>
 </div>

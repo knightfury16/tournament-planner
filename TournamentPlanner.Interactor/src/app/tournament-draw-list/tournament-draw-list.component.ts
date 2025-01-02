@@ -21,6 +21,7 @@ import { RouterModule } from '@angular/router';
 import { DrawTabViewType } from '../tournament-details-homepage/tournament-details-homepage.component';
 import { LoadingService } from '../../Shared/loading.service';
 import { AdminTournamentService } from '../../Shared/admin-tournament.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-tournament-draw-list',
@@ -32,6 +33,8 @@ import { AdminTournamentService } from '../../Shared/admin-tournament.service';
     MatButtonModule,
     MatChipsModule,
     MatCommonModule,
+    MatChipsModule,
+    MatIconModule
   ],
   templateUrl: './tournament-draw-list.component.html',
   styleUrl: './tournament-draw-list.component.scss',
