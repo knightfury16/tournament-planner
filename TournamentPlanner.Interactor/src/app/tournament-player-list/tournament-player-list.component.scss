@@ -1,32 +1,39 @@
 .player-list {
-  .mat-expansion-panel {
-    margin-bottom: 16px;
-    
-    .player-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin: 16px 0;
+    .mat-expansion-panel {
+        margin-bottom: 16px;
+
+        .player-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .win-ratio {
+            background: #e3f2fd;
+            padding: 16px;
+            border-radius: 4px;
+            margin: 16px 0;
+        }
+
+        mat-icon {
+            margin-right: 2px;
+            vertical-align: bottom;
+        }
     }
-    
-    .win-ratio {
-      background: #e3f2fd;
-      padding: 16px;
-      border-radius: 4px;
-      margin: 16px 0;
-    }
-  }
 }
 
 .empty-state {
-  text-align: center;
-  padding: 48px 0;
-  color: rgba(0, 0, 0, 0.54);
-  
-  mat-icon {
-    font-size: 48px;
-    height: 48px;
-    width: 48px;
-    margin-bottom: 16px;
-  }
+    text-align: center;
+    padding: 48px 0;
+    color: rgba(0, 0, 0, 0.54);
+
+    mat-icon {
+        font-size: 48px;
+        height: 48px;
+        width: 48px;
+        margin-bottom: 20px;
+        padding: 2px;
+        vertical-align: middle;
+    }
 }
