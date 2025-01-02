@@ -29,7 +29,7 @@
     [matchTypeId]="this.matchType()?.id"></app-group-matchtype-details>
   }
   @else if (this.matchType()?.type == matchTypeTypes.KnockOut) {
-  <app-knockout-matchtype-details></app-knockout-matchtype-details>
+  <app-knockout-matchtype-details [players]="this.players()" [rounds]="this.rounds()"></app-knockout-matchtype-details>
   }
   }
 </ng-template>
