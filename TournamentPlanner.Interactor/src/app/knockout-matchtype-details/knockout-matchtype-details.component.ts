@@ -1,17 +1,52 @@
-import { Component, Input } from '@angular/core';
-import { GameTypeDto } from '../tp-model/TpModel';
+import { Component, computed, Input } from '@angular/core';
+import { GameTypeDto, RoundDto } from '../tp-model/TpModel';
 import { MatchDto } from '../tp-model/TpModel';
 import { PlayerDto } from '../tp-model/TpModel';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-knockout-matchtype-details',
   standalone: true,
-  imports: [],
+  imports: [MatCardModule, MatIconModule, CommonModule, MatTooltipModule],
   templateUrl: './knockout-matchtype-details.component.html',
   styleUrl: './knockout-matchtype-details.component.scss'
 })
 export class KnockoutMatchtypeDetailsComponent {
 
+  @Input({ required: true }) public players?: PlayerDto[];
+  @Input({ required: true }) public rounds?: RoundDto[];
+  public matches = computed<MatchDto[]>(() => {
+    var matches: MatchDto[] = [];
+    if (this.rounds == undefined) return matches;
 
+    this.rounds!.forEach((round) => {
+      if (round.matches == undefined || round.matches.length == 0) return;
+      matches = [...matches, ...round.matches];
+    });
+    return matches;
+  });
+
+  public knockoutStartNumber?: number = this.players?.length;
+
+  public sortedRounds = computed(() => {
+    return this.rounds?.sort((a, b) => a.roundNumber - b.roundNumber) || [];
+  });
+  isLastRound(roundIndex: number): boolean {
+    return roundIndex === (this.sortedRounds()?.length || 0) - 1;
+  }
+
+  getConnectorHeight(roundIndex: number): number {
+    // Calculate spacing based on round number
+    return Math.pow(2, roundIndex) * 40;
+  }
+
+  getPlayerSets(match: MatchDto, player: PlayerDto): number {
+    if (!match.scoreJson) return 0;
+    const score = JSON.parse(match.scoreJson);
+    return player.id === match.firstPlayer.id ? score.Player1Sets : score.Player2Sets;
+  }
 
 }

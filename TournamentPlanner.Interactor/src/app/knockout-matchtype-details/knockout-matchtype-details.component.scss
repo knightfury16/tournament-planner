@@ -1,0 +1,76 @@
+.bracket-container {
+  display: flex;
+  gap: 40px;
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.round-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  gap: 20px;
+}
+
+.match-wrapper {
+  flex: 1;
+  display: flex;
+  position: relative;
+}
+
+.match-card {
+  flex: 1;
+  margin: 10px 0;
+}
+
+.player-slot {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &.winner {
+    background: rgba(76, 175, 80, 0.1);
+  }
+}
+
+.player-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.match-details {
+  font-size: 12px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+}
+
+// Connector styles
+.connector-container {
+  position: absolute;
+  right: -40px;
+  width: 40px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.vertical-line {
+  position: absolute;
+  right: 0;
+  width: 2px;
+  background: #ccc;
+}
+
+.horizontal-line {
+  position: absolute;
+  right: 0;
+  height: 2px;
+  background: #ccc;
+}
