@@ -1,30 +1,48 @@
 @if (players && players.length) {
-<div class="mat-list">
+  <mat-accordion class="player-list">
     @for (player of players; track player.id) {
-    <mat-expansion-panel class="expan-panel">
+      <mat-expansion-panel>
         <mat-expansion-panel-header>
-            <mat-panel-title> {{player.name}}</mat-panel-title>
+          <mat-panel-title>
+            <mat-icon>person</mat-icon>
+            {{player.name}}
+          </mat-panel-title>
         </mat-expansion-panel-header>
-        <div>
-            <ng-template [ngTemplateOutlet]="playerDetails"></ng-template>
+
+        <div class="player-stats">
+          <div>
+            <mat-icon>email</mat-icon>
+            <strong>Email:</strong> {{player.email}}
+          </div>
+          <div>
+            <mat-icon>cake</mat-icon>
+            <strong>Age:</strong> {{player.age}}
+          </div>
+          <div>
+            <mat-icon>sports_esports</mat-icon>
+            <strong>Games Played:</strong> {{player.gamePlayed}}
+          </div>
+          <div>
+            <mat-icon>emoji_events</mat-icon>
+            <strong>Games Won:</strong> {{player.gameWon}}
+          </div>
         </div>
 
-        <ng-template #playerDetails>
-            <p><strong>Email:</strong> {{player.email}}</p>
-            <p><strong>Age:</strong> {{player.age}}</p>
-            <p><strong>Games Played:</strong> {{player.gamePlayed}}</p>
-            <p><strong>Games Won:</strong> {{player.gameWon}}</p>
-            <p><strong>Win Ratio:</strong> {{ this.getRoundWinRatio(player.winRatio)}}</p>
-            <button mat-button (click)="emitTabViewChangeEvent()">See More Details</button>
-        </ng-template>
+        <div class="win-ratio">
+          <mat-icon>trending_up</mat-icon>
+          <strong>Win Ratio:</strong> {{getRoundWinRatio(player.winRatio)}}
+        </div>
 
-    </mat-expansion-panel>
+        <button mat-raised-button color="primary" (click)="emitTabViewChangeEvent()">
+          <mat-icon>visibility</mat-icon>
+          View Details
+        </button>
+      </mat-expansion-panel>
     }
-</div>
-}
-@else if(players == undefined) {
-<div>
-    <!-- //link to registration button here -->
-    Such Empty...
-</div>
+  </mat-accordion>
+} @else {
+  <div class="empty-state">
+    <mat-icon>group</mat-icon>
+    <p>No players registered</p>
+  </div>
 }

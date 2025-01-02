@@ -7,11 +7,12 @@ import { PlayerTabViewType } from '../tournament-details-homepage/tournament-det
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-tournament-player-list',
   standalone: true,
-  imports: [MatListModule, MatExpansionModule, MatButtonModule, MatCardModule, CommonModule],
+  imports: [MatListModule, MatExpansionModule, MatButtonModule, MatCardModule, CommonModule,MatIconModule],
   templateUrl: './tournament-player-list.component.html',
   styleUrl: './tournament-player-list.component.scss'
 })
