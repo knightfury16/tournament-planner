@@ -86,6 +86,25 @@ public class MatchTypeService : IMatchTypeService
 
         var matchTypeWithPopulatedRound = await _matchTypeRepository.GetByIdAsync(matchType.Id, [nameof(MatchType.Rounds)]);
         if (matchTypeWithPopulatedRound == null) throw new NotFoundException(nameof(matchTypeWithPopulatedRound));
+
+        if (matchType is Group) await UpdateGroupMatchTypeCompletion(matchTypeWithPopulatedRound);
+        else if (matchType is KnockOut) await UpdateKnockoutMatchTypeCompletion(matchTypeWithPopulatedRound);
+    }
+
+    private async Task UpdateKnockoutMatchTypeCompletion(MatchType matchTypeWithPopulatedRound)
+    {
+        var lastRound = matchTypeWithPopulatedRound.Rounds.OrderBy(r => r.Id).LastOrDefault();
+        if (lastRound == null) return;
+        if(!lastRound.IsCompleted)return; //not complete
+        if(lastRound.RoundName != "Final")return; //complete but not final round
+
+        //if here then complete and Final round
+        matchTypeWithPopulatedRound.IsCompleted = true;
+        await _matchTypeRepository.SaveAsync();
+    }
+
+    private async Task UpdateGroupMatchTypeCompletion(MatchType matchTypeWithPopulatedRound)
+    {
         var rounds = matchTypeWithPopulatedRound.Rounds;
         foreach (var round in rounds)
         {
@@ -93,8 +112,7 @@ public class MatchTypeService : IMatchTypeService
             if (!round.IsCompleted) return;
         }
         //if here then all round complete
-        matchType.IsCompleted = true;
+        matchTypeWithPopulatedRound.IsCompleted = true;
         await _matchTypeRepository.SaveAsync();
     }
-
 }
