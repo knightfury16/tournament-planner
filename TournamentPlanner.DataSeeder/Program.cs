@@ -102,11 +102,12 @@ async Task SeedData(TournamentPlannerDataContext context)
         await transaction.CommitAsync();
         Console.WriteLine("Simulated success!!");
 
-    }
-    catch (Exception e)
-    {
-        Console.Error.WriteLine($"someting went wrong: {e.Message}");
-    }
+  }
+  catch (Exception e)
+  {
+    Console.Error.WriteLine(e);
+    Console.Error.WriteLine($"someting went wrong: {e.Message}");
+  }
 }
 
 async Task RemoveAllData(TournamentPlannerDataContext dataContext)
