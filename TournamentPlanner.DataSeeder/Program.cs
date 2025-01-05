@@ -132,7 +132,7 @@ async Task AddPlayerToTournament(TournamentPlannerDataContext dataContext)
         return;
     }
     var rand = new Random();
-    var playerToAdd = Factory.CreatePlayers(playerCount, $"TestFromAdd{rand.Next()}");
+    var playerToAdd = Factory.CreatePlayers(playerCount);
     dataContext.Players.AddRange(playerToAdd);
     tournament?.Participants.AddRange(playerToAdd);
     await dataContext.SaveChangesAsync();

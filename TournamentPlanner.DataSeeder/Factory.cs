@@ -32,13 +32,14 @@ public static class Factory
     public static List<Player> CreatePlayers(int numOfPlayers, string? name = "Test")
     {
         List<Player> players = new List<Player>();
+        var rand = new Random();
 
         for (int i = 0; i < numOfPlayers; i++)
         {
             var player = new PlayerBuilder()
 
                 .WithName($"{name} Player " + (i + 1).ToString())
-                .WithEmail($"{SeedDataDefault.TestPlayer}-{i}@gmail.com")
+                .WithEmail($"{SeedDataDefault.TestPlayer}{rand.NextDouble()}-{i}@gmail.com")
                 .Build();
             players.Add(player);
         }
