@@ -1,43 +1,32 @@
 <div class="bracket-container">
-      <div class="round-column" *ngFor="let round of sortedRounds(); let roundIndex = index">
-        <h3 class="round-title">{{ round.roundName }}</h3>
-        <div class="match-wrapper" 
-             *ngFor="let match of round.matches; let matchIndex = index; let isLastMatch = last">
-          <mat-card class="match-card">
-            <div class="player-slot" 
-                 *ngFor="let player of [match.firstPlayer, match.secondPlayer]"
-                 [class.winner]="player?.id === match.winner?.id">
-              <div class="player-info">
-                <span>{{ player?.name || 'TBD' }}</span>
-                <span class="score" *ngIf="match.scoreJson">
-                  {{ getPlayerSets(match, player) }}
-                </span>
-              </div>
-            </div>
-            <div class="match-details" *ngIf="match.gameScheduled">
-              <mat-icon>schedule</mat-icon>
-              {{ match.gameScheduled | date:'shortDate' }}
-            </div>
-          </mat-card>
-          
-          <div class="connector-container" *ngIf="!isLastRound(roundIndex)">
-            <!-- Vertical line for first match in pair -->
-            <div class="vertical-line" 
-                 *ngIf="matchIndex % 2 === 0"
-                 [style.top]="'50%'"
-                 [style.height]="getConnectorHeight(roundIndex) + 'px'">
-            </div>
-            <!-- Vertical line for second match in pair -->
-            <div class="vertical-line"
-                 *ngIf="matchIndex % 2 === 1"
-                 [style.bottom]="'50%'"
-                 [style.height]="getConnectorHeight(roundIndex) + 'px'">
-            </div>
-            <!-- Horizontal connector -->
-            <div class="horizontal-line"
-                 [style.width]="'100%'">
+  <div class="round-column" *ngFor="let round of sortedRounds(); let roundIndex = index">
+    <h3 class="round-title">{{ round.roundName }}</h3>
+    <div class="column-wrapper">
+      <div class="match-wrapper" *ngFor="let match of round.matches; let matchIndex = index"
+        [style.top.px]="getMatchWrapperTopPosition(roundIndex, matchIndex)">
+        <mat-card class="match-card">
+          <div class="player-slot" *ngFor="let player of [match.firstPlayer, match.secondPlayer]"
+            [class.winner]="player?.id === match.winner?.id">
+            <div class="player-info">
+              <span>{{ player?.name || 'TBD' }}</span>
+              <span class="score" *ngIf="match.scoreJson">
+                {{ getPlayerSets(match, player) }}
+              </span>
             </div>
           </div>
+          <div class="match-details" *ngIf="match.gameScheduled">
+            <mat-icon>schedule</mat-icon>
+            {{ match.gameScheduled | date:'shortDate' }}
+          </div>
+        </mat-card>
+
+        <div class="connector-container" *ngIf="!isLastRound(roundIndex)">
+          <div class="vertical-line" [style.height.px]="getConnectorHeight(roundIndex)"
+            [style.top]="matchIndex % 2 === 0 ? '50%' : null" [style.bottom]="matchIndex % 2 === 1 ? '50%' : null">
+          </div>
+          <div class="horizontal-line" [style.top]="'50%'"></div>
         </div>
       </div>
     </div>
+  </div>
+</div>

@@ -18,35 +18,48 @@ export class KnockoutMatchtypeDetailsComponent {
 
   @Input({ required: true }) public players?: PlayerDto[];
   @Input({ required: true }) public rounds?: RoundDto[];
+
   public matches = computed<MatchDto[]>(() => {
-    var matches: MatchDto[] = [];
-    if (this.rounds == undefined) return matches;
-
-    this.rounds!.forEach((round) => {
-      if (round.matches == undefined || round.matches.length == 0) return;
-      matches = [...matches, ...round.matches];
-    });
-    return matches;
+    if (!this.rounds) return [];
+    return this.rounds.reduce((acc, round) => 
+      round.matches ? [...acc, ...round.matches] : acc, [] as MatchDto[]);
   });
-
-  public knockoutStartNumber?: number = this.players?.length;
 
   public sortedRounds = computed(() => {
     return this.rounds?.sort((a, b) => a.roundNumber - b.roundNumber) || [];
   });
+
   isLastRound(roundIndex: number): boolean {
     return roundIndex === (this.sortedRounds()?.length || 0) - 1;
   }
 
+  getMatchSpacing(roundIndex: number): number {
+    // Base spacing multiplied by 2 for each round
+    return Math.pow(2, roundIndex + 1) * 60;
+  }
+
+  getMatchWrapperTopPosition(roundIndex: number, matchIndex: number): number {
+    const spacing = this.getMatchSpacing(roundIndex);
+    const offset = spacing / 2;
+    return matchIndex * spacing + offset;
+  }
+
   getConnectorHeight(roundIndex: number): number {
-    // Calculate spacing based on round number
-    return Math.pow(2, roundIndex) * 40;
+    return Math.pow(2, roundIndex) * 60;
+  }
+
+  getVerticalLinePosition(matchIndex: number, isTop: boolean): string {
+    return isTop ? '50%' : '-50%';
   }
 
   getPlayerSets(match: MatchDto, player: PlayerDto): number {
     if (!match.scoreJson) return 0;
-    const score = JSON.parse(match.scoreJson);
-    return player.id === match.firstPlayer.id ? score.Player1Sets : score.Player2Sets;
+    try {
+      const score = JSON.parse(match.scoreJson);
+      return player.id === match.firstPlayer.id ? score.Player1Sets : score.Player2Sets;
+    } catch {
+      return 0;
+    }
   }
 
 }

@@ -1,36 +1,52 @@
 .bracket-container {
   display: flex;
-  gap: 40px;
+  gap: 24px;
   padding: 20px;
+  height: 1280px;
   overflow-x: auto;
+  white-space: nowrap;
 }
 
 .round-column {
   display: flex;
   flex-direction: column;
-  min-width: 200px;
-  gap: 20px;
+  min-width: 250px;
+  position: relative;
+}
+
+.round-title {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.column-wrapper {
+  position: relative;
+  flex: 1;
 }
 
 .match-wrapper {
-  flex: 1;
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 80px;
+  /* Reduced from 100px */
   display: flex;
-  position: relative;
 }
 
 .match-card {
   flex: 1;
-  margin: 10px 0;
+  margin: 0;
 }
 
 .player-slot {
-  padding: 8px;
+  padding: 6px 8px;
+  /* Slightly reduced padding */
   border-bottom: 1px solid #eee;
-  
+
   &:last-child {
     border-bottom: none;
   }
-  
+
   &.winner {
     background: rgba(76, 175, 80, 0.1);
   }
@@ -40,6 +56,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  /* Slightly smaller font */
+}
+
+mat-icon{
+  font-size: large;
 }
 
 .match-details {
@@ -48,24 +71,23 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 8px;
+  padding: 2px 8px;
 }
 
-// Connector styles
 .connector-container {
   position: absolute;
-  right: -40px;
-  width: 40px;
+  right: -24px;
+  /* Reduced from -40px */
+  width: 24px;
+  /* Reduced from 40px */
   height: 100%;
-  display: flex;
-  align-items: center;
 }
 
 .vertical-line {
   position: absolute;
-  right: 0;
   width: 2px;
   background: #ccc;
+  right: 0;
 }
 
 .horizontal-line {
@@ -73,4 +95,5 @@
   right: 0;
   height: 2px;
   background: #ccc;
+  width: 100%;
 }
