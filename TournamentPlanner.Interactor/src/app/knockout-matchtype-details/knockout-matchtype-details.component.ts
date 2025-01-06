@@ -26,7 +26,10 @@ export class KnockoutMatchtypeDetailsComponent {
   });
 
   public sortedRounds = computed(() => {
-    return this.rounds?.sort((a, b) => a.roundNumber - b.roundNumber) || [];
+    return this.rounds?.map(round => ({
+      ...round,
+      matches: round.matches?.sort((a, b) => a.id - b.id) || []
+    })).sort((a, b) => a.roundNumber - b.roundNumber) || [];
   });
 
   isLastRound(roundIndex: number): boolean {
