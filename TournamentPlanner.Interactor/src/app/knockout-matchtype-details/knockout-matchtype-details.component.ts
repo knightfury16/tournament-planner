@@ -21,7 +21,7 @@ export class KnockoutMatchtypeDetailsComponent {
 
   public matches = computed<MatchDto[]>(() => {
     if (!this.rounds) return [];
-    return this.rounds.reduce((acc, round) => 
+    return this.rounds.reduce((acc, round) =>
       round.matches ? [...acc, ...round.matches] : acc, [] as MatchDto[]);
   });
 
@@ -60,6 +60,15 @@ export class KnockoutMatchtypeDetailsComponent {
     } catch {
       return 0;
     }
+  }
+
+  public getContainerHeight() {
+    const eachMatchWapperHeight = 80;
+    const gap = 60;
+    const maxMatch = this.players?.length! / 2;
+    const offset = 10;
+    var totalHeight = (eachMatchWapperHeight * maxMatch) + (gap * maxMatch) + offset;
+    return totalHeight;
   }
 
 }

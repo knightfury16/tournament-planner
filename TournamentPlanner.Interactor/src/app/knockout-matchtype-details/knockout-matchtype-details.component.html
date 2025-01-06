@@ -1,4 +1,4 @@
-<div class="bracket-container">
+<div class="bracket-container" [style.height.px]="this.getContainerHeight()">
   <div class="round-column" *ngFor="let round of sortedRounds(); let roundIndex = index">
     <h3 class="round-title">{{ round.roundName }}</h3>
     <div class="column-wrapper">
