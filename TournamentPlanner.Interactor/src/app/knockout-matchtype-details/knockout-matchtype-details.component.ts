@@ -1,4 +1,4 @@
-import { Component, computed, Input } from '@angular/core';
+import { Component, computed, effect, Input } from '@angular/core';
 import { GameTypeDto, RoundDto } from '../tp-model/TpModel';
 import { MatchDto } from '../tp-model/TpModel';
 import { PlayerDto } from '../tp-model/TpModel';
@@ -19,6 +19,8 @@ export class KnockoutMatchtypeDetailsComponent {
   @Input({ required: true }) public players?: PlayerDto[];
   @Input({ required: true }) public rounds?: RoundDto[];
 
+  public readonly playOff = "playoff 3/4";
+
   public matches = computed<MatchDto[]>(() => {
     if (!this.rounds) return [];
     return this.rounds.reduce((acc, round) =>
@@ -26,10 +28,13 @@ export class KnockoutMatchtypeDetailsComponent {
   });
 
   public sortedRounds = computed(() => {
-    return this.rounds?.map(round => ({
-      ...round,
-      matches: round.matches?.sort((a, b) => a.id - b.id) || []
-    })).sort((a, b) => a.roundNumber - b.roundNumber) || [];
+    return this.rounds
+      ?.filter(round => round.roundName?.toLowerCase() !== this.playOff)
+      .map(round => ({
+        ...round,
+        matches: round.matches?.sort((a, b) => a.id - b.id) || []
+      }))
+      .sort((a, b) => a.roundNumber - b.roundNumber) || [];
   });
 
   isLastRound(roundIndex: number): boolean {
