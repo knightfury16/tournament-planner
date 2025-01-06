@@ -37,6 +37,10 @@ export class KnockoutMatchtypeDetailsComponent {
       .sort((a, b) => a.roundNumber - b.roundNumber) || [];
   });
 
+  public playOffRound = computed(() => {
+    return this.rounds?.filter(round => round.roundName?.toLocaleLowerCase() == this.playOff)[0];
+  })
+
   isLastRound(roundIndex: number): boolean {
     return roundIndex === (this.sortedRounds()?.length || 0) - 1;
   }

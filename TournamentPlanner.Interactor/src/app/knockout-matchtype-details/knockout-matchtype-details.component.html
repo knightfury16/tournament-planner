@@ -29,4 +29,32 @@
       </div>
     </div>
   </div>
+  @if (this.playOffRound()) {
+  <div class="round-column">
+    <h3 class="round-title">{{ this.playOffRound()?.roundName }}</h3>
+    <div class="column-wrapper">
+      <div class="match-wrapper" *ngFor="let match of this.playOffRound()?.matches; let matchIndex = index"
+        [style.top.px]="getMatchWrapperTopPosition(0, matchIndex)">
+        <mat-card class="match-card">
+          <div class="player-slot" *ngFor="let player of [match.firstPlayer, match.secondPlayer]"
+            [class.winner]="player?.id === match.winner?.id">
+            <div class="player-info">
+              <span>{{ player?.name || 'TBD' }}</span>
+              <span class="score" *ngIf="match.scoreJson">
+                {{ getPlayerSets(match, player) }}
+              </span>
+            </div>
+          </div>
+          <div class="match-details" *ngIf="match.gameScheduled">
+            <mat-icon>schedule</mat-icon>
+            {{ match.gameScheduled | date:'shortDate' }}
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  }
+
+
 </div>
