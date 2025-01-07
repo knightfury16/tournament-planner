@@ -33,7 +33,8 @@ export class AdminCreatedTournamentListComponent implements OnInit {
   async ngOnInit() {
     try {
       var response = await this._adminTPService.getAdminTournaments();
-      this.tournaments.set(response);
+      this.tournaments.set(
+        response.sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()));
     } catch (error) {
       console.log(error)
     }
