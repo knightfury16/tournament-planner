@@ -26,6 +26,8 @@ public static class Data
 
         // Create Players
         var players = Factory.CreatePlayers(playerCount);
+        //TODO: Need to change the default seed method implementation
+        // var players = Factory.GetMoqPlayers();
         CreateSomeRandomWin(playerCount, ref players);
         context.Players.AddRange(players);
 

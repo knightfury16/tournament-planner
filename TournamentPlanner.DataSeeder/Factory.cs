@@ -41,7 +41,7 @@ public static class Factory
             var player = new PlayerBuilder()
 
                 .WithName($"{name} Player " + (i + 1).ToString())
-                .WithEmail($"{SeedDataDefault.TestPlayer}{rand.NextDouble()}-{i}@gmail.com")
+                .WithEmail($"{SeedDataDefault.TestPlayer}{rand.NextDouble()}-{i + 5000}@gmail.com")
                 .Build();
             players.Add(player);
         }
