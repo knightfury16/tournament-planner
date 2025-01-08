@@ -82,7 +82,6 @@ if (shouldSeed)
 if (shouldAdd)
 {
     await AddPlayerToTournament(dataContext);
-    System.Console.WriteLine("Added player to tournament");
 }
 
 
@@ -119,22 +118,5 @@ async Task RemoveAllData(TournamentPlannerDataContext dataContext)
 
 async Task AddPlayerToTournament(TournamentPlannerDataContext dataContext)
 {
-    System.Console.WriteLine($"Adding {playerCount} to tournament with Id {tournamentId}");
-    var tournament = await dataContext.Tournaments.Include(t => t.Participants).Where(t => t.Id == tournamentId).FirstOrDefaultAsync();
-    if (tournament == null)
-    {
-        System.Console.WriteLine("Tournament not found to add player");
-        return;
-    }
-    if (tournament?.MaxParticipant < playerCount || tournament?.Participants.Count + playerCount > tournament?.MaxParticipant)
-    {
-        System.Console.WriteLine("Player count excede the max participants count.");
-        return;
-    }
-    var rand = new Random();
-    var playerToAdd = Factory.CreatePlayers(playerCount);
-    dataContext.Players.AddRange(playerToAdd);
-    tournament?.Participants.AddRange(playerToAdd);
-    await dataContext.SaveChangesAsync();
-    System.Console.WriteLine("Added player to tournament sccessfully!!");
+   await Data.AddPlayerToTournament(dataContext, playerCount, tournamentId); 
 }
