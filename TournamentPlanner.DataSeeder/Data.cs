@@ -147,6 +147,45 @@ public static class Data
             .Build();
     }
 
+    public async static Task AddPlayerToTournament(TournamentPlannerDataContext dataContext, int playerCount, int tournamentId)
+    {
+
+        System.Console.WriteLine($"Adding {playerCount} players to tournament with Id {tournamentId}");
+        var tournament = await dataContext.Tournaments.Include(t => t.Participants).Where(t => t.Id == tournamentId).FirstOrDefaultAsync();
+        if (tournament == null)
+        {
+            System.Console.WriteLine("Tournament not found to add player");
+            return;
+        }
+        if (tournament?.MaxParticipant < playerCount || tournament?.Participants.Count + playerCount > tournament?.MaxParticipant)
+        {
+            System.Console.WriteLine("Player count excede the max participants count.");
+            return;
+        }
+        var playerToAdd = await GetPlayerToAdd(dataContext, playerCount);
+        ArgumentNullException.ThrowIfNull(playerToAdd);
+        dataContext.Players.AddRange(playerToAdd);
+        tournament?.Participants.AddRange(playerToAdd);
+        await dataContext.SaveChangesAsync();
+        System.Console.WriteLine("Added player to tournament sccessfully!!");
+    }
+
+    private static async Task<List<Player>> GetPlayerToAdd(TournamentPlannerDataContext dataContext, int playerCount)
+    {
+        var moqPlayers = Factory.GetMoqPlayers();
+        var players = new List<Player>();
+        var index = 0;
+        while (players.Count < playerCount)
+        {
+            var player = moqPlayers[index];
+            var result = await dataContext.Players.SingleOrDefaultAsync(p => p.Email == player.Email);
+            if(result != null)continue;
+            players.Add(player);
+            index++;
+        }
+        return players;
+    }
+
     public static void RemoveAllDataBeforeSeedAndSave(TournamentPlannerDataContext context)
     {
         // Clear existing data
