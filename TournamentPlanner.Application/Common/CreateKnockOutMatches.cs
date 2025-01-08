@@ -19,12 +19,14 @@ public class CreateKnockOutMatches : IKnockout
 {
     private readonly IRepository<MatchType> _matchTypeRepository;
     private readonly IRepository<Round> _roundRepository;
+    private readonly IRepository<Player> _playerRepository;
     private Player? _byePlayer;
 
-    public CreateKnockOutMatches(IRepository<MatchType> matchTypeRepository, IRepository<Round> roundRepository)
+    public CreateKnockOutMatches(IRepository<MatchType> matchTypeRepository, IRepository<Round> roundRepository, IRepository<Player> playerRepository)
     {
         _matchTypeRepository = matchTypeRepository;
         _roundRepository = roundRepository;
+        _playerRepository = playerRepository;
     }
 
     public async Task<IEnumerable<Match>> CreateFirstRoundMatches(Tournament tournament, MatchType matchType)
@@ -115,7 +117,7 @@ public class CreateKnockOutMatches : IKnockout
             int byeMatchCount = 0;
             while(numberOfBye > 0 && byeMatchCount < seededPlayerList.Count )
             {
-                var match = GetMatch(GetByePlayer(), seededPlayerList[byeMatchCount]!, round, tournament);
+                var match = GetMatch(await GetByePlayer(), seededPlayerList[byeMatchCount]!, round, tournament);
                 matches.Add(match);
                 numberOfBye--;
                 byeMatchCount++;
@@ -127,7 +129,7 @@ public class CreateKnockOutMatches : IKnockout
         //assign byes to the remaining slots
         for(int i = 0; i < numberOfBye; i++)
         {
-            matches.Add(GetMatch(GetByePlayer(), shuffledPlayers[i], round, tournament));
+            matches.Add(GetMatch(await GetByePlayer(), shuffledPlayers[i], round, tournament));
         }
 
 
@@ -195,17 +197,26 @@ public class CreateKnockOutMatches : IKnockout
         return 1 << (Convert.ToString(N, 2).Length);
     }
 
-    private Player GetByePlayer()
+    private async Task<Player> GetByePlayer()
     {
         if (_byePlayer == null)
         {
-            _byePlayer = new Player
+            //search db if already exists
+            var result = (await _playerRepository.GetAllAsync(p => p.Email == Utility.ByePlayerEmail)).FirstOrDefault();
+            if (result != null)
             {
-                //One bye player for the entire Tournament platform
-                Name = Utility.ByePlayerName,
-                Email = Utility.ByePlayerEmail,
-                Age = 18,
-            };
+                _byePlayer = result;
+            }
+            else
+            {
+                _byePlayer = new Player
+                {
+                    //One bye player for the entire Tournament platform
+                    Name = Utility.ByePlayerName,
+                    Email = Utility.ByePlayerEmail,
+                    Age = 18,
+                };
+            }
         }
         return _byePlayer;
     }

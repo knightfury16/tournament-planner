@@ -1,3 +1,4 @@
+using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Exceptions;
@@ -15,7 +16,14 @@ public class CreateRoundRobinMatches : IRoundRobin
     private readonly string _roundPrefix = "Round";
     private static Player? _byePlayerInstance;
 
-    public Task<IEnumerable<Match>> CreateMatches(Tournament tournament, MatchType matchType)
+    private readonly IRepository<Player> _playerRepository;
+
+    public CreateRoundRobinMatches(IRepository<Player> playerRepository)
+    {
+        _playerRepository = playerRepository;
+    }
+
+    public async Task<IEnumerable<Match>> CreateMatches(Tournament tournament, MatchType matchType)
     {
         //check if match type is group
         if (matchType is not Group group)
@@ -33,7 +41,7 @@ public class CreateRoundRobinMatches : IRoundRobin
             //ToDO: this hold on to the reference of the bye, need to remove it
             // -- Caution -- remember this point
             //not deleting the bye, will have only one bye player in the entire TP platform
-            players.Add(GetByePlayer());
+            players.Add(await GetByePlayer());
         }
         //figure out the round number
         var roundNumber = players.Count() - 1;
@@ -66,19 +74,29 @@ public class CreateRoundRobinMatches : IRoundRobin
 
         }
 
-        return Task.FromResult(createdMatches.AsEnumerable());
+        return createdMatches;
     }
 
-    private Player GetByePlayer()
+    private async Task<Player> GetByePlayer()
     {
         if (_byePlayerInstance == null)
         {
-            _byePlayerInstance = new Player
+            //search db if already exists
+            var result = (await _playerRepository.GetAllAsync(p => p.Email == Utility.ByePlayerEmail)).FirstOrDefault();
+            if (result != null)
             {
-                Name = Utility.ByePlayerName,
-                Email = Utility.ByePlayerEmail,
-                Age = 18
-            };
+                _byePlayerInstance = result;
+            }
+            else
+            {
+                _byePlayerInstance = new Player
+                {
+                    //One bye player for the entire Tournament platform
+                    Name = Utility.ByePlayerName,
+                    Email = Utility.ByePlayerEmail,
+                    Age = 18,
+                };
+            }
         }
         return _byePlayerInstance;
     }
