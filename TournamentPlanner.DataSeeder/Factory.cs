@@ -1,3 +1,4 @@
+using System.Text.Json;
 using TournamentPlanner.Domain.Entities;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
@@ -13,6 +14,7 @@ public static class SeedDataDefault
 
 public static class Factory
 {
+    private static string MoqDataPath = "playerMoqData.json";
     public static List<Tournament> CreateTournaments(int numberOfTournament, string? name = "Test")
     {
         List<Tournament> tounaments = new List<Tournament>();
@@ -43,6 +45,22 @@ public static class Factory
                 .Build();
             players.Add(player);
         }
+        return players;
+    }
+
+
+    public static List<Player> GetMoqPlayers()
+    {
+        List<Player> players = ReadMoqPlayers();
+        return players;
+    }
+
+    private static List<Player> ReadMoqPlayers()
+    {
+        var moqFilePath = Path.Combine("./", MoqDataPath);
+        var jsonSting = File.ReadAllText(moqFilePath);
+        var players = JsonSerializer.Deserialize<List<Player>>(jsonSting, new JsonSerializerOptions { PropertyNameCaseInsensitive = true});
+        ArgumentNullException.ThrowIfNull(players);
         return players;
     }
 
