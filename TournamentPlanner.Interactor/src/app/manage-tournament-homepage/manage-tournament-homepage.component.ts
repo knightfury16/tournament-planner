@@ -14,13 +14,14 @@ import { MatchTabViewType } from '../tp-model/types';
 import { TournamentDrawListComponent } from '../tournament-draw-list/tournament-draw-list.component';
 import { TournamentDrawDetailsComponent } from '../tournament-draw-details/tournament-draw-details.component';
 import { MatButtonModule } from '@angular/material/button';
+import { MakeMatchScheduleComponent } from "../make-match-schedule/make-match-schedule.component";
 
 @Component({
   selector: 'app-manage-tournament-homepage',
   standalone: true,
   imports: [MatTabsModule, AddMatchScoreComponent, CommonModule, MatCardModule,
     TournamentPlayerListComponent, TournamentPlayerDetailsComponent, ManageTournamentDetailsComponent,
-    TournamentMatchesListComponent, TournamentDrawListComponent,MatButtonModule, TournamentDrawDetailsComponent],
+    TournamentMatchesListComponent, TournamentDrawListComponent, MatButtonModule, TournamentDrawDetailsComponent, MakeMatchScheduleComponent],
   templateUrl: './manage-tournament-homepage.component.html',
   styleUrl: './manage-tournament-homepage.component.scss'
 })
