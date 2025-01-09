@@ -180,6 +180,12 @@ export type CanIDrawDto = {
   message: string | undefined | null;
 }
 
+export type CanIScheduleDto = {
+  success: boolean;
+  message: string | undefined | null;
+}
+
+
 export enum MatchTypeTypes{
   Group = "Group",
   KnockOut = "KnockOut"
