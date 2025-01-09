@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TournamentPlanner.Api.Models;
 using TournamentPlanner.Application;
@@ -142,7 +142,7 @@ namespace TournamentPlanner.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ChangeIMakeDraw(int id)
+        public async Task<IActionResult> CheckCanIMakeDraw(int id)
         {
             if (id <= 0) return BadRequest("Tournament Id invalid");
 
