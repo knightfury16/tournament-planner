@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TournamentPlanner.Api.Models;
 using TournamentPlanner.Application;
@@ -152,6 +152,19 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(response);
         }
 
+        [HttpGet("{id}/can-make-schedule")]
+        [Authorize(Roles = Role.Admin)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CheckCanIMakeSchedule(int id)
+        {
+            if (id <= 0) return BadRequest("Tournament Id invalid");
+
+            var request = new CanIScheduleRequest(id);
+            var response = await _mediator.Send(request);
+
+            return Ok(response);
+        }
 
 
 
