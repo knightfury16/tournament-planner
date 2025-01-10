@@ -164,15 +164,14 @@ public static class Data
             System.Console.WriteLine("Player count excede the max participants count.");
             return;
         }
-        var playerToAdd = await GetPlayerToAdd(dataContext, playerCount);
+        var playerToAdd = await GetPlayerToAdd(dataContext, playerCount, tournament?.Participants);
         ArgumentNullException.ThrowIfNull(playerToAdd);
-        dataContext.Players.AddRange(playerToAdd);
         tournament?.Participants.AddRange(playerToAdd);
         await dataContext.SaveChangesAsync();
         System.Console.WriteLine("Added player to tournament sccessfully!!");
     }
 
-    private static async Task<List<Player>> GetPlayerToAdd(TournamentPlannerDataContext dataContext, int playerCount)
+    private static async Task<List<Player>> GetPlayerToAdd(TournamentPlannerDataContext dataContext, int playerCount, List<Player>? alreadyParticipants)
     {
         var moqPlayers = Factory.GetMoqPlayers();
         var players = new List<Player>();
@@ -181,8 +180,17 @@ public static class Data
         {
             var player = moqPlayers[index];
             var result = await dataContext.Players.SingleOrDefaultAsync(p => p.Email == player.Email);
-            if(result != null)continue;
-            players.Add(player);
+            if (result != null)
+            {
+                if (alreadyParticipants == null || !alreadyParticipants.Any(p => p.Email == player.Email))
+                {
+                    players.Add(result);
+                }
+            }
+            else
+            {
+                players.Add(player);
+            }
             index++;
         }
         return players;
