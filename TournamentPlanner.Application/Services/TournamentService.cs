@@ -55,6 +55,13 @@ public class TournamentService : ITournamentService
         if (draws == null) throw new NullReferenceException(nameof(draws));
         if (draws.Count == 0) return false; // i have not made any draw yet
 
+
+        // double checking me I dont beleive in me. alright i beleive but little
+        if (tournament.Matches == null || tournament.Matches.Count == 0)
+        {
+            await _tournamentRepository.ExplicitLoadCollectionAsync(tournament, t => t.Matches);
+        }
+
         //this will only his in initial state of Group Matches
         if (tournament.Matches == null || tournament.Matches.Count == 0) return true; // i have made draw but no matches scheduled yet
 
