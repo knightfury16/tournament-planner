@@ -1,5 +1,13 @@
 # Code Journal
 
+## EF connection string to include the error on exception
+Normally the detail error is not given when an DB exception or error happens. With **IncludeErrorDetails=true**
+it include the detail error.
+
+```
+"DefaultConnection": "Host=localhost;Database=dbtp;Username=postgres;Password=123;IncludeErrorDetail=true"
+```
+
 ## Asp Middleware
 
 - Adds to app() pipeline
