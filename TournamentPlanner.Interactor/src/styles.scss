@@ -14,6 +14,15 @@ app-root {
 
 /* You can add global styles to this file, and also import other style files */
 :root {
+  //tournament planner variables
+  --tp-title-color: #3f51b5;
+  --tp-header-color: #3f51b5;
+  --tp-card-background-color: #fafafa;
+  --tp-card-radius: 12px;
+
+
+
+
   --rd-color: red;
   --rd-font-family: "Courier New", Courier, monospace;
   --rd-font-size: 90px;
