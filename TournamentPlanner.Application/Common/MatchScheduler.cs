@@ -1,4 +1,4 @@
-
+﻿
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Domain.Entities;
@@ -90,20 +90,52 @@ public class MatchScheduler : IMatchScheduler
         return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, hour, minute, second).ToUniversalTime(); // setting the start time with start date
     }
 
-    public IEnumerable<Match> AdvanceMatchScheduler( List<Match> matches, SchedulingInfo schedulingInfo)
+    public async Task<IEnumerable<Match>> AdvanceMatchScheduler(List<Match> matches, SchedulingInfo schedulingInfo)
     {
-        //a scheduler that takes into accout the following things
-        //1. match per day -> end day - start day = day we have to finish all the matches. 
-        //if match per day is defined we have to calculate if it is possible to finish the tournament within the available days 
-        //of the tournament. for that we have to calcualte the total possible match that can be played with in 
-        //the tournament. 
-        //2. parallelism -> how many matches can be played at once. will be pessimist here and make the default 1
-        //when calculating if it is possible to finish all the matches with the given the match per day, will take this parameter 
-        // into accoutn too.
-        //3. match start time -> will be constant for all the matches within the tournament unless it is being change.
-        //4. time per match -> will also have to take this parameter into account when calculating if is possible the
-        //finish the tournament with in the alotted time.
-        //remember to keep in mind when writting the rescheduler method, to check the collision
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(matches);
+        ArgumentNullException.ThrowIfNull(schedulingInfo);
+
+        await PopulateTournament(matches.First());
+
+        var tournament = matches.First().Tournament;
+        DateTime startDate = schedulingInfo.StartDate ?? tournament.StartDate;
+        TimeOnly startTime = GetStartTime(schedulingInfo.StartTime);
+        TimeSpan eachMatchTime = GetEachMatchTime(schedulingInfo.EachMatchTime);
+        int matchPerDay = schedulingInfo.MatchPerDay > 0 ? schedulingInfo.MatchPerDay : 10; // Default to 10 matches per day
+        int parallelMatches = schedulingInfo.ParallelMatchesPossible > 0 ? schedulingInfo.ParallelMatchesPossible : 1;
+
+        DateTime currentDateTime = GetModifiedStartDate(startTime, startDate);
+        int totalDays = (tournament.EndDate.HasValue ? (tournament.EndDate.Value - startDate).Days : 7) + 1; // Default to 7 days if no end date
+
+        int totalMatches = matches.Count;
+        int totalPossibleMatches = totalDays * matchPerDay * parallelMatches;
+
+        if (totalMatches > totalPossibleMatches)
+        {
+            int extraDaysNeeded = (int)Math.Ceiling((double)(totalMatches - totalPossibleMatches) / (matchPerDay * parallelMatches));
+            throw new InvalidOperationException($"Not enough days to schedule all matches with the given constraints. You need {extraDaysNeeded} more day(s) to complete the schedule.");
+        }
+
+        int matchesScheduledToday = 0;
+        for (int i = 0; i < matches.Count; i += parallelMatches)
+        {
+            for (int j = 0; j < parallelMatches && i + j < matches.Count; j++)
+            {
+                var match = matches[i + j];
+                match.Duration = eachMatchTime;
+                match.GameScheduled = currentDateTime;
+            }
+
+            currentDateTime = currentDateTime.Add(eachMatchTime);
+            matchesScheduledToday += parallelMatches;
+
+            if (matchesScheduledToday >= matchPerDay * parallelMatches || currentDateTime.Hour >= 19)
+            {
+                currentDateTime = currentDateTime.AddDays(1).Date.AddHours(startTime.Hour).AddMinutes(startTime.Minute);
+                matchesScheduledToday = 0;
+            }
+        }
+
+        return matches;
     }
 }
