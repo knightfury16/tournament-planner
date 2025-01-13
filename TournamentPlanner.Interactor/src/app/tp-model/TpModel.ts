@@ -190,3 +190,11 @@ export enum MatchTypeTypes{
   Group = "Group",
   KnockOut = "KnockOut"
 }
+
+export type ScheduleingInfo = {
+  eachMatchTime?: string; // Using string to represent TimeSpan
+  startTime?: string; // Using string to represent TimeOnly
+  startDate?: Date | string;
+  matchPerDay: number;
+  parallelMatchesPossible: number;
+}
