@@ -101,13 +101,10 @@ namespace TournamentPlanner.Api.Controllers
         //- Make tournament schedule // authorized
         [HttpPost("{id}/make-schedule", Name = nameof(MakeTournamentSchedule))]
         [Authorize(Roles = Role.Admin)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DrawDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> MakeTournamentSchedule(int id)
+        public async Task<IActionResult> MakeTournamentSchedule(int id, [FromBody] SchedulingInfo schedulingInfo)
         {
-            var schedulingInfo = new SchedulingInfo
-            {
-            };
 
             var createTournamentDrawRequest = new MakeTournamentMatchScheduleRequest(id, schedulingInfo);
 
