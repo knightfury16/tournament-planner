@@ -1,4 +1,5 @@
 
+using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Domain.Entities;
 
@@ -11,14 +12,24 @@ public interface IMatchScheduler
 }
 public class MatchScheduler : IMatchScheduler
 {
+    private readonly IRepository<Match> _matchRepository;
 
-    public IEnumerable<Match> DefaultMatchScheduler(List<Match> matches, SchedulingInfo schedulingInfo)
+    public MatchScheduler(IRepository<Match> matchRepository)
     {
-        var tournament = matches.First().Tournament; // do i need to send the tournament explicitly here?
+        _matchRepository = matchRepository;
+    }
+
+    public async Task<IEnumerable<Match>> DefaultMatchScheduler(List<Match> matches, SchedulingInfo schedulingInfo)
+    {
+        ArgumentNullException.ThrowIfNull(matches);
+
+        await PopulateTournament(matches.First());
+
+        var tournament = matches.First().Tournament;
 
         // if start time is provided or else default to 30 minutes later of touranament start date
-        TimeOnly startTime = schedulingInfo?.StartTime ?? new TimeOnly(10, 0, 0); //10am
-        var eachMatchTime = schedulingInfo?.EachMatchTime ?? TimeSpan.FromMinutes(30);
+        TimeOnly startTime = GetStartTime(schedulingInfo.StartTime);
+        var eachMatchTime = GetEachMatchTime(schedulingInfo.EachMatchTime);
         DateTime modifiedStartDate = GetModifiedStartDate(startTime, schedulingInfo?.StartDate ?? tournament.StartDate);
 
         foreach (var match in matches)
@@ -35,6 +46,39 @@ public class MatchScheduler : IMatchScheduler
         }
 
         return matches;
+    }
+
+    private TimeSpan GetEachMatchTime(string? eachMatchTime)
+    {
+        var defaultTimeSpanOfMatchTime = TimeSpan.FromMinutes(30);
+        return eachMatchTime != null ? ConvertToTimeSpan(eachMatchTime) : defaultTimeSpanOfMatchTime;
+    }
+
+    private TimeOnly GetStartTime(string? startTime)
+    {
+        var defaultTime = new TimeOnly(10, 0); //10am
+        return startTime != null ? ConvertToTimeOnly(startTime) : defaultTime;
+    }
+
+    private TimeOnly ConvertToTimeOnly(string startTime)
+    {
+        var success = TimeOnly.TryParse(startTime, out var startTimeParsed);
+        if (!success) throw new InvalidOperationException("Can not parse timeonly from Start Time");
+        return startTimeParsed;
+    }
+
+    private TimeSpan ConvertToTimeSpan(string eachMatchTime)
+    {
+        var success = TimeSpan.TryParse(eachMatchTime, out var matchTimeParsed);
+        if (!success) throw new InvalidOperationException("Can not parse timespan from Each Match Time");
+        return matchTimeParsed;
+    }
+
+    private async Task PopulateTournament(Match match)
+    {
+        //load tournament if null
+        if (match.Tournament != null) return;
+        await _matchRepository.ExplicitLoadReferenceAsync(match, m => m.Tournament);
     }
 
     private DateTime GetModifiedStartDate(TimeOnly startTime, DateTime dateTime)
