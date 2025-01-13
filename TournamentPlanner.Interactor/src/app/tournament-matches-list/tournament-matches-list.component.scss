@@ -1,13 +1,14 @@
 .tournament-container {
-  margin: 24px;
-  border-radius: 12px;
-  background: #fafafa;
+  // margin: 24px;
+  border-radius: var(--tp-card-radius);
+  background: var(--tp-card-background-color);
+  min-height: 100vh;
   
   .tournament-title {
     h1 {
       font-size: 28px;
       font-weight: 500;
-      color: #1a237e;
+      color: var(--tp-title-color);
       margin: 0;
       padding: 16px 0;
     }

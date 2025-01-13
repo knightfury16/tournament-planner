@@ -37,3 +37,11 @@
 mat-icon{
     vertical-align: middle;
 }
+
+.page-container
+{
+  background-color: var(--tp-card-background-color);
+  border-radius: var(--tp-card-radius);
+  min-height: 100vh;
+  padding: 1.5rem;
+}

@@ -1,4 +1,4 @@
-<div class="page-container">
+<mat-card appearance="raised" class="page-container">
     @if (manage) {
     <mat-card-actions>
         <button mat-raised-button color="primary" [disabled]="!canIMakeDraw()" (click)="makeDraw()">
@@ -11,7 +11,7 @@
     <div class="draw-list">
         @if (draws() && draws()!.length > 0) {
         @for (item of draws(); track item) {
-        <mat-card appearance="outlined">
+        <mat-card class="card-draw" appearance="outlined">
             <mat-card-header>
                 <mat-card-title>
                     <button mat-button class="title-link" (click)="emitDrawTabViewChangeEvent(item.matchType.id)">
@@ -39,4 +39,4 @@
         </div>
         }
     </div>
-</div>
+</mat-card>
