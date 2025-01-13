@@ -1,25 +1,48 @@
 <!-- make-match-schedule.component.html -->
-<mat-card appearance="raised"  class="card">
+<mat-card appearance="raised" class="card">
     <mat-card-header>
         <mat-card-title color="primary" class="title">Make Tournament Schedule</mat-card-title>
     </mat-card-header>
-    <form [formGroup]="scheduleForm" (ngSubmit)="onSubmit()" class="schedule-form">
-        <mat-form-field appearance="outline">
-            <mat-label>Match Duration</mat-label>
-            <input matInput formControlName="eachMatchTime" placeholder="e.g., 30m" required>
-            <mat-hint>Use format: 30m for minutes, 1h for hours</mat-hint>
-            <mat-error>{{getErrorMessage('eachMatchTime')}}</mat-error>
-        </mat-form-field>
+    <mat-card appearance="raised">
+        <form [formGroup]="scheduleForm" (ngSubmit)="onSubmit()" class="schedule-form">
+            <mat-form-field appearance="outline">
+                <mat-label>Start Date</mat-label>
+                <input matInput [matDatepicker]="startDate" formControlName="startDate">
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="startDate"></mat-datepicker-toggle>
+                <mat-datepicker #startDate></mat-datepicker>
+                <mat-error>{{getErrorMessage('startDate')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Start Time</mat-label>
+                <mat-select formControlName="startTime">
+                    <mat-option *ngFor="let time of this.getStartTimeOptions()" [value]="time">{{time}}</mat-option>
+                </mat-select>
+                <mat-error>{{getErrorMessage('startTime')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Match Duration</mat-label>
+                <input matInput formControlName="eachMatchTime" required>
+                <mat-hint>In Minute</mat-hint>
+                <mat-error>{{getErrorMessage('eachMatchTime')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Match per Day</mat-label>
+                <input matInput formControlName="matchPerDay" required>
+                <mat-error>{{getErrorMessage('matchPerDay')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Parallel Match Number</mat-label>
+                <input matInput formControlName="parallelMatch" required>
+                <mat-hint>Number of matches that can be played in parallel.</mat-hint>
+                <mat-error>{{getErrorMessage('parallelMatch')}}</mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="outline">
-            <mat-label>Start Time</mat-label>
-            <input matInput formControlName="startTime" placeholder="HH:MM:SS" required>
-            <mat-hint>24-hour format (e.g., 13:00:00)</mat-hint>
-            <mat-error>{{getErrorMessage('startTime')}}</mat-error>
-        </mat-form-field>
 
-        <button mat-raised-button class="schedule-btn" color="primary" type="submit" [disabled]="!canISchedule() || scheduleForm.invalid">
-            Make Schedule
-        </button>
-    </form>
+            <button mat-raised-button class="schedule-btn" color="primary" type="submit"
+                [disabled]="!canISchedule() || scheduleForm.invalid">
+                Make Schedule
+            </button>
+        </form>
+    </mat-card>
 </mat-card>
