@@ -1,0 +1,29 @@
+/* make-match-schedule.component.scss */
+.schedule-form {
+    gap: 1rem;
+    max-width: 400px;
+    padding: 1rem;
+
+    mat-form-field {
+        width: 100%;
+    }
+}
+
+.card {
+    padding-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--tp-card-background-color);
+    border-radius: var(--tp-card-radius);
+}
+
+.title {
+    font-size: xx-large;
+    color: var(--tp-title-color);
+    margin-bottom: 1.2rem;
+}
+
+.schedule-btn {
+    margin-top: 1.2rem;
+}
