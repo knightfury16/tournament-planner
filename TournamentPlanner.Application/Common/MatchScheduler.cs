@@ -1,4 +1,4 @@
-﻿
+
 using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Domain.Entities;
 
@@ -6,8 +6,8 @@ namespace TournamentPlanner.Application;
 
 public interface IMatchScheduler
 {
-    public IEnumerable<Match> DefaultMatchScheduler(List<Match> matches, SchedulingInfo schedulingInfo);
-    public IEnumerable<Match> AdvanceMatchScheduler(List<Match> matches, SchedulingInfo schedulingInfo);
+    public Task<IEnumerable<Match>> DefaultMatchScheduler(List<Match> matches, SchedulingInfo schedulingInfo);
+    public Task<IEnumerable<Match>> AdvanceMatchScheduler(List<Match> matches, SchedulingInfo schedulingInfo);
 }
 public class MatchScheduler : IMatchScheduler
 {

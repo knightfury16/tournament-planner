@@ -51,7 +51,7 @@ public class MakeTournamentMatchScheduleRequestHandler : IRequestHandler<MakeTou
         //go to match service with all the draws
         var matches = await _matchService.CreateMatches(tournament, request.SchedulingInfo);
 
-        var scheduledMatches = _matchScheduler.DefaultMatchScheduler(matches.ToList(), request.SchedulingInfo);
+        var scheduledMatches = await _matchScheduler.DefaultMatchScheduler(matches.ToList(), request.SchedulingInfo);
 
         //ON-TEST 
         //! at worst case will have 20 group with 10 match each, with total 200 matches between them. so cant send all the info. remember it. 
