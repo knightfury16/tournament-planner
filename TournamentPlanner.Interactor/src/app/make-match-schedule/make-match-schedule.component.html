@@ -5,7 +5,7 @@
     </mat-card-header>
     <mat-card appearance="raised">
         <form [formGroup]="scheduleForm" (ngSubmit)="onSubmit()" class="schedule-form">
-            <mat-form-field appearance="outline">
+            <mat-form-field class="field-container" appearance="outline">
                 <mat-label>Start Date</mat-label>
                 <input matInput [matDatepicker]="startDate" formControlName="startDate">
                 <mat-hint>MM/DD/YYYY</mat-hint>
@@ -13,25 +13,24 @@
                 <mat-datepicker #startDate></mat-datepicker>
                 <mat-error>{{getErrorMessage('startDate')}}</mat-error>
             </mat-form-field>
-            <mat-form-field class="form-field" appearance="outline">
+            <mat-form-field class="field-container" appearance="outline">
                 <mat-label>Start Time</mat-label>
                 <mat-select formControlName="startTime">
                     <mat-option *ngFor="let time of this.getStartTimeOptions()" [value]="time">{{time}}</mat-option>
                 </mat-select>
                 <mat-error>{{getErrorMessage('startTime')}}</mat-error>
             </mat-form-field>
-            <mat-form-field appearance="outline">
+            <mat-form-field class="field-container" appearance="outline">
                 <mat-label>Match Duration</mat-label>
-                <input matInput formControlName="eachMatchTime" required>
-                <mat-hint>In Minute</mat-hint>
+                <input matInput formControlName="eachMatchTime" placeholder="In Minutes" required>
                 <mat-error>{{getErrorMessage('eachMatchTime')}}</mat-error>
             </mat-form-field>
-            <mat-form-field appearance="outline">
+            <mat-form-field class="field-container" appearance="outline">
                 <mat-label>Match per Day</mat-label>
                 <input matInput formControlName="matchPerDay" required>
                 <mat-error>{{getErrorMessage('matchPerDay')}}</mat-error>
             </mat-form-field>
-            <mat-form-field appearance="outline">
+            <mat-form-field class="field-container" appearance="outline">
                 <mat-label>Parallel Match Number</mat-label>
                 <input matInput formControlName="parallelMatch" required>
                 <mat-hint>Number of matches that can be played in parallel.</mat-hint>

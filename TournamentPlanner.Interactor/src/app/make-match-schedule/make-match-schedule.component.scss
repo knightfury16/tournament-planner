@@ -1,7 +1,7 @@
 /* make-match-schedule.component.scss */
 .schedule-form {
     gap: 1rem;
-    max-width: 400px;
+    max-width: 30rem;
     padding: 1rem;
 
     mat-form-field {
@@ -26,4 +26,8 @@
 
 .schedule-btn {
     margin-top: 1.2rem;
+}
+
+.field-container {
+    margin-bottom: 5px;
 }
