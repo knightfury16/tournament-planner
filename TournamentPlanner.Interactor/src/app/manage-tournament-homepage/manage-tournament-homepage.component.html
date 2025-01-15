@@ -2,7 +2,7 @@
     <mat-card-header class="card-header">
         <mat-card-title class="card-title">{{this.tournament()?.name}}</mat-card-title>
     </mat-card-header>
-    <mat-tab-group>
+    <mat-tab-group [selectedIndex]="2">
         <mat-tab label="Details">
             <div class="tab-container">
                 <app-manage-tournament-details [tournamentId]="tournamentId"

@@ -12,6 +12,7 @@ import { ScheduleingInfo, TournamentDto } from '../tp-model/TpModel';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { getDateTimeWithTimeZoneOffsetToMidnight } from '../../Shared/Utility/dateTimeUtility';
 
 interface ScheduleForm {
   eachMatchTime: string;
@@ -94,7 +95,8 @@ export class MakeMatchScheduleComponent implements OnInit, OnChanges {
       try {
         this._loadingService.show();
         const scheduleData: ScheduleingInfo = {
-          startDate: this.scheduleForm.value.startDate ?? '',
+          //--TEST date
+          startDate: this.scheduleForm.value.startDate ? getDateTimeWithTimeZoneOffsetToMidnight(this.scheduleForm.value.startDate) : '',
           startTime: this.scheduleForm.value.startTime ?? '10:00',
           eachMatchTime: this.scheduleForm.value.eachMatchTime?.toString() ?? '30',
           matchPerDay: this.scheduleForm.value.matchPerDay ?? 15,

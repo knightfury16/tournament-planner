@@ -25,6 +25,14 @@ export function getDateAndTimeStringInFormat(date: Date): string {
     return `${day} ${month} ${year} ${hours}:${minutes} (UTC)`;
 }
 
+
+export function getDateTimeWithTimeZoneOffsetToMidnight(date: Date): string {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
+    return new Date(Date.UTC(year, month, day)).toISOString();
+}
+
 export function transformTournamentIsoDate(value: TournamentDto | null): TournamentDto | null {
     if (!value) return null;
     const startDate = value.startDate ? getDateStringInFormat(new Date(value.startDate)) : null;
