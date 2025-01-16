@@ -49,7 +49,7 @@ public class GetTournamentRequestHandler : IRequestHandler<GetTournamentRequest,
         else
         {
             //default date range
-            filters.Add(GetSearchCategoryFilter(request.SearchCategory));
+            // filters.Add(GetSearchCategoryFilter(request.SearchCategory));
         }
 
         var tournaments = await _tournamentRepository.GetAllAsync(filters,[nameof(Tournament.GameType)]);
