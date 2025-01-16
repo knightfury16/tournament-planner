@@ -48,6 +48,7 @@ public class GetTournamentRequestHandler : IRequestHandler<GetTournamentRequest,
         }
         else
         {
+            // !ON TEST. Turn off after development
             //default date range
             // filters.Add(GetSearchCategoryFilter(request.SearchCategory));
         }
