@@ -41,6 +41,7 @@ public class MatchScheduler : IMatchScheduler
             //if start time is greater than 7pm go to next day
             if (modifiedStartDate.Hour >= 19)
             {
+                //need to make the time dynamic istead of 10 am hardcoded
                 modifiedStartDate = modifiedStartDate.AddDays(1).Date.AddHours(10); //next day 10am
             }
         }
