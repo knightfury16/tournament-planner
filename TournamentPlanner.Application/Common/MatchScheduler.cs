@@ -36,7 +36,7 @@ public class MatchScheduler : IMatchScheduler
         {
             match.Duration = eachMatchTime;
             match.GameScheduled = modifiedStartDate;
-            modifiedStartDate = modifiedStartDate.AddMinutes(30);
+            modifiedStartDate = modifiedStartDate.AddMinutes(eachMatchTime.TotalMinutes);
 
             //if start time is greater than 7pm go to next day
             if (modifiedStartDate.Hour >= 19)
