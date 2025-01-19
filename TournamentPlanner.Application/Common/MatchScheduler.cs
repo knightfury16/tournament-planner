@@ -1,4 +1,4 @@
-﻿
+
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Domain.Entities;
@@ -71,7 +71,7 @@ public class MatchScheduler : IMatchScheduler
     {
         var success = TimeSpan.TryParse(eachMatchTime, out var matchTimeParsed);
         if (!success) throw new InvalidOperationException("Can not parse timespan from Each Match Time");
-        return matchTimeParsed;
+        return TimeSpan.FromMinutes(eachMatchTimeInt);
     }
 
     private async Task PopulateTournament(Match match)
