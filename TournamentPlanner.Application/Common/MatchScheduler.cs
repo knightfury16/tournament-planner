@@ -69,7 +69,7 @@ public class MatchScheduler : IMatchScheduler
 
     private TimeSpan ConvertToTimeSpan(string eachMatchTime)
     {
-        var success = TimeSpan.TryParse(eachMatchTime, out var matchTimeParsed);
+        var success = int.TryParse(eachMatchTime, out var eachMatchTimeInt);
         if (!success) throw new InvalidOperationException("Can not parse timespan from Each Match Time");
         return TimeSpan.FromMinutes(eachMatchTimeInt);
     }
