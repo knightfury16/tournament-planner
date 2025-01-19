@@ -87,7 +87,7 @@ public class MatchScheduler : IMatchScheduler
         int minute = startTime.Minute;
         int second = startTime.Second;
 
-        return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, hour, minute, second).ToUniversalTime(); // setting the start time with start date
+        return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, hour, minute, second); // setting the start time with start date
     }
 
     public async Task<IEnumerable<Match>> AdvanceMatchScheduler(List<Match> matches, SchedulingInfo schedulingInfo)
