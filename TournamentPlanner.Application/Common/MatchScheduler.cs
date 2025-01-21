@@ -29,6 +29,7 @@ public class MatchScheduler : IMatchScheduler
 
         // if start time is provided or else default to 30 minutes later of touranament start date
         TimeOnly startTime = GetStartTime(schedulingInfo.StartTime);
+        TimeOnly endTime = GetEndTime(schedulingInfo.EndTime);
         var eachMatchTime = GetEachMatchTime(schedulingInfo.EachMatchTime);
         DateTime modifiedStartDate = GetModifiedStartDate(startTime, schedulingInfo?.StartDate ?? tournament.StartDate);
 
@@ -57,8 +58,13 @@ public class MatchScheduler : IMatchScheduler
 
     private TimeOnly GetStartTime(string? startTime)
     {
-        var defaultTime = new TimeOnly(10, 0); //10am
-        return startTime != null ? ConvertToTimeOnly(startTime) : defaultTime;
+        var defaultStartTime = SchedulingInfo.DefaultStartTime; //10am
+        return startTime != null ? ConvertToTimeOnly(startTime) : defaultStartTime;
+    }
+    private TimeOnly GetEndTime(string? endTime)
+    {
+        var defaultEndTime = SchedulingInfo.DefaultEndTime;
+        return endTime != null ? ConvertToTimeOnly(endTime) : defaultEndTime;
     }
 
     private TimeOnly ConvertToTimeOnly(string startTime)
