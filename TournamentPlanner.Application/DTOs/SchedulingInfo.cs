@@ -2,7 +2,6 @@ namespace TournamentPlanner.Application.DTOs;
 
 public class SchedulingInfo
 {
-    //TODO: make scheduling info non nullable
     public static TimeOnly DefaultStartTime => new TimeOnly(10, 0); //10am
     public static TimeOnly DefaultEndTime => new TimeOnly(17, 0); //5pm
     public static TimeSpan DefaultMatchDuration => TimeSpan.FromMinutes(30); //30min
