@@ -51,7 +51,7 @@ public class MatchScheduler : IMatchScheduler
 
     private TimeSpan GetEachMatchTime(string? eachMatchTime)
     {
-        var defaultTimeSpanOfMatchTime = TimeSpan.FromMinutes(30);
+        var defaultTimeSpanOfMatchTime = SchedulingInfo.DefaultMatchDuration;
         return eachMatchTime != null ? ConvertToTimeSpan(eachMatchTime) : defaultTimeSpanOfMatchTime;
     }
 
