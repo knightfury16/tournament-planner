@@ -106,6 +106,7 @@ public class MatchScheduler : IMatchScheduler
         var tournament = matches.First().Tournament;
         DateTime startDate = schedulingInfo.StartDate ?? tournament.StartDate;
         TimeOnly startTime = GetStartTime(schedulingInfo.StartTime);
+        TimeOnly endTime = GetEndTime(schedulingInfo.EndTime);
         TimeSpan eachMatchTime = GetEachMatchTime(schedulingInfo.EachMatchTime);
         int matchPerDay = schedulingInfo.MatchPerDay > 0 ? schedulingInfo.MatchPerDay : 10; // Default to 10 matches per day
         int parallelMatches = schedulingInfo.ParallelMatchesPossible > 0 ? schedulingInfo.ParallelMatchesPossible : 1;
@@ -135,9 +136,9 @@ public class MatchScheduler : IMatchScheduler
             currentDateTime = currentDateTime.Add(eachMatchTime);
             matchesScheduledToday += parallelMatches;
 
-            if (matchesScheduledToday >= matchPerDay * parallelMatches || currentDateTime.Hour >= 19)
+            if (matchesScheduledToday >= matchPerDay * parallelMatches || currentDateTime.Hour >= endTime.Hour)
             {
-                currentDateTime = currentDateTime.AddDays(1).Date.AddHours(startTime.Hour).AddMinutes(startTime.Minute);
+                currentDateTime = GetModifiedStartDate(startTime, currentDateTime.AddDays(1));
                 matchesScheduledToday = 0;
             }
         }
