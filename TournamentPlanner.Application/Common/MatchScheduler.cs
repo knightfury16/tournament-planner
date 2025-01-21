@@ -39,11 +39,10 @@ public class MatchScheduler : IMatchScheduler
             match.GameScheduled = modifiedStartDate;
             modifiedStartDate = modifiedStartDate.AddMinutes(eachMatchTime.TotalMinutes);
 
-            //if start time is greater than 7pm go to next day
-            if (modifiedStartDate.Hour >= 19)
+            //if start time is greater than endtime go to next day
+            if (modifiedStartDate.Hour >= endTime.Hour)
             {
-                //need to make the time dynamic istead of 10 am hardcoded
-                modifiedStartDate = modifiedStartDate.AddDays(1).Date.AddHours(10); //next day 10am
+                modifiedStartDate = GetModifiedStartDate(startTime, modifiedStartDate.AddDays(1));
             }
         }
 
@@ -70,7 +69,7 @@ public class MatchScheduler : IMatchScheduler
     private TimeOnly ConvertToTimeOnly(string startTime)
     {
         var success = TimeOnly.TryParse(startTime, out var startTimeParsed);
-        if (!success) throw new InvalidOperationException("Can not parse timeonly from Start Time");
+        if (!success) throw new InvalidOperationException("Can not parse timeonly from given Time string");
         return startTimeParsed;
     }
 
