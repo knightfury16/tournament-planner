@@ -194,6 +194,7 @@ export enum MatchTypeTypes{
 export type ScheduleingInfo = {
   eachMatchTime?: string; // Using string to represent TimeSpan
   startTime?: string; // Using string to represent TimeOnly
+  endTime?: string; // Using string to represent TimeOnly
   startDate?: Date | string;
   matchPerDay: number;
   parallelMatchesPossible: number;
