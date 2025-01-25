@@ -48,6 +48,7 @@ export class MakeMatchScheduleComponent implements OnInit, OnChanges {
   public scheduleForm = new FormGroup({
     startDate: new FormControl(this.getTournamentDefaultStartDate(), [Validators.required]),
     startTime: new FormControl('10:00', [Validators.required]),
+    endTime: new FormControl('17:00', [Validators.required]),
     eachMatchTime: new FormControl<number>(30, [Validators.required]),
     matchPerDay: new FormControl<number>(15, [Validators.required]),
     parallelMatch: new FormControl<number>(1, [Validators.required])
@@ -98,6 +99,7 @@ export class MakeMatchScheduleComponent implements OnInit, OnChanges {
           //--TEST date
           startDate: this.scheduleForm.value.startDate ? getDateTimeWithTimeZoneOffsetToMidnight(this.scheduleForm.value.startDate) : '',
           startTime: this.scheduleForm.value.startTime ?? '10:00',
+          endTime: this.scheduleForm.value.endTime ?? '17:00',
           eachMatchTime: this.scheduleForm.value.eachMatchTime?.toString() ?? '30',
           matchPerDay: this.scheduleForm.value.matchPerDay ?? 15,
           parallelMatchesPossible: this.scheduleForm.value.parallelMatch ?? 1
@@ -127,6 +129,11 @@ export class MakeMatchScheduleComponent implements OnInit, OnChanges {
       else times.push(`${i}:00`);
     }
     return times;
+  }
+
+  public getEndTimeOptions(): string[] {
+    //if needed configure end time separately
+    return this.getStartTimeOptions();
   }
 
   getErrorMessage(controlName: string): string {

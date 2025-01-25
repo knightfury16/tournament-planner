@@ -21,6 +21,14 @@
                 <mat-error>{{getErrorMessage('startTime')}}</mat-error>
             </mat-form-field>
             <mat-form-field class="field-container" appearance="outline">
+                <mat-label>End Time</mat-label>
+                <mat-select formControlName="endTime">
+                    <mat-option *ngFor="let time of this.getEndTimeOptions()" [value]="time">{{time}}</mat-option>
+                </mat-select>
+                <mat-hint>Select End Time greater than Start Time.</mat-hint>
+                <mat-error>{{getErrorMessage('endTime')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="field-container" appearance="outline">
                 <mat-label>Match Duration</mat-label>
                 <input matInput formControlName="eachMatchTime" placeholder="In Minutes" required>
                 <mat-error>{{getErrorMessage('eachMatchTime')}}</mat-error>
