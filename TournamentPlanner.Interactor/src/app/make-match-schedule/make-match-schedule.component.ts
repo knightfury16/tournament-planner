@@ -139,6 +139,16 @@ export class MakeMatchScheduleComponent implements OnInit, OnChanges {
   getErrorMessage(controlName: string): string {
     const control = this.scheduleForm.get(controlName);
 
+    //TODO: debug here. endtime validation not working
+    if(control && controlName == "endTime")
+    {
+      const startTime = this.scheduleForm.get("startTime")?.value;
+      if(startTime && control.value <= startTime)
+      {
+        return 'End time should be greater than start time';
+      }
+    }
+
     if (control?.hasError('required')) {
       return 'This field is required';
     }
