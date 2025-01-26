@@ -2,7 +2,7 @@ import { inject, Inject, Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { TP_BASE_URL } from '../app/app.config';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { AddMatchScoreDto, CanIDrawDto, CanIScheduleDto, DrawDto, MatchDto, TournamentDto, TournamentStatusChangeDto } from '../app/tp-model/TpModel';
+import { AddMatchScoreDto, CanIDrawDto, CanIScheduleDto, DrawDto, MatchDto, ScheduleingInfo, TournamentDto, TournamentStatusChangeDto } from '../app/tp-model/TpModel';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +23,11 @@ export class AdminTournamentService {
 
   public addMatchScore(matchId: string, score: AddMatchScoreDto): Promise<MatchDto> {
     return firstValueFrom(this.httpClient.post<MatchDto>(`${this.baseUrl}/matches/${matchId}/entry-match-score`, score, { withCredentials: true, headers: { 'Content-Type': 'application/json' } }));
+
+  }
+
+  public makeMatchSchedule(tournamentId: string, schedulingInfo: ScheduleingInfo): Promise<MatchDto[]> {
+    return firstValueFrom(this.httpClient.post<MatchDto[]>(`${this.baseUrl}/tournament/${tournamentId}/make-schedule`, schedulingInfo, { withCredentials: true, headers: { 'Content-Type': 'application/json' } }));
 
   }
 
