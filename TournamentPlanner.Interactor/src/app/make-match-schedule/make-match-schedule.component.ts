@@ -96,7 +96,6 @@ export class MakeMatchScheduleComponent implements OnInit, OnChanges {
       try {
         this._loadingService.show();
         const scheduleData: ScheduleingInfo = {
-          //--TEST date
           startDate: this.scheduleForm.value.startDate ? getDateTimeWithTimeZoneOffsetToMidnight(this.scheduleForm.value.startDate) : '',
           startTime: this.scheduleForm.value.startTime ?? '10:00',
           endTime: this.scheduleForm.value.endTime ?? '17:00',
