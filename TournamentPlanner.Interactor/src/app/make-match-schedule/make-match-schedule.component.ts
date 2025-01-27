@@ -1,5 +1,5 @@
 // make-match-schedule.component.ts
-import { Component, effect, inject, Input, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
+import { Component, effect, EventEmitter, inject, Input, OnChanges, OnInit, Output, signal, SimpleChanges } from '@angular/core';
 import { AdminTournamentService } from '../../Shared/admin-tournament.service';
 import { LoadingService } from '../../Shared/loading.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -43,7 +43,7 @@ export class MakeMatchScheduleComponent implements OnInit, OnChanges {
   @Output() seletdTabChangeEE = new EventEmitter<number>();
   public canISchedule = signal(false);
   private _tournament = signal<TournamentDto | undefined>(undefined);
-
+  private _snackbarService = inject(SnackbarService);
   private _adminService = inject(AdminTournamentService);
   private _loadingService = inject(LoadingService);
 
@@ -106,9 +106,14 @@ export class MakeMatchScheduleComponent implements OnInit, OnChanges {
           matchPerDay: this.scheduleForm.value.matchPerDay ?? 15,
           parallelMatchesPossible: this.scheduleForm.value.parallelMatch ?? 1
         }
-        console.log("SCHEDULE DATA:::", scheduleData);
+        var matchesDto  = await this._adminService.makeMatchSchedule(this.tournament!.id.toString(), scheduleData);
+
+        this._snackbarService.showMessage('Matches scheduled successfully');
+        this.seletdTabChangeEE.emit(ManageTournamentViewTabIndex.MatchesTabIndex);
+        
       } catch (error: any) {
         // Handle error (show error message)
+        this._snackbarService.showError('Error scheduling matches');
         console.error('Error scheduling matches:', error);
       } finally {
         this._loadingService.hide();
