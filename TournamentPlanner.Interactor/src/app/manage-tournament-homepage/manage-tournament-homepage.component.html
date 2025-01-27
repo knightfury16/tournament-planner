@@ -23,19 +23,23 @@
             </div>
         </mat-tab>
         <mat-tab label="Make Schedule">
-            <div class="tab-container">
-                <app-make-match-schedule [tournament]="this.tournament()"></app-make-match-schedule>
-            </div>
+            <ng-template matTabContent>
+                <div class="tab-container">
+                    <app-make-match-schedule (seletdTabChangeEE)="this.changeSelectedTab($event)" [tournament]="this.tournament()"></app-make-match-schedule>
+                </div>
+            </ng-template>
         </mat-tab>
         <mat-tab label="Matches">
-            <div class="tab-container">
-                @if (this.matchTabView() == this.matchTabViewType.MatchView) {
-                    <app-tournament-matches-list (matchTabChangeEventWithSelectedMatchId)="this.tabViewChangeToAddScoreWithMatchId($event)" [tournamentId]="this.tournamentId" [gameType]="this.tournament()?.gameTypeDto" [manage]="true"></app-tournament-matches-list>
-                }
-                @else if (this.matchTabView() == this.matchTabViewType.AddScoreView) {
-                    <app-add-match-score (matchTabViewChangeEvent)="this.tabChangeToListView()" [matchId]="this.matchId()" [gameType]="this.tournament()?.gameTypeDto"></app-add-match-score>
-                }
-            </div>
+            <ng-template matTabContent>
+                <div class="tab-container">
+                    @if (this.matchTabView() == this.matchTabViewType.MatchView) {
+                        <app-tournament-matches-list (matchTabChangeEventWithSelectedMatchId)="this.tabViewChangeToAddScoreWithMatchId($event)" [tournamentId]="this.tournamentId" [gameType]="this.tournament()?.gameTypeDto" [manage]="true"></app-tournament-matches-list>
+                    }
+                    @else if (this.matchTabView() == this.matchTabViewType.AddScoreView) {
+                        <app-add-match-score (matchTabViewChangeEvent)="this.tabChangeToListView()" [matchId]="this.matchId()" [gameType]="this.tournament()?.gameTypeDto"></app-add-match-score>
+                    }
+                </div>
+            </ng-template>
         </mat-tab>
     </mat-tab-group>
 </mat-card>
