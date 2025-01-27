@@ -82,4 +82,8 @@ export class ManageTournamentHomepageComponent {
   {
     this.tournamentStatusChange.update(old => !old); //just triggering it
   }
+
+  public changeSelectedTab(index: number) {
+    this.tabSelectedIndex.set(index);
+  }
 }
