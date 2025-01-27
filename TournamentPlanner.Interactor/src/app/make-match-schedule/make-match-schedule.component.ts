@@ -13,6 +13,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { getDateTimeWithTimeZoneOffsetToMidnight } from '../../Shared/Utility/dateTimeUtility';
+import { SnackbarService } from '../../Shared/snackbar.service';
+import { ManageTournamentViewTabIndex } from '../tp-model/ManageTournamentVIewTabIndex';
 
 interface ScheduleForm {
   eachMatchTime: string;
@@ -38,6 +40,7 @@ interface ScheduleForm {
 })
 export class MakeMatchScheduleComponent implements OnInit, OnChanges {
   @Input({ required: true }) tournament?: TournamentDto;
+  @Output() seletdTabChangeEE = new EventEmitter<number>();
   public canISchedule = signal(false);
   private _tournament = signal<TournamentDto | undefined>(undefined);
 
