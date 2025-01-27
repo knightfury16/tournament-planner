@@ -15,6 +15,7 @@ import { TournamentDrawListComponent } from '../tournament-draw-list/tournament-
 import { TournamentDrawDetailsComponent } from '../tournament-draw-details/tournament-draw-details.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MakeMatchScheduleComponent } from "../make-match-schedule/make-match-schedule.component";
+import { ManageTournamentViewTabIndex } from '../tp-model/ManageTournamentVIewTabIndex';
 
 @Component({
   selector: 'app-manage-tournament-homepage',
@@ -36,6 +37,8 @@ export class ManageTournamentHomepageComponent {
   public tournamentParticipants = signal<PlayerDto[] | undefined>(undefined);
   public playerTabViewType = PlayerTabViewType;
   public drawTabViewType = DrawTabViewType;
+
+  public tabSelectedIndex = signal<number>(ManageTournamentViewTabIndex.DefaultTabIndex);
 
   public matchTabViewType = MatchTabViewType;
 
