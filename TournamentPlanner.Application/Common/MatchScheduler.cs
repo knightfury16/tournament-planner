@@ -36,7 +36,7 @@ public class MatchScheduler : IMatchScheduler
         foreach (var match in matches)
         {
             match.Duration = eachMatchTime;
-            match.GameScheduled = modifiedStartDate;
+            match.GameScheduled = GetUtcTimeOfGameSchedule(modifiedStartDate);
             modifiedStartDate = modifiedStartDate.AddMinutes(eachMatchTime.TotalMinutes);
 
             //if start time is greater than endtime go to next day
@@ -47,6 +47,12 @@ public class MatchScheduler : IMatchScheduler
         }
 
         return matches;
+    }
+
+    private DateTime? GetUtcTimeOfGameSchedule(DateTime modifiedStartDate)
+    {
+        var temp = new DateTime(modifiedStartDate.Ticks, modifiedStartDate.Kind);
+        return temp.ToUniversalTime();
     }
 
     private TimeSpan GetEachMatchTime(string? eachMatchTime)
