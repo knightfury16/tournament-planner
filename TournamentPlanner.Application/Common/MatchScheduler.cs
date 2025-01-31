@@ -29,6 +29,8 @@ public class MatchScheduler : IMatchScheduler
 
         var tournament = matches.First().Tournament;
 
+        matches = OrderTheMatches(matches);
+
         // if start time is provided or else default to 30 minutes later of touranament start date
         TimeOnly startTime = GetStartTime(schedulingInfo.StartTime);
         TimeOnly endTime = GetEndTime(schedulingInfo.EndTime);
@@ -49,6 +51,13 @@ public class MatchScheduler : IMatchScheduler
         }
 
         return matches;
+    }
+
+    private List<Match> OrderTheMatches(List<Match> matches)
+    {
+        //ordering the matches before scheduling so that I dont
+        //schedule round 2 before round 1
+        return matches.OrderBy(m => m.Round.RoundNumber).ToList();
     }
 
     private DateTime? GetUtcTimeOfGameSchedule(DateTime modifiedStartDate)
@@ -113,6 +122,7 @@ public class MatchScheduler : IMatchScheduler
         await PopulateTournament(matches.First());
 
         var tournament = matches.First().Tournament;
+        matches = OrderTheMatches(matches);
         DateTime startDate = schedulingInfo.StartDate ?? tournament.StartDate;
         TimeOnly startTime = GetStartTime(schedulingInfo.StartTime);
         TimeOnly endTime = GetEndTime(schedulingInfo.EndTime);
