@@ -51,6 +51,7 @@ public class MatchScheduler : IMatchScheduler
 
     private DateTime? GetUtcTimeOfGameSchedule(DateTime modifiedStartDate)
     {
+        //get postgres error if I dont convert it to utc kind
         var temp = new DateTime(modifiedStartDate.Ticks, modifiedStartDate.Kind);
         return temp.ToUniversalTime();
     }
