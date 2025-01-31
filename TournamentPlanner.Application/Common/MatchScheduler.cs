@@ -7,6 +7,8 @@ namespace TournamentPlanner.Application;
 
 public interface IMatchScheduler
 {
+    //make some base method or abstract virtual that will be called on either schedule.
+    //like sort the matches and fix the times that are both common
     public Task<IEnumerable<Match>> DefaultMatchScheduler(List<Match> matches, SchedulingInfo schedulingInfo);
     public Task<IEnumerable<Match>> AdvanceMatchScheduler(List<Match> matches, SchedulingInfo schedulingInfo);
 }
