@@ -20,7 +20,7 @@ public class CanIScheduleRequestHandler : IRequestHandler<CanIScheduleRequest, C
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var navigationProperty = Utility.NavigationPrpertyCreator(nameof(Tournament.Draws));
+        var navigationProperty = Utility.NavigationPrpertyCreator(nameof(Tournament.Draws), nameof(Draw.MatchType));
         var tournament = await _tournamentRepository.GetByIdAsync(request.TournamentId, [navigationProperty]);
         if (tournament == null) return new CanIScheduleDto { Success = false, Message = "Toutnament with the given Id not found" };
         try
