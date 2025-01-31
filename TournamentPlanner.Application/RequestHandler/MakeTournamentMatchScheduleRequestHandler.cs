@@ -57,7 +57,7 @@ public class MakeTournamentMatchScheduleRequestHandler : IRequestHandler<MakeTou
         //! at worst case will have 20 group with 10 match each, with total 200 matches between them. so cant send all the info. remember it. 
 
         tournament.Matches.AddRange(scheduledMatches);
-        await _tournamentRepository.SaveAsync();
+         await _tournamentRepository.SaveAsync();
         return _mapper.Map<IEnumerable<MatchDto>>(scheduledMatches);
     }
 }
