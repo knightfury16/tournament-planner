@@ -78,7 +78,7 @@ export class KnockoutMatchtypeDetailsComponent {
     const eachMatchWapperHeight = 80;
     const gap = 60;
     const maxMatch = this.players?.length! / 2;
-    const offset = 10;
+    const offset = 100;
     var totalHeight = (eachMatchWapperHeight * maxMatch) + (gap * maxMatch) + offset;
     return totalHeight;
   }
