@@ -225,11 +225,11 @@ public class CreateKnockOutMatches : IKnockout
     {
         return playerNumber switch
         {
-            8 => "Quater Final",
-            4 => "Semi Final",
-            2 => "Final",
-            -1 => "Playoff 3/4", //-1 is for playoff, selected randomly
-            _ => "KnockOut"
+            Utility.QuaterFinalPlayerNumber => Utility.QuaterFinal,
+            Utility.SemiFinalPlayerNumber => Utility.SemiFinal,
+            Utility.FinalPlayerNumber => Utility.Final,
+            Utility.PlayOffPlayerNumber => Utility.PlayOff, //-1 is for playoff, selected randomly
+            _ => Utility.Knockout
         };
     }
     public async Task<IEnumerable<Match>> CreateSubsequentMatches(Tournament tournament, MatchType matchType)
@@ -273,11 +273,11 @@ public class CreateKnockOutMatches : IKnockout
         List<Match> matches = new List<Match>();
 
         //make playoff for third and fourth place
-        if(currentRound.RoundName == "Final")
+        if(currentRound.RoundName == Utility.Final)
         {
             //get the loser of the semifinal
             var semiFinalLosers = previousRound.Matches.Select(mt => mt.Winner == mt.SecondPlayer ? mt.FirstPlayer : mt.SecondPlayer).ToList();
-            var playoffRound = GetRound(previousRound.RoundNumber + 2, matchType, -1); // palyouff round with index -1
+            var playoffRound = GetRound(previousRound.RoundNumber + 2, matchType, Utility.PlayOffPlayerNumber); // palyouff round with index -1
             matches.Add(GetMatch(semiFinalLosers[0], semiFinalLosers[1], playoffRound, tournament));
         }
 
