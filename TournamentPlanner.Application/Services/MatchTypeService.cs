@@ -93,10 +93,9 @@ public class MatchTypeService : IMatchTypeService
 
     private async Task UpdateKnockoutMatchTypeCompletion(MatchType matchTypeWithPopulatedRound)
     {
-        var lastRound = matchTypeWithPopulatedRound.Rounds.OrderBy(r => r.Id).LastOrDefault();
-        if (lastRound == null) return;
-        if(!lastRound.IsCompleted)return; //not complete
-        if(lastRound.RoundName != "Final")return; //complete but not final round
+        var finalRound = matchTypeWithPopulatedRound.Rounds.Where(r => r.RoundName == Utility.Final).FirstOrDefault();
+        if (finalRound == null) return;
+        if(!finalRound.IsCompleted)return; //not complete
 
         //if here then complete and Final round
         matchTypeWithPopulatedRound.IsCompleted = true;
