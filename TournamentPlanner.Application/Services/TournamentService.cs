@@ -1,6 +1,8 @@
 ﻿using TournamentPlanner.Application.Common.Interfaces;
+using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
+using MatchType = TournamentPlanner.Domain.Entities.MatchType;
 
 namespace TournamentPlanner.Application;
 public interface ITournamentService
@@ -17,16 +19,18 @@ public class TournamentService : ITournamentService
     private readonly IMatchTypeService _matchTypeService;
     private readonly IRoundService _roundService;
     private readonly IRepository<Tournament> _tournamentRepository;
+    private readonly IRepository<MatchType> _matchTypeRepository;
     private readonly ICurrentUser _currentUser;
 
 
-    public TournamentService(IDrawService drawService, IMatchTypeService matchTypeService, IRepository<Tournament> tornamentRepository, IRoundService roundService, ICurrentUser currentUser)
+    public TournamentService(IDrawService drawService, IMatchTypeService matchTypeService, IRepository<Tournament> tornamentRepository, IRoundService roundService, ICurrentUser currentUser, IRepository<MatchType> matchTypetRepository)
     {
         this._drawService = drawService;
         _matchTypeService = matchTypeService;
         _tournamentRepository = tornamentRepository;
         _roundService = roundService;
         _currentUser = currentUser;
+        _matchTypeRepository = matchTypetRepository;
     }
 
     public async Task<bool> CanIMakeDraw(Tournament tournament)
@@ -76,11 +80,30 @@ public class TournamentService : ITournamentService
             //i need to know the winner of the previous round in order to schedule the next round
             //in group match type i know all the matches of all the round before hand so in order to schedule it i dont need to 
             //to know any information beforehand
-            return await _roundService.IsAllRoundComplete(knockoutDraw.MatchType);
+            return await IsAllRoundOfKnockoutMatchtypeComplete(knockoutDraw.MatchType);
         }
 
         return false; //in all other cases it is false
     }
+
+
+    private async Task<bool> IsAllRoundOfKnockoutMatchtypeComplete(MatchType matchType)
+    {
+        if (matchType == null) throw new ArgumentNullException(nameof(matchType));
+
+        //load all the rounds
+        if (matchType.Rounds.Count == 0) await _matchTypeRepository.ExplicitLoadCollectionAsync(matchType, mt => mt.Rounds);
+        
+        //see if final round exists
+        var finalRound = matchType.Rounds.Where(r => r.RoundName == Utility.Final).FirstOrDefault();
+
+        if (finalRound == null) return await _roundService.IsAllRoundComplete(matchType);
+
+        //if here then final round found and if once final round is created
+        //i can not schedule any more matches coz there is noting to schedule. So returning false
+        return false;
+    }
+
     public async Task<IEnumerable<Draw>> MakeDraws(Tournament tournament, string? matchTypePrefix = null, List<int>? seedersPlayers = null)
     {
         var areSeedersValid = ValidateSeeders(tournament, seedersPlayers);
