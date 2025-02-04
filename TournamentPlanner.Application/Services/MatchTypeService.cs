@@ -99,7 +99,25 @@ public class MatchTypeService : IMatchTypeService
 
         //if here then complete and Final round
         matchTypeWithPopulatedRound.IsCompleted = true;
+        //change the tournament status here as complete
+        await UpdateTournamentStatus(matchTypeWithPopulatedRound);
         await _matchTypeRepository.SaveAsync();
+    }
+
+    private async Task UpdateTournamentStatus(MatchType matchType)
+    {
+        ArgumentNullException.ThrowIfNull(matchType);
+
+        var draw = (await _drawRepository.GetAllAsync(d => d.MatchTypeId == matchType.Id, [nameof(Draw.Tournament)])).FirstOrDefault();
+        if (draw == null) return;
+
+        var tournament = draw.Tournament;
+
+        if(tournament == null) return;
+
+        tournament.Status = TournamentStatus.Completed;
+
+        await _drawRepository.SaveAsync();
     }
 
     private async Task UpdateGroupMatchTypeCompletion(MatchType matchTypeWithPopulatedRound)
