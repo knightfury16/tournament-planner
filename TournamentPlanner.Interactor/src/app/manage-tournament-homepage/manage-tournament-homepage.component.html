@@ -11,16 +11,18 @@
             </div>
         </mat-tab>
         <mat-tab label="Make Draws">
-            <div class="tab-container draw-container">
-                @if (this.drawTabView() == drawTabViewType.ListView) {
-                <app-tournament-draw-list (drawTabChangeEvent)="toggleDrawTabView($event)" [manage]="true"
-                    (matchTypeId)="catchMatchTypeId($event)" [tournamentId]="tournamentId"></app-tournament-draw-list>
-                }
-                @else if (this.drawTabView() == drawTabViewType.DetailView) {
-                <app-tournament-draw-details (drawTabChangeEvent)="toggleDrawTabView($event)" [matchTypeId]="this.matchTypeId()"
-                    [gameType]="this.tournament()?.gameTypeDto"></app-tournament-draw-details>
-                }
-            </div>
+            <ng-template matTabContent="">
+                <div class="tab-container draw-container">
+                    @if (this.drawTabView() == drawTabViewType.ListView) {
+                    <app-tournament-draw-list (drawTabChangeEvent)="toggleDrawTabView($event)" [manage]="true"
+                        (matchTypeId)="catchMatchTypeId($event)" [tournamentId]="tournamentId"></app-tournament-draw-list>
+                    }
+                    @else if (this.drawTabView() == drawTabViewType.DetailView) {
+                    <app-tournament-draw-details (drawTabChangeEvent)="toggleDrawTabView($event)" [matchTypeId]="this.matchTypeId()"
+                        [gameType]="this.tournament()?.gameTypeDto"></app-tournament-draw-details>
+                    }
+                </div>
+            </ng-template>
         </mat-tab>
         <mat-tab label="Make Schedule">
             <ng-template matTabContent>
