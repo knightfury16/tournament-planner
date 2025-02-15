@@ -44,11 +44,12 @@ namespace TournamentPlanner.Application.RequestHandler
             {
                 var result = await _identityService.RegisterApplicationUserAndSigninAsync(applicationUserDto, true);
             }
-            catch (Exception ex)
+            catch (Exception  ex)
             {
                 //remove the tp admin created
                 await _playerRepository.DeleteByIdAsync(player.Id);
                 await _playerRepository.SaveAsync();
+                Console.WriteLine("Error from AddPlayerRequestHandler: ", ex.Message);
                 throw;
             }
 
