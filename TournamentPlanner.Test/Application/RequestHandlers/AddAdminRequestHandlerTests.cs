@@ -11,6 +11,7 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
     {
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IRepository<Admin>> _mockRepository;
+        private readonly Mock<IIdentityService> _mockIdentityService;
         private readonly AddAdminRequestHandler _handler;
 
 
@@ -20,14 +21,15 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepository = new Mock<IRepository<Admin>>();
-            _handler = new AddAdminRequestHandler(_mockMapper.Object, _mockRepository.Object);
+            _mockIdentityService = new Mock<IIdentityService>();
+            _handler = new AddAdminRequestHandler(_mockMapper.Object, _mockRepository.Object, _mockIdentityService.Object);
 
         }
         [Fact]
         public async Task Handle_ValidRequest_ReturnsAdminDto()
         {
             // Arrange
-            var addAdminDto = new AddAdminDto { Name = "Test Admin", Email = "Test@gamil.com", PhoneNumber = "12345" };
+            var addAdminDto = new AddAdminDto { Name = "Test Admin",  Password = "Hello@123", Email = "Test@gamil.com", PhoneNumber = "12345" };
             var request = new AddAdminRequest(addAdminDto);
             var admin = new Admin { Id = 1, Name = "Test Admin", Email = "Test@gmail.com", PhoneNumber = "12345" };
             var expectedAdminDto = new AdminDto { Id = 1, Name = "Test Admin", Email = "Test@gmail.com", PhoneNumber = "12345" };
