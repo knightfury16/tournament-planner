@@ -43,10 +43,11 @@ public class MakeTournamentMatchScheduleRequestHandlerTest
         var matches = new List<Match> { firstMatch, secondMatch };
         var matchDtos = matches.Select(m => new MatchDto { FirstPlayer = new PlayerDto { Name = "Test Player1" }, SecondPlayer = new PlayerDto { Name = "Test Player2" } }).ToList();
         _tournamentRepository.Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<string[]>())).ReturnsAsync(tournament);
+        _tournamentServiceMock.Setup(s => s.AmITheCreator(tournament)).Returns(true);
         _tournamentServiceMock.Setup(s => s.CanISchedule(It.IsAny<Tournament>())).ReturnsAsync(true);
         _matchServiceMock.Setup(m => m.CreateMatches(It.IsAny<Tournament>(), It.IsAny<SchedulingInfo>())).ReturnsAsync(matches);
 
-        _matchSchedulerMock.Setup(ms => ms.DefaultMatchScheduler(It.IsAny<List<Match>>(), It.IsAny<SchedulingInfo>())).Returns(matches);
+        _matchSchedulerMock.Setup(ms => ms.DefaultMatchScheduler(It.IsAny<List<Match>>(), It.IsAny<SchedulingInfo>())).ReturnsAsync(matches);
         _mapper.Setup(m => m.Map<IEnumerable<MatchDto>>(It.IsAny<List<Match>>())).Returns(matchDtos);
 
         var request = new MakeTournamentMatchScheduleRequest
@@ -55,7 +56,7 @@ public class MakeTournamentMatchScheduleRequestHandlerTest
             new SchedulingInfo
             {
                 StartDate = DateTime.UtcNow,
-                EachMatchTime = TimeSpan.FromMinutes(20)
+                EachMatchTime = TimeSpan.FromMinutes(20).ToString(),
             }
         );
 
@@ -77,7 +78,7 @@ public class MakeTournamentMatchScheduleRequestHandlerTest
             new SchedulingInfo
             {
                 StartDate = DateTime.UtcNow,
-                EachMatchTime = TimeSpan.FromMinutes(20)
+                EachMatchTime = TimeSpan.FromMinutes(20).ToString()
             }
         );
 
