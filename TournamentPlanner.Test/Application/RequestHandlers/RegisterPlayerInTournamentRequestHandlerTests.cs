@@ -13,15 +13,17 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
     {
         private readonly Mock<IRepository<Tournament>> _mockTournamentRepository;
         private readonly Mock<IRepository<Player>> _mockPlayerRepository;
+        private readonly Mock<ICurrentUser> _mockCurrentUser;
         private readonly RegisterPlayerInTournamentRequestHandler _handler;
 
         public RegisterPlayerInTournamentRequestHandlerTests()
         {
             _mockTournamentRepository = new Mock<IRepository<Tournament>>();
             _mockPlayerRepository = new Mock<IRepository<Player>>();
+            _mockCurrentUser = new Mock<ICurrentUser>();
             _handler = new RegisterPlayerInTournamentRequestHandler(
                 _mockTournamentRepository.Object,
-                _mockPlayerRepository.Object);
+                _mockPlayerRepository.Object, _mockCurrentUser.Object);
         }
 
         [Fact]
@@ -29,20 +31,20 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
         {
             // Arrange
             var tournament = GetSomeMockTournaments().First();
+            var beforeParticipants = tournament.Participants.Count;
             var player = new Player { Id = 1, Age = 20, Name = "test", Email = "test@gmail.com" };
-            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament.Id, PlayerId = player.Id };
+            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament.Id };
             var request = new RegisterPlayerInTournamentRequest(registrationDto);
-            _mockTournamentRepository.Setup(r => r.GetAllAsync(
-                It.IsAny<Expression<Func<Tournament, bool>>>(),
-                It.IsAny<string[]>()))
-                .ReturnsAsync(new List<Tournament> { tournament });
+            _mockTournamentRepository.Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<string[]>())).ReturnsAsync(tournament);
             _mockPlayerRepository.Setup(r => r.GetByIdAsync(player.Id)).ReturnsAsync(player);
+            _mockCurrentUser.Setup(u => u.DomainUserId).Returns(player.Id); // Set up the current user
 
             // Act
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
             Assert.True(result);
+            Assert.Equal(beforeParticipants +  1, tournament.Participants.Count);
             _mockTournamentRepository.Verify(r => r.SaveAsync(), Times.Once);
         }
 
@@ -57,13 +59,10 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
         public async Task Handle_TournamentNotFound_ThrowsInvalidOperationException()
         {
             // Arrange
-            var registrationDto = new RegistrationInTournamentDto { TournamentId = 999, PlayerId = 1 };
+            var registrationDto = new RegistrationInTournamentDto { TournamentId = 999 };
             var request = new RegisterPlayerInTournamentRequest(registrationDto);
 
-            _mockTournamentRepository.Setup(r => r.GetAllAsync(
-                It.IsAny<Expression<Func<Tournament, bool>>>(),
-                It.IsAny<string[]>()))
-                .ReturnsAsync(new List<Tournament>());
+            _mockTournamentRepository.Setup(r => r.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((Tournament)null!);
 
             // Act
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(request, CancellationToken.None));
@@ -78,13 +77,10 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
         {
             // Arrange
             var tournament = GetSomeMockTournaments().First(t => t.Status != TournamentStatus.RegistrationOpen);
-            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament.Id, PlayerId = 1 };
+            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament.Id};
             var request = new RegisterPlayerInTournamentRequest(registrationDto);
 
-            _mockTournamentRepository.Setup(r => r.GetAllAsync(
-                It.IsAny<Expression<Func<Tournament, bool>>>(),
-                It.IsAny<string[]>()))
-                .ReturnsAsync(new List<Tournament> { tournament });
+            _mockTournamentRepository.Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<string[]>())).ReturnsAsync(tournament);
 
             // Act & Assert
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(request, CancellationToken.None));
@@ -95,13 +91,10 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
         {
             // Arrange
             var tournament = GetSomeMockTournaments().FirstOrDefault(t => t.RegistrationLastDate.HasValue && t.RegistrationLastDate < DateTime.UtcNow);
-            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament!.Id, PlayerId = 1 };
+            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament!.Id };
             var request = new RegisterPlayerInTournamentRequest(registrationDto);
 
-            _mockTournamentRepository.Setup(r => r.GetAllAsync(
-                It.IsAny<Expression<Func<Tournament, bool>>>(),
-                It.IsAny<string[]>()))
-                .ReturnsAsync(new List<Tournament> { tournament });
+            _mockTournamentRepository.Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<string[]>())).ReturnsAsync(tournament);
 
             // Act & Assert
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(request, CancellationToken.None));
@@ -114,13 +107,10 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
         {
             // Arrange
             var tournament = GetSomeMockTournaments().First(t => t.Participants.Count >= t.MaxParticipant);
-            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament.Id, PlayerId = 3 };
+            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament.Id };
             var request = new RegisterPlayerInTournamentRequest(registrationDto);
 
-            _mockTournamentRepository.Setup(r => r.GetAllAsync(
-                It.IsAny<Expression<Func<Tournament, bool>>>(),
-                It.IsAny<string[]>()))
-                .ReturnsAsync(new List<Tournament> { tournament });
+            _mockTournamentRepository.Setup(r => r.GetByIdAsync(It.IsAny<int>(), It.IsAny<string[]>())).ReturnsAsync(tournament);
 
             // Act & Assert
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(request, CancellationToken.None));
@@ -133,14 +123,11 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
         {
             // Arrange
             var tournament = GetSomeMockTournaments().First(t => t.Status == TournamentStatus.RegistrationOpen);
-            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament.Id, PlayerId = 999 };
+            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament.Id };
             var request = new RegisterPlayerInTournamentRequest(registrationDto);
 
-            _mockTournamentRepository.Setup(r => r.GetAllAsync(
-                It.IsAny<Expression<Func<Tournament, bool>>>(),
-                It.IsAny<string[]>()))
-                .ReturnsAsync(new List<Tournament> { tournament });
-            _mockPlayerRepository.Setup(r => r.GetByIdAsync(999)).ReturnsAsync((Player)null!);// asserting null with !
+            _mockTournamentRepository.Setup(r => r.GetByIdAsync(It.IsAny<int>(),It.IsAny<string[]>())).ReturnsAsync(tournament);
+            _mockCurrentUser.Setup(u => u.DomainUserId).Returns((int?)null); // Set up the current user to return null
 
             // Act & Assert
             await Assert.ThrowsAsync<NotFoundException>(() => _handler.Handle(request, CancellationToken.None)); // will assert only exception type not messages
@@ -153,13 +140,11 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
             // Arrange
             var tournament = GetSomeMockTournaments().First(t => t.MinimumAgeOfRegistration > 0);
             var player = new Player { Id = 1, Age = tournament.MinimumAgeOfRegistration - 1, Name = "test", Email = "test@gmail.com" };
-            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament.Id, PlayerId = player.Id };
+            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament.Id };
             var request = new RegisterPlayerInTournamentRequest(registrationDto);
 
-            _mockTournamentRepository.Setup(r => r.GetAllAsync(
-                It.IsAny<Expression<Func<Tournament, bool>>>(),
-                It.IsAny<string[]>()))
-                .ReturnsAsync(new List<Tournament> { tournament });
+            _mockTournamentRepository.Setup(r => r.GetByIdAsync(It.IsAny<int>(),It.IsAny<string[]>())).ReturnsAsync(tournament);
+            _mockCurrentUser.Setup(u => u.DomainUserId).Returns(player.Id);
             _mockPlayerRepository.Setup(r => r.GetByIdAsync(player.Id)).ReturnsAsync(player);
 
             // Act & Assert
@@ -172,13 +157,11 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
             // Arrange
             var tournament = GetSomeMockTournaments().First(t => t.Participants.Count > 0);
             var player = tournament.Participants[0];
-            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament.Id, PlayerId = player.Id };
+            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament.Id };
             var request = new RegisterPlayerInTournamentRequest(registrationDto);
 
-            _mockTournamentRepository.Setup(r => r.GetAllAsync(
-                It.IsAny<Expression<Func<Tournament, bool>>>(),
-                It.IsAny<string[]>()))
-                .ReturnsAsync(new List<Tournament> { tournament });
+            _mockTournamentRepository.Setup(r => r.GetByIdAsync(It.IsAny<int>(),It.IsAny<string[]>())).ReturnsAsync(tournament);
+            _mockCurrentUser.Setup(u => u.DomainUserId).Returns(player.Id);
             _mockPlayerRepository.Setup(r => r.GetByIdAsync(player.Id)).ReturnsAsync(player);
 
             // Act & Assert
@@ -191,13 +174,11 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
             // Arrange
             var tournament = GetSomeMockTournaments().First(t => t.MinimumAgeOfRegistration == 0);
             var player = new Player { Id = 1, Age = 10, Name = "test player", Email = "test@gmail.com"}; // Very young player, handler only handle age greateer than 0
-            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament.Id, PlayerId = player.Id };
+            var registrationDto = new RegistrationInTournamentDto { TournamentId = tournament.Id };
             var request = new RegisterPlayerInTournamentRequest(registrationDto);
 
-            _mockTournamentRepository.Setup(r => r.GetAllAsync(
-                It.IsAny<Expression<Func<Tournament, bool>>>(),
-                It.IsAny<string[]>()))
-                .ReturnsAsync(new List<Tournament> { tournament });
+            _mockTournamentRepository.Setup(r => r.GetByIdAsync(It.IsAny<int>(),It.IsAny<string[]>())).ReturnsAsync(tournament);
+            _mockCurrentUser.Setup(u => u.DomainUserId).Returns(player.Id);
             _mockPlayerRepository.Setup(r => r.GetByIdAsync(player.Id)).ReturnsAsync(player);
 
             // Act
