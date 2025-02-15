@@ -17,6 +17,7 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
 
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IRepository<Player>> _mockRepository;
+        private readonly Mock<IIdentityService> _identityService;
         private readonly AddPlayerRequestHandler _handler;
 
 
@@ -24,14 +25,15 @@ namespace TournamentPlanner.Test.Application.RequestHandlers
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepository = new Mock<IRepository<Player>>();
-            _handler = new AddPlayerRequestHandler(_mockRepository.Object, _mockMapper.Object);
+            _identityService = new Mock<IIdentityService>();
+            _handler = new AddPlayerRequestHandler(_mockRepository.Object, _mockMapper.Object, _identityService.Object);
 
         }
         [Fact]
         public async Task Handle_ValidRequest_ReturnsPlayerDto()
         {
             // Arrange
-            var addPlayerDto = new AddPlayerDto { Name = "Test Player", Email = "Test@gamil.com", Age = 23};
+            var addPlayerDto = new AddPlayerDto { Name = "Test Player", Password = "Hello@123", Email = "Test@gamil.com", Age = 23};
             var request = new AddPlayerRequest(addPlayerDto);
             var player = new Player { Id = 1, Name = "Test Player", Email = "Test@gmail.com", Age = 23};
             var expectedPlayerDto = new PlayerDto { Id = 1, Name = "Test Player", Age = 23};
