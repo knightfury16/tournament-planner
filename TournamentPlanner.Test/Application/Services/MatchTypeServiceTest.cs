@@ -1,7 +1,9 @@
-﻿using Moq;
+﻿using System.Linq.Expressions;
+using Moq;
 using TournamentPlanner.Application;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.GameTypeHandler;
+using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
@@ -156,7 +158,90 @@ public class MatchTypeServiceTest
 
         // Assert
         Assert.False(matchTypeWithRounds.IsCompleted);
+    }
+
+    [Fact]
+    public async Task UpdateMatchTypeCompletion_WithoutFinalRoundNotComplete_KnockoutMatchType_SetsMatchTypeAsIncomplete()
+    {
+        // Arrange
+        var matchTypeWithRounds = new KnockOut { Id = 1, Name = "Test Knockout With Rounds" };
+        var rounds = new List<Round>
+        {
+            new Round { MatchType = matchTypeWithRounds, IsCompleted = false, RoundName = Utility.Final },
+            new Round { MatchType = matchTypeWithRounds, IsCompleted = true }
+        };
+        matchTypeWithRounds.Rounds = rounds;
+
+        _matchTypeRepositoryMock
+            .Setup(r => r.GetByIdAsync(1, It.IsAny<string[]>()))
+            .ReturnsAsync(matchTypeWithRounds);
+
+        // Act
+        await _sut.UpdateMatchTypeCompletion(matchTypeWithRounds);
+
+        // Assert
+        Assert.False(matchTypeWithRounds.IsCompleted);
+    }
+
+    [Fact]
+    public async Task UpdateMatchTypeCompletion_WithoutFinalRoundComplete_KnockoutMatchType_SetsMatchTypeAsComplete()
+    {
+        // Arrange
+        var matchTypeWithRounds = new KnockOut { Id = 1, Name = "Test Knockout With Rounds" };
+        var rounds = new List<Round>
+        {
+            new Round { MatchType = matchTypeWithRounds, IsCompleted = true, RoundName = Utility.Final },
+            new Round { MatchType = matchTypeWithRounds, IsCompleted = true }
+        };
+        matchTypeWithRounds.Rounds = rounds;
+
+        _matchTypeRepositoryMock
+            .Setup(r => r.GetByIdAsync(1, It.IsAny<string[]>()))
+            .ReturnsAsync(matchTypeWithRounds);
+
+        // Act
+        await _sut.UpdateMatchTypeCompletion(matchTypeWithRounds);
+
+        // Assert
+        Assert.True(matchTypeWithRounds.IsCompleted);
         _matchTypeRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateMatchTypeCompletion_WithoutFinalRoundComplete_KnockoutMatchType_ChangeTournamentStatus()
+    {
+        // Arrange
+        var tournament = Fixtures.TournamentFixtures.GetTournament();
+        var matchTypeWithRounds = new KnockOut { Id = 1, Name = "Test Knockout With Rounds" };
+        var rounds = new List<Round>
+        {
+            new Round { MatchType = matchTypeWithRounds, IsCompleted = true, RoundName = Utility.Final },
+            new Round { MatchType = matchTypeWithRounds, IsCompleted = true }
+        };
+        matchTypeWithRounds.Rounds = rounds;
+
+        var draw = new Draw
+        {
+            MatchType = matchTypeWithRounds,
+            Tournament = tournament
+        };
+
+        var listOfDraws = new List<Draw> { draw };
+
+        _drawRepositoryMock.Setup(r => r.GetAllAsync(It.IsAny<Expression<Func<Draw, bool>>>(), It.IsAny<string[]>())).ReturnsAsync(listOfDraws);
+
+        _matchTypeRepositoryMock
+            .Setup(r => r.GetByIdAsync(1, It.IsAny<string[]>()))
+            .ReturnsAsync(matchTypeWithRounds);
+
+        // Act
+        await _sut.UpdateMatchTypeCompletion(matchTypeWithRounds);
+
+        // Assert
+        Assert.True(matchTypeWithRounds.IsCompleted);
+        Assert.Equal(tournament.Status, TournamentStatus.Completed);
+        _matchTypeRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
+        _drawRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
     }
 
     [Fact]
