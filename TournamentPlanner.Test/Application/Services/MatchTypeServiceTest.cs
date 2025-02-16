@@ -136,15 +136,14 @@ public class MatchTypeServiceTest
     }
 
     [Fact]
-    public async Task UpdateMatchTypeCompletion_WithAllRoundsComplete_KnockoutMatchType_SetsMatchTypeAsComplete()
+    public async Task UpdateMatchTypeCompletion_WithoutFinalRound_KnockoutMatchType_SetsMatchTypeAsIncomplete()
     {
         // Arrange
-        var matchType = MatchTypeFixtures.GetKnockOut();
         var matchTypeWithRounds = new KnockOut { Id = 1, Name = "Test Knockout With Rounds" };
         var rounds = new List<Round>
         {
-            new Round { MatchType = matchType, IsCompleted = true },
-            new Round { MatchType = matchType, IsCompleted = true }
+            new Round { MatchType = matchTypeWithRounds, IsCompleted = true },
+            new Round { MatchType = matchTypeWithRounds, IsCompleted = true }
         };
         matchTypeWithRounds.Rounds = rounds;
 
@@ -153,10 +152,10 @@ public class MatchTypeServiceTest
             .ReturnsAsync(matchTypeWithRounds);
 
         // Act
-        await _sut.UpdateMatchTypeCompletion(matchType);
+        await _sut.UpdateMatchTypeCompletion(matchTypeWithRounds);
 
         // Assert
-        Assert.True(matchType.IsCompleted);
+        Assert.False(matchTypeWithRounds.IsCompleted);
         _matchTypeRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
     }
 
