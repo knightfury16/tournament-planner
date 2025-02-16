@@ -111,17 +111,42 @@ public class MatchTypeServiceTest
     }
 
     [Fact]
-    public async Task UpdateMatchTypeCompletion_WithAllRoundsComplete_SetsMatchTypeAsComplete()
+    public async Task UpdateMatchTypeCompletion_WithAllRoundsComplete_GroupMatchType_SetsMatchTypeAsComplete()
     {
         // Arrange
-        var matchType = new Group { Id = 1, Name = "Test Gorup A" };
+        var matchType = MatchTypeFixtures.GetGroup();
         var rounds = new List<Round>
         {
             new Round { MatchType = matchType, IsCompleted = true },
             new Round { MatchType = matchType, IsCompleted = true }
         };
 
-        var matchTypeWithRounds = new Group { Id = 1, Name = "Test Group With rounds", Rounds = rounds };
+        var matchTypeWithRounds = new Group { Id = 1, Name = "Test Group With Rounds", Rounds = rounds };
+
+        _matchTypeRepositoryMock
+            .Setup(r => r.GetByIdAsync(1, It.IsAny<string[]>()))
+            .ReturnsAsync(matchTypeWithRounds);
+
+        // Act
+        await _sut.UpdateMatchTypeCompletion(matchType);
+
+        // Assert
+        Assert.True(matchType.IsCompleted);
+        _matchTypeRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateMatchTypeCompletion_WithAllRoundsComplete_KnockoutMatchType_SetsMatchTypeAsComplete()
+    {
+        // Arrange
+        var matchType = MatchTypeFixtures.GetKnockOut();
+        var matchTypeWithRounds = new KnockOut { Id = 1, Name = "Test Knockout With Rounds" };
+        var rounds = new List<Round>
+        {
+            new Round { MatchType = matchType, IsCompleted = true },
+            new Round { MatchType = matchType, IsCompleted = true }
+        };
+        matchTypeWithRounds.Rounds = rounds;
 
         _matchTypeRepositoryMock
             .Setup(r => r.GetByIdAsync(1, It.IsAny<string[]>()))
