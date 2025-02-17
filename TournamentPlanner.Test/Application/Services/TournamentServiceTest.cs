@@ -1,6 +1,7 @@
 using Moq;
 using TournamentPlanner.Application;
 using TournamentPlanner.Application.Common.Interfaces;
+using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
 using TournamentPlanner.Test.Fixtures;
@@ -11,131 +12,282 @@ namespace TournamentPlanner.Test.Application.Services;
 
 public class TournamentServiceTest
 {
-    private readonly Mock<IDrawService> _drawServiceMock;
-    private readonly Mock<IMatchTypeService> _matchTypeServiceMock;
-    private readonly Mock<IRepository<Tournament>> _tournamentRepositoryMock;
-    private readonly Mock<IRoundService> _roundServiceMock;
-    private readonly TournamentService _sut;
+  private readonly Mock<IDrawService> _drawServiceMock;
+  private readonly Mock<IMatchTypeService> _matchTypeServiceMock;
+  private readonly Mock<IRepository<Tournament>> _tournamentRepositoryMock;
+  private readonly Mock<IRepository<MatchType>> _matchTypeRepositoryMock;
+  private readonly Mock<IRoundService> _roundServiceMock;
+  private readonly TournamentService _sut;
+  private readonly Mock<ICurrentUser> _currentUserMock;
 
-    public TournamentServiceTest()
-    {
-        _drawServiceMock = new Mock<IDrawService>();
-        _matchTypeServiceMock = new Mock<IMatchTypeService>();
-        _tournamentRepositoryMock = new Mock<IRepository<Tournament>>();
-        _roundServiceMock = new Mock<IRoundService>();
-        _sut = new TournamentService(_drawServiceMock.Object, _matchTypeServiceMock.Object, _tournamentRepositoryMock.Object, _roundServiceMock.Object);
-    }
+  public TournamentServiceTest()
+  {
+    _drawServiceMock = new Mock<IDrawService>();
+    _matchTypeServiceMock = new Mock<IMatchTypeService>();
+    _tournamentRepositoryMock = new Mock<IRepository<Tournament>>();
+    _matchTypeRepositoryMock = new Mock<IRepository<MatchType>>();
+    _roundServiceMock = new Mock<IRoundService>();
+    _currentUserMock = new Mock<ICurrentUser>();
+    _sut = new TournamentService(_drawServiceMock.Object, _matchTypeServiceMock.Object, _tournamentRepositoryMock.Object, _roundServiceMock.Object, _currentUserMock.Object, _matchTypeRepositoryMock.Object);
+  }
 
-    [Fact]
-    public async Task CanIMakeDraw_WithNoDraws_ReturnsTrue()
-    {
-        // Arrange
-        var tournament = TournamentFixtures.GetTournament();
-        tournament.Draws = new List<Draw>();
+  [Fact]
+  public async Task CanIMakeDraw_WithNoDraws_ReturnsTrue()
+  {
+    // Arrange
+    var tournament = TournamentFixtures.GetGroupTournament();
+    tournament.Draws = new List<Draw>();
 
-        // Act
-        var result = await _sut.CanIMakeDraw(tournament);
+    // Act
+    var result = await _sut.CanIMakeDraw(tournament);
 
-        // Assert
-        Assert.True(result);
-    }
+    // Assert
+    Assert.True(result);
+  }
 
-    [Fact]
-    public async Task CanIMakeDraw_InGroupStateWithCompleteDraws_ReturnsTrue()
-    {
-        // Arrange
-        var tournament = TournamentFixtures.GetGroupTournament();
-        tournament.Draws = new List<Draw>();
-        tournament.CurrentState = TournamentState.GroupState;
+  [Fact]
+  public async Task CanIMakeDraw_InGroupStateWithCompleteDraws_ReturnsTrue()
+  {
+    // Arrange
+    var tournament = TournamentFixtures.GetGroupTournament();
+    var matchType = Fixtures.MatchTypeFixtures.GetGroup();
+    tournament.Draws = new List<Draw> { new Draw { MatchType = matchType, Tournament = tournament } };
+    tournament.CurrentState = TournamentState.GroupState;
 
-        _drawServiceMock.Setup(x => x.IsDrawsComplete(tournament)).ReturnsAsync(true);
+    _drawServiceMock.Setup(x => x.IsDrawsComplete(tournament)).ReturnsAsync(true);
 
-        // Act
-        var result = await _sut.CanIMakeDraw(tournament);
+    // Act
+    var result = await _sut.CanIMakeDraw(tournament);
 
-        // Assert
-        Assert.True(result);
-    }
+    // Assert
+    Assert.True(result);
+    _drawServiceMock.Verify(x => x.IsDrawsComplete(tournament), Times.Once);
+  }
 
-    [Fact]
-    public async Task CanIMakeDraw_InKnockoutState_ReturnsFalse()
-    {
-        // Arrange
-        var tournament = TournamentFixtures.GetKnockoutTournament();
-        tournament.Draws = new List<Draw> {
+  [Fact]
+  public async Task CanIMakeDraw_InKnockoutState_ReturnsFalse()
+  {
+    // Arrange
+    var tournament = TournamentFixtures.GetKnockoutTournament();
+    tournament.Draws = new List<Draw> {
                 new Draw { Tournament = tournament, MatchType = new Group { Name = "Group A" } }
             };
-        tournament.CurrentState = TournamentState.KnockoutState;
+    tournament.CurrentState = TournamentState.KnockoutState;
 
 
-        // Act
-        var result = await _sut.CanIMakeDraw(tournament);
+    // Act
+    var result = await _sut.CanIMakeDraw(tournament);
 
-        // Assert
-        Assert.False(result);
-    }
+    // Assert
+    Assert.False(result);
+    _drawServiceMock.Verify(x => x.IsDrawsComplete(tournament), Times.Never);
+  }
 
-    [Fact]
-    public async Task CanISchedule_WithNoDraws_ReturnsFalse()
-    {
-        // Arrange
-        var tournament = TournamentFixtures.GetTournament();
-        tournament.Draws = new List<Draw>();
+  [Fact]
+  public async Task CanISchedule_WithNoDraws_ReturnsFalse()
+  {
+    // Arrange
+    var tournament = TournamentFixtures.GetTournament();
+    tournament.Draws = new List<Draw>();
 
-        // Act
-        var result = await _sut.CanISchedule(tournament);
+    // Act
+    var result = await _sut.CanISchedule(tournament);
 
-        // Assert
-        Assert.False(result);
-    }
+    // Assert
+    Assert.False(result);
+  }
 
-    [Fact]
-    public async Task CanISchedule_WithDrawsButNoMatches_ReturnsTrue()
-    {
-        // Arrange
-        var tournament = TournamentFixtures.GetTournament();
-        tournament.Draws = new List<Draw> { new Draw { Tournament = tournament, MatchType = new Group { Name = "Group A" } } };
-        tournament.Matches = new List<Match>();
+  [Fact]
+  public async Task CanISchedule_WithDrawsButNoMatches_ReturnsTrue()
+  {
+    // Arrange
+    var tournament = TournamentFixtures.GetTournament();
+    tournament.Draws = new List<Draw> { new Draw { Tournament = tournament, MatchType = new Group { Name = "Group A" } } };
+    tournament.Matches = new List<Match>();
 
-        // Act
-        var result = await _sut.CanISchedule(tournament);
+    // Act
+    var result = await _sut.CanISchedule(tournament);
 
-        // Assert
-        Assert.True(result);
-    }
+    // Assert
+    Assert.True(result);
+  }
 
-    [Fact]
-    public async Task MakeDraws_WithValidSeeders_ReturnsDraws()
-    {
-        // Arrange
-        var tournament = TournamentFixtures.GetTournament();
-        tournament.Participants.AddRange(PlayerFixtures.GetSamplePlayers(2));
+  [Fact]
+  public async Task CanISchedule_KnockoutState_WithNoFinalRound_ReturnFalse()
+  {
+    // Arrange
+    var tournament = TournamentFixtures.GetKnockoutTournament();
+    tournament.CurrentState = TournamentState.KnockoutState;
+    var matches = Fixtures.MatchFixtures.GetMatches();
+    var matchType = Fixtures.MatchTypeFixtures.GetKnockOut();
+    var round = new Round { RoundName = "NotFinal", MatchType = matchType, Matches = matches };
+    matchType.Rounds = new List<Round> { round };
+    var draw = new Draw { MatchType = matchType, Tournament = tournament };
+    tournament.Draws = new List<Draw> { draw };
+    tournament.Matches = matches;
 
-        var seeders = new List<int> { 1 };
+    // Act
+    var result = await _sut.CanISchedule(tournament);
+    _roundServiceMock.Setup(x => x.IsAllRoundComplete(It.IsAny<MatchType>())).ReturnsAsync(false);
 
-        var matchType = new Group { Name = "Group A" };
-        _matchTypeServiceMock.Setup(x => x.CreateMatchType(tournament, It.IsAny<string>(), seeders))
-            .ReturnsAsync(new List<MatchType> { matchType });
+    // Assert
+    Assert.False(result);
+    _roundServiceMock.Verify(x => x.IsAllRoundComplete(matchType), Times.Once);
+  }
 
-        // Act
-        var result = await _sut.MakeDraws(tournament, null, seeders);
+  [Fact]
+  public async Task CanISchedule_KnockoutState_WithNoFinalRound_ReturnTrue()
+  {
+    // Arrange
+    var tournament = TournamentFixtures.GetKnockoutTournament();
+    tournament.CurrentState = TournamentState.KnockoutState;
+    var matches = Fixtures.MatchFixtures.GetMatches();
+    var matchType = Fixtures.MatchTypeFixtures.GetKnockOut();
+    var round = new Round { RoundName = "NotFinal", MatchType = matchType, Matches = matches };
+    matchType.Rounds = new List<Round> { round };
+    var draw = new Draw { MatchType = matchType, Tournament = tournament };
+    tournament.Draws = new List<Draw> { draw };
+    tournament.Matches = matches;
 
-        // Assert
-        Assert.Single(result);
-        Assert.Equal(matchType, result.First().MatchType);
-    }
+    // Act
+    _roundServiceMock.Setup(x => x.IsAllRoundComplete(It.IsAny<MatchType>())).ReturnsAsync(true);
+    var result = await _sut.CanISchedule(tournament);
 
-    [Fact]
-    public async Task MakeDraws_WithInvalidSeeders_ThrowsException()
-    {
-        // Arrange
-        var tournament = TournamentFixtures.GetTournament();
-        tournament.Participants.AddRange(PlayerFixtures.GetSamplePlayers(2));
+    // Assert
+    _roundServiceMock.Verify(x => x.IsAllRoundComplete(matchType), Times.Once);
+    Assert.True(result);
+  }
 
-        var seeders = new List<int> { 3 }; // Invalid seeder
 
-        // Act & Assert
-        await Assert.ThrowsAsync<Exception>(() =>
-            _sut.MakeDraws(tournament, null, seeders));
-    }
+  [Fact]
+  public async Task CanISchedule_KnockoutState_WithFinalRound_ReturnFalse()
+  {
+    // Arrange
+    var tournament = TournamentFixtures.GetKnockoutTournament();
+    tournament.CurrentState = TournamentState.KnockoutState;
+    var matches = Fixtures.MatchFixtures.GetMatches();
+    var matchType = Fixtures.MatchTypeFixtures.GetKnockOut();
+    var round = new Round { RoundName = Utility.Final, MatchType = matchType, Matches = matches };
+    matchType.Rounds = new List<Round> { round };
+    var draw = new Draw { MatchType = matchType, Tournament = tournament };
+    tournament.Draws = new List<Draw> { draw };
+    tournament.Matches = matches;
+
+    // Act
+    var result = await _sut.CanISchedule(tournament);
+
+    // Assert
+    Assert.False(result);
+    _roundServiceMock.Verify(x => x.IsAllRoundComplete((It.IsAny<MatchType>())), Times.Never);
+  }
+
+
+
+  [Fact]
+  public async Task MakeDraws_WithValidSeeders_ReturnsDraws()
+  {
+    // Arrange
+    var tournament = TournamentFixtures.GetTournament();
+    tournament.Participants.AddRange(PlayerFixtures.GetSamplePlayers(2));
+
+    var seeders = new List<int> { 1 };
+
+    var matchType = new Group { Name = "Group A" };
+    _matchTypeServiceMock.Setup(x => x.CreateMatchType(tournament, It.IsAny<string>(), seeders))
+        .ReturnsAsync(new List<MatchType> { matchType });
+
+    // Act
+    var result = await _sut.MakeDraws(tournament, null, seeders);
+
+    // Assert
+    Assert.Single(result);
+    Assert.Equal(matchType, result.First().MatchType);
+  }
+
+  [Fact]
+  public async Task MakeDraws_WithInvalidSeeders_ThrowsException()
+  {
+    // Arrange
+    var tournament = TournamentFixtures.GetTournament();
+    tournament.Participants.AddRange(PlayerFixtures.GetSamplePlayers(2));
+
+    var seeders = new List<int> { 3 }; // Invalid seeder
+
+    // Act & Assert
+    await Assert.ThrowsAsync<Exception>(() =>
+        _sut.MakeDraws(tournament, null, seeders));
+  }
+  [Fact]
+  public void AmICreator_WithNullCurrentUser_ReturnsFalse()
+  {
+    // Arrange
+    var tournament = Fixtures.TournamentFixtures.GetTournament();
+    tournament.AdminId = 1;
+    _currentUserMock.Setup(x => x.DomainUserId).Returns((int?)null);
+
+    // Act
+    var result = _sut.AmITheCreator(tournament);
+
+    // Assert
+    Assert.False(result);
+  }
+
+  [Fact]
+  public void AmICreator_WithNullTournament_ReturnsFalse()
+  {
+    // Arrange
+    _currentUserMock.Setup(x => x.DomainUserId).Returns(1);
+
+    // Act
+    var result = _sut.AmITheCreator(null!);
+
+    // Assert
+    Assert.False(result);
+  }
+
+  [Fact]
+  public void AmICreator_WithAdminIdZero_ReturnsFalse()
+  {
+    // Arrange
+    var tournament = TournamentFixtures.GetTournament();
+    _currentUserMock.Setup(x => x.DomainUserId).Returns(1);
+
+    // Act
+    var result = _sut.AmITheCreator(tournament);
+
+    // Assert
+    Assert.False(result);
+  }
+
+  [Fact]
+  public void AmICreator_WithDifferentAdminId_ReturnsFalse()
+  {
+    // Arrange
+    var tournament = TournamentFixtures.GetTournament();
+    tournament.AdminId = tournament.CreatedBy.Id;
+    _currentUserMock.Setup(x => x.DomainUserId).Returns(2);
+
+    // Act
+    var result = _sut.AmITheCreator(tournament);
+
+    // Assert
+    Assert.False(result);
+  }
+
+  [Fact]
+  public void AmICreator_WithSameAdminId_ReturnsTrue()
+  {
+    // Arrange
+    var tournament = TournamentFixtures.GetTournament();
+    tournament.AdminId = tournament.CreatedBy.Id;
+
+    _currentUserMock.Setup(x => x.DomainUserId).Returns(tournament.CreatedBy.Id);
+
+    // Act
+    var result = _sut.AmITheCreator(tournament);
+
+    // Assert
+    Assert.True(result);
+  }
+
 }
