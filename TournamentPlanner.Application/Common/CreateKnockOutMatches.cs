@@ -93,29 +93,30 @@ public class CreateKnockOutMatches : IKnockout
     {
         if (matchType.Players.Count == 0) await _matchTypeRepository.ExplicitLoadCollectionAsync(matchType, mt => mt.Players);
         //load all the seeded players
-        if(matchType.SeededPlayers == null || matchType.SeededPlayers.Count == 0)
+        if (matchType.SeededPlayers == null || matchType.SeededPlayers.Count == 0)
         {
             await _matchTypeRepository.ExplicitLoadCollectionAsync(matchType, mt => mt.SeededPlayers);
         }
-        
+
         int totalSlots = HighestPowerof2Ceil(matchType.Players.Count);
-        int numberOfBye = totalSlots - matchType.Players.Count;
+        int numberOfBye = GetNumberOfBye(totalSlots, matchType.Players.Count);
 
         List<Match> matches = new List<Match>();
         Round round = GetRound(1, matchType, totalSlots); // this is the first round
         var allPlayerList = new List<Player>(matchType.Players);
 
-        if(numberOfBye > 0 && matchType.SeededPlayers?.Count > 0)
+        if (numberOfBye > 0 && matchType.SeededPlayers?.Count > 0)
         {
             //remove the seeded players from the allPlayerList
-            foreach(var seededPlayer in matchType.SeededPlayers)
+            foreach (var seededPlayer in matchType.SeededPlayers)
             {
-                allPlayerList.Remove(seededPlayer.Player!); //i know players cant be empty here
+                ArgumentNullException.ThrowIfNull(seededPlayer.Player);
+                allPlayerList.Remove(seededPlayer.Player); //i know players cant be empty here
             }
 
             var seededPlayerList = matchType.SeededPlayers.Select(sp => sp.Player).ToList();
             int byeMatchCount = 0;
-            while(numberOfBye > 0 && byeMatchCount < seededPlayerList.Count )
+            while (numberOfBye > 0 && byeMatchCount < seededPlayerList.Count)
             {
                 var match = GetMatch(await GetByePlayer(), seededPlayerList[byeMatchCount]!, round, tournament);
                 matches.Add(match);
@@ -127,7 +128,7 @@ public class CreateKnockOutMatches : IKnockout
         List<Player> shuffledPlayers = ShuffledPlayers(allPlayerList);
 
         //assign byes to the remaining slots
-        for(int i = 0; i < numberOfBye; i++)
+        for (int i = 0; i < numberOfBye; i++)
         {
             matches.Add(GetMatch(await GetByePlayer(), shuffledPlayers[i], round, tournament));
         }
@@ -136,7 +137,7 @@ public class CreateKnockOutMatches : IKnockout
         //create match for the remaining slots
         for (int i = numberOfBye; i < shuffledPlayers.Count; i += 2)
         {
-            if(i + 1 < shuffledPlayers.Count)
+            if (i + 1 < shuffledPlayers.Count)
             {
                 var firstPlayer = shuffledPlayers[i];
                 var secondPlayer = shuffledPlayers[i + 1];
@@ -183,9 +184,10 @@ public class CreateKnockOutMatches : IKnockout
         return players.OrderBy(p => random.Next()).ToList();
     }
 
-    private int GetNumberOfBye(int count)
+    private int GetNumberOfBye(int totalSlots, int playerCount)
     {
-        return HighestPowerof2Ceil(count) - count;
+        //say i have 14 player then slots will be 16, so bye number will be 16 - 14 = 2
+        return totalSlots - playerCount;
     }
 
     private int HighestPowerof2Ceil(int N)
@@ -242,13 +244,13 @@ public class CreateKnockOutMatches : IKnockout
         if (previousRound == null) throw new Exception("Previous round can not be null");
 
         //populate the matches of the previous round
-        if( previousRound.Matches == null || previousRound.Matches.Count == 0)
+        if (previousRound.Matches == null || previousRound.Matches.Count == 0)
         {
             await _roundRepository.ExplicitLoadCollectionAsync(previousRound, r => r.Matches);
         }
 
         //still if previous round match count is 0 then throw an exception
-        if(previousRound!.Matches!.Count == 0)
+        if (previousRound!.Matches!.Count == 0)
         {
             throw new Exception("Previous round matches can not be empty");
         }
@@ -273,7 +275,7 @@ public class CreateKnockOutMatches : IKnockout
         List<Match> matches = new List<Match>();
 
         //make playoff for third and fourth place
-        if(currentRound.RoundName == Utility.Final)
+        if (currentRound.RoundName == Utility.Final)
         {
             //get the loser of the semifinal
             var semiFinalLosers = previousRound.Matches.Select(mt => mt.Winner == mt.SecondPlayer ? mt.FirstPlayer : mt.SecondPlayer).ToList();
@@ -281,11 +283,11 @@ public class CreateKnockOutMatches : IKnockout
             matches.Add(GetMatch(semiFinalLosers[0], semiFinalLosers[1], playoffRound, tournament));
         }
 
-        for (int i = 0; i < winners.Count; i+=2)
+        for (int i = 0; i < winners.Count; i += 2)
         {
-            var firstPlayer = winners[i];   
-            var secondPlayer = winners[i+1];
-            if(firstPlayer == null || secondPlayer == null)
+            var firstPlayer = winners[i];
+            var secondPlayer = winners[i + 1];
+            if (firstPlayer == null || secondPlayer == null)
             {
                 throw new Exception("Player can not be null");
             }
