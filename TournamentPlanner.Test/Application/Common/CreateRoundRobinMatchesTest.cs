@@ -3,7 +3,9 @@ using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Exceptions;
 using TournamentPlanner.Test.Fixtures;
+using TournamentPlanner.Application.Common.Interfaces;
 using MatchType = TournamentPlanner.Domain.Entities.MatchType;
+using Moq;
 
 namespace TournamentPlanner.Test.Application.Common;
 
@@ -11,11 +13,13 @@ public class CreateRoundRobinMatchesTest
 {
     private readonly CreateRoundRobinMatches _createRoundRobinMatches;
     private readonly Tournament _tournament;
+    private readonly Mock<IRepository<Player>> _playerRepositoryMoq;
     private readonly MatchType _matchType;
 
     public CreateRoundRobinMatchesTest()
     {
-        _createRoundRobinMatches = new CreateRoundRobinMatches();
+        _playerRepositoryMoq = new Mock<IRepository<Player>>();
+        _createRoundRobinMatches = new CreateRoundRobinMatches(_playerRepositoryMoq.Object);
         _tournament = TournamentFixtures.GetPopulatedGroupTournamentFresh();
         _matchType = new Group { Name = "Test Group A", Players = _tournament.Participants.ToList() };
     }
@@ -88,7 +92,7 @@ public class CreateRoundRobinMatchesTest
     {
         // Arrange
         var players = PlayerFixtures.GetSamplePlayers(4); // 4 players for a valid match
-        var knockOutMatchType = new KnockOut{Name = "Knockout Matchtype"};
+        var knockOutMatchType = new KnockOut { Name = "Knockout Matchtype" };
         knockOutMatchType.Players = players;
 
         // Act & Assert
