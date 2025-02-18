@@ -18,13 +18,15 @@ public class CreateKnockOutMatchesTest
 {
     private readonly Mock<IRepository<MatchType>> _matchTypeRepositoryMock;
     private readonly Mock<IRepository<Round>> _roundRepositoryMock;
+    private readonly Mock<IRepository<Player>> _playerRepositoryMock;
     private readonly CreateKnockOutMatches _createKnockOutMatches;
 
     public CreateKnockOutMatchesTest()
     {
         _matchTypeRepositoryMock = new Mock<IRepository<MatchType>>();
         _roundRepositoryMock = new Mock<IRepository<Round>>();
-        _createKnockOutMatches = new CreateKnockOutMatches(_matchTypeRepositoryMock.Object, _roundRepositoryMock.Object);
+        _playerRepositoryMock = new Mock<IRepository<Player>>();
+        _createKnockOutMatches = new CreateKnockOutMatches(_matchTypeRepositoryMock.Object, _roundRepositoryMock.Object, _playerRepositoryMock.Object);
     }
     //Test correact number of matches with player power of 2
     [Fact]
