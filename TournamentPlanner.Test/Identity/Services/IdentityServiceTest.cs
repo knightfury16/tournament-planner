@@ -109,26 +109,31 @@ public class IdentityServiceTest
         Assert.True(result);
     }
 
-    // [Fact]
-    // public async Task LoginApplicationUser_WithValidCredentials_ReturnsTrue()
-    // {
-    //     // Arrange
-    //     var userDto = new ApplicationUserDto { Email = "test@test.com", Password = "Password123!" };
-    //
-    //     var appUser = new ApplicationUser { Email = userDto.Email };
-    //
-    //     _mockUserManager.Setup(x => x.FindByEmailAsync(userDto.Email)).ReturnsAsync(appUser);
-    //
-    //     _mockSignInManager
-    //         .Setup(x => x.PasswordSignInAsync(appUser, userDto.Password, false, false))
-    //         .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
-    //
-    //     // Act
-    //     var result = await _identityServiceMoq.LoginApplicationUserAsync(userDto);
-    //
-    //     // Assert
-    //     Assert.True(result);
-    // }
+    [Fact]
+    public async Task LoginApplicationUser_WithValidCredentials_ReturnsTrue()
+    {
+        // Arrange
+        var userDto = new ApplicationUserDto { Email = "test@test.com", Password = "Password123!" };
+
+        var appUser = new ApplicationUser { Email = userDto.Email };
+
+        _mockUserManager.Setup(x => x.FindByEmailAsync(userDto.Email)).ReturnsAsync(appUser);
+
+        _mockSignInManager
+            .Setup(x => x.PasswordSignInAsync(appUser, userDto.Password, false, false))
+            .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
+
+        // Act
+        var result = await _identityServiceMoq.LoginApplicationUserAsync(userDto);
+
+        // Assert
+        Assert.True(result);
+        _mockSignInManager.Verify(
+            x => x.PasswordSignInAsync(appUser, userDto.Password, false, false),
+            Times.Once
+        );
+        _mockSignInManager.Verify(x => x.SignInAsync(appUser, It.IsAny<bool>(), null), Times.Once);
+    }
     //
     // [Fact]
     // public async Task LoginApplicationUser_WithInvalidEmail_ThrowsNotFoundException()
