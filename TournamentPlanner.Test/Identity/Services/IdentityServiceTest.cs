@@ -22,15 +22,15 @@ public class IdentityServiceTest
         var userStore = new Mock<IUserStore<ApplicationUser>>();
         _mockUserManager = new Mock<UserManager<ApplicationUser>>(
             userStore.Object,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!,
+            null!
+        )!;
 
         var contextAccessor = new Mock<IHttpContextAccessor>();
         var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<ApplicationUser>>();
@@ -38,20 +38,20 @@ public class IdentityServiceTest
             _mockUserManager.Object,
             contextAccessor.Object,
             userPrincipalFactory.Object,
-            null,
-            null,
-            null,
-            null
-        );
+            null!,
+            null!,
+            null!,
+            null!
+        )!;
 
         var roleStore = new Mock<IRoleStore<IdentityRole>>();
         _mockRoleManager = new Mock<RoleManager<IdentityRole>>(
             roleStore.Object,
-            null,
-            null,
-            null,
-            null
-        );
+            null!,
+            null!,
+            null!,
+            null!
+        )!;
 
         _identityServiceMoq = new IdentityService(
             _mockUserManager.Object,
