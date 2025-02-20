@@ -372,44 +372,32 @@ public class IdentityServiceTest
         Assert.Equal(claims[0].Value, result[0].Value);
     }
 
-    // [Fact]
-    // public async Task AddClaimToApplicationUser_WithValidData_AddClaimSuccessfully()
-    // {
-    //     // Arrange
-    //     var email = "test@test.com";
-    //     var user = new ApplicationUser { Email = email };
-    //     var claim = new Claim(ClaimTypes.Email, email);
-    //
-    //     _mockUserManager.Setup(x => x.FindByEmailAsync(email)).ReturnsAsync(user);
-    //
-    //     _mockUserManager
-    //         .Setup(x => x.AddClaimAsync(user, claim))
-    //         .ReturnsAsync(IdentityResult.Success);
-    //
-    //     // Act
-    //     await _identityServiceMoq.AddClaimToApplicationUserAsync(email, "emailType", "cool");
-    //
-    //     // Assert
-    //     _mockUserManager.Verify(x => x.AddClaimAsync(user, claim), Times.Once);
-    // }
+    [Fact]
+    public async Task AddClaimToApplicationUser_WithValidData_AddClaimSuccessfully()
+    {
+        // Arrange
+        var email = "test@test.com";
+        var user = new ApplicationUser
+        {
+            Email = email,
+            PasswordHash = "hello",
+            DomainUserId = 1,
+        };
+        var claim = new Claim(ClaimTypes.Email, email);
 
-    // [Fact]
-    // public async Task AddClaimToApplicationUser_WithValidData_AddClaimFail()
-    // {
-    //     // Arrange
-    //     var email = "test@test.com";
-    //     var user = new ApplicationUser { Email = email };
-    //     var claim = new Claim(ClaimTypes.Email, email);
-    //
-    //     _mockUserManager.Setup(x => x.FindByEmailAsync(email)).ReturnsAsync(user);
-    //
-    //     _mockUserManager
-    //         .Setup(x => x.AddClaimAsync(user, claim))
-    //         .ReturnsAsync(IdentityResult.Failed());
-    //
-    //     // Act && assert
-    //     await Assert.ThrowsAsync<Exception>(
-    //         () => _identityServiceMoq.AddClaimToApplicationUserAsync(email, "email", email)
-    //     );
-    // }
+        _mockUserManager.Setup(x => x.FindByEmailAsync(email)).ReturnsAsync(user);
+
+        _mockUserManager
+            .Setup(x => x.AddClaimAsync(It.IsAny<ApplicationUser>(), It.IsAny<Claim>()))
+            .ReturnsAsync(IdentityResult.Success);
+
+        // Act
+        await _identityServiceMoq.AddClaimToApplicationUserAsync(email, "emailType", "cool");
+
+        // Assert
+        _mockUserManager.Verify(
+            x => x.AddClaimAsync(It.IsAny<ApplicationUser>(), It.IsAny<Claim>()),
+            Times.Once
+        );
+    }
 }
