@@ -284,6 +284,22 @@ public class IdentityServiceTest
             () => _identityServiceMoq.AddRoleToApplicationUserAsync(email, roleName)
         );
     }
+
+    [Fact]
+    public async Task SignoutApplicationUser_signout()
+    {
+        // Arrange
+        var email = "test@test.com";
+        var user = new ApplicationUser { Email = email };
+
+        _mockSignInManager.Setup(x => x.SignOutAsync());
+
+        //Act
+        await _identityServiceMoq.SignoutApplicationUserAsync();
+
+        //Assert
+        _mockSignInManager.Verify(x => x.SignOutAsync(), Times.Once);
+    }
     // [Fact]
     // public async Task GetAllClaimsOfApplicationUser_WithValidEmail_ReturnsClaims()
     // {
