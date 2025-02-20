@@ -110,6 +110,62 @@ public class IdentityServiceTest
     }
 
     [Fact]
+    public async Task RegisterApplicationUserAndSignIn_WithValidData_ReturnsTrue()
+    {
+        // Arrange
+        var userDto = new ApplicationUserDto
+        {
+            Email = "test@test.com",
+            Password = "Password123!",
+            UserName = "testuser",
+            PhoneNumber = "1234567890",
+            DomainUserId = 1,
+        };
+
+        var applicationUser = new ApplicationUser
+        {
+            Email = userDto.Email,
+            PasswordHash = userDto.Password,
+            PhoneNumber = userDto.PhoneNumber,
+            DomainUserId = userDto.DomainUserId,
+        };
+        var claim = new Claim("Email", "test@gmail.com");
+
+        _mockUserManager
+            .Setup(x => x.CreateAsync(It.IsAny<ApplicationUser>(), userDto.Password))
+            .ReturnsAsync(IdentityResult.Success);
+
+        _mockUserManager
+            .Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
+            .ReturnsAsync(applicationUser);
+
+        _mockUserManager
+            .Setup(x => x.AddClaimAsync(It.IsAny<ApplicationUser>(), It.IsAny<Claim>()))
+            .ReturnsAsync(IdentityResult.Success);
+
+        _mockUserManager
+            .Setup(x => x.AddClaimAsync(It.IsAny<ApplicationUser>(), It.IsAny<Claim>()))
+            .ReturnsAsync(IdentityResult.Success);
+        _mockSignInManager.Setup(x =>
+            x.SignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<bool>(), It.IsAny<string>())
+        );
+
+        // Act
+        var result = await _identityServiceMoq.RegisterApplicationUserAndSigninAsync(userDto);
+        _mockUserManager.Verify(
+            x => x.CreateAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()),
+            Times.Once
+        );
+
+        // Assert
+        Assert.True(result);
+        _mockSignInManager.Verify(
+            x => x.SignInAsync(It.IsAny<ApplicationUser>(), It.IsAny<bool>(), It.IsAny<string>()),
+            Times.Once
+        );
+    }
+
+    [Fact]
     public async Task LoginApplicationUser_WithValidCredentials_ReturnsTrue()
     {
         // Arrange
@@ -134,28 +190,59 @@ public class IdentityServiceTest
         );
         _mockSignInManager.Verify(x => x.SignInAsync(appUser, It.IsAny<bool>(), null), Times.Once);
     }
-    //
+
+    [Fact]
+    public async Task LoginApplicationUser_WithInvalidEmail_ThrowsNotFoundException()
+    {
+        // Arrange
+        var userDto = new ApplicationUserDto
+        {
+            Email = "nonexistent@test.com",
+            Password = "Password123!",
+        };
+
+        _mockUserManager
+            .Setup(x => x.FindByEmailAsync(userDto.Email))
+            .ReturnsAsync((ApplicationUser)null!);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(
+            () => _identityServiceMoq.LoginApplicationUserAsync(userDto)
+        );
+    }
+
+    [Fact]
+    public async Task LoginApplicationUser_WithInvalidCredential_ThrowsUnauthorizeException()
+    {
+        // Arrange
+        var userDto = new ApplicationUserDto
+        {
+            Email = "nonexistent@test.com",
+            Password = "Password123!",
+        };
+
+        var applicationUser = new ApplicationUser
+        {
+            Email = userDto.Email,
+            PasswordHash = userDto.Password,
+        };
+
+        _mockUserManager
+            .Setup(x => x.FindByEmailAsync(userDto.Email))
+            .ReturnsAsync(applicationUser);
+
+        _mockSignInManager
+            .Setup(x => x.PasswordSignInAsync(applicationUser, userDto.Password, false, false))
+            .ReturnsAsync(SignInResult.Failed);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<UnauthorizedException>(
+            () => _identityServiceMoq.LoginApplicationUserAsync(userDto)
+        );
+    }
+
     // [Fact]
-    // public async Task LoginApplicationUser_WithInvalidEmail_ThrowsNotFoundException()
-    // {
-    //     // Arrange
-    //     var userDto = new ApplicationUserDto
-    //     {
-    //         Email = "nonexistent@test.com",
-    //         Password = "Password123!",
-    //     };
     //
-    //     _mockUserManager
-    //         .Setup(x => x.FindByEmailAsync(userDto.Email))
-    //         .ReturnsAsync((ApplicationUser)null);
-    //
-    //     // Act & Assert
-    //     await Assert.ThrowsAsync<NotFoundException>(
-    //         () => _identityServiceMoq.LoginApplicationUserAsync(userDto)
-    //     );
-    // }
-    //
-    // [Fact]
     // public async Task AddRoleToApplicationUser_WithValidData_Succeeds()
     // {
     //     // Arrange
