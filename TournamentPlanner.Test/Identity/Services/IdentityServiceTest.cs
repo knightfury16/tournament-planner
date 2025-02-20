@@ -286,6 +286,24 @@ public class IdentityServiceTest
     }
 
     [Fact]
+    public async Task CreateRole_WithValidRole_RetrurnSuccees()
+    {
+        // Arrange
+        var role = "MyRole";
+
+        _mockRoleManager
+            .Setup(x => x.CreateAsync(It.IsAny<IdentityRole>()))
+            .ReturnsAsync(IdentityResult.Success);
+
+        // Act
+        var result = await _identityServiceMoq.CreateRoleAsync(role);
+
+        // Assert
+        Assert.True(result);
+        _mockRoleManager.Verify(x => x.CreateAsync(It.IsAny<IdentityRole>()), Times.Once);
+    }
+
+    [Fact]
     public async Task SignoutApplicationUser_signout()
     {
         // Arrange
@@ -300,28 +318,98 @@ public class IdentityServiceTest
         //Assert
         _mockSignInManager.Verify(x => x.SignOutAsync(), Times.Once);
     }
+
+    [Fact]
+    public async Task GetAllClaimsOfApplicationUser_WithValidEmail_ReturnsClaims()
+    {
+        // Arrange
+        var email = "test@test.com";
+        var user = new ApplicationUser { Email = email };
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Email, email),
+            new Claim(ClaimTypes.Name, "Test User"),
+        };
+
+        _mockUserManager.Setup(x => x.FindByEmailAsync(email)).ReturnsAsync(user);
+
+        _mockUserManager.Setup(x => x.GetClaimsAsync(user)).ReturnsAsync(claims);
+
+        // Act
+        var result = await _identityServiceMoq.GetAllClaimsOfApplicationUser(email);
+
+        // Assert
+        Assert.Equal(claims.Count, result.Count);
+        Assert.Equal(claims[0].Type, result[0].Type);
+        Assert.Equal(claims[0].Value, result[0].Value);
+    }
+
+    [Fact]
+    public async Task GetAllClaimsOfApplicationUser_WithValidClaimPrincipal_ReturnsClaims()
+    {
+        // Arrange
+        var email = "test@test.com";
+        var user = new ApplicationUser { Email = email };
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Email, email),
+            new Claim(ClaimTypes.Name, "Test User"),
+        };
+        var claimsIdentity = new ClaimsIdentity(claims);
+
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+        _mockUserManager.Setup(x => x.GetUserAsync(claimsPrincipal)).ReturnsAsync(user);
+
+        _mockUserManager.Setup(x => x.GetClaimsAsync(user)).ReturnsAsync(claims);
+
+        // Act
+        var result = await _identityServiceMoq.GetAllClaimsOfApplicationUser(claimsPrincipal);
+
+        // Assert
+        Assert.Equal(claims.Count, result.Count);
+        Assert.Equal(claims[0].Type, result[0].Type);
+        Assert.Equal(claims[0].Value, result[0].Value);
+    }
+
     // [Fact]
-    // public async Task GetAllClaimsOfApplicationUser_WithValidEmail_ReturnsClaims()
+    // public async Task AddClaimToApplicationUser_WithValidData_AddClaimSuccessfully()
     // {
     //     // Arrange
     //     var email = "test@test.com";
     //     var user = new ApplicationUser { Email = email };
-    //     var claims = new List<Claim>
-    //     {
-    //         new Claim(ClaimTypes.Email, email),
-    //         new Claim(ClaimTypes.Name, "Test User"),
-    //     };
+    //     var claim = new Claim(ClaimTypes.Email, email);
     //
     //     _mockUserManager.Setup(x => x.FindByEmailAsync(email)).ReturnsAsync(user);
     //
-    //     _mockUserManager.Setup(x => x.GetClaimsAsync(user)).ReturnsAsync(claims);
+    //     _mockUserManager
+    //         .Setup(x => x.AddClaimAsync(user, claim))
+    //         .ReturnsAsync(IdentityResult.Success);
     //
     //     // Act
-    //     var result = await _identityServiceMoq.GetAllClaimsOfApplicationUser(email);
+    //     await _identityServiceMoq.AddClaimToApplicationUserAsync(email, "emailType", "cool");
     //
     //     // Assert
-    //     Assert.Equal(claims.Count, result.Count);
-    //     Assert.Equal(claims[0].Type, result[0].Type);
-    //     Assert.Equal(claims[0].Value, result[0].Value);
+    //     _mockUserManager.Verify(x => x.AddClaimAsync(user, claim), Times.Once);
+    // }
+
+    // [Fact]
+    // public async Task AddClaimToApplicationUser_WithValidData_AddClaimFail()
+    // {
+    //     // Arrange
+    //     var email = "test@test.com";
+    //     var user = new ApplicationUser { Email = email };
+    //     var claim = new Claim(ClaimTypes.Email, email);
+    //
+    //     _mockUserManager.Setup(x => x.FindByEmailAsync(email)).ReturnsAsync(user);
+    //
+    //     _mockUserManager
+    //         .Setup(x => x.AddClaimAsync(user, claim))
+    //         .ReturnsAsync(IdentityResult.Failed());
+    //
+    //     // Act && assert
+    //     await Assert.ThrowsAsync<Exception>(
+    //         () => _identityServiceMoq.AddClaimToApplicationUserAsync(email, "email", email)
+    //     );
     // }
 }
