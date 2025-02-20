@@ -241,29 +241,49 @@ public class IdentityServiceTest
         );
     }
 
-    // [Fact]
-    //
-    // public async Task AddRoleToApplicationUser_WithValidData_Succeeds()
-    // {
-    //     // Arrange
-    //     var email = "test@test.com";
-    //     var roleName = "Admin";
-    //     var user = new ApplicationUser { Email = email };
-    //
-    //     _mockUserManager.Setup(x => x.FindByEmailAsync(email)).ReturnsAsync(user);
-    //
-    //     _mockRoleManager.Setup(x => x.RoleExistsAsync(roleName)).ReturnsAsync(true);
-    //
-    //     _mockUserManager
-    //         .Setup(x => x.AddToRoleAsync(user, roleName))
-    //         .ReturnsAsync(IdentityResult.Success);
-    //
-    //     // Act & Assert
-    //     await _identityServiceMoq.AddRoleToApplicationUserAsync(email, roleName);
-    //
-    //     _mockUserManager.Verify(x => x.AddToRoleAsync(user, roleName), Times.Once);
-    // }
-    //
+    [Fact]
+    public async Task AddRoleToApplicationUser_WithValidData_Succeeds()
+    {
+        // Arrange
+        var email = "test@test.com";
+        var roleName = "Admin";
+        var user = new ApplicationUser { Email = email };
+
+        _mockUserManager.Setup(x => x.FindByEmailAsync(email)).ReturnsAsync(user);
+
+        _mockRoleManager.Setup(x => x.RoleExistsAsync(roleName)).ReturnsAsync(true);
+
+        _mockUserManager
+            .Setup(x => x.AddToRoleAsync(user, roleName))
+            .ReturnsAsync(IdentityResult.Success);
+
+        // Act & Assert
+        await _identityServiceMoq.AddRoleToApplicationUserAsync(email, roleName);
+
+        _mockUserManager.Verify(x => x.AddToRoleAsync(user, roleName), Times.Once);
+    }
+
+    [Fact]
+    public async Task AddRoleToApplicationUser_WhenRoleDoesNotExist_ThrowsException()
+    {
+        // Arrange
+        var email = "test@test.com";
+        var roleName = "Admin";
+        var user = new ApplicationUser { Email = email };
+
+        _mockUserManager.Setup(x => x.FindByEmailAsync(email)).ReturnsAsync(user);
+
+        _mockRoleManager.Setup(x => x.RoleExistsAsync(roleName)).ReturnsAsync(false);
+
+        _mockUserManager
+            .Setup(x => x.AddToRoleAsync(user, roleName))
+            .ReturnsAsync(IdentityResult.Success);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ValidationException>(
+            () => _identityServiceMoq.AddRoleToApplicationUserAsync(email, roleName)
+        );
+    }
     // [Fact]
     // public async Task GetAllClaimsOfApplicationUser_WithValidEmail_ReturnsClaims()
     // {
