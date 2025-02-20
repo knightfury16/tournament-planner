@@ -400,4 +400,83 @@ public class IdentityServiceTest
             Times.Once
         );
     }
+    [Fact]
+    public async Task CheckUserClaim_WithValidData_ReturnsTrue()
+    {
+        // Arrange
+        var email = "test@test.com";
+        var user = new ApplicationUser { Email = email };
+        var claims = new List<Claim>
+        {
+            new Claim("TestType", "TestValue")
+        };
+
+        _mockUserManager.Setup(x => x.FindByEmailAsync(email)).ReturnsAsync(user);
+        _mockUserManager.Setup(x => x.GetClaimsAsync(user)).ReturnsAsync(claims);
+
+        // Act
+        var result = await _identityServiceMoq.CheckUserClaimAsync(email, "TestType", "TestValue");
+
+        // Assert
+        Assert.True(result);
+        _mockUserManager.Verify(x => x.FindByEmailAsync(email), Times.Once);
+        _mockUserManager.Verify(x => x.GetClaimsAsync(user), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetAllRolesOfUser_WithValidData_ReturnsRoles()
+    {
+        // Arrange
+        var email = "test@test.com";
+        var user = new ApplicationUser { Email = email };
+        var roles = new List<string> { "Admin", "User" };
+
+        _mockUserManager.Setup(x => x.FindByEmailAsync(email)).ReturnsAsync(user);
+        _mockUserManager.Setup(x => x.GetRolesAsync(user)).ReturnsAsync(roles);
+
+        // Act
+        var result = await _identityServiceMoq.GetAllRolesOfUser(email);
+
+        // Assert
+        Assert.Equal(roles.Count, result.Count);
+        Assert.Equal(roles[0], result[0]);
+        Assert.Equal(roles[1], result[1]);
+        _mockUserManager.Verify(x => x.FindByEmailAsync(email), Times.Once);
+        _mockUserManager.Verify(x => x.GetRolesAsync(user), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetRoleClaimsOfUser_WithValidData_ReturnsClaims()
+    {
+        // Arrange
+        var email = "test@test.com";
+        var user = new ApplicationUser { Email = email };
+        var roles = new List<string> { "Admin" };
+        var role = new IdentityRole("Admin");
+        var claims = new List<Claim> 
+        { 
+            new Claim("Permission", "CanEdit"),
+            new Claim("Permission", "CanDelete")
+        };
+
+        _mockUserManager.Setup(x => x.FindByEmailAsync(email)).ReturnsAsync(user);
+        _mockUserManager.Setup(x => x.GetRolesAsync(user)).ReturnsAsync(roles);
+        _mockRoleManager.Setup(x => x.FindByNameAsync("Admin")).ReturnsAsync(role);
+        _mockRoleManager.Setup(x => x.GetClaimsAsync(role)).ReturnsAsync(claims);
+
+        // Act
+        var result = await _identityServiceMoq.GetRoleClaimsOfuser(email);
+
+        // Assert
+        Assert.Equal(claims.Count, result.Count);
+        Assert.Equal(claims[0].Type, result[0].Type);
+        Assert.Equal(claims[0].Value, result[0].Value);
+        Assert.Equal(claims[1].Type, result[1].Type);
+        Assert.Equal(claims[1].Value, result[1].Value);
+        _mockUserManager.Verify(x => x.FindByEmailAsync(email), Times.Once);
+        _mockUserManager.Verify(x => x.GetRolesAsync(user), Times.Once);
+        _mockRoleManager.Verify(x => x.FindByNameAsync("Admin"), Times.Once);
+        _mockRoleManager.Verify(x => x.GetClaimsAsync(role), Times.Once);
+    }
+
 }
