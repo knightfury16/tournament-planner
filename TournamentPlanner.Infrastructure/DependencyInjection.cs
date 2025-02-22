@@ -10,9 +10,18 @@ namespace TournamentPlanner.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+        public static void AddInfrastructureServices(
+            this IServiceCollection services,
+            IConfiguration configuration
+        )
         {
-            services.AddDbContext<TournamentPlannerDataContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<TournamentPlannerDataContext>(options =>
+            {
+                options.UseNpgsql(
+                    configuration.GetConnectionString("DefaultConnection"),
+                    o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
+                );
+            });
             services.AddScoped<IRepository<Player>, Repository<Player>>();
             services.AddScoped<IRepository<Match>, Repository<Match>>();
             services.AddScoped<IRepository<Tournament>, Repository<Tournament>>();
@@ -23,3 +32,4 @@ namespace TournamentPlanner.Infrastructure
         }
     }
 }
+
