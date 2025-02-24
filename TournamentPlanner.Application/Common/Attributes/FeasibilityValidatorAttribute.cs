@@ -7,7 +7,6 @@ namespace TournamentPlanner.Application.Common.Attributes
     [AttributeUsage(AttributeTargets.Class)]
     public class FeasibilityValidatorAttribute : ValidationAttribute
     {
-        //matchtype, knockoutstartnumber, maxparticipant
         private readonly string _tournamentTypePropName;
         private readonly string _maxParticipantPropName;
         private readonly string _knockoutstartnumberPropName;

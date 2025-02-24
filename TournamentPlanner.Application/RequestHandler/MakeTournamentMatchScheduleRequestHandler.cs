@@ -54,6 +54,7 @@ public class MakeTournamentMatchScheduleRequestHandler : IRequestHandler<MakeTou
         var scheduledMatches = await _matchScheduler.DefaultMatchScheduler(matches.ToList(), request.SchedulingInfo);
 
         //ON-TEST 
+        //TODO: Recalculate this match count logic. This does not seem right
         //! at worst case will have 20 group with 10 match each, with total 200 matches between them. so cant send all the info. remember it. 
 
         tournament.Matches.AddRange(scheduledMatches);
