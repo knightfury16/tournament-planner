@@ -13,16 +13,20 @@ public static class Utility
     public const int QuaterFinalPlayerNumber = 8;
     public const int SemiFinalPlayerNumber = 4;
     public const int FinalPlayerNumber = 2;
+    public const int KnocoutMatchTypeMaxParticipant = 64;
+    public const int GroupMatchTypePPG = 6;
 
-    public static string NavigationPrpertyCreator(params string [] propertyNames){
+    public static string NavigationPrpertyCreator(params string[] propertyNames)
+    {
         string navigationString = string.Empty;
-        for (int i = 0; i < propertyNames.Length; i++){
+        for (int i = 0; i < propertyNames.Length; i++)
+        {
             navigationString += propertyNames[i];
-            if(i != propertyNames.Length-1){
+            if (i != propertyNames.Length - 1)
+            {
                 navigationString += ".";
             }
         }
         return navigationString;
     }
-    
 }
