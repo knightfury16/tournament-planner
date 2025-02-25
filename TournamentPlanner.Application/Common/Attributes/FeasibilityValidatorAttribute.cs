@@ -7,26 +7,22 @@ namespace TournamentPlanner.Application.Common.Attributes
     [AttributeUsage(AttributeTargets.Class)]
     public class FeasibilityValidatorAttribute : ValidationAttribute
     {
+        private const string DefaultTournamentTypePropName = "TournamentType";
+        private const string DefaultMaxParticipantPropName = "MaxParticipant";
+        private const string DefaultKnockOutStartNumber = "KnockOutStartNumber";
         private readonly string _tournamentTypePropName;
         private readonly string _maxParticipantPropName;
         private readonly string _knockoutstartnumberPropName;
 
         public FeasibilityValidatorAttribute(
-            string tournamentTypePropName,
-            string maxparticipantPropName,
-            string knockoutstartnumberPropName
+            string tournamentTypePropName = DefaultTournamentTypePropName,
+            string maxparticipantPropName = DefaultMaxParticipantPropName,
+            string knockoutstartnumberPropName = DefaultKnockOutStartNumber
         )
         {
             _tournamentTypePropName = tournamentTypePropName;
             _maxParticipantPropName = maxparticipantPropName;
             _knockoutstartnumberPropName = knockoutstartnumberPropName;
-        }
-
-        public FeasibilityValidatorAttribute()
-        {
-            _tournamentTypePropName = "TournamentType";
-            _maxParticipantPropName = "MaxParticipant";
-            _knockoutstartnumberPropName = "KnockOutStartNumber";
         }
 
         protected override ValidationResult? IsValid(
@@ -112,4 +108,3 @@ namespace TournamentPlanner.Application.Common.Attributes
         }
     }
 }
-
