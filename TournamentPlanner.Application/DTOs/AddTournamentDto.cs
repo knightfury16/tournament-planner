@@ -6,6 +6,7 @@ using TournamentPlanner.Domain.Enum;
 namespace TournamentPlanner.Application.DTOs;
 
 //* Finding: Property are being validated first then the class validator or DateRangeValidator work. Propagating up
+[FeasibilityValidator]
 [DateRangeValidator]
 public class AddTournamentDto
 {
@@ -26,7 +27,8 @@ public class AddTournamentDto
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public TournamentStatus Status { get; set; } = TournamentStatus.Draft;
-    //TODO: make a validator or extends the current validator to check for Registration last date 
+
+    //TODO: make a validator or extends the current validator to check for Registration last date
     public DateTime? RegistrationLastDate { get; set; }
 
     [Range(1, 104, ErrorMessage = "Max participant must be between 1 and 104")]
@@ -35,15 +37,16 @@ public class AddTournamentDto
     public decimal RegistrationFee { get; set; }
     public int MinimumAgeOfRegistration { get; set; }
 
-    [Range(1, 3, ErrorMessage ="Winner per group value must be between 1 and 3")]
+    [Range(1, 3, ErrorMessage = "Winner per group value must be between 1 and 3")]
     public int WinnerPerGroup { get; set; } = 2; // Default value 2
 
-    [Range(2, 64, ErrorMessage ="Knockout start number should be between 2 to 64")]
+    [Range(2, 64, ErrorMessage = "Knockout start number should be between 2 to 64")]
     [PowerOfTwo] // I am being fancy here, could just make it enum and only allow those values
     public int KnockOutStartNumber { get; set; } = 16; // Default value 16
-    public ResolutionStrategy? ParticipantResolutionStrategy { get; set; } = ResolutionStrategy.StatBased; // Default value StatBased
+    public ResolutionStrategy? ParticipantResolutionStrategy { get; set; } =
+        ResolutionStrategy.StatBased; // Default value StatBased
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public required TournamentType? TournamentType { get; set; } = Domain.Enum.TournamentType.GroupStage; // Default value GroupStage
-
+    public required TournamentType? TournamentType { get; set; } =
+        Domain.Enum.TournamentType.GroupStage; // Default value GroupStage
 }
