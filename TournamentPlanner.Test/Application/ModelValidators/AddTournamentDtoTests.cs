@@ -20,8 +20,14 @@ namespace TournamentPlanner.Test.Application.ModelValidators
         [Theory]
         [InlineData("", "The Name field is required.")]
         [InlineData("Test", "Name should at least 5 character long")]
-        [InlineData("ThisNameIsTooLongThisNameIsTooLongThisNameIsTooLongThisNameIsTooLongThisNameIsTooLongThisNameIsTooLong", "Name should at most 100 charecter long")]
-        public void AddTournamentDto_InvalidName_ShouldFailValidation(string name, string expectedErrorMessage)
+        [InlineData(
+            "ThisNameIsTooLongThisNameIsTooLongThisNameIsTooLongThisNameIsTooLongThisNameIsTooLongThisNameIsTooLong",
+            "Name should at most 100 charecter long"
+        )]
+        public void AddTournamentDto_InvalidName_ShouldFailValidation(
+            string name,
+            string expectedErrorMessage
+        )
         {
             // Arrange
             var dto = GetAValidTournamentDto();
@@ -31,7 +37,10 @@ namespace TournamentPlanner.Test.Application.ModelValidators
             var validationResults = ValidateModel(dto);
 
             // Assert
-            Assert.Contains(validationResults, vr => vr.ErrorMessage!.Contains(expectedErrorMessage));
+            Assert.Contains(
+                validationResults,
+                vr => vr.ErrorMessage!.Contains(expectedErrorMessage)
+            );
         }
 
         [Fact]
@@ -44,8 +53,15 @@ namespace TournamentPlanner.Test.Application.ModelValidators
             var validationResults = ValidateModel(dto);
 
             // Assert
-            Assert.Contains(validationResults, vr => vr.ErrorMessage!.Contains("The start date must be earlier than or equal to the end date"));
+            Assert.Contains(
+                validationResults,
+                vr =>
+                    vr.ErrorMessage!.Contains(
+                        "The start date must be earlier than or equal to the end date"
+                    )
+            );
         }
+
         [Theory]
         [InlineData(0)]
         [InlineData(105)]
@@ -58,7 +74,10 @@ namespace TournamentPlanner.Test.Application.ModelValidators
             var validationResults = ValidateModel(dto);
 
             // Assert
-            Assert.Contains(validationResults, vr => vr.ErrorMessage!.Contains("Max participant must be between 1 and 104"));
+            Assert.Contains(
+                validationResults,
+                vr => vr.ErrorMessage!.Contains("Max participant must be between 1 and 104")
+            );
         }
 
         [Theory]
@@ -72,12 +91,18 @@ namespace TournamentPlanner.Test.Application.ModelValidators
             // Act
             var validationResults = ValidateModel(dto);
             // Assert
-            Assert.Contains(validationResults, vr => vr.ErrorMessage!.Contains("Winner per group value must be between 1 and 3"));
+            Assert.Contains(
+                validationResults,
+                vr => vr.ErrorMessage!.Contains("Winner per group value must be between 1 and 3")
+            );
         }
+
         [Theory]
         [InlineData(0)]
         [InlineData(124)]
-        public void AddTournamentDto_InvalidKnockOutStartNumber_ShouldFailValidation(int knockOutStartNumber)
+        public void AddTournamentDto_InvalidKnockOutStartNumber_ShouldFailValidation(
+            int knockOutStartNumber
+        )
         {
             // Arrange
             var dto = GetAValidTournamentDto();
@@ -85,7 +110,10 @@ namespace TournamentPlanner.Test.Application.ModelValidators
             // Act
             var validationResults = ValidateModel(dto);
             // Assert
-            Assert.Contains(validationResults, vr => vr.ErrorMessage!.Contains("Knockout start number should be between 2 to 64"));
+            Assert.Contains(
+                validationResults,
+                vr => vr.ErrorMessage!.Contains("Knockout start number should be between 2 to 64")
+            );
         }
 
         [Theory]
@@ -94,7 +122,9 @@ namespace TournamentPlanner.Test.Application.ModelValidators
         [InlineData(12)]
         [InlineData(24)]
         [InlineData(48)]
-        public void AddTournamentDto_NonPowerOfTwoKnockOutStartNumber_ShouldFailValidation(int knockOutStartNumber)
+        public void AddTournamentDto_NonPowerOfTwoKnockOutStartNumber_ShouldFailValidation(
+            int knockOutStartNumber
+        )
         {
             // Arrange
             var dto = GetAValidTournamentDto();
@@ -103,7 +133,10 @@ namespace TournamentPlanner.Test.Application.ModelValidators
             var validationResults = ValidateModel(dto);
 
             // Assert
-            Assert.Contains(validationResults, vr => vr.ErrorMessage!.Contains("KnockOutStartNumber must be a power of two"));
+            Assert.Contains(
+                validationResults,
+                vr => vr.ErrorMessage!.Contains("KnockOutStartNumber must be a power of two")
+            );
         }
 
         private AddTournamentDto GetAValidTournamentDto()
@@ -116,14 +149,14 @@ namespace TournamentPlanner.Test.Application.ModelValidators
                 GameType = new GameTypeDto { Name = GameTypeSupported.Chess.ToString() },
                 Status = TournamentStatus.Draft,
                 RegistrationLastDate = DateTime.Now,
-                MaxParticipant = 64,
+                MaxParticipant = 48, //changed for adding the new feasibility validator
                 Venue = "Test Venue",
                 RegistrationFee = 10.00m,
                 MinimumAgeOfRegistration = 18,
                 WinnerPerGroup = 2,
                 KnockOutStartNumber = 16,
                 ParticipantResolutionStrategy = ResolutionStrategy.StatBased,
-                TournamentType = TournamentType.GroupStage
+                TournamentType = TournamentType.GroupStage,
             };
         }
 
@@ -136,3 +169,4 @@ namespace TournamentPlanner.Test.Application.ModelValidators
         }
     }
 }
+
