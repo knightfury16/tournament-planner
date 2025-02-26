@@ -81,7 +81,7 @@ namespace TournamentPlanner.Application.Common.Attributes
             )
             {
                 return new ValidationResult(
-                    "Feasibility Validation Fail: Knockout match type max participants count exceeded."
+                    $"Feasibility Validation Fail: Knockout match type max participants count of {Utility.KnocoutMatchTypeMaxParticipant} exceeded."
                 );
             }
 
@@ -91,7 +91,7 @@ namespace TournamentPlanner.Application.Common.Attributes
                 if (ppg > Utility.GroupMatchTypePPG)
                 {
                     return new ValidationResult(
-                        "Feasibility Validation Fail: Player per group max count exceeded."
+                        $"Feasibility Validation Fail: Player per group max count of {Utility.GroupMatchTypePPG} exceeded."
                     );
                 }
             }
