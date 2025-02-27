@@ -22,6 +22,16 @@
         <mat-error *ngIf="addTournamentForm.get('endDate')!.hasError('required')">End Date is required.</mat-error>
       </mat-form-field>
       <mat-form-field class="form-field">
+        <mat-label>Registration Last Date</mat-label>
+        <input matInput [matDatepicker]="registrationLastDatePicker" formControlName="registrationLastDate">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="registrationLastDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #registrationLastDatePicker></mat-datepicker>
+        <mat-error
+          *ngIf="addTournamentForm.get('registrationLastDate')!.hasError('invalidRegistrationLastDate')">Registration
+          Last Date must be after today and before the start date.</mat-error>
+      </mat-form-field>
+      <mat-form-field class="form-field">
         <mat-label>Game Type</mat-label>
         <mat-select formControlName="gameType">
           <mat-option *ngFor="let type of gameTypeSupported | keyvalue" [value]="type.key">{{type.value}}</mat-option>
@@ -37,14 +47,12 @@
         <mat-error *ngIf="addTournamentForm.get('status')!.hasError('required')">Status is required.</mat-error>
       </mat-form-field>
       <mat-form-field class="form-field">
-        <mat-label>Registration Last Date</mat-label>
-        <input matInput [matDatepicker]="registrationLastDatePicker" formControlName="registrationLastDate">
-        <mat-hint>MM/DD/YYYY</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="registrationLastDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #registrationLastDatePicker></mat-datepicker>
-        <mat-error
-          *ngIf="addTournamentForm.get('registrationLastDate')!.hasError('invalidRegistrationLastDate')">Registration
-          Last Date must be after today and before the start date.</mat-error>
+        <mat-label>Tournament Type</mat-label>
+        <mat-select formControlName="tournamentType">
+          <mat-option *ngFor="let type of this.tournamentType | keyvalue" [value]="type.key">{{type.value}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="addTournamentForm.get('tournamentType')!.hasError('required')">Tournament Type is
+          required.</mat-error>
       </mat-form-field>
       <mat-form-field class="form-field">
         <mat-label>Max Participant</mat-label>
@@ -69,14 +77,6 @@
           required.</mat-error>
         <mat-error *ngIf="addTournamentForm.get('knockOutStartNumber')!.hasError('invalidPowerOfTwo')">Knock Out Start
           Number must be a power of 2.</mat-error>
-      </mat-form-field>
-      <mat-form-field class="form-field">
-        <mat-label>Tournament Type</mat-label>
-        <mat-select formControlName="tournamentType">
-          <mat-option *ngFor="let type of this.tournamentType | keyvalue" [value]="type.key">{{type.value}}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="addTournamentForm.get('tournamentType')!.hasError('required')">Tournament Type is
-          required.</mat-error>
       </mat-form-field>
       @if (this.errors()) {
           @for (error of errors(); track $index) {
