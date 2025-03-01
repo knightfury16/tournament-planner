@@ -59,7 +59,7 @@ export class AddTournamentComponent implements OnInit {
     venue: new FormControl<string>(''),
     registrationFee: new FormControl<string>(''),
     minimumAgeOfRegistration: new FormControl<number | null>(null),
-    knockOutStartNumber: new FormControl<number>(8, [Validators.required, this.powerOfTwoValidator]),
+    knockOutStartNumber: new FormControl<number>(8, [Validators.required]),
     tournamentType: new FormControl<TournamentType | null>(null, [Validators.required]),
   });
 
@@ -124,6 +124,10 @@ export class AddTournamentComponent implements OnInit {
       return null;
     }
     return { 'invalidRegistrationLastDate': true };
+  }
+
+  public getKnockoutStartNumber(): number[] {
+    return [8, 16, 32, 64];
   }
 
   private powerOfTwoValidator(control: AbstractControl) {

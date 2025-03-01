@@ -59,11 +59,11 @@
       </mat-form-field>
       <mat-form-field class="form-field" *ngIf="this.showKnockoutField()">
         <mat-label>Knock Out Start Number</mat-label>
-        <input matInput type="number" formControlName="knockOutStartNumber">
+        <mat-select formControlName="knockOutStartNumber">
+          <mat-option *ngFor="let powerValue of getKnockoutStartNumber()" [value]="powerValue" >{{powerValue}}</mat-option>
+        </mat-select>
         <mat-error *ngIf="addTournamentForm.get('knockOutStartNumber')!.hasError('required')">Knock Out Start Number is
           required.</mat-error>
-        <mat-error *ngIf="addTournamentForm.get('knockOutStartNumber')!.hasError('invalidPowerOfTwo')">Knock Out Start
-          Number must be a power of 2.</mat-error>
       </mat-form-field>
       <mat-form-field class="form-field">
         <mat-label>Max Participant</mat-label>
