@@ -37,8 +37,7 @@ public class AddTournamentDto
     public decimal RegistrationFee { get; set; }
     public int MinimumAgeOfRegistration { get; set; }
 
-    [Range(1, 3, ErrorMessage = "Winner per group value must be between 1 and 3")]
-    public int WinnerPerGroup { get; set; } = 2; // Default value 2
+    public int WinnerPerGroup { get; set; } = 2; // Default value 2. Will not let the User choose. This is enforced by me.
 
     [Range(2, 64, ErrorMessage = "Knockout start number should be between 2 to 64")]
     [PowerOfTwo] // I am being fancy here, could just make it enum and only allow those values
