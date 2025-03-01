@@ -31,8 +31,8 @@ public class AddTournamentDto
     //TODO: make a validator or extends the current validator to check for Registration last date
     public DateTime? RegistrationLastDate { get; set; }
 
-    [Range(1, 104, ErrorMessage = "Max participant must be between 1 and 104")]
-    public int MaxParticipant { get; set; } = 104; // Default: 26 Group (A-Z) * 4 per group = 104
+    // In theory the Feasibility Validator will take care of anything unsual.
+    public int MaxParticipant { get; set; } = 64; // This is the max value for knockout tournament type. Putting here just in case.
     public string? Venue { get; set; }
     public decimal RegistrationFee { get; set; }
     public int MinimumAgeOfRegistration { get; set; }

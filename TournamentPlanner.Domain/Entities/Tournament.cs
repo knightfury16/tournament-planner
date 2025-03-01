@@ -3,7 +3,6 @@ namespace TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Common;
 using TournamentPlanner.Domain.Enum;
 
-
 public class Tournament : BaseEntity
 {
     public required string Name { get; set; }
@@ -15,7 +14,7 @@ public class Tournament : BaseEntity
     public DateTime? EndDate { get; set; }
     public DateTime? RegistrationLastDate { get; set; }
 
-    public int MaxParticipant { get; set; } // Default: 26 Group (A-Z) * 4 per group = 104
+    public int MaxParticipant { get; set; } // Max participants depends on the Tournament Type now.
     public string? Venue { get; set; }
 
     public decimal RegistrationFee { get; set; }
@@ -30,7 +29,7 @@ public class Tournament : BaseEntity
     public required TournamentType? TournamentType { get; set; } // Default value GroupStage
 
     //setting the inital current state during creation of tournament in datacontext, based on tournament type
-    public TournamentState CurrentState { get; set; } 
+    public TournamentState CurrentState { get; set; }
 
     public required GameType GameType { get; set; }
     public int GameTypeId { get; set; }
@@ -44,5 +43,4 @@ public class Tournament : BaseEntity
 
     // Added to support search functionality
     public bool IsSearchable => Status != TournamentStatus.Draft; //TODO: If not searchable dont include it in the query
-
 }
