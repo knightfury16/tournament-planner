@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TournamentPlannerService } from '../tournament-planner.service';
@@ -13,6 +13,7 @@ import { MatOptionModule, provideNativeDateAdapter } from '@angular/material/cor
 import { MatSelectModule } from '@angular/material/select';
 import { LoadingService } from '../../Shared/loading.service';
 import { firstValueFrom } from 'rxjs';
+import { trimAllSpace } from '../../Shared/Utility/stringUtility';
 
 @Component({
   selector: 'app-add-tournament',
@@ -24,19 +25,28 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './add-tournament.component.html',
   styleUrl: './add-tournament.component.scss',
 })
-export class AddTournamentComponent {
+export class AddTournamentComponent implements OnInit {
   public addTournamentDto: AddTournamentDto | null = null;
   public readonly gameTypeSupported = GameTypeSupported;
   public readonly tournamentStatus = TournamentStatus;
   public readonly tournamentType = TournamentType;
   public loadingService = inject(LoadingService);
   public errors = signal<string[] | null>(null);
+  public showKnockoutField = signal<boolean>(false);
 
 
   constructor(
     private tp: TournamentPlannerService,
     private router: Router
   ) { }
+
+  ngOnInit(): void {
+    this.UpdateKnockoutFieldVisibility();
+
+    this.addTournamentForm.get('tournamentType')?.valueChanges.subscribe(value => {
+      this.UpdateKnockoutFieldVisibility();
+    })
+  }
 
   public addTournamentForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -52,6 +62,11 @@ export class AddTournamentComponent {
     knockOutStartNumber: new FormControl<number>(8, [Validators.required, this.powerOfTwoValidator]),
     tournamentType: new FormControl<TournamentType | null>(null, [Validators.required]),
   });
+
+  public UpdateKnockoutFieldVisibility(): void {
+    var tournamentTypeValue = this.addTournamentForm.get('tournamentType')?.value;
+    this.showKnockoutField.set(tournamentTypeValue === trimAllSpace(this.tournamentType.GroupStage));
+  }
 
   public async onClickCreate() {
     if (this.addTournamentForm.valid) {
