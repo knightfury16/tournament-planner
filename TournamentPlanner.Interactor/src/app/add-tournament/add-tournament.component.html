@@ -26,7 +26,7 @@
       </mat-form-field>
       <mat-form-field class="form-field">
         <mat-label>Registration Last Date</mat-label>
-        <input matInput [matDatepicker]="registrationLastDatePicker" formControlName="registrationLastDate">
+        <input matInput [matDatepickerFilter]="this.disablePastDates" [matDatepicker]="registrationLastDatePicker" formControlName="registrationLastDate">
         <mat-hint>MM/DD/YYYY</mat-hint>
         <mat-datepicker-toggle matIconSuffix [for]="registrationLastDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #registrationLastDatePicker></mat-datepicker>

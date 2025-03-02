@@ -178,6 +178,15 @@ export class AddTournamentComponent implements OnInit {
     }
   }
 
+  // Function to disable past dates
+  // I can also disable date with my custom fuction
+  disablePastDates = (date: Date | null): boolean => {
+    if (!date) return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set time to midnight to compare only dates
+    return date >= today;
+  };
+
   public getKnockoutStartNumber(): number[] {
     return [8, 16, 32, 64];
   }
