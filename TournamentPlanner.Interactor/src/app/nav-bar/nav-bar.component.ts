@@ -26,7 +26,7 @@ import { MatDividerModule } from '@angular/material/divider';
   styleUrl: './nav-bar.component.scss',
 })
 export class NavBarComponent {
-  public ApplicationTitle: string = "TP"
+  public ApplicationTitle: string = "Tournament Planner"
   public userRole: string | null = null; // Define userRole variable
   private router = inject(Router);
   private loading = inject(LoadingService);
