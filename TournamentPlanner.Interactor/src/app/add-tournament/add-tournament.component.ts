@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { Router } from '@angular/router';
-import { AddTournamentDto, TournamentStatus, GameTypeSupported, ResolutionStrategy, TournamentType, GameTypeDto } from '../tp-model/TpModel';
+import { AddTournamentDto, TournamentStatus, GameTypeSupported, ResolutionStrategy, TournamentType, GameTypeDto, KnocoutMatchTypeMaxParticipant, GroupMatchTypePPG, PlayerAdvanceFromPerGroup } from '../tp-model/TpModel';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -33,6 +33,7 @@ export class AddTournamentComponent implements OnInit {
   public loadingService = inject(LoadingService);
   public errors = signal<string[] | null>(null);
   public showKnockoutField = signal<boolean>(false);
+  public maxParticipantLimit = signal<number | null>(null);
 
 
   constructor(
@@ -45,6 +46,10 @@ export class AddTournamentComponent implements OnInit {
 
     this.addTournamentForm.get('tournamentType')?.valueChanges.subscribe(value => {
       this.UpdateKnockoutFieldVisibility();
+      this.UpdateMaxCountLimit();
+    })
+    this.addTournamentForm.get('knockOutStartNumber')?.valueChanges.subscribe(_ => {
+      this.UpdateMaxCountLimit();
     })
   }
 
@@ -55,7 +60,7 @@ export class AddTournamentComponent implements OnInit {
     gameType: new FormControl<GameTypeSupported | null>(null, [Validators.required]),
     status: new FormControl<TournamentStatus>(TournamentStatus.Draft, [Validators.required]),
     registrationLastDate: new FormControl<Date | null>(null, [this.registrationLastDateValidator]),
-    maxParticipant: new FormControl<string>(''),
+    maxParticipant: new FormControl<string>('', [this.maxParticipantValidator.bind(this)]),
     venue: new FormControl<string>(''),
     registrationFee: new FormControl<string>(''),
     minimumAgeOfRegistration: new FormControl<number | null>(null),
@@ -66,6 +71,42 @@ export class AddTournamentComponent implements OnInit {
   public UpdateKnockoutFieldVisibility(): void {
     var tournamentTypeValue = this.addTournamentForm.get('tournamentType')?.value;
     this.showKnockoutField.set(tournamentTypeValue === trimAllSpace(this.tournamentType.GroupStage));
+  }
+
+  public UpdateMaxCountLimit(): void {
+
+    var tournamentTypeValue = this.addTournamentForm.get('tournamentType')?.value;
+    var knockOutStartNumberValue = this.addTournamentForm.get('knockOutStartNumber')?.value;
+    var currentMaxParticipantValue = this.addTournamentForm.get('maxParticipant')?.value;
+    var currentMaxParticipantNumber = currentMaxParticipantValue ? parseInt(currentMaxParticipantValue) : null;
+
+    if (tournamentTypeValue == trimAllSpace(this.tournamentType.Knockout)) {
+      this.maxParticipantLimit.set(KnocoutMatchTypeMaxParticipant);
+    }
+
+    else if (tournamentTypeValue == trimAllSpace(this.tournamentType.GroupStage) && knockOutStartNumberValue) {
+      var maxLimit = (GroupMatchTypePPG / PlayerAdvanceFromPerGroup) * knockOutStartNumberValue;
+      this.maxParticipantLimit.set(maxLimit);
+    }
+
+    // Update the maxParticipant field value if needed
+    if (this.maxParticipantLimit() !== null) {
+      if (!currentMaxParticipantValue ||
+        (currentMaxParticipantNumber && currentMaxParticipantNumber > this.maxParticipantLimit()!)) {
+        this.addTournamentForm.get('maxParticipant')?.setValue(this.maxParticipantLimit()!.toString());
+      }
+    }
+  }
+
+  // Custom validator for maxParticipant
+  public maxParticipantValidator(control: AbstractControl) {
+    const value = control.value ? parseInt(control.value) : null;
+    const limit = this.maxParticipantLimit();
+
+    if (value && limit && value > limit) {
+      return { 'exceedsMaxLimit': true };
+    }
+    return null;
   }
 
   public async onClickCreate() {
