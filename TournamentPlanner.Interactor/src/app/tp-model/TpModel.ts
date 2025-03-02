@@ -1,4 +1,8 @@
 export const NotAvailable = "N/A";
+export const KnocoutMatchTypeMaxParticipant = 64;
+export const GroupMatchTypePPG = 6;
+export const PlayerAdvanceFromPerGroup = 2;
+
 export interface TournamentDto {
   id: number;
   name: string | undefined;
@@ -186,7 +190,7 @@ export type CanIScheduleDto = {
 }
 
 
-export enum MatchTypeTypes{
+export enum MatchTypeTypes {
   Group = "Group",
   KnockOut = "KnockOut"
 }
