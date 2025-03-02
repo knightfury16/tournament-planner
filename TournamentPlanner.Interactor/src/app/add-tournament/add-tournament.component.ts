@@ -34,12 +34,27 @@ export class AddTournamentComponent implements OnInit {
   public errors = signal<string[] | null>(null);
   public showKnockoutField = signal<boolean>(false);
   public maxParticipantLimit = signal<number | null>(null);
-
+  public addTournamentForm: FormGroup;
 
   constructor(
     private tp: TournamentPlannerService,
     private router: Router
-  ) { }
+  ) {
+    this.addTournamentForm = new FormGroup({
+      name: new FormControl('', [Validators.required]),
+      startDate: new FormControl<Date>(new Date(), [Validators.required]),
+      endDate: new FormControl<Date>(new Date(), [Validators.required]),
+      gameType: new FormControl<GameTypeSupported | null>(null, [Validators.required]),
+      status: new FormControl<TournamentStatus>(TournamentStatus.Draft, [Validators.required]),
+      registrationLastDate: new FormControl<Date | null>(null, [this.registrationLastDateValidator.bind(this)]),
+      maxParticipant: new FormControl<string>('', [this.maxParticipantValidator.bind(this)]),
+      venue: new FormControl<string>(''),
+      registrationFee: new FormControl<string>(''),
+      minimumAgeOfRegistration: new FormControl<number | null>(null),
+      knockOutStartNumber: new FormControl<number>(8, [Validators.required]),
+      tournamentType: new FormControl<TournamentType | null>(null, [Validators.required]),
+    });
+  }
 
   ngOnInit(): void {
     this.UpdateKnockoutFieldVisibility();
@@ -56,20 +71,6 @@ export class AddTournamentComponent implements OnInit {
     })
   }
 
-  public addTournamentForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    startDate: new FormControl<Date>(new Date(), [Validators.required]),
-    endDate: new FormControl<Date>(new Date(), [Validators.required]),
-    gameType: new FormControl<GameTypeSupported | null>(null, [Validators.required]),
-    status: new FormControl<TournamentStatus>(TournamentStatus.Draft, [Validators.required]),
-    registrationLastDate: new FormControl<Date | null>(null, [this.registrationLastDateValidator.bind(this)]),
-    maxParticipant: new FormControl<string>('', [this.maxParticipantValidator.bind(this)]),
-    venue: new FormControl<string>(''),
-    registrationFee: new FormControl<string>(''),
-    minimumAgeOfRegistration: new FormControl<number | null>(null),
-    knockOutStartNumber: new FormControl<number>(8, [Validators.required]),
-    tournamentType: new FormControl<TournamentType | null>(null, [Validators.required]),
-  });
 
   public UpdateKnockoutFieldVisibility(): void {
     var tournamentTypeValue = this.addTournamentForm.get('tournamentType')?.value;
