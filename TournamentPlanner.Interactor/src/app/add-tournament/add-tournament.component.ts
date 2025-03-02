@@ -59,7 +59,7 @@ export class AddTournamentComponent implements OnInit {
     endDate: new FormControl<Date>(new Date(), [Validators.required]),
     gameType: new FormControl<GameTypeSupported | null>(null, [Validators.required]),
     status: new FormControl<TournamentStatus>(TournamentStatus.Draft, [Validators.required]),
-    registrationLastDate: new FormControl<Date | null>(null, [this.registrationLastDateValidator]),
+    registrationLastDate: new FormControl<Date | null>(null, [this.registrationLastDateValidator.bind(this)]),
     maxParticipant: new FormControl<string>('', [this.maxParticipantValidator.bind(this)]),
     venue: new FormControl<string>(''),
     registrationFee: new FormControl<string>(''),
