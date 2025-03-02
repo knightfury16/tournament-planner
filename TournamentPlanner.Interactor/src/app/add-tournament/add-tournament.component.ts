@@ -194,6 +194,7 @@ export class AddTournamentComponent implements OnInit {
   disablePastDates = (date: Date | null): boolean => {
     if (!date) return false;
     const today = new Date();
+    today.setDate(today.getDate() + 1);
     today.setHours(0, 0, 0, 0); // Set time to midnight to compare only dates
     return date >= today;
   };
