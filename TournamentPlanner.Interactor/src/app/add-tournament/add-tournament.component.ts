@@ -51,6 +51,9 @@ export class AddTournamentComponent implements OnInit {
     this.addTournamentForm.get('knockOutStartNumber')?.valueChanges.subscribe(_ => {
       this.UpdateMaxCountLimit();
     })
+    this.addTournamentForm.get('startDate')?.valueChanges.subscribe(_ => {
+      this.validateRegistrationLastDate();
+    })
   }
 
   public addTournamentForm = new FormGroup({
@@ -166,6 +169,13 @@ export class AddTournamentComponent implements OnInit {
       return null;
     }
     return { 'invalidRegistrationLastDate': true };
+  }
+
+  validateRegistrationLastDate() {
+    const control = this.addTournamentForm.get("registrationLastDate");
+    if (control) {
+      control.updateValueAndValidity();
+    }
   }
 
   public getKnockoutStartNumber(): number[] {
