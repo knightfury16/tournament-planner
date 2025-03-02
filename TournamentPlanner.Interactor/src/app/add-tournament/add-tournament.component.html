@@ -14,7 +14,7 @@
       </mat-form-field>
       <mat-form-field class="form-field">
         <mat-label>Select start and end Date</mat-label>
-        <mat-date-range-input [rangePicker]="duration">
+        <mat-date-range-input [rangePicker]="duration" [min]="this.minStartDate">
           <input matStartDate placeholder="Start date" formControlName="startDate">
           <input matEndDate placeholder="End date" formControlName="endDate">
         </mat-date-range-input>

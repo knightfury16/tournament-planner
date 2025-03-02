@@ -35,15 +35,25 @@ export class AddTournamentComponent implements OnInit {
   public showKnockoutField = signal<boolean>(false);
   public maxParticipantLimit = signal<number | null>(null);
   public addTournamentForm: FormGroup;
+  public today: Date;
+  public minStartDate: Date;
+  public minEndDate: Date;
 
   constructor(
     private tp: TournamentPlannerService,
     private router: Router
   ) {
+    this.today = new Date();
+    this.minStartDate = new Date();
+    this.minStartDate.setDate(this.today.getDate() + 2); //adding 2 days because i need to have a registratin last date
+
+    this.minEndDate = new Date();
+    this.minEndDate.setDate(this.minStartDate.getDate() + 1); //adding 1 more day with the start day by default
+
     this.addTournamentForm = new FormGroup({
       name: new FormControl('', [Validators.required]),
-      startDate: new FormControl<Date>(new Date(), [Validators.required]),
-      endDate: new FormControl<Date>(new Date(), [Validators.required]),
+      startDate: new FormControl<Date>(this.minStartDate, [Validators.required]),
+      endDate: new FormControl<Date>(this.minEndDate, [Validators.required]),
       gameType: new FormControl<GameTypeSupported | null>(null, [Validators.required]),
       status: new FormControl<TournamentStatus>(TournamentStatus.Draft, [Validators.required]),
       registrationLastDate: new FormControl<Date | null>(null, [this.registrationLastDateValidator.bind(this)]),
