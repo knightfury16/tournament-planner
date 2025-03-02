@@ -161,6 +161,7 @@ export class AddTournamentComponent implements OnInit {
     const registrationLastDate = control.value
     var val = new Date(registrationLastDate);
     const startDate = control.parent?.get('startDate')?.value;
+    if (registrationLastDate == null) return null; //since this is nullbale
     if (registrationLastDate && startDate && new Date(registrationLastDate) >= new Date() && new Date(registrationLastDate) < new Date(startDate)) {
       return null;
     }
