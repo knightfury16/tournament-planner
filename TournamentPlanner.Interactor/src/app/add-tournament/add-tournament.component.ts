@@ -203,11 +203,4 @@ export class AddTournamentComponent implements OnInit {
     return [8, 16, 32, 64];
   }
 
-  private powerOfTwoValidator(control: AbstractControl) {
-    const value = parseInt(control.value);
-    if (value && value > 0 && (value & (value - 1)) === 0) {
-      return null;
-    }
-    return { 'invalidPowerOfTwo': true };
-  }
 }
