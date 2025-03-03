@@ -137,7 +137,7 @@ export class AddTournamentComponent implements OnInit {
         registrationFee: this.addTournamentForm.value.registrationFee ? parseInt(this.addTournamentForm.value.registrationFee) : undefined,
         minimumAgeOfRegistration: this.addTournamentForm.value.minimumAgeOfRegistration ? this.addTournamentForm.value.minimumAgeOfRegistration : undefined,
         knockOutStartNumber: this.addTournamentForm.value.knockOutStartNumber ?? undefined,
-        winnerPerGroup: 2, // locking it to 2
+        winnerPerGroup: PlayerAdvanceFromPerGroup, // locking it to 2
         participantResolutionStrategy: ResolutionStrategy.StatBased, // Assuming a default strategy
         tournamentType: this.addTournamentForm.value.tournamentType ?? this.tournamentType.GroupStage,
       };
