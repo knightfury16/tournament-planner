@@ -62,8 +62,8 @@
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Status</mat-label>
               <mat-select formControlName="status">
-                <mat-option *ngFor="let status of tournamentStatus | keyvalue"
-                  [value]="status.key">{{status.value}}</mat-option>
+                <mat-option *ngFor="let status of this.curatedStatus()"
+                  [value]="status">{{status}}</mat-option>
               </mat-select>
               <mat-error *ngIf="addTournamentForm.get('status')!.hasError('required')">Status is required.</mat-error>
             </mat-form-field>

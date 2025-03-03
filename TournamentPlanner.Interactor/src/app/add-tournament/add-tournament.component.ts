@@ -55,7 +55,7 @@ export class AddTournamentComponent implements OnInit {
       startDate: new FormControl<Date>(this.minStartDate, [Validators.required]),
       endDate: new FormControl<Date>(this.minEndDate, [Validators.required]),
       gameType: new FormControl<GameTypeSupported | null>(null, [Validators.required]),
-      status: new FormControl<TournamentStatus>(TournamentStatus.Draft, [Validators.required]),
+      status: new FormControl<string>(TournamentStatus.Draft, [Validators.required]),
       registrationLastDate: new FormControl<Date | null>(null, [this.registrationLastDateValidator.bind(this)]),
       maxParticipant: new FormControl<string>('', [this.maxParticipantValidator.bind(this)]),
       venue: new FormControl<string>(''),
@@ -203,4 +203,7 @@ export class AddTournamentComponent implements OnInit {
     return [8, 16, 32, 64];
   }
 
+  public curatedStatus(): string[] {
+    return [this.tournamentStatus.Draft, this.tournamentStatus.RegistrationOpen]
+  }
 }
