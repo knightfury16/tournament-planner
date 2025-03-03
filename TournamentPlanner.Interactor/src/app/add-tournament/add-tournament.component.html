@@ -1,99 +1,150 @@
 <mat-card class="container">
-
   <mat-card-header class="header">
     <mat-card-title class="card-title">Add Tournament</mat-card-title>
   </mat-card-header>
 
-
   <mat-card-content class="card-content">
     <form [formGroup]="addTournamentForm" class="add-tournament-form">
-      <mat-form-field class="form-field">
-        <mat-label>Tournament Name</mat-label>
-        <input matInput type="text" formControlName="name">
-        <mat-error *ngIf="addTournamentForm.get('name')!.hasError('required')">Name is required.</mat-error>
-      </mat-form-field>
-      <mat-form-field class="form-field">
-        <mat-label>Select start and end Date</mat-label>
-        <mat-date-range-input [rangePicker]="duration" [min]="this.minStartDate">
-          <input matStartDate placeholder="Start date" formControlName="startDate">
-          <input matEndDate placeholder="End date" formControlName="endDate">
-        </mat-date-range-input>
-        <mat-hint>MM/DD/YYYY–MM/DD/YYYY</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="duration"></mat-datepicker-toggle>
-        <mat-date-range-picker #duration></mat-date-range-picker>
-        <mat-error *ngIf="addTournamentForm.get('startDate')!.hasError('required')">Start Date is required.</mat-error>
-        <mat-error *ngIf="addTournamentForm.get('endDate')!.hasError('required')">End Date is required.</mat-error>
-      </mat-form-field>
-      <mat-form-field class="form-field">
-        <mat-label>Registration Last Date</mat-label>
-        <input matInput [matDatepickerFilter]="this.disablePastDates" [matDatepicker]="registrationLastDatePicker" formControlName="registrationLastDate">
-        <mat-hint>MM/DD/YYYY</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="registrationLastDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #registrationLastDatePicker></mat-datepicker>
-        <mat-error
-          *ngIf="addTournamentForm.get('registrationLastDate')!.hasError('invalidRegistrationLastDate')">Registration
-          Last Date must be after today and before the start date.</mat-error>
-      </mat-form-field>
-      <mat-form-field class="form-field">
-        <mat-label>Game Type</mat-label>
-        <mat-select formControlName="gameType">
-          <mat-option *ngFor="let type of gameTypeSupported | keyvalue" [value]="type.key">{{type.value}}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="addTournamentForm.get('gameType')!.hasError('required')">Game Type is required.</mat-error>
-      </mat-form-field>
-      <mat-form-field class="form-field">
-        <mat-label>Status</mat-label>
-        <mat-select formControlName="status">
-          <mat-option *ngFor="let status of tournamentStatus | keyvalue"
-            [value]="status.key">{{status.value}}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="addTournamentForm.get('status')!.hasError('required')">Status is required.</mat-error>
-      </mat-form-field>
-      <mat-form-field class="form-field">
-        <mat-label>Tournament Type</mat-label>
-        <mat-select formControlName="tournamentType">
-          <mat-option *ngFor="let type of this.tournamentType | keyvalue" [value]="type.key">{{type.value}}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="addTournamentForm.get('tournamentType')!.hasError('required')">Tournament Type is
-          required.</mat-error>
-      </mat-form-field>
-      <mat-form-field class="form-field" *ngIf="this.showKnockoutField()">
-        <mat-label>Knock Out Start Number</mat-label>
-        <mat-select formControlName="knockOutStartNumber">
-          <mat-option *ngFor="let powerValue of getKnockoutStartNumber()" [value]="powerValue" >{{powerValue}}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="addTournamentForm.get('knockOutStartNumber')!.hasError('required')">Knock Out Start Number is
-          required.</mat-error>
-      </mat-form-field>
-      <mat-form-field class="form-field">
-        <mat-label>Max Participant</mat-label>
-        <input matInput type="number" formControlName="maxParticipant">
-        <mat-hint *ngIf="maxParticipantLimit()">Maximum allowed: {{maxParticipantLimit()}}</mat-hint>
-        <mat-error *ngIf="addTournamentForm.get('maxParticipant')!.hasError('exceedsMaxLimit')">
-          Value cannot exceed the maximum limit of {{maxParticipantLimit()}}
-        </mat-error>
-      </mat-form-field>
-      <mat-form-field class="form-field">
-        <mat-label>Registration Fee</mat-label>
-        <input matInput type="number" placeholder="In USD" formControlName="registrationFee">
-      </mat-form-field>
-      <mat-form-field class="form-field">
-        <mat-label>Venue</mat-label>
-        <input matInput type="text" formControlName="venue">
-      </mat-form-field>
-      <mat-form-field class="form-field">
-        <mat-label>Minimum Age of Registration</mat-label>
-        <input matInput type="number" formControlName="minimumAgeOfRegistration">
-      </mat-form-field>
+      <div class="form-grid">
+        <!-- Basic Information Section -->
+        <div class="form-section">
+          <h3 class="section-title">Basic Information</h3>
+
+          <!-- Tournament Name Field -->
+          <mat-form-field appearance="outline" class="form-field field-spacing title-field">
+            <mat-label>Tournament Name</mat-label>
+            <input matInput type="text" formControlName="name">
+            <mat-error *ngIf="addTournamentForm.get('name')!.hasError('required')">Name is required.</mat-error>
+          </mat-form-field>
+
+          <!-- Tournament Duration Field -->
+          <mat-form-field appearance="outline" class="form-field field-spacing duration-field">
+            <mat-label>Select start and end Date</mat-label>
+            <mat-date-range-input [rangePicker]="duration" [min]="this.minStartDate">
+              <input matStartDate placeholder="Start date" formControlName="startDate">
+              <input matEndDate placeholder="End date" formControlName="endDate">
+            </mat-date-range-input>
+            <mat-hint>MM/DD/YYYY–MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="duration"></mat-datepicker-toggle>
+            <mat-date-range-picker #duration></mat-date-range-picker>
+            <mat-error *ngIf="addTournamentForm.get('startDate')!.hasError('required')">Start Date is required.</mat-error>
+            <mat-error *ngIf="addTournamentForm.get('endDate')!.hasError('required')">End Date is required.</mat-error>
+          </mat-form-field>
+
+          <!-- Registration Deadline Field -->
+          <mat-form-field appearance="outline" class="form-field field-spacing last-field">
+            <mat-label>Registration Last Date</mat-label>
+            <input matInput [matDatepickerFilter]="this.disablePastDates" [matDatepicker]="registrationLastDatePicker" formControlName="registrationLastDate">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="registrationLastDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #registrationLastDatePicker></mat-datepicker>
+            <mat-error
+              *ngIf="addTournamentForm.get('registrationLastDate')!.hasError('invalidRegistrationLastDate')">Registration
+              Last Date must be after today and before the start date.</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Tournament Settings Section -->
+        <div class="form-section">
+          <h3 class="section-title">Tournament Settings</h3>
+
+          <div class="form-row">
+            <!-- Game Type Selection Field -->
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Game Type</mat-label>
+              <mat-select formControlName="gameType">
+                <mat-option *ngFor="let type of gameTypeSupported | keyvalue" [value]="type.key">{{type.value}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="addTournamentForm.get('gameType')!.hasError('required')">Game Type is required.</mat-error>
+            </mat-form-field>
+
+            <!-- Tournament Status Field -->
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="status">
+                <mat-option *ngFor="let status of tournamentStatus | keyvalue"
+                  [value]="status.key">{{status.value}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="addTournamentForm.get('status')!.hasError('required')">Status is required.</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <!-- Tournament Type Selection Field -->
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Tournament Type</mat-label>
+              <mat-select formControlName="tournamentType">
+                <mat-option *ngFor="let type of this.tournamentType | keyvalue" [value]="type.key">{{type.value}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="addTournamentForm.get('tournamentType')!.hasError('required')">Tournament Type is
+                required.</mat-error>
+            </mat-form-field>
+
+            <!-- Knockout Start Number Field - Only visible for Group Stage tournaments -->
+            <mat-form-field appearance="outline" class="form-field" *ngIf="this.showKnockoutField()">
+              <mat-label>Knock Out Start Number</mat-label>
+              <mat-select formControlName="knockOutStartNumber">
+                <mat-option *ngFor="let powerValue of getKnockoutStartNumber()" [value]="powerValue">{{powerValue}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="addTournamentForm.get('knockOutStartNumber')!.hasError('required')">Knock Out Start Number is
+                required.</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Participant Settings Section -->
+        <div class="form-section">
+          <h3 class="section-title">Participant Settings</h3>
+
+          <div class="form-row">
+            <!-- Maximum Number of Participants Field -->
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Max Participant</mat-label>
+              <input matInput type="number" formControlName="maxParticipant">
+              <mat-hint *ngIf="maxParticipantLimit()">Maximum allowed: {{maxParticipantLimit()}}</mat-hint>
+              <mat-error *ngIf="addTournamentForm.get('maxParticipant')!.hasError('exceedsMaxLimit')">
+                Value cannot exceed the maximum limit of {{maxParticipantLimit()}}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Minimum Age Requirement Field -->
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Minimum Age of Registration</mat-label>
+              <input matInput type="number" formControlName="minimumAgeOfRegistration">
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <!-- Registration Fee Field -->
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Registration Fee</mat-label>
+              <input matInput type="number" placeholder="In USD" formControlName="registrationFee">
+              <span matTextSuffix>USD</span>
+            </mat-form-field>
+
+            <!-- Tournament Venue Field -->
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Venue</mat-label>
+              <input matInput type="text" formControlName="venue">
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Messages Container -->
       @if (this.errors()) {
+        <div class="error-container">
           @for (error of errors(); track $index) {
-              <mat-error class="error">{{error}}</mat-error>
+            <mat-error class="error">{{error}}</mat-error>
           }
+        </div>
       }
     </form>
   </mat-card-content>
+
+  <!-- Form Submission Button -->
   <mat-card-actions class="card-actions">
-    <button mat-stroked-button class="my-button" (click)="this.onClickCreate()"
+    <button mat-raised-button color="primary" class="submit-button" (click)="this.onClickCreate()"
       [disabled]="!this.addTournamentForm.valid">Add Tournament</button>
   </mat-card-actions>
 </mat-card>

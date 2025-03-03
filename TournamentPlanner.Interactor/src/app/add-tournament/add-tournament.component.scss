@@ -1,30 +1,117 @@
 .container {
-    height: 100%;
-    // border: 1px solid red;
+  max-width: 900px;
+  margin: 2rem auto;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 }
 
-.header{
-    margin-bottom: 10px;
-    align-self: center;
+.header {
+  padding: 1.5rem 1.5rem 0;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
 }
 
-.card-actions{
-    align-self: center;
-    font-size: large;
-    
+.card-title {
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #333;
 }
 
-.my-button{
-    padding: 10px;
-    font-size: large;
+.card-content {
+  padding: 0 1.5rem;
 }
 
 .add-tournament-form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+  display: flex;
+  flex-direction: column;
 }
-.form-field{
-    align-self: center;
-    width: 80%;
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-section {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  margin-top: 0;
+  margin-bottom: 1.2rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #444;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.form-field {
+  flex: 1;
+  min-width: 200px;
+}
+
+.title-field {
+  width: 100%;
+}
+.duration-field{
+  width: 100%;
+}
+.last-field{
+  width: 100%;
+}
+
+/* Add spacing between fields in vertical layouts */
+.field-spacing {
+  margin-bottom: 1rem;
+}
+
+.error-container {
+  background-color: #fff0f0;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  border-left: 4px solid #f44336;
+}
+
+.error {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem 1.5rem 1.5rem;
+}
+
+.submit-button {
+  min-width: 150px;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.5rem 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .container {
+    margin: 1rem;
+    width: auto;
+  }
 }
