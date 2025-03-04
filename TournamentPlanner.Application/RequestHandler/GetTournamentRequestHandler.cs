@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using AutoMapper;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.DTOs;
@@ -48,9 +48,7 @@ public class GetTournamentRequestHandler : IRequestHandler<GetTournamentRequest,
         }
         else
         {
-            // !ON TEST. Turn off after development
-            //default date range
-            // filters.Add(GetSearchCategoryFilter(request.SearchCategory));
+            filters.Add(GetSearchCategoryFilter(request.SearchCategory));
         }
 
         var tournaments = await _tournamentRepository.GetAllAsync(filters,[nameof(Tournament.GameType)]);
