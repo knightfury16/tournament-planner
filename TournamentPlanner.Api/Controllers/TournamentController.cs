@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TournamentPlanner.Api.Models;
 using TournamentPlanner.Application;
@@ -198,7 +198,7 @@ namespace TournamentPlanner.Api.Controllers
             var request = new GetTournamentRequest
             {
                 Name = searchParams.Name,
-                SearchCategory = searchParams.SearchCategory ?? TournamentSearchCategory.ThisWeek,
+                SearchCategory = searchParams.SearchCategory ?? TournamentSearchCategory.All,
                 Status = searchParams.Status,
                 GameTypeSupported = searchParams.GameTypeSupported,
                 StartDate = searchParams.StartDate,
