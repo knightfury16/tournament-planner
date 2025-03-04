@@ -195,6 +195,13 @@ export enum MatchTypeTypes {
   KnockOut = "KnockOut"
 }
 
+export enum TournamentSearchCategory {
+  Recent = "Recent",
+  ThisWeek = "This Week",
+  Upcoming = "Upcoming",
+  All = "All"
+}
+
 export type ScheduleingInfo = {
   eachMatchTime?: string; // Using string to represent TimeSpan
   startTime?: string; // Using string to represent TimeOnly
