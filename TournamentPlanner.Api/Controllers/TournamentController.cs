@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TournamentPlanner.Api.Models;
 using TournamentPlanner.Application;
@@ -43,7 +43,11 @@ namespace TournamentPlanner.Api.Controllers
                 return BadRequest("Tournament creation failed");
             }
 
-            return CreatedAtAction(nameof(GetTournamentById), new { id = tournamentDto.Id }, tournamentDto);
+            return CreatedAtAction(
+                nameof(GetTournamentById),
+                new { id = tournamentDto.Id },
+                tournamentDto
+            );
         }
 
         //- Register player in tournament // authorize
@@ -51,20 +55,25 @@ namespace TournamentPlanner.Api.Controllers
         [Authorize(Roles = Role.Player)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> RegisterPlayerInTournament([FromBody] RegistrationInTournamentDto registrationDto)
+        public async Task<IActionResult> RegisterPlayerInTournament(
+            [FromBody] RegistrationInTournamentDto registrationDto
+        )
         {
             if (registrationDto == null)
             {
                 return BadRequest("Registration information is required");
             }
 
-            var registerPlayerInTournamentRequest = new RegisterPlayerInTournamentRequest(registrationDto);
+            var registerPlayerInTournamentRequest = new RegisterPlayerInTournamentRequest(
+                registrationDto
+            );
 
             var result = await _mediator.Send(registerPlayerInTournamentRequest);
 
-            return result ? Ok(new {message = "Player successfully registered for the tournament" }) : BadRequest(new { message = "Player registration failed" });
+            return result
+                ? Ok(new { message = "Player successfully registered for the tournament" })
+                : BadRequest(new { message = "Player registration failed" });
         }
-
 
         //- Make match type
         //! Experimental
@@ -73,7 +82,8 @@ namespace TournamentPlanner.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> MakeMatchTypesOfTournament(int id)
         {
-            if (id <= 0) return BadRequest("Tournament Id invalid");
+            if (id <= 0)
+                return BadRequest("Tournament Id invalid");
 
             var createMatchTypeRequest = new CreateMatchTypeRequest(id);
 
@@ -82,16 +92,21 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(matchTypes);
         }
 
-
         //- Make tournament draw // authorized
         [HttpPost("{id}/make-draw", Name = nameof(MakeTournamentDraw))]
         [Authorize(Roles = Role.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> MakeTournamentDraw(int id, [FromBody] MakeTournamentDrawDto drawDto)
+        public async Task<IActionResult> MakeTournamentDraw(
+            int id,
+            [FromBody] MakeTournamentDrawDto drawDto
+        )
         {
-
-            var createTournamentDrawRequest = new CreateTournamentDrawRequest(id, drawDto.SeedersId, drawDto.MatchTypePrefix);
+            var createTournamentDrawRequest = new CreateTournamentDrawRequest(
+                id,
+                drawDto.SeedersId,
+                drawDto.MatchTypePrefix
+            );
 
             var drawDtos = await _mediator.Send(createTournamentDrawRequest);
 
@@ -103,10 +118,15 @@ namespace TournamentPlanner.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<DrawDto>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> MakeTournamentSchedule(int id, [FromBody] SchedulingInfo schedulingInfo)
+        public async Task<IActionResult> MakeTournamentSchedule(
+            int id,
+            [FromBody] SchedulingInfo schedulingInfo
+        )
         {
-
-            var createTournamentDrawRequest = new MakeTournamentMatchScheduleRequest(id, schedulingInfo);
+            var createTournamentDrawRequest = new MakeTournamentMatchScheduleRequest(
+                id,
+                schedulingInfo
+            );
 
             var drawDtos = await _mediator.Send(createTournamentDrawRequest);
 
@@ -118,9 +138,13 @@ namespace TournamentPlanner.Api.Controllers
         [Authorize(Roles = Role.Admin)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> ChangeTournamentStatus(int id, [FromBody] ChangeStatusDto changeStatusDto)
+        public async Task<IActionResult> ChangeTournamentStatus(
+            int id,
+            [FromBody] ChangeStatusDto changeStatusDto
+        )
         {
-            if (id <= 0) return BadRequest("Tournament Id invalid");
+            if (id <= 0)
+                return BadRequest("Tournament Id invalid");
 
             var request = new ChangeTournamentStatusRequest(id, changeStatusDto.TournamentStatus);
 
@@ -128,7 +152,7 @@ namespace TournamentPlanner.Api.Controllers
 
             if (!success)
             {
-                return BadRequest( "Could not change tournament status" );
+                return BadRequest("Could not change tournament status");
             }
 
             return Ok(new { message = "Tournament status changed successfully" });
@@ -141,7 +165,8 @@ namespace TournamentPlanner.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CheckCanIMakeDraw(int id)
         {
-            if (id <= 0) return BadRequest("Tournament Id invalid");
+            if (id <= 0)
+                return BadRequest("Tournament Id invalid");
 
             var request = new CanIMakeDrawRequest(id);
             var response = await _mediator.Send(request);
@@ -155,15 +180,14 @@ namespace TournamentPlanner.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CheckCanIMakeSchedule(int id)
         {
-            if (id <= 0) return BadRequest("Tournament Id invalid");
+            if (id <= 0)
+                return BadRequest("Tournament Id invalid");
 
             var request = new CanIScheduleRequest(id);
             var response = await _mediator.Send(request);
 
             return Ok(response);
         }
-
-
 
         //! On maintenance
         // [HttpPost("{tournamentId}/add-match")]
@@ -193,7 +217,9 @@ namespace TournamentPlanner.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Tournament>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetTournament([FromQuery] TournamentSearchParams searchParams)
+        public async Task<IActionResult> GetTournament(
+            [FromQuery] TournamentSearchParams searchParams
+        )
         {
             var request = new GetTournamentRequest
             {
@@ -202,7 +228,7 @@ namespace TournamentPlanner.Api.Controllers
                 Status = searchParams.Status,
                 GameTypeSupported = searchParams.GameTypeSupported,
                 StartDate = searchParams.StartDate,
-                EndDate = searchParams.EndDate
+                EndDate = searchParams.EndDate,
             };
 
             var tournaments = await _mediator.Send(request);
@@ -235,7 +261,6 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(tournamentDto);
         }
 
-
         //- Get tournament created by an admin(id)
         [Authorize(Roles = Role.Admin)]
         [HttpGet("created/admin", Name = nameof(GetTournamentCreatedByAnAdmin))]
@@ -253,7 +278,6 @@ namespace TournamentPlanner.Api.Controllers
             return Ok(tournamentsDto);
         }
 
-
         //- Get tournament players
         [HttpGet("{id}/players", Name = nameof(GetTournamentPlayers))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PlayerDto>))]
@@ -264,7 +288,6 @@ namespace TournamentPlanner.Api.Controllers
             var playersDto = await _mediator.Send(getTournamentPlayersRequest);
             return Ok(playersDto);
         }
-
 
         //- Get tournament matches
         //getTournamentMatches(id)
