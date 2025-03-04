@@ -33,7 +33,7 @@ import { MatNativeDateModule } from '@angular/material/core';
   selector: 'app-tournament-list',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule, MatFormFieldModule,
-    MatInputModule, MatListModule, MatCardModule, MatIconModule, MatButtonModule,MatNativeDateModule, 
+    MatInputModule, MatListModule, MatCardModule, MatIconModule, MatButtonModule, MatNativeDateModule,
     MatTabsModule, TournamentCardComponent, MatDatepickerModule, MatSelectModule, MatProgressSpinner, MatExpansionModule],
   templateUrl: './tournament-list.component.html',
   styleUrl: './tournament-list.component.scss'
