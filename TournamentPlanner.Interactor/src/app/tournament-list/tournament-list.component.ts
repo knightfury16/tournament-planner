@@ -20,7 +20,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { TournamentDto } from '../tp-model/TpModel';
+import { TournamentDto, TournamentSearchCategory } from '../tp-model/TpModel';
 import { MatCardModule } from '@angular/material/card';
 import { TournamentCardComponent } from "../tournament-card/tournament-card.component";
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -39,6 +39,7 @@ import { MatNativeDateModule } from '@angular/material/core';
   styleUrl: './tournament-list.component.scss'
 })
 export class TournamentListComponent {
+  public readonly tournamentSearchCategory = TournamentSearchCategory;
   searchForm: FormGroup;
   tournaments$ = new BehaviorSubject<TournamentDto[]>([]);
   loading = false;
@@ -49,7 +50,7 @@ export class TournamentListComponent {
   ) {
     this.searchForm = this.fb.group({
       name: [''],
-      searchCategory: [''],
+      searchCategory: [this.tournamentSearchCategory.All],
       status: [''],
       gameType: [''],
       startDate: [null],
