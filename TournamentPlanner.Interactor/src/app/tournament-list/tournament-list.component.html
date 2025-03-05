@@ -51,17 +51,13 @@
               </mat-form-field>
 
               <mat-form-field>
-                <mat-label>Start Date</mat-label>
-                <input matInput [matDatepicker]="startPicker" formControlName="startDate">
-                <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-                <mat-datepicker #startPicker></mat-datepicker>
-              </mat-form-field>
-
-              <mat-form-field>
-                <mat-label>End Date</mat-label>
-                <input matInput [matDatepicker]="endPicker" formControlName="endDate">
-                <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-                <mat-datepicker #endPicker></mat-datepicker>
+                <mat-label>Tournament Date Range</mat-label>
+                <mat-date-range-input [rangePicker]="tournamentDateRange">
+                  <input matStartDate placeholder="Start date" formControlName="startDate">
+                  <input matEndDate placeholder="End date" formControlName="endDate">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matIconSuffix [for]="tournamentDateRange"></mat-datepicker-toggle>
+                <mat-date-range-picker #tournamentDateRange></mat-date-range-picker>
               </mat-form-field>
             </div>
           </mat-expansion-panel>

@@ -114,9 +114,9 @@ export class TournamentListComponent {
   onSearch() {
     this.loading = true;
     const formValues = this.searchForm.value;
-    
-    const startDate = formValues.startDate ? new Date(formValues.startDate).toISOString() : '';
-    const endDate = formValues.endDate ? new Date(formValues.endDate).toISOString() : '';
+
+    const startDate = formValues.startDate ? formValues.startDate.toISOString() : '';
+    const endDate = formValues.endDate ? formValues.endDate.toISOString() : '';
 
     this.tp.getTournament(
       formValues.name,
