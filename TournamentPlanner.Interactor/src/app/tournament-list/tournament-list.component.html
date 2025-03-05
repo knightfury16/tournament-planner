@@ -39,10 +39,7 @@
               <mat-form-field>
                 <mat-label>Status</mat-label>
                 <mat-select formControlName="status">
-                  <mat-option value="">All Statuses</mat-option>
-                  <mat-option value="1">Active</mat-option>
-                  <mat-option value="2">Upcoming</mat-option>
-                  <mat-option value="3">Completed</mat-option>
+                  <mat-option *ngFor="let value of this.curatedTournamentStatus()" [value]="value">{{value}}</mat-option>
                 </mat-select>
               </mat-form-field>
 

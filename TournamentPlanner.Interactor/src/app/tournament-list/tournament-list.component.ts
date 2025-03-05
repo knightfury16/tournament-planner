@@ -28,6 +28,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatNativeDateModule } from '@angular/material/core';
+import { trimAllSpace } from '../../Shared/Utility/stringUtility';
 
 @Component({
   selector: 'app-tournament-list',
@@ -119,7 +120,7 @@ export class TournamentListComponent {
     this.tp.getTournament(
       formValues.name,
       formValues.searchCategory,
-      formValues.status,
+      trimAllSpace(formValues.status),
       formValues.gameType,
       startDate,
       endDate
@@ -134,6 +135,10 @@ export class TournamentListComponent {
         this.loading = false;
       }
     });
+  }
+
+  public curatedTournamentStatus(): string[] {
+    return [this.tournamentStatus.RegistrationOpen, this.tournamentStatus.Ongoing, this.tournamentStatus.RegistrationClosed, this.tournamentStatus.Completed];
   }
 
   clearSearch() {
