@@ -20,7 +20,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { TournamentDto, TournamentSearchCategory } from '../tp-model/TpModel';
+import { TournamentDto, TournamentSearchCategory, TournamentStatus } from '../tp-model/TpModel';
 import { MatCardModule } from '@angular/material/card';
 import { TournamentCardComponent } from "../tournament-card/tournament-card.component";
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -40,6 +40,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 })
 export class TournamentListComponent {
   public readonly tournamentSearchCategory = TournamentSearchCategory;
+  public readonly tournamentStatus = TournamentStatus;
   searchForm: FormGroup;
   tournaments$ = new BehaviorSubject<TournamentDto[]>([]);
   loading = false;
@@ -78,14 +79,34 @@ export class TournamentListComponent {
   }
 
   private processTournaments(tournaments: TournamentDto[]): TournamentDto[] {
+    const isAdvancedSearchActive = this.getIsAdvanceSearchActive();
+
+
     return tournaments
-      .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime())
-      .filter((tor) => {
-        if (tor.endDate) {
-          return new Date(tor.endDate) >= new Date();
+      .filter((tournament) => {
+        // Always exclude draft tournaments
+        if (tournament.status === TournamentStatus.Draft) {
+          return false;
         }
+
+        // If advanced search is not active, only show active/upcoming tournaments
+        if (!isAdvancedSearchActive) {
+          return tournament.endDate ? new Date(tournament.endDate) >= new Date() : true;
+        }
+
+        // Additional filtering can be added based on search category if needed
         return true;
-      });
+      })
+      .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
+  }
+
+  getIsAdvanceSearchActive() {
+    const isAdvancedSearchActive = this.searchForm.get('searchCategory')!.dirty ||
+      this.searchForm.get('status')!.dirty ||
+      this.searchForm.get('gameType')!.dirty ||
+      this.searchForm.get('startDate')!.dirty ||
+      this.searchForm.get('endDate')!.dirty;
+    return isAdvancedSearchActive;
   }
 
   onSearch() {
