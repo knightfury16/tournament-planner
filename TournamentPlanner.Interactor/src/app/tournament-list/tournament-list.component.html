@@ -46,10 +46,7 @@
               <mat-form-field>
                 <mat-label>Game Type</mat-label>
                 <mat-select formControlName="gameType">
-                  <mat-option value="">All Games</mat-option>
-                  <mat-option value="1">Single Elimination</mat-option>
-                  <mat-option value="2">Double Elimination</mat-option>
-                  <mat-option value="3">Round Robin</mat-option>
+                  <mat-option *ngFor="let type of this.gameTypeSupported | keyvalue" [value]="type.key">{{type.value}}</mat-option>
                 </mat-select>
               </mat-form-field>
 

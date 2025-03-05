@@ -20,7 +20,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { TournamentDto, TournamentSearchCategory, TournamentStatus } from '../tp-model/TpModel';
+import { GameTypeSupported, TournamentDto, TournamentSearchCategory, TournamentStatus } from '../tp-model/TpModel';
 import { MatCardModule } from '@angular/material/card';
 import { TournamentCardComponent } from "../tournament-card/tournament-card.component";
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -42,6 +42,7 @@ import { trimAllSpace } from '../../Shared/Utility/stringUtility';
 export class TournamentListComponent {
   public readonly tournamentSearchCategory = TournamentSearchCategory;
   public readonly tournamentStatus = TournamentStatus;
+  public readonly gameTypeSupported = GameTypeSupported;
   searchForm: FormGroup;
   tournaments$ = new BehaviorSubject<TournamentDto[]>([]);
   loading = false;
