@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -29,6 +29,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatNativeDateModule } from '@angular/material/core';
 import { trimAllSpace } from '../../Shared/Utility/stringUtility';
+import { LoadingService } from '../../Shared/loading.service';
 
 @Component({
   selector: 'app-tournament-list',
@@ -43,9 +44,9 @@ export class TournamentListComponent {
   public readonly tournamentSearchCategory = TournamentSearchCategory;
   public readonly tournamentStatus = TournamentStatus;
   public readonly gameTypeSupported = GameTypeSupported;
+  public loadingService = inject(LoadingService);
   searchForm: FormGroup;
   tournaments$ = new BehaviorSubject<TournamentDto[]>([]);
-  loading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -66,7 +67,7 @@ export class TournamentListComponent {
   }
 
   loadInitialTournaments() {
-    this.loading = true;
+    this.loadingService.show();
     this.tp.getTournament().subscribe({
       next: (tournaments) => {
         this.tournaments$.next(this.processTournaments(tournaments));
@@ -75,7 +76,7 @@ export class TournamentListComponent {
         console.error('Error fetching tournaments:', error);
       },
       complete: () => {
-        this.loading = false;
+        this.loadingService.hide();
       }
     });
   }
@@ -112,7 +113,7 @@ export class TournamentListComponent {
   }
 
   onSearch() {
-    this.loading = true;
+    this.loadingService.show();
     const formValues = this.searchForm.value;
 
     const startDate = formValues.startDate ? formValues.startDate.toISOString() : '';
@@ -133,7 +134,7 @@ export class TournamentListComponent {
         console.error('Error fetching tournaments:', error);
       },
       complete: () => {
-        this.loading = false;
+        this.loadingService.hide();
       }
     });
   }
