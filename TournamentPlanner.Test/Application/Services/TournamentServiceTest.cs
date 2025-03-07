@@ -480,8 +480,10 @@ public class TournamentServiceTest
     public async Task ChangeTournamentStatus_WithStringId_NullOrEmptyId_ThrowsArgumentNullException()
     {
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentNullException>(
-            () => _sut.ChangeTournamentStatus("", TournamentStatus.Ongoing)
+        //ArgumentNullException.ThrowIfNullOrEmpty(tournamentId) => this will throw ArgumentException not ArgumentNullException
+        //if a Empty string is passed
+        await Assert.ThrowsAsync<ArgumentException>(
+            () => _sut.ChangeTournamentStatus(String.Empty, TournamentStatus.Ongoing)
         );
         await Assert.ThrowsAsync<ArgumentNullException>(
             () => _sut.ChangeTournamentStatus((string)null!, TournamentStatus.Ongoing)
