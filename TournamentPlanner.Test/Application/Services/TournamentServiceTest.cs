@@ -243,6 +243,29 @@ public class TournamentServiceTest
     }
 
     [Fact]
+    public async Task MakeDraws_VerifyThatTournamentStatusChange_ReturnChangedStatus()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetTournament();
+        tournament.Participants.AddRange(PlayerFixtures.GetSamplePlayers(2));
+
+        var seeders = new List<int> { 1 };
+
+        var matchType = new Group { Name = "Group A" };
+        _matchTypeServiceMock
+            .Setup(x => x.CreateMatchType(tournament, It.IsAny<string>(), seeders))
+            .ReturnsAsync(new List<MatchType> { matchType });
+
+        // Act
+        var result = await _sut.MakeDraws(tournament, null, seeders);
+
+        // Assert
+        Assert.Single(result);
+        Assert.Equal(tournament.Status, TournamentStatus.Ongoing); //expected the changed status
+        Assert.Equal(matchType, result.First().MatchType);
+    }
+
+    [Fact]
     public async Task MakeDraws_WithNullTournament_ThrowsArgumentNullException()
     {
         // Act & Assert
