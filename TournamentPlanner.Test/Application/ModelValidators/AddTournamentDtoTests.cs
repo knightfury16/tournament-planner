@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using TournamentPlanner.Application.DTOs;
+using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain.Enum;
 
 namespace TournamentPlanner.Test.Application.ModelValidators
@@ -62,8 +63,6 @@ namespace TournamentPlanner.Test.Application.ModelValidators
             );
         }
 
-
-
         [Theory]
         [InlineData(0)]
         [InlineData(124)]
@@ -106,6 +105,54 @@ namespace TournamentPlanner.Test.Application.ModelValidators
             );
         }
 
+        [Fact]
+        public void KnockoutTournament_ExceedsMaxParticipants_ShouldFailValidation()
+        {
+            // Arrange
+            var dto = GetAValidTournamentDto();
+            dto.TournamentType = TournamentType.Knockout;
+            dto.MaxParticipant = Utility.KnocoutMatchTypeMaxParticipant + 1; // Exceeding max limit
+
+            // Act
+            var validationResults = ValidateModel(dto);
+
+            // Assert
+            Assert.Contains(
+                validationResults,
+                vr =>
+                    vr.ErrorMessage!.Contains(
+                        $"Feasibility Validation Fail: Knockout match type max participants count of {Utility.KnocoutMatchTypeMaxParticipant} exceeded."
+                    )
+            );
+        }
+
+        [Theory]
+        [InlineData(128, 16)] // Too many participants
+        [InlineData(64, 8)] // Invalid PPG
+        public void GroupStageTournament_ExceedsPPGLimit_ShouldFailValidation(
+            int maxParticipants,
+            int knockOutStartNumber
+        )
+        {
+            // Arrange
+            var dto = GetAValidTournamentDto();
+            dto.TournamentType = TournamentType.GroupStage;
+            dto.MaxParticipant = maxParticipants;
+            dto.KnockOutStartNumber = knockOutStartNumber;
+
+            // Act
+            var validationResults = ValidateModel(dto);
+
+            // Assert
+            Assert.Contains(
+                validationResults,
+                vr =>
+                    vr.ErrorMessage!.Contains(
+                        $"Feasibility Validation Fail: Player per group max count of {Utility.GroupMatchTypePPG} exceeded."
+                    )
+            );
+        }
+
         private AddTournamentDto GetAValidTournamentDto()
         {
             return new AddTournamentDto
@@ -136,4 +183,3 @@ namespace TournamentPlanner.Test.Application.ModelValidators
         }
     }
 }
-
