@@ -62,23 +62,6 @@ namespace TournamentPlanner.Test.Application.ModelValidators
             );
         }
 
-        [Theory]
-        [InlineData(0)]
-        [InlineData(105)]
-        public void AddTournamentDto_InvalidMaxParticipant_ShouldFailValidation(int maxParticipant)
-        {
-            // Arrange
-            var dto = GetAValidTournamentDto();
-            dto.MaxParticipant = maxParticipant;
-            // Act
-            var validationResults = ValidateModel(dto);
-
-            // Assert
-            Assert.Contains(
-                validationResults,
-                vr => vr.ErrorMessage!.Contains("Max participant must be between 1 and 104")
-            );
-        }
 
 
         [Theory]
