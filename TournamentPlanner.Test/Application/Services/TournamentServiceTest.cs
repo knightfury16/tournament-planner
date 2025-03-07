@@ -333,7 +333,7 @@ public class TournamentServiceTest
     {
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(
-            () => _sut.ChangeTournamentStatus(null!, TournamentStatus.Draft)
+            () => _sut.ChangeTournamentStatus((Tournament)null!, TournamentStatus.Draft)
         );
     }
 
@@ -483,9 +483,8 @@ public class TournamentServiceTest
         await Assert.ThrowsAsync<ArgumentNullException>(
             () => _sut.ChangeTournamentStatus("", TournamentStatus.Ongoing)
         );
-
         await Assert.ThrowsAsync<ArgumentNullException>(
-            () => _sut.ChangeTournamentStatus(null!, TournamentStatus.Ongoing)
+            () => _sut.ChangeTournamentStatus((string)null!, TournamentStatus.Ongoing)
         );
 
         _tournamentRepositoryMock.Verify(r => r.GetByIdAsync(It.IsAny<int>()), Times.Never);
