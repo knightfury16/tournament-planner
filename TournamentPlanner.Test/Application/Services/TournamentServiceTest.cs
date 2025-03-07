@@ -243,6 +243,13 @@ public class TournamentServiceTest
     }
 
     [Fact]
+    public async Task MakeDraws_WithNullTournament_ThrowsArgumentNullException()
+    {
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _sut.MakeDraws(null!, null));
+    }
+
+    [Fact]
     public async Task MakeDraws_WithInvalidSeeders_ThrowsException()
     {
         // Arrange
