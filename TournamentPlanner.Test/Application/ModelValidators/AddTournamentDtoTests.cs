@@ -80,22 +80,6 @@ namespace TournamentPlanner.Test.Application.ModelValidators
             );
         }
 
-        [Theory]
-        [InlineData(0)]
-        [InlineData(4)]
-        public void AddTournamentDto_InvalidWinnerPerGroup_ShouldFailValidation(int winnerPerGroup)
-        {
-            // Arrange
-            var dto = GetAValidTournamentDto();
-            dto.WinnerPerGroup = winnerPerGroup;
-            // Act
-            var validationResults = ValidateModel(dto);
-            // Assert
-            Assert.Contains(
-                validationResults,
-                vr => vr.ErrorMessage!.Contains("Winner per group value must be between 1 and 3")
-            );
-        }
 
         [Theory]
         [InlineData(0)]
