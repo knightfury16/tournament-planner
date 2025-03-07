@@ -492,4 +492,23 @@ public class TournamentServiceTest
         _tournamentRepositoryMock.Verify(r => r.GetByIdAsync(It.IsAny<int>()), Times.Never);
         _tournamentRepositoryMock.Verify(r => r.SaveAsync(), Times.Never);
     }
+
+    [Fact]
+    public async Task ChangeTournamentStatus_RequestedStatusSameAsCurrentStatus_ReturnsTrueWithoutSaving()
+    {
+        // Arrange
+        var tournament = TournamentFixtures.GetTournament();
+        tournament.Status = TournamentStatus.RegistrationOpen;
+
+        // Act
+        var result = await _sut.ChangeTournamentStatus(
+            tournament,
+            TournamentStatus.RegistrationOpen
+        );
+
+        // Assert
+        Assert.True(result);
+        Assert.Equal(TournamentStatus.RegistrationOpen, tournament.Status);
+        _tournamentRepositoryMock.Verify(r => r.SaveAsync(), Times.Never);
+    }
 }
