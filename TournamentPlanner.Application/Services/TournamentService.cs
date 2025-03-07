@@ -139,6 +139,8 @@ public class TournamentService : ITournamentService
         List<int>? seedersPlayers = null
     )
     {
+        ArgumentNullException.ThrowIfNull(tournament);
+
         var areSeedersValid = ValidateSeeders(tournament, seedersPlayers);
         if (!areSeedersValid)
             throw new Exception("Seeders are not valid");
