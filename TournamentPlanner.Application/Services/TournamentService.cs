@@ -200,6 +200,11 @@ public class TournamentService : ITournamentService
             ?? throw new InvalidOperationException("Tournament status is unexpectedly null.");
         //I can change between Draft, RegistrationOpen, RegistrationClosed back and forth as much as i want
         //but once status is ongoing i cant go back
+
+        //check if the requestedStatus the same as currentStatus. if so then no need to change, return true
+        if (currentStatus == requestedStatus)
+            return true;
+
         if (currentStatus == TournamentStatus.Completed)
             return false;
 
