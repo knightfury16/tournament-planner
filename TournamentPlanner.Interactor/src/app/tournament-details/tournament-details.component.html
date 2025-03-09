@@ -96,11 +96,20 @@
     </mat-card-content>
 
     <mat-card-actions align="end">
-      <button mat-stroked-button [disabled]="!canRegister" (click)="registerInTournament()"
-        matTooltip="{{!canRegister ? 'You must be logged in as a player to register' : 'Click to register for this tournament'}}">
-        <mat-icon>how_to_reg</mat-icon>
-        Register in the tournament
-      </button>
+      <ng-container *ngIf="this.isRegistered; else showRegisterButton">
+        <button mat-flat-button color="primary" disabled>
+          <mat-icon>check_circle</mat-icon>
+          Registered Successfully
+        </button>
+      </ng-container>
+
+      <ng-template #showRegisterButton>
+        <button mat-stroked-button [disabled]="!canRegister" (click)="registerInTournament()"
+          matTooltip="{{ !canRegister ? 'You must be logged in as a player to register' : 'Click to register for this tournament' }}">
+          <mat-icon>how_to_reg</mat-icon>
+          Register in the tournament
+        </button>
+      </ng-template>
     </mat-card-actions>
   </mat-card>
 </div>
