@@ -206,6 +206,17 @@ export class AddTournamentComponent implements OnInit {
     return date >= today;
   };
 
+  // This function has to an Arrow Function to capture the context of (this)
+  public validRegistrationLastDate = (date: Date | null): boolean => {
+    if (!date) return false;
+    var startDate = this.addTournamentForm.value.startDate != null ? new Date(this.addTournamentForm.value.startDate) : null;
+    if (startDate == null) return false;
+    const today = new Date();
+    today.setDate(today.getDate() + 1);
+    today.setHours(0, 0, 0, 0); // Set time to midnight to compare only dates
+    return date >= today && date < startDate;
+  }
+
   public getKnockoutStartNumber(): number[] {
     return [8, 16, 32, 64];
   }
