@@ -130,7 +130,7 @@ export class AddTournamentComponent implements OnInit {
         startDate: this.addTournamentForm.value.startDate?.toISOString() ?? null,
         endDate: this.addTournamentForm.value.endDate?.toISOString() ?? null,
         gameType: this.getGameTypeDto(this.addTournamentForm.value.gameType ?? null),
-        status: this.addTournamentForm.value.status ?? undefined,
+        status: this.getStatusValue(),
         registrationLastDate: this.addTournamentForm.value.registrationLastDate?.toISOString() ?? undefined,
         maxParticipant: this.addTournamentForm.value.maxParticipant ? parseInt(this.addTournamentForm.value.maxParticipant) : undefined,
         venue: this.addTournamentForm.value.venue ?? undefined,
@@ -201,6 +201,13 @@ export class AddTournamentComponent implements OnInit {
 
   public getKnockoutStartNumber(): number[] {
     return [8, 16, 32, 64];
+  }
+
+  public getStatusValue(): string | undefined {
+    var statusStringValue = this.addTournamentForm.value.status ?? undefined;
+    if (statusStringValue)
+      return trimAllSpace(statusStringValue);
+    return undefined;
   }
 
   public curatedStatus(): string[] {
