@@ -99,7 +99,7 @@ export interface AddTournamentDto {
   startDate: string | null; //iso string
   endDate: string | null; //iso string
   gameType: GameTypeDto | null;
-  status?: TournamentStatus;
+  status?: TournamentStatus | string;
   registrationLastDate?: string; //iso string
   maxParticipant?: number;
   venue?: string;
