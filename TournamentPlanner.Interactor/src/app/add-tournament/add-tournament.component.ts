@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { LoadingService } from '../../Shared/loading.service';
 import { firstValueFrom } from 'rxjs';
 import { trimAllSpace } from '../../Shared/Utility/stringUtility';
+import { SnackbarService } from '../../Shared/snackbar.service';
 
 @Component({
   selector: 'app-add-tournament',
@@ -38,6 +39,7 @@ export class AddTournamentComponent implements OnInit {
   public today: Date;
   public minStartDate: Date;
   public minEndDate: Date;
+  public snackBarService = inject(SnackbarService);
 
   constructor(
     private tp: TournamentPlannerService,
@@ -143,10 +145,14 @@ export class AddTournamentComponent implements OnInit {
       };
       console.log(JSON.stringify(this.addTournamentDto));
 
-      await this.createTournament(this.addTournamentDto);
-      this.router.navigate(['/tp']);
+      try {
+        console.log(this.addTournamentDto);
+        await this.createTournament(this.addTournamentDto);
+        this.router.navigate(['/tp']);
+      } catch (errors: any) {
+        this.snackBarService.showError("Could not create tournament. Fix the errors and try again.");
+      }
 
-      console.log(this.addTournamentDto);
     }
   }
   async createTournament(addTournamentDto: AddTournamentDto) {
@@ -159,6 +165,7 @@ export class AddTournamentComponent implements OnInit {
       const errors = error.error?.errors ? Object.values(error.error.errors).flat() : error.error?.Error ? [error.error.Error] : [];
       this.errors.set(errors);
       this.loadingService.hide();
+      throw errors;
     }
   }
   getGameTypeDto(gameType: GameTypeSupported | null): GameTypeDto | null {
