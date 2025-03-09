@@ -46,11 +46,16 @@ export class AddTournamentComponent implements OnInit {
     private router: Router
   ) {
     this.today = new Date();
+
+    //setting default startDate
     this.minStartDate = new Date();
     this.minStartDate.setDate(this.today.getDate() + 2); //adding 2 days because i need to have a registratin last date
+    this.minStartDate.setHours(0, 0, 0, 0);
 
+    //setting default endDate
     this.minEndDate = new Date();
     this.minEndDate.setDate(this.minStartDate.getDate() + 1); //adding 1 more day with the start day by default
+    this.minEndDate.setHours(0, 0, 0, 0);
 
     this.addTournamentForm = new FormGroup({
       name: new FormControl('', [Validators.required]),
