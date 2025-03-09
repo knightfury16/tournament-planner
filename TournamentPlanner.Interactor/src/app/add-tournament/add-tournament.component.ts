@@ -201,15 +201,6 @@ export class AddTournamentComponent implements OnInit {
     }
   }
 
-  // Function to disable past dates
-  // I can also disable date with my custom fuction
-  disablePastDates = (date: Date | null): boolean => {
-    if (!date) return false;
-    const today = new Date();
-    today.setDate(today.getDate() + 1);
-    today.setHours(0, 0, 0, 0); // Set time to midnight to compare only dates
-    return date >= today;
-  };
 
   // This function has to an Arrow Function to capture the context of (this)
   public validRegistrationLastDate = (date: Date | null): boolean => {
