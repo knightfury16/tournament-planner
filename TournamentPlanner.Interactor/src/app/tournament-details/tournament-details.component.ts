@@ -34,6 +34,7 @@ export class TournamentDetailsComponent implements OnInit {
 
   public tournamentDetails = signal<TournamentDto | null>(null);
   public canRegister = false;
+  public isRegistered = true;
 
   async ngOnInit() {
     if (this.tournamentId == undefined) { return }
@@ -41,14 +42,23 @@ export class TournamentDetailsComponent implements OnInit {
     this.tournamentDetails.set(tourDetail);
     this.emtiTournament(tourDetail); //name will be here
     this.emitToutnamentParticipants(tourDetail.participants);
+    this.isRegistered = this.checkIfAlreadyRegistered();
     this.setCanRegister();
 
   }
   setCanRegister() {
     var currentUser = this.authService.getCurrentUser();
-    if (currentUser && currentUser.role == DomainRole.Player) {
+    if (currentUser && currentUser.role == DomainRole.Player && this.registrationOpen()) {
       this.canRegister = true;
     }
+  }
+
+  public registrationOpen(): boolean {
+    const tournamentDetails = this.tournamentDetails();
+    if (tournamentDetails && tournamentDetails.status) {
+      return tournamentDetails.status == trimAllSpace(TournamentStatus.RegistrationOpen)
+    }
+    return false;
   }
 
   emitToutnamentParticipants(participants: PlayerDto[] | undefined) {
@@ -63,17 +73,14 @@ export class TournamentDetailsComponent implements OnInit {
 
   public async registerInTournament() {
     try {
-
-      var currentUser = this.authService.getCurrentUser();
-      var currentUseremail = currentUser?.email;
-
-      if (this.checkIfAlreadyRegistered(currentUseremail)) { this._snackBar.showWarning("You are already registered for this tournament."); return }
+      if (this.checkIfAlreadyRegistered()) { this._snackBar.showWarning("You are already registered for this tournament."); return }
       if (this.tournamentParticipantsFull()) { this._snackBar.showWarning("Tournament Participants is full"); return; }
 
       this.loadingService.show();
       await this._tpService.registerPlayerInTournament(this.tournamentId!);
       this.loadingService.hide();
       this.showSuccesMessage();
+      this.isRegistered = true;
       //fetch the participant and emit it again to refresh the new player
       await this.refreshTheTournamentParticipants();
 
@@ -103,7 +110,10 @@ export class TournamentDetailsComponent implements OnInit {
     this._snackBar.showMessage("Registered Successfully.");
   }
 
-  checkIfAlreadyRegistered(currentUseremail: string | undefined) {
+  checkIfAlreadyRegistered() {
+    var currentUser = this.authService.getCurrentUser();
+    var currentUseremail = currentUser?.email;
+
     if (!currentUseremail) return false;
     const tournamentDetails = this.tournamentDetails();
     if (tournamentDetails && tournamentDetails.participants) {
