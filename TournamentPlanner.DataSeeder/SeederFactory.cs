@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -8,17 +9,23 @@ namespace TournamentPlanner.DataSeeder
     public class SeederFactory : IDesignTimeDbContextFactory<TournamentPlannerDataContext>
     {
         public bool ON_TEST { get; set; }
+
         public SeederFactory(bool? onTest = true)
         {
             ON_TEST = onTest ?? false;
         }
+
         public SeederFactory()
         {
             ON_TEST = true;
         }
+
         public TournamentPlannerDataContext CreateDbContext(string[]? args = null)
         {
-            var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .AddUserSecrets(Assembly.GetExecutingAssembly())
+                .Build();
             var myConnection = configuration.GetConnectionString("DefaultConnection");
             if (!ON_TEST)
             {
@@ -31,7 +38,6 @@ namespace TournamentPlanner.DataSeeder
 
             return new TournamentPlannerDataContext(optionsBuilder.Options);
         }
-
-
     }
 }
+
