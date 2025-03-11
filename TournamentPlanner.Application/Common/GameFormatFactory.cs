@@ -1,4 +1,3 @@
-
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.GameTypeHandler;
 using TournamentPlanner.Domain.Entities;
@@ -13,6 +12,7 @@ public class GameFormatFactory : IGameFormatFactory
         return gameType switch
         {
             GameTypeSupported.TableTennis => new TableTennisGameFormat(),
+            GameTypeSupported.EightBallPool => new EightBallPoolGameFormat(),
             _ => throw new ArgumentException($"{gameType} not supported yet"),
         };
     }
