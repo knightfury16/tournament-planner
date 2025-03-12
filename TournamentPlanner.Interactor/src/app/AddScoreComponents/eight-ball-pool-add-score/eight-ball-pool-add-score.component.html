@@ -1,0 +1,75 @@
+<div class="score-container">
+    <form [formGroup]="scoreForm" (ngSubmit)="onSubmit()">
+            <mat-card-header>
+                <mat-card-title class="title">Eight Ball Pool Score</mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+                <!-- Match Settings -->
+                <div class="settings-row">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Race To</mat-label>
+                        <input matInput type="number" formControlName="raceTo" min="1" max="15">
+                        <mat-error *ngIf="scoreForm.get('raceTo')?.hasError('required')">
+                            Race to value is required
+                        </mat-error>
+                        <mat-error *ngIf="scoreForm.get('raceTo')?.hasError('min') || scoreForm.get('raceTo')?.hasError('max')">
+                            Race to must be between 3 and 15
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="player-holder">
+                    <h3>Player 1: {{match?.firstPlayer?.name}}</h3>
+                    <h3>Player 2: {{match?.secondPlayer?.name}}</h3>
+                </div>
+
+                <!-- Racks Scoring -->
+                <div class="rack-row">
+                    <div class="rack-header">Racks Won</div>
+
+                    <div class="rack-inputs">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Player 1 Racks</mat-label>
+                            <input matInput type="number" formControlName="player1Racks" min="0">
+                            <mat-error *ngIf="scoreForm.get('player1Racks')?.hasError('required')">
+                                Racks required
+                            </mat-error>
+                            <mat-error *ngIf="scoreForm.get('player1Racks')?.hasError('same')">
+                                Both Player can not have the same value
+                            </mat-error>
+                            <mat-error *ngIf="scoreForm.get('player1Racks')?.hasError('max')">
+                                Racks cannot exceed race to value
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Player 2 Racks</mat-label>
+                            <input matInput type="number" formControlName="player2Racks" min="0">
+                            <mat-error *ngIf="scoreForm.get('player2Racks')?.hasError('required')">
+                                Racks required
+                            </mat-error>
+                            <mat-error *ngIf="scoreForm.get('player2Racks')?.hasError('same')">
+                                Both Player can not have the same value
+                            </mat-error>
+                            <mat-error *ngIf="scoreForm.get('player2Racks')?.hasError('max')">
+                                Racks cannot exceed race to value
+                            </mat-error>
+                        </mat-form-field>
+
+                        <div class="rack-status" *ngIf="isMatchComplete()">✓</div>
+                    </div>
+                </div>
+
+                @if (scoreError()) {
+                    <mat-error class="score-error">{{scoreError()}}</mat-error>
+                }
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+                <button mat-raised-button color="primary" type="submit" [disabled]="!this.scoreForm.valid">
+                    Submit Score
+                </button>
+            </mat-card-actions>
+    </form>
+</div>
