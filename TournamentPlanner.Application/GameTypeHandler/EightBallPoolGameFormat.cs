@@ -98,7 +98,7 @@ public class EightBallPoolGameFormat : GameFormat
                     player2Standing.Losses++;
 
                     // Match points
-                    player1Standing.MatchPoints += 3;
+                    player1Standing.MatchPoints += 2;
                     player2Standing.MatchPoints += 1;
                 }
                 else
@@ -107,7 +107,7 @@ public class EightBallPoolGameFormat : GameFormat
                     player1Standing.Losses++;
 
                     // Match points
-                    player2Standing.MatchPoints += 3;
+                    player2Standing.MatchPoints += 2;
                     player1Standing.MatchPoints += 1;
                 }
 
@@ -141,8 +141,7 @@ public class EightBallPoolGameFormat : GameFormat
                 i > 0
                 && standings[i].MatchPoints == standings[i - 1].MatchPoints
                 && standings[i].Wins == standings[i - 1].Wins
-                && standings[i].GamesWon - standings[i].GamesLost
-                    == standings[i - 1].GamesWon - standings[i - 1].GamesLost
+                && standings[i].GameDifference == standings[i - 1].GameDifference
             )
             {
                 standings[i].Ranking = standings[i - 1].Ranking;
