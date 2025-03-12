@@ -21,7 +21,10 @@ public class EightBallPoolGameFormat : GameFormat
         {
             throw new Exception("Can not convert object to string");
         }
-        EightBallPoolScore? eightBallPoolScore = JsonSerializer.Deserialize<EightBallPoolScore>(scoreString, JsonOptions);
+        EightBallPoolScore? eightBallPoolScore = JsonSerializer.Deserialize<EightBallPoolScore>(
+            scoreString,
+            JsonOptions
+        );
         if (eightBallPoolScore == null)
         {
             throw new JsonException($"Error Deserializing {nameof(EightBallPoolScore)}");
@@ -43,30 +46,46 @@ public class EightBallPoolGameFormat : GameFormat
         {
             return false;
         }
-        if (eightBallPoolScore.Player1Racks + eightBallPoolScore.Player2Racks > eightBallPoolScore.RaceTo * 2 - 1)
+        if (
+            eightBallPoolScore.Player1Racks + eightBallPoolScore.Player2Racks
+            > eightBallPoolScore.RaceTo * 2 - 1
+        )
             return false;
 
-        if (eightBallPoolScore.Player1Racks != eightBallPoolScore.RaceTo || eightBallPoolScore.Player2Racks != eightBallPoolScore.RaceTo)
+        //TODO: change the condition here
+        if (
+            eightBallPoolScore.Player1Racks != eightBallPoolScore.RaceTo
+            || eightBallPoolScore.Player2Racks != eightBallPoolScore.RaceTo
+        )
             return false;
-
 
         return true;
     }
 
-    public override List<PlayerStanding> GetGroupStanding(Tournament tournament, Domain.Entities.MatchType matchType, bool completeStanding = false)
+    public override List<PlayerStanding> GetGroupStanding(
+        Tournament tournament,
+        Domain.Entities.MatchType matchType,
+        bool completeStanding = false
+    )
     {
-        if (tournament == null || matchType == null) throw new ArgumentNullException(nameof(GetGroupStanding));
+        if (tournament == null || matchType == null)
+            throw new ArgumentNullException(nameof(GetGroupStanding));
 
-        if (matchType.Rounds.Count == 0) throw new Exception("No Rounds found to get Group standing");
-        if (matchType.Players.Count == 0) throw new Exception("No players found in the matchtype to get the standing");
+        if (matchType.Rounds.Count == 0)
+            throw new Exception("No Rounds found to get Group standing");
+        if (matchType.Players.Count == 0)
+            throw new Exception("No players found in the matchtype to get the standing");
 
-        Dictionary<int, PlayerStanding>? playerStandings = matchType.Players.Select(p => new PlayerStanding { Player = p }).ToDictionary(ps => ps.Player.Id);
+        Dictionary<int, PlayerStanding>? playerStandings = matchType
+            .Players.Select(p => new PlayerStanding { Player = p })
+            .ToDictionary(ps => ps.Player.Id);
 
         foreach (var round in matchType.Rounds)
         {
             foreach (var match in round.Matches)
             {
-                if (match.ScoreJson == null) continue;
+                if (match.ScoreJson == null)
+                    continue;
 
                 var score = (EightBallPoolScore)DeserializeScore(match.ScoreJson);
                 var player1Standing = playerStandings[match.FirstPlayer.Id];
@@ -102,24 +121,34 @@ public class EightBallPoolGameFormat : GameFormat
 
         // Convert dictionary to list and sort standings
         var standings = playerStandings.Values.ToList();
-        standings.Sort((x, y) =>
-        {
-            int result = y.MatchPoints.CompareTo(x.MatchPoints);
-            if (result == 0) result = y.Wins.CompareTo(x.Wins);
-            if (result == 0) result = y.GameDifference.CompareTo(x.GameDifference);
-            return result;
-        });
+        standings.Sort(
+            (x, y) =>
+            {
+                int result = y.MatchPoints.CompareTo(x.MatchPoints);
+                if (result == 0)
+                    result = y.Wins.CompareTo(x.Wins);
+                if (result == 0)
+                    result = y.GameDifference.CompareTo(x.GameDifference);
+                return result;
+            }
+        );
 
         // Check for ties and assign ranks
         for (int i = 0; i < standings.Count; i++)
         {
             standings[i].Ranking = i + 1;
-            if (i > 0 && standings[i].MatchPoints == standings[i - 1].MatchPoints &&
-                standings[i].Wins == standings[i - 1].Wins &&
-                standings[i].GamesWon - standings[i].GamesLost == standings[i - 1].GamesWon - standings[i - 1].GamesLost)
+            if (
+                i > 0
+                && standings[i].MatchPoints == standings[i - 1].MatchPoints
+                && standings[i].Wins == standings[i - 1].Wins
+                && standings[i].GamesWon - standings[i].GamesLost
+                    == standings[i - 1].GamesWon - standings[i - 1].GamesLost
+            )
             {
                 standings[i].Ranking = standings[i - 1].Ranking;
-                Console.WriteLine($"A tie Exists between Player {standings[i].Player.Name} and {standings[i - 1].Player.Name}");
+                Console.WriteLine(
+                    $"A tie Exists between Player {standings[i].Player.Name} and {standings[i - 1].Player.Name}"
+                );
             }
         }
 
