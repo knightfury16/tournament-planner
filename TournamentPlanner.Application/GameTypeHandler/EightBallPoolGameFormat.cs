@@ -52,10 +52,10 @@ public class EightBallPoolGameFormat : GameFormat
         )
             return false;
 
-        //TODO: change the condition here
+        // If either player not yet reached race to value thats why and
         if (
             eightBallPoolScore.Player1Racks != eightBallPoolScore.RaceTo
-            || eightBallPoolScore.Player2Racks != eightBallPoolScore.RaceTo
+            && eightBallPoolScore.Player2Racks != eightBallPoolScore.RaceTo
         )
             return false;
 
