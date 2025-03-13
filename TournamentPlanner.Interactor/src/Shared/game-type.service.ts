@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { GameTypeDto, GameTypeSupported } from '../app/tp-model/TpModel';
-import { IScore } from '../GameTypeSuportedScore/IScore';
 import { TableTennisScore, TableTennisScoreType } from '../GameTypeSuportedScore/TableTennisScore';
 import { trimAllSpace } from './Utility/stringUtility';
 import { StringBuilder } from './Utility/StringBuilder';
@@ -18,22 +17,17 @@ export class GameTypeService {
     if (gameType.name == trimAllSpace(GameTypeSupported.EightBallPool)) return this.eightBallPoolScore(score, flip);
     return "could not map score"
   }
-  tableTennisScore(score: string, flip = false): string {
-    var ttScore: TableTennisScoreType = this.parseScore<TableTennisScoreType>(score);
-    if (flip) return `${ttScore.Player2Sets} - ${ttScore.Player1Sets}`
-    return `${ttScore.Player1Sets} - ${ttScore.Player2Sets}`
-  }
-
-  eightBallPoolScore(score: string, flip: boolean = false): string {
-    var eightBallPoolScore: EightBallPoolScoreType = this.parseScore<EightBallPoolScoreType>(score);
-    if (flip) return `${eightBallPoolScore.Player2Racks} - ${eightBallPoolScore.Player1Racks}`
-    return `${eightBallPoolScore.Player1Racks} - ${eightBallPoolScore.Player2Racks}`
-  }
 
   public getFullDisplayeScore(gameType: GameTypeDto, score: string): string {
     if (gameType.name == trimAllSpace(GameTypeSupported.TableTennis)) return this.tableTennisFullScore(score);
     if (gameType.name == trimAllSpace(GameTypeSupported.EightBallPool)) return this.eightBallPoolScore(score);
     return "could not map full score";
+  }
+
+  tableTennisScore(score: string, flip = false): string {
+    var ttScore: TableTennisScoreType = this.parseScore<TableTennisScoreType>(score);
+    if (flip) return `${ttScore.Player2Sets} - ${ttScore.Player1Sets}`
+    return `${ttScore.Player1Sets} - ${ttScore.Player2Sets}`
   }
 
   tableTennisFullScore(score: string): string {
@@ -48,6 +42,13 @@ export class GameTypeService {
 
     return scoreStringBuilder.toString();
   }
+
+  eightBallPoolScore(score: string, flip: boolean = false): string {
+    var eightBallPoolScore: EightBallPoolScoreType = this.parseScore<EightBallPoolScoreType>(score);
+    if (flip) return `${eightBallPoolScore.Player2Racks} - ${eightBallPoolScore.Player1Racks}`
+    return `${eightBallPoolScore.Player1Racks} - ${eightBallPoolScore.Player2Racks}`
+  }
+
   parseScore<T>(score: string): T {
     return JSON.parse(score) as T;
   }
