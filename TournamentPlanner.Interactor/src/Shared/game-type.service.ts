@@ -22,6 +22,12 @@ export class GameTypeService {
     return `${ttScore.Player1Sets} - ${ttScore.Player2Sets}`
   }
 
+  eightBallPoolScore(score: string, flip: boolean = false): string {
+    var eightBallPoolScore: EightBallPoolScoreType = this.parseScore<EightBallPoolScoreType>(score);
+    if (flip) return `${eightBallPoolScore.Player2Racks} - ${eightBallPoolScore.Player1Racks}`
+    return `${eightBallPoolScore.Player1Racks} - ${eightBallPoolScore.Player2Racks}`
+  }
+
   public getFullDisplayeScore(gameType: GameTypeDto, score: string): string {
     if (gameType.name == trimAllSpace(GameTypeSupported.TableTennis)) return this.tableTennisFullScore(score);
     return "could not map";
