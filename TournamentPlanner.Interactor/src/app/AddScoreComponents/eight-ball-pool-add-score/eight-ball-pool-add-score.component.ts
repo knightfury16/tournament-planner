@@ -109,10 +109,9 @@ export class EightBallPoolAddScoreComponent extends BaseAddScoreComponent {
       // Clear the error
       this.scoreError.set(undefined);
 
-      // TODO: Send to backend
       console.log('Submitting score:', score);
 
-      // await this.addMatchScore(score);
+      await this.addMatchScore(score);
     }
   }
 }
