@@ -4,6 +4,7 @@ import { IScore } from '../GameTypeSuportedScore/IScore';
 import { TableTennisScore, TableTennisScoreType } from '../GameTypeSuportedScore/TableTennisScore';
 import { trimAllSpace } from './Utility/stringUtility';
 import { StringBuilder } from './Utility/StringBuilder';
+import { EightBallPoolScoreType } from '../GameTypeSuportedScore/EightBallPoolScore';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +13,14 @@ export class GameTypeService {
 
   constructor() { }
 
-  public getDisplayScore(gameType: GameTypeDto, score: string, flip: boolean = false):string{
-    if(gameType.name == trimAllSpace(GameTypeSupported.TableTennis))return this.tableTennisScore(score, flip);
-    return "could not map"
+  public getDisplayScore(gameType: GameTypeDto, score: string, flip: boolean = false): string {
+    if (gameType.name == trimAllSpace(GameTypeSupported.TableTennis)) return this.tableTennisScore(score, flip);
+    if (gameType.name == trimAllSpace(GameTypeSupported.EightBallPool)) return this.eightBallPoolScore(score, flip);
+    return "could not map score"
   }
   tableTennisScore(score: string, flip = false): string {
     var ttScore: TableTennisScoreType = this.parseScore<TableTennisScoreType>(score);
-    if(flip)return `${ttScore.Player2Sets} - ${ttScore.Player1Sets}`
+    if (flip) return `${ttScore.Player2Sets} - ${ttScore.Player1Sets}`
     return `${ttScore.Player1Sets} - ${ttScore.Player2Sets}`
   }
 
@@ -30,7 +32,8 @@ export class GameTypeService {
 
   public getFullDisplayeScore(gameType: GameTypeDto, score: string): string {
     if (gameType.name == trimAllSpace(GameTypeSupported.TableTennis)) return this.tableTennisFullScore(score);
-    return "could not map";
+    if (gameType.name == trimAllSpace(GameTypeSupported.EightBallPool)) return this.eightBallPoolScore(score);
+    return "could not map full score";
   }
 
   tableTennisFullScore(score: string): string {
