@@ -1,9 +1,9 @@
 import { Component, Input, inject } from '@angular/core';
-import { GameTypeSupported, NotAvailable, TournamentDto } from '../tp-model/TpModel';
+import { GameTypeColor, GameTypeSupported, NotAvailable, TournamentDto } from '../tp-model/TpModel';
 import { transformTournamentIsoDate } from '../../Shared/Utility/dateTimeUtility';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
-import { mapStringToEnum } from '../../Shared/Utility/stringUtility';
+import { mapStringToEnum, trimAllSpace } from '../../Shared/Utility/stringUtility';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -75,4 +75,15 @@ export class TournamentCardComponent {
     return 'Active';
   }
 
+  public getGameTypeColor(gameType: string | null | undefined): string {
+    if (gameType == null || gameType == undefined) return GameTypeColor.Default;
+    switch (gameType) {
+      case trimAllSpace(GameTypeSupported.TableTennis):
+        return GameTypeColor.TableTennis
+      case trimAllSpace(GameTypeSupported.EightBallPool):
+        return GameTypeColor.EightBallPool
+      default:
+        return GameTypeColor.Default
+    }
+  }
 }
