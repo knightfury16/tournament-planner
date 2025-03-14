@@ -12,8 +12,24 @@ export class AdminTournamentService {
   private baseUrl: string = inject(TP_BASE_URL);
   private httpClient: HttpClient = inject(HttpClient);
 
-  public getAdminTournaments(): Promise<TournamentDto[]> {
-    return firstValueFrom(this.httpClient.get<TournamentDto[]>(`${this.baseUrl}/tournament/created/admin`, { withCredentials: true }));
+  public getAdminTournaments(
+    name: string = '',
+    searchCategory?: string,
+    status?: string,
+    gameType?: string,
+    startDate?: string,
+    endDate?: string
+  ): Promise<TournamentDto[]> {
+
+    let params = new HttpParams();
+
+    if (name) params = params.set('name', name);
+    if (searchCategory) params = params.set('searchCategory', searchCategory);
+    if (status) params = params.set('status', status);
+    if (gameType) params = params.set('gameType', gameType);
+    if (startDate) params = params.set('startDate', startDate);
+    if (endDate) params = params.set('endDate', endDate);
+    return firstValueFrom(this.httpClient.get<TournamentDto[]>(`${this.baseUrl}/tournament/created/admin`, { withCredentials: true, params }));
   }
   public changeTournamentStatus(tournamentId: string, changedStatus: string): Promise<{ message: string }> {
     //i have to do this coz server is expecting a json object, and if string is sent it can not deserialize
@@ -39,6 +55,6 @@ export class AdminTournamentService {
   }
 
   public makeDraws(tournamentId: string): Promise<DrawDto[]> {
-    return firstValueFrom(this.httpClient.post<DrawDto[]>(`${this.baseUrl}/tournament/${tournamentId}/make-draw`, {} , { withCredentials: true, headers: { 'Content-Type': 'application/json' } }));
+    return firstValueFrom(this.httpClient.post<DrawDto[]>(`${this.baseUrl}/tournament/${tournamentId}/make-draw`, {}, { withCredentials: true, headers: { 'Content-Type': 'application/json' } }));
   }
 }
