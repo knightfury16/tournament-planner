@@ -39,8 +39,9 @@ export enum TournamentStatusColor {
 }
 
 export enum GameTypeColor {
+  Default = "#A0A0A0",
   TableTennis = "#CDC1FF",
-  EightBallPool = "#C1BAA1"
+  EightBallPool = "#C4D9FF"
 }
 
 export enum TournamentType {
