@@ -41,6 +41,7 @@
     }
 
     &::after {
+      // z-index: -1;
       content: '';
       position: absolute;
       bottom: 0;
@@ -48,6 +49,7 @@
       right: 0;
       height: 60px;
       background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+      pointer-events: none; // Allows clicks to pass through
     }
   }
 
