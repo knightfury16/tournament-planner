@@ -31,6 +31,7 @@ export enum TournamentStatus {
 }
 
 export enum TournamentStatusColor {
+  Default = "#A0A0A0",
   Draft = "#A0A0A0",
   RegistrationOpen = "#A0C878",
   RegistrationClosed = "#FFAB5B",
