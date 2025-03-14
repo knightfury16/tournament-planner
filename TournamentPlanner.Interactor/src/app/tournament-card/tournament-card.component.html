@@ -4,7 +4,7 @@
 
     <div class="tournament-image">
         <a [ngClass]="{'disabled-link': getLinkDisableValue()}" [routerLink]="getLink(tournament?.id)">
-            <img src="../../assets/tt.jpg" alt="Tournament">
+      <img [src]="this.getTournamentImageUrl()" alt="Tournament">
         </a>
     </div>
 

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { GameTypeSupported, TournamentDto } from '../tp-model/TpModel';
 import { transformTournamentIsoDate } from '../../Shared/Utility/dateTimeUtility';
 import { MatCardModule } from '@angular/material/card';
@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TournamentImageService } from '../../Shared/tournament-image.service';
 
 @Component({
   selector: 'app-tournament-card',
@@ -21,9 +22,15 @@ export class TournamentCardComponent {
 
   @Input({ required: true, transform: transformTournamentIsoDate }) tournament: TournamentDto | null = null;
   @Input() manage: boolean = false;
+  public tournamentImageService = inject(TournamentImageService);
 
   getVenue() {
     return this.tournament?.venue ?? 'N/A';
+  }
+
+  public getTournamentImageUrl(): string {
+    var gameType = this.getGameType();
+    return this.tournamentImageService.getTournamentCardImageUrl(gameType);
   }
 
   getGameType(): GameTypeSupported | null {
