@@ -38,6 +38,11 @@ export enum TournamentStatusColor {
   Completed = "#4DA1A9"
 }
 
+export enum GameTypeColor {
+  TableTennis = "#CDC1FF",
+  EightBallPool = "#C1BAA1"
+}
+
 export enum TournamentType {
   GroupStage = "Group Stage",
   Knockout = "Knockout"
