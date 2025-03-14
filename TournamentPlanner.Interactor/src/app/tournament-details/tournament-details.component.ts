@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, output, signal } from '@angular/core';
 import { TournamentPlannerService } from '../tournament-planner.service';
-import { DomainRole, PlayerDto, TournamentDto, TournamentStatus } from '../tp-model/TpModel';
+import { DomainRole, GameTypeColor, PlayerDto, TournamentDto, TournamentStatus, TournamentStatusColor } from '../tp-model/TpModel';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../Shared/auth.service';
 import { LoadingService } from '../../Shared/loading.service';
@@ -13,6 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { trimAllSpace } from '../../Shared/Utility/stringUtility';
 import { RouterModule } from '@angular/router';
+import { TournamentColorService } from '../../Shared/tournament-color.service';
 
 @Component({
   selector: 'app-tournament-details',
@@ -31,6 +32,7 @@ export class TournamentDetailsComponent implements OnInit {
   private _snackBar = inject(SnackbarService);
   public authService = inject(AuthService);
   public loadingService = inject(LoadingService);
+  public tournamentColorService = inject(TournamentColorService);
 
   public tournamentDetails = signal<TournamentDto | null>(null);
   public canRegister = false;
@@ -123,21 +125,7 @@ export class TournamentDetailsComponent implements OnInit {
   }
 
   getStatusColor(status: string | null | undefined): string {
-    if (!status) return '';
-    switch (status) {
-      case TournamentStatus.Draft:
-        return 'gray';
-      case trimAllSpace(TournamentStatus.RegistrationOpen):
-        return 'green';
-      case trimAllSpace(TournamentStatus.RegistrationClosed):
-        return 'orange';
-      case TournamentStatus.Ongoing:
-        return 'blue';
-      case TournamentStatus.Completed:
-        return 'purple';
-      default:
-        return 'gray';
-    }
+    return this.tournamentColorService.getTournamentStatusColor(status);
   }
   getParticipantsProgress(): number {
     const tournament = this.tournamentDetails();
