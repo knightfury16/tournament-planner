@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TournamentImageService } from '../../Shared/tournament-image.service';
+import { TournamentColorService } from '../../Shared/tournament-color.service';
 
 @Component({
   selector: 'app-tournament-card',
@@ -23,6 +24,7 @@ export class TournamentCardComponent {
   @Input({ required: true, transform: transformTournamentIsoDate }) tournament: TournamentDto | null = null;
   @Input() manage: boolean = false;
   public tournamentImageService = inject(TournamentImageService);
+  public tournamentColorService = inject(TournamentColorService);
 
   getVenue() {
     var venue = this.tournament?.venue;
@@ -76,14 +78,6 @@ export class TournamentCardComponent {
   }
 
   public getGameTypeColor(gameType: string | null | undefined): string {
-    if (gameType == null || gameType == undefined) return GameTypeColor.Default;
-    switch (gameType) {
-      case trimAllSpace(GameTypeSupported.TableTennis):
-        return GameTypeColor.TableTennis
-      case trimAllSpace(GameTypeSupported.EightBallPool):
-        return GameTypeColor.EightBallPool
-      default:
-        return GameTypeColor.Default
-    }
+    return this.tournamentColorService.getGameTypeColor(gameType);
   }
 }
