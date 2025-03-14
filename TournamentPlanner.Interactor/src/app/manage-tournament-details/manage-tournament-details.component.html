@@ -1,5 +1,10 @@
 <div class="management-container" *ngIf="tournamentDetails() as tournament">
   <mat-card class="overview-card">
+    <div class="btn-div">
+      <a mat-icon-button class="back-btn" [routerLink]="['/tp/admin-created-tournament-list']">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+    </div>
     <mat-card-header>
       <mat-card-title>Tournament Overview</mat-card-title>
       <mat-card-subtitle>

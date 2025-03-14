@@ -14,6 +14,7 @@ import { AdminTournamentService } from '../../Shared/admin-tournament.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-manage-tournament-details',
@@ -27,7 +28,8 @@ import { MatChipsModule } from '@angular/material/chips';
     MatButtonModule,
     MatIconModule,
     MatDividerModule,
-    MatChipsModule
+    MatChipsModule,
+    RouterModule
   ],
   templateUrl: './manage-tournament-details.component.html',
   styleUrl: './manage-tournament-details.component.scss'
