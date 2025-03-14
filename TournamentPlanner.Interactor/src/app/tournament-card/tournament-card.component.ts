@@ -13,13 +13,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 @Component({
   selector: 'app-tournament-card',
   standalone: true,
-  imports: [MatIconModule, MatCardModule, MatButtonModule, MatChipsModule, RouterModule, CommonModule,MatTooltipModule],
+  imports: [MatIconModule, MatCardModule, MatButtonModule, MatChipsModule, RouterModule, CommonModule, MatTooltipModule],
   templateUrl: './tournament-card.component.html',
   styleUrl: './tournament-card.component.scss'
 })
 export class TournamentCardComponent {
 
-   @Input({ required: true, transform: transformTournamentIsoDate }) tournament: TournamentDto | null = null;
+  @Input({ required: true, transform: transformTournamentIsoDate }) tournament: TournamentDto | null = null;
   @Input() manage: boolean = false;
 
   getVenue() {
@@ -33,7 +33,7 @@ export class TournamentCardComponent {
 
   getLink(tournamentId: number | undefined): string | any[] | null | undefined {
     if (tournamentId == null) return;
-    return this.manage 
+    return this.manage
       ? ['/tp/manage-tournament-homepage', tournamentId]
       : ['/tp/tournament-details-homepage', tournamentId];
   }
@@ -48,7 +48,7 @@ export class TournamentCardComponent {
     const endDate = this.tournament?.endDate ? new Date(this.tournament.endDate) : null;
 
     if (!startDate || !endDate) return 'gray';
-    
+
     if (currentDate < startDate) return '#2196F3'; // Upcoming - Blue
     if (currentDate > endDate) return '#FF5722'; // Completed - Orange
     return '#4CAF50'; // Active - Green
@@ -60,7 +60,7 @@ export class TournamentCardComponent {
     const endDate = this.tournament?.endDate ? new Date(this.tournament.endDate) : null;
 
     if (!startDate || !endDate) return 'Unknown';
-    
+
     if (currentDate < startDate) return 'Upcoming';
     if (currentDate > endDate) return 'Completed';
     return 'Active';
