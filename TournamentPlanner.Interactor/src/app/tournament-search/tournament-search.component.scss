@@ -1,0 +1,30 @@
+  .search-section {
+    margin-bottom: 24px;
+
+    .basic-search {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 16px;
+
+      .search-input {
+        flex-grow: 1;
+      }
+
+      .search-buttons {
+        display: flex;
+        gap: 8px;
+      }
+    }
+
+    .advanced-search {
+      margin-top: 16px;
+
+      .advanced-search-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+        margin-top: 16px;
+      }
+    }
+  }

@@ -1,0 +1,66 @@
+<div class="search-section">
+  <mat-card>
+    <mat-card-content>
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+        <!-- Basic Search -->
+        <div class="basic-search">
+          <mat-form-field class="search-input">
+            <mat-label>Search Tournaments</mat-label>
+            <input matInput formControlName="name" placeholder="Enter tournament name...">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+          <div class="search-buttons">
+            <button mat-raised-button color="primary" type="submit">
+              Search
+            </button>
+            <button mat-button type="button" (click)="clearSearch()">
+              Clear
+            </button>
+          </div>
+        </div>
+
+        <!-- Advanced Search Panel -->
+        <mat-expansion-panel class="advanced-search">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Advanced Search Options
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="advanced-search-grid">
+            <mat-form-field>
+              <mat-label>Category</mat-label>
+              <mat-select formControlName="searchCategory">
+                <mat-option *ngFor="let type of this.tournamentSearchCategory| keyvalue" [value]="type.key">{{type.value}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="status">
+                <mat-option *ngFor="let value of this.statusOptions" [value]="value">{{value}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Game Type</mat-label>
+              <mat-select formControlName="gameType">
+                <mat-option *ngFor="let type of this.gameTypeSupported | keyvalue" [value]="type.key">{{type.value}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Tournament Date Range</mat-label>
+              <mat-date-range-input [rangePicker]="tournamentDateRange">
+                <input matStartDate placeholder="Start date" formControlName="startDate">
+                <input matEndDate placeholder="End date" formControlName="endDate">
+              </mat-date-range-input>
+              <mat-datepicker-toggle matIconSuffix [for]="tournamentDateRange"></mat-datepicker-toggle>
+              <mat-date-range-picker #tournamentDateRange></mat-date-range-picker>
+            </mat-form-field>
+          </div>
+        </mat-expansion-panel>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
