@@ -1,5 +1,5 @@
 import { Component, Input, inject } from '@angular/core';
-import { GameTypeSupported, TournamentDto } from '../tp-model/TpModel';
+import { GameTypeSupported, NotAvailable, TournamentDto } from '../tp-model/TpModel';
 import { transformTournamentIsoDate } from '../../Shared/Utility/dateTimeUtility';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -25,7 +25,9 @@ export class TournamentCardComponent {
   public tournamentImageService = inject(TournamentImageService);
 
   getVenue() {
-    return this.tournament?.venue ?? 'N/A';
+    var venue = this.tournament?.venue;
+    if (venue == undefined || venue == null || venue == "") return NotAvailable;
+    return venue;
   }
 
   public getTournamentImageUrl(): string {
