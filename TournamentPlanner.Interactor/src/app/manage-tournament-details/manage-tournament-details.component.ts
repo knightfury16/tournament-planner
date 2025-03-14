@@ -114,17 +114,17 @@ export class ManageTournamentDetailsComponent implements OnInit {
   getStatusColor(status: string): string {
     switch (status) {
       case TournamentStatus.Draft:
-        return 'gray';
+        return TournamentStatusColor.Draft;
       case trimAllSpace(TournamentStatus.RegistrationOpen):
-        return '#4CAF50';
+        return TournamentStatusColor.RegistrationOpen;
       case trimAllSpace(TournamentStatus.RegistrationClosed):
-        return '#FF9800';
+        return TournamentStatusColor.RegistrationClosed;
       case TournamentStatus.Ongoing:
-        return '#2196F3';
+        return TournamentStatusColor.Ongoing;
       case TournamentStatus.Completed:
-        return '#9C27B0';
+        return TournamentStatusColor.Completed;
       default:
-        return 'gray';
+        return TournamentStatusColor.Draft;
     }
   }
 }
