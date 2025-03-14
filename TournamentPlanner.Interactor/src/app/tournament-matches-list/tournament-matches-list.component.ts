@@ -69,9 +69,6 @@ export class TournamentMatchesListComponent implements OnInit {
     })
   }
 
-  public isMatchAvailable(): boolean {
-    return this.matchCardModels.length > 0;
-  }
 
   async ngOnInit() {
     try {

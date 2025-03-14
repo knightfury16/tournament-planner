@@ -7,7 +7,7 @@
 
     <mat-card-content>
       <div class="rounds-container">
-      @if(this.isMatchAvailable())
+      @if(this.draws() && this.draws()!.length > 0)
       {
             <div class="round" *ngFor="let item of matchCardModels() | keyvalue">
                 <div class="round-header">
