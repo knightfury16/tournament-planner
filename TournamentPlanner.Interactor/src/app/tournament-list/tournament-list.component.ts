@@ -1,23 +1,16 @@
 import { Component, inject } from '@angular/core';
 import { TournamentPlannerService } from '../tournament-planner.service';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 
 import {
   BehaviorSubject,
-  debounceTime,
-  distinctUntilChanged,
-  firstValueFrom,
-  map,
-  startWith,
-  switchMap,
 } from 'rxjs';
 import { RouterModule } from '@angular/router';
-import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
-import { MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { GameTypeSupported, TournamentDto, TournamentSearchCategory, TournamentStatus } from '../tp-model/TpModel';
@@ -30,13 +23,14 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatNativeDateModule } from '@angular/material/core';
 import { trimAllSpace } from '../../Shared/Utility/stringUtility';
 import { LoadingService } from '../../Shared/loading.service';
+import { TournamentSearchComponent, TournamentSearchCriteria } from '../tournament-search/tournament-search.component';
 
 @Component({
   selector: 'app-tournament-list',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule, MatFormFieldModule,
     MatInputModule, MatListModule, MatCardModule, MatIconModule, MatButtonModule, MatNativeDateModule,
-    MatTabsModule, TournamentCardComponent, MatDatepickerModule, MatSelectModule, MatProgressSpinner, MatExpansionModule],
+    MatTabsModule, TournamentCardComponent, MatDatepickerModule, MatSelectModule, MatProgressSpinner, MatExpansionModule, TournamentSearchComponent],
   templateUrl: './tournament-list.component.html',
   styleUrl: './tournament-list.component.scss'
 })
@@ -112,20 +106,17 @@ export class TournamentListComponent {
     return isAdvancedSearchActive;
   }
 
-  onSearch() {
-    this.loadingService.show();
-    const formValues = this.searchForm.value;
 
-    const startDate = formValues.startDate ? formValues.startDate.toISOString() : '';
-    const endDate = formValues.endDate ? formValues.endDate.toISOString() : '';
+  onSearch(criteria: TournamentSearchCriteria) {
+    this.loadingService.show();
 
     this.tp.getTournament(
-      formValues.name,
-      formValues.searchCategory,
-      trimAllSpace(formValues.status),
-      formValues.gameType,
-      startDate,
-      endDate
+      criteria.name,
+      criteria.searchCategory,
+      criteria.status,
+      criteria.gameType,
+      criteria.startDate,
+      criteria.endDate
     ).subscribe({
       next: (tournaments) => {
         this.tournaments$.next(this.processTournaments(tournaments));
@@ -143,8 +134,7 @@ export class TournamentListComponent {
     return [this.tournamentStatus.RegistrationOpen, this.tournamentStatus.Ongoing, this.tournamentStatus.RegistrationClosed, this.tournamentStatus.Completed];
   }
 
-  clearSearch() {
-    this.searchForm.reset();
+  public onClear() {
     this.loadInitialTournaments();
   }
 }

@@ -3,37 +3,6 @@
   margin: 0 auto;
   padding: 24px;
 
-  .search-section {
-    margin-bottom: 24px;
-
-    .basic-search {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      margin-bottom: 16px;
-
-      .search-input {
-        flex-grow: 1;
-      }
-
-      .search-buttons {
-        display: flex;
-        gap: 8px;
-      }
-    }
-
-    .advanced-search {
-      margin-top: 16px;
-
-      .advanced-search-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 16px;
-        margin-top: 16px;
-      }
-    }
-  }
-
   .results-section {
     position: relative;
     min-height: 200px;
@@ -75,7 +44,7 @@
 
     .basic-search {
       flex-direction: column;
-      
+
       .search-buttons {
         width: 100%;
         button {
