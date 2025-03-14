@@ -29,6 +29,15 @@ export enum TournamentStatus {
   Ongoing = "Ongoing",
   Completed = "Completed"
 }
+
+export enum TournamentStatusColor {
+  Draft = "#A0A0A0",
+  RegistrationOpen = "#A0C878",
+  RegistrationClosed = "#FFAB5B",
+  Ongoing = "#7886C7",
+  Completed = "#4DA1A9"
+}
+
 export enum TournamentType {
   GroupStage = "Group Stage",
   Knockout = "Knockout"
