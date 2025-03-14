@@ -266,9 +266,20 @@ namespace TournamentPlanner.Api.Controllers
         [HttpGet("created/admin", Name = nameof(GetTournamentCreatedByAnAdmin))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TournamentDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetTournamentCreatedByAnAdmin()
+        public async Task<IActionResult> GetTournamentCreatedByAnAdmin(
+            [FromQuery] TournamentSearchParams searchParams
+        )
         {
-            var getTournamentsByAdmin = new GetAdminCreatedTournamentsRequest();
+            var getTournamentsByAdmin = new GetAdminCreatedTournamentsRequest
+            {
+                Name = searchParams.Name,
+                SearchCategory = searchParams.SearchCategory ?? TournamentSearchCategory.All,
+                Status = searchParams.Status,
+                GameTypeSupported = searchParams.GameTypeSupported,
+                StartDate = searchParams.StartDate,
+                EndDate = searchParams.EndDate,
+            };
+
             var tournamentsDto = await _mediator.Send(getTournamentsByAdmin);
 
             if (tournamentsDto == null)
