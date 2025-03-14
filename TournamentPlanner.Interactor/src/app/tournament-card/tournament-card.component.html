@@ -16,9 +16,10 @@
                 </a>
             </h2>
             @if (getGameType()) {
-            <mat-chip-set>
+            <div class="my-chip">
+                <mat-chip [style.background-color]="this.getTournamentStatusColor(this.tournament?.status)" [style.color]="'white'">{{this.tournament?.status ?? "Draft"}}</mat-chip>
                 <mat-chip [style.background-color]="getGameTypeColor(this.tournament?.gameTypeDto?.name)" [style.color]="'white'">{{getGameType()}}</mat-chip>
-            </mat-chip-set>
+            </div>
             }
         </div>
 

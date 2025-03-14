@@ -80,4 +80,9 @@ export class TournamentCardComponent {
   public getGameTypeColor(gameType: string | null | undefined): string {
     return this.tournamentColorService.getGameTypeColor(gameType);
   }
+
+  public getTournamentStatusColor(status: string | null | undefined): string {
+    return this.tournamentColorService.getTournamentStatusColor(status);
+
+  }
 }
