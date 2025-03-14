@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
-import { TournamentDto, TournamentStatus } from '../tp-model/TpModel';
+import { TournamentDto, TournamentStatus, TournamentStatusColor } from '../tp-model/TpModel';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { transformTournamentIsoDate } from '../../Shared/Utility/dateTimeUtility';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { RouterModule } from '@angular/router';
+import { TournamentColorService } from '../../Shared/tournament-color.service';
 
 @Component({
   selector: 'app-manage-tournament-details',
@@ -48,6 +49,7 @@ export class ManageTournamentDetailsComponent implements OnInit {
   public tournamentDetails = signal<TournamentDto | null>(null);
   public selectedStatus: TournamentStatus | undefined = undefined;
   public statusFormControl = new FormControl();
+  public tournamentColorService = inject(TournamentColorService);
 
   async ngOnInit() {
     if (this.tournamentId == undefined) { return; }
@@ -114,19 +116,6 @@ export class ManageTournamentDetailsComponent implements OnInit {
   }
 
   getStatusColor(status: string): string {
-    switch (status) {
-      case TournamentStatus.Draft:
-        return TournamentStatusColor.Draft;
-      case trimAllSpace(TournamentStatus.RegistrationOpen):
-        return TournamentStatusColor.RegistrationOpen;
-      case trimAllSpace(TournamentStatus.RegistrationClosed):
-        return TournamentStatusColor.RegistrationClosed;
-      case TournamentStatus.Ongoing:
-        return TournamentStatusColor.Ongoing;
-      case TournamentStatus.Completed:
-        return TournamentStatusColor.Completed;
-      default:
-        return TournamentStatusColor.Draft;
-    }
+    return this.tournamentColorService.getTournamentStatusColor(status);
   }
 }
