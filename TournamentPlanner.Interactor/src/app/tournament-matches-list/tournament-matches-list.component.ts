@@ -35,27 +35,27 @@ export type MatchModel = {
 @Component({
   selector: 'app-tournament-matches-list',
   standalone: true,
-  imports: [MatCardModule, MatTabsModule, MatGridListModule, TournamentMatchComponent, CommonModule,MatDividerModule, MatIconModule],
+  imports: [MatCardModule, MatTabsModule, MatGridListModule, TournamentMatchComponent, CommonModule, MatDividerModule, MatIconModule],
   templateUrl: './tournament-matches-list.component.html',
   styleUrl: './tournament-matches-list.component.scss'
 })
 export class TournamentMatchesListComponent implements OnInit {
-  @Input({required: true}) public tournamentId?: string;
-  @Input({required: true}) public gameType?: GameTypeDto | null;
+  @Input({ required: true }) public tournamentId?: string;
+  @Input({ required: true }) public gameType?: GameTypeDto | null;
 
   @Input() public manage: boolean = false;
 
-  @Output() public matchTabChangeEventWithSelectedMatchId = new EventEmitter<{viewType: MatchTabViewType, matchId: number}>();
+  @Output() public matchTabChangeEventWithSelectedMatchId = new EventEmitter<{ viewType: MatchTabViewType, matchId: number }>();
 
   private _tpService = inject(TournamentPlannerService);
   private _loadingService = inject(LoadingService);
 
-  public draws = signal< DrawDto[] | undefined>(undefined);
+  public draws = signal<DrawDto[] | undefined>(undefined);
   public matchSelectedId = signal<number | undefined>(undefined);
 
-  public matchCardModels = computed<{[roundName: string]: MatchModel[]}>(() => {
-    if(this.draws() == undefined) return {};
-    return this.getMatchCardModels().reduce((acc: {[roundName: string]: MatchModel[]}, match) => {
+  public matchCardModels = computed<{ [roundName: string]: MatchModel[] }>(() => {
+    if (this.draws() == undefined) return {};
+    return this.getMatchCardModels().reduce((acc: { [roundName: string]: MatchModel[] }, match) => {
       const roundName = match.roundName || 'Default';
       if (!acc[roundName]) acc[roundName] = [];
       acc[roundName].push(match);
@@ -63,43 +63,45 @@ export class TournamentMatchesListComponent implements OnInit {
     }, {});
   });
 
-  constructor(){
-    effect(() =>{
+  constructor() {
+    effect(() => {
       console.log("MATCHCARDMODLESSSSSS:::", this.matchCardModels());
     })
   }
 
+  public isMatchAvailable(): boolean {
+    return this.matchCardModels.length > 0;
+  }
 
-  async ngOnInit(){
+  async ngOnInit() {
     try {
       this._loadingService.show()
       var response = await this._tpService.getTournamentMatches(this.tournamentId!.toString());
       this.draws.set(response);
       this._loadingService.hide();
-      
+
     } catch (error: any) {
       this._loadingService.hide();
       console.log(error);
     }
   }
 
-  public matchSelectedEC(matchId: number){
+  public matchSelectedEC(matchId: number) {
     this.matchSelectedId.set(matchId);
     //if from manage then change match tab view to addscore
-    if(this.manage){
+    if (this.manage) {
       this.emitMatchTabChangeEvent();
     }
   }
 
-  public emitMatchTabChangeEvent()
-  {
-    this.matchTabChangeEventWithSelectedMatchId.emit({ viewType:MatchTabViewType.AddScoreView, matchId: this.matchSelectedId()! })
+  public emitMatchTabChangeEvent() {
+    this.matchTabChangeEventWithSelectedMatchId.emit({ viewType: MatchTabViewType.AddScoreView, matchId: this.matchSelectedId()! })
   }
 
   getMatchCardModels(): MatchModel[] {
-    return this.draws()!.flatMap(draw => 
-      draw.matchType.rounds.flatMap(round => 
-        round.matches.map(match  => {
+    return this.draws()!.flatMap(draw =>
+      draw.matchType.rounds.flatMap(round =>
+        round.matches.map(match => {
           const matchCardModel: MatchModel = {
             matchId: match.id,
             firstPlayer: match.firstPlayer,

@@ -6,7 +6,9 @@
     </mat-card-header>
 
     <mat-card-content>
-        <div class="rounds-container">
+      <div class="rounds-container">
+      @if(this.isMatchAvailable())
+      {
             <div class="round" *ngFor="let item of matchCardModels() | keyvalue">
                 <div class="round-header">
                     <div class="round-badge">
@@ -24,6 +26,15 @@
                     </div>
                 </div>
             </div>
-        </div>
+      }
+      @else
+      {
+            <div class="no-matches">
+                <mat-icon class="no-matches-icon">sports_esports</mat-icon>
+                <p>No matches yet</p>
+            </div>
+      }
+      </div>
+
     </mat-card-content>
 </mat-card>
