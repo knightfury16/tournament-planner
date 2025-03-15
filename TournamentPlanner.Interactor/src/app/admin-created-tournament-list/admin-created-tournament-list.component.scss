@@ -18,6 +18,7 @@ mat-form-field.mat-focused {
 
 .container {
     min-height: 100vh;
+    border-radius: 10px;
 }
 
 .card-title {
@@ -25,9 +26,15 @@ mat-form-field.mat-focused {
 }
 
 .card-header {
-    background-color: #E5E3D4;
+    border-radius: 10px 10px 0px 0px;
+    background-color: #C6E7FF;
     padding: 10px;
     margin-bottom: 8px;
+    justify-content: center;
+}
+.card-title{
+
+  color: #003161;
 }
 .empty
 {
