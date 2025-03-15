@@ -22,6 +22,6 @@ namespace TournamentPlanner.Application.DTOs
         public List<PlayerDto>? Participants { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdateAt { get; set; }
-
+        public string? TournamentType { get; set; }
     }
 }
