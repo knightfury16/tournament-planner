@@ -130,6 +130,21 @@ export class AddTournamentComponent implements OnInit {
     return null;
   }
 
+  // Custom validator for minParticipant
+  public minParticipantValidator(control: AbstractControl) {
+    const value = control.value ? parseInt(control.value) : null;
+    var knockOutStartNumberValue = this.addTournamentForm?.get('knockOutStartNumber')?.value;
+    var knockOutStartNumberValue = this.addTournamentForm?.get('knockOutStartNumber')?.value;
+    var tournamentTypeValue = this.addTournamentForm?.get('tournamentType')?.value;
+    //if GroupStage and knockOutStartNumber
+    if (tournamentTypeValue && tournamentTypeValue == trimAllSpace(this.tournamentType.GroupStage) && knockOutStartNumberValue) {
+      if (value && value < knockOutStartNumberValue) {
+        return { 'MinLimit': true };
+      }
+    }
+    return null;
+  }
+
   public async onClickCreate() {
     if (this.addTournamentForm.valid) {
       this.addTournamentDto = {
