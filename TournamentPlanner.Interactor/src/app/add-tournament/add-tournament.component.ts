@@ -64,7 +64,7 @@ export class AddTournamentComponent implements OnInit {
       gameType: new FormControl<GameTypeSupported | null>(null, [Validators.required]),
       status: new FormControl<string>(TournamentStatus.Draft, [Validators.required]),
       registrationLastDate: new FormControl<Date | null>(null, [this.registrationLastDateValidator.bind(this)]),
-      maxParticipant: new FormControl<string>('', [this.maxParticipantValidator.bind(this)]),
+      maxParticipant: new FormControl<string>('', [Validators.min(2), this.minParticipantValidator.bind(this), this.maxParticipantValidator.bind(this)]),
       venue: new FormControl<string>(''),
       registrationFee: new FormControl<string>(''),
       minimumAgeOfRegistration: new FormControl<number | null>(null),
@@ -98,7 +98,8 @@ export class AddTournamentComponent implements OnInit {
 
     var tournamentTypeValue = this.addTournamentForm.get('tournamentType')?.value;
     var knockOutStartNumberValue = this.addTournamentForm.get('knockOutStartNumber')?.value;
-    var currentMaxParticipantValue = this.addTournamentForm.get('maxParticipant')?.value;
+    var currentMaxParticipant = this.addTournamentForm.get('maxParticipant');
+    var currentMaxParticipantValue = currentMaxParticipant?.value;
     var currentMaxParticipantNumber = currentMaxParticipantValue ? parseInt(currentMaxParticipantValue) : null;
 
     if (tournamentTypeValue == trimAllSpace(this.tournamentType.Knockout)) {
@@ -117,6 +118,7 @@ export class AddTournamentComponent implements OnInit {
         this.addTournamentForm.get('maxParticipant')?.setValue(this.maxParticipantLimit()!.toString());
       }
     }
+    currentMaxParticipant?.updateValueAndValidity();
   }
 
   // Custom validator for maxParticipant
