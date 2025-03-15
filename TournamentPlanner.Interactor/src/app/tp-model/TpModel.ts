@@ -18,6 +18,7 @@ export interface TournamentDto {
   gameTypeDto?: GameTypeDto | null;
   createdAt?: string | null;
   updateAt?: string | null;
+  tournamentType?: string | null
 
 }
 
