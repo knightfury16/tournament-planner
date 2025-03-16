@@ -56,10 +56,12 @@ export class EightBallPoolAddScoreComponent extends BaseAddScoreComponent {
 
     // Watch for changes in rack values to trigger validation
     this.scoreForm.get('player1Racks')?.valueChanges.subscribe(() => {
+      this.scoreError.set(undefined);
       this.scoreForm.get('player2Racks')?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
     });
 
     this.scoreForm.get('player2Racks')?.valueChanges.subscribe(() => {
+      this.scoreError.set(undefined);
       this.scoreForm.get('player1Racks')?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
     });
 
