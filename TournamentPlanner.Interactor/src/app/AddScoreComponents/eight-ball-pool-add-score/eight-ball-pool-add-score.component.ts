@@ -37,12 +37,14 @@ export class EightBallPoolAddScoreComponent extends BaseAddScoreComponent {
       player1Racks: new FormControl(0, [
         Validators.required,
         Validators.min(0),
-        this.racksValidator()
+        this.racksValidator(),
+        this.sameValidator()
       ]),
       player2Racks: new FormControl(0, [
         Validators.required,
         Validators.min(0),
-        this.racksValidator()
+        this.racksValidator(),
+        this.sameValidator()
       ])
     });
 
@@ -50,19 +52,18 @@ export class EightBallPoolAddScoreComponent extends BaseAddScoreComponent {
     this.scoreForm.get('raceTo')?.valueChanges.subscribe(() => {
       this.scoreForm.get('player1Racks')?.updateValueAndValidity();
       this.scoreForm.get('player2Racks')?.updateValueAndValidity();
-      this.scoreForm.updateValueAndValidity();
     });
 
     // Watch for changes in rack values to trigger validation
     this.scoreForm.get('player1Racks')?.valueChanges.subscribe(() => {
-      this.scoreForm.updateValueAndValidity();
+      this.scoreForm.get('player2Racks')?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
     });
 
     this.scoreForm.get('player2Racks')?.valueChanges.subscribe(() => {
-      this.scoreForm.updateValueAndValidity();
+      this.scoreForm.get('player1Racks')?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
     });
-  }
 
+  }
 
   private racksValidator() {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -73,9 +74,26 @@ export class EightBallPoolAddScoreComponent extends BaseAddScoreComponent {
 
       const player1Racks = this.scoreForm.get('player1Racks')?.value;
       const player2Racks = this.scoreForm.get('player2Racks')?.value;
-      if (player1Racks > raceTo || player2Racks > raceTo) {
-        return { max: true };
+      if (player1Racks && player1Racks > raceTo) {
+        return { maxp1: true };
       }
+      if (player2Racks && player2Racks > raceTo) {
+        return { maxp2: true };
+      }
+
+      return null;
+    };
+  }
+
+  private sameValidator() {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!this.scoreForm) return null;
+
+      const raceTo = this.scoreForm.get('raceTo')?.value;
+      if (raceTo === undefined) return null;
+
+      const player1Racks = this.scoreForm.get('player1Racks')?.value;
+      const player2Racks = this.scoreForm.get('player2Racks')?.value;
 
       if (player1Racks == player2Racks) {
         return { same: true }

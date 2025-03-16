@@ -38,7 +38,7 @@
                             <mat-error *ngIf="scoreForm.get('player1Racks')?.hasError('same')">
                                 Both Player can not have the same value
                             </mat-error>
-                            <mat-error *ngIf="scoreForm.get('player1Racks')?.hasError('max')">
+                            <mat-error *ngIf="scoreForm.get('player1Racks')?.hasError('maxp1')">
                                 Racks cannot exceed race to value
                             </mat-error>
                         </mat-form-field>
@@ -52,7 +52,7 @@
                             <mat-error *ngIf="scoreForm.get('player2Racks')?.hasError('same')">
                                 Both Player can not have the same value
                             </mat-error>
-                            <mat-error *ngIf="scoreForm.get('player2Racks')?.hasError('max')">
+                            <mat-error *ngIf="scoreForm.get('player2Racks')?.hasError('maxp2')">
                                 Racks cannot exceed race to value
                             </mat-error>
                         </mat-form-field>
