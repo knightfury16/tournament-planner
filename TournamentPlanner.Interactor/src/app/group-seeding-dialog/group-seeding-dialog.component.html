@@ -1,0 +1,25 @@
+<mat-dialog-content class="dialog-content">
+  <h2>Select Players</h2>
+  <mat-form-field class="full-width">
+    <mat-label>Choose Players</mat-label>
+    <mat-select [multiple]="false" disableOptionCentering panelClass="custom-dropdown">
+      <mat-option *ngFor="let player of availablePlayers" (click)="selectPlayer(player)">
+        {{ player }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="selected-chips" *ngIf="selectedPlayers.length > 0">
+    <mat-chip-set>
+      <mat-chip *ngFor="let player of selectedPlayers" removable (removed)="removePlayer(player)">
+        {{ player }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+    </mat-chip-set>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="closeDialog()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="confirmSelection()">Confirm</button>
+</mat-dialog-actions>
