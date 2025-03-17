@@ -22,6 +22,7 @@ import { DrawTabViewType } from '../tournament-details-homepage/tournament-detai
 import { LoadingService } from '../../Shared/loading.service';
 import { AdminTournamentService } from '../../Shared/admin-tournament.service';
 import { MatIconModule } from '@angular/material/icon';
+import { SnackbarService } from '../../Shared/snackbar.service';
 
 @Component({
   selector: 'app-tournament-draw-list',
@@ -48,6 +49,7 @@ export class TournamentDrawListComponent implements OnInit {
   private _tpService = inject(TournamentPlannerService);
   private _adminService = inject(AdminTournamentService);
   private _loadingService = inject(LoadingService);
+  private _snackBarService = inject(SnackbarService);
   public canIMakeDraw = signal(false);
   public draws = signal<DrawDto[] | undefined>(undefined);
 
@@ -67,7 +69,7 @@ export class TournamentDrawListComponent implements OnInit {
         this.tournamentId!
       );
       this.draws.set(reqResponse);
-      if(this.manage)await this.checkIfICanMakeDraw();
+      if (this.manage) await this.checkIfICanMakeDraw();
       console.log("CALING CAN I DRAW REQ from ONINIT")
       this._loadingService.hide();
     } catch (error) {
@@ -111,7 +113,8 @@ export class TournamentDrawListComponent implements OnInit {
       await this.checkIfICanMakeDraw();
       this.draws.set(response);
       this._loadingService.hide();
-    } catch (error) {
+    } catch (error: any) {
+      this._snackBarService.showError(error?.error?.Error ?? "An unknown error occurred.");
       this._loadingService.hide();
       console.log(error);
     }
