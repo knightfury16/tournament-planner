@@ -54,6 +54,6 @@ export class GroupSeedingDialogComponent implements OnInit {
   }
 
   confirmSelection() {
-    this.dialogRef.close(this.selectedPlayers);
+    this.dialogRef.close(this.selectedPlayers.map(p => p.id));
   }
 }
