@@ -14,6 +14,7 @@ import { DrawDto, MatchTypeDto } from '../tp-model/TpModel';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
 import { MatCommonModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { getDateStringInFormat } from '../../Shared/Utility/dateTimeUtility';
@@ -23,6 +24,7 @@ import { LoadingService } from '../../Shared/loading.service';
 import { AdminTournamentService } from '../../Shared/admin-tournament.service';
 import { MatIconModule } from '@angular/material/icon';
 import { SnackbarService } from '../../Shared/snackbar.service';
+import { GroupSeedingDialogComponent } from '../group-seeding-dialog/group-seeding-dialog.component';
 
 @Component({
   selector: 'app-tournament-draw-list',
@@ -52,6 +54,7 @@ export class TournamentDrawListComponent implements OnInit {
   private _snackBarService = inject(SnackbarService);
   public canIMakeDraw = signal(false);
   public draws = signal<DrawDto[] | undefined>(undefined);
+  public readonly dialog = inject(MatDialog);
 
   constructor() {
     if (this.manage) {
@@ -108,15 +111,27 @@ export class TournamentDrawListComponent implements OnInit {
 
   public async makeDraw() {
     try {
-      this._loadingService.show();
-      var response = await this._adminService.makeDraws(this.tournamentId!.toString());
-      await this.checkIfICanMakeDraw();
-      this.draws.set(response);
-      this._loadingService.hide();
+      // check tournament start date
+      // show the seeding dialog
+      this.seedingDilaog();
+
+
+      // make the draw
     } catch (error: any) {
       this._snackBarService.showError(error?.error?.Error ?? "An unknown error occurred.");
       this._loadingService.hide();
       console.log(error);
     }
   }
+
+
+  public seedingDilaog() {
+    var dialogRef = this.dialog.open(GroupSeedingDialogComponent, { height: '400px', width: '600px' });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The Dialog was closed')
+
+    })
+  }
+
 }

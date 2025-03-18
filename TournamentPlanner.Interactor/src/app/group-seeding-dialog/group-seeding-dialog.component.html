@@ -1,5 +1,6 @@
 <mat-dialog-content class="dialog-content">
-  <h2>Select Players</h2>
+  <mat-card-title>Select Players to Seed</mat-card-title>
+  <p>Seeded player will be placed in different groups</p>
   <mat-form-field class="full-width">
     <mat-label>Choose Players</mat-label>
     <mat-select [multiple]="false" disableOptionCentering panelClass="custom-dropdown">
@@ -21,5 +22,5 @@
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="closeDialog()">Cancel</button>
-  <button mat-flat-button color="primary" (click)="confirmSelection()">Confirm</button>
+  <button mat-flat-button color="primary" (click)="confirmSelection()">Continue Draw</button>
 </mat-dialog-actions>
