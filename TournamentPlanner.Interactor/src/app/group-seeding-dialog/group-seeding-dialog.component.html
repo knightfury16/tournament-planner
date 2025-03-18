@@ -4,8 +4,8 @@
   <mat-form-field class="full-width">
     <mat-label>Choose Players</mat-label>
     <mat-select [multiple]="false" disableOptionCentering panelClass="custom-dropdown">
-      <mat-option *ngFor="let player of availablePlayers" (click)="selectPlayer(player)">
-        {{ player }}
+      <mat-option *ngFor="let player of availablePlayers()" (click)="this.selectPlayer(player)">
+        {{ player.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>
@@ -13,7 +13,7 @@
   <div class="selected-chips" *ngIf="selectedPlayers.length > 0">
     <mat-chip-set>
       <mat-chip *ngFor="let player of selectedPlayers" removable (removed)="removePlayer(player)">
-        {{ player }}
+        {{ player.name }}
         <mat-icon matChipRemove>cancel</mat-icon>
       </mat-chip>
     </mat-chip-set>

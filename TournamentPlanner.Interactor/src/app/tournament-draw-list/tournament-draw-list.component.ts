@@ -126,7 +126,8 @@ export class TournamentDrawListComponent implements OnInit {
 
 
   public seedingDilaog() {
-    var dialogRef = this.dialog.open(GroupSeedingDialogComponent, { height: '400px', width: '600px' });
+    var dialogRef = this.dialog.open(GroupSeedingDialogComponent,
+      { height: '400px', width: '600px', data: this.tournamentId });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The Dialog was closed')
