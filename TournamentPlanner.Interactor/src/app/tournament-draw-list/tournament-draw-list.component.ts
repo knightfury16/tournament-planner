@@ -134,6 +134,13 @@ export class TournamentDrawListComponent implements OnInit {
 
 
   public async seedingDilaog() {
+
+    //only show the dialog if it is the first draw of the tournament
+    if (this.draws() && this.draws()?.length != 0) {
+      // await this.makeDraw([]);
+      return;
+    }
+
     var dialogRef = this.dialog.open(GroupSeedingDialogComponent,
       { height: '400px', width: '600px', data: this.tournamentId, autoFocus: false });
 
