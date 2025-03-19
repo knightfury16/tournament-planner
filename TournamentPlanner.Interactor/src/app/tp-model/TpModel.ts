@@ -14,6 +14,7 @@ export interface TournamentDto {
   registrationFee: number;
   minimumAgeOfRegistration: number;
   maxParticipant: number;
+  knockOutStartNumber: number;
   status?: string | null;
   gameTypeDto?: GameTypeDto | null;
   createdAt?: string | null;
