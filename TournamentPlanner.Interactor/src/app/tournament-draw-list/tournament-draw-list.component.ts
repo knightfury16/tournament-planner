@@ -10,7 +10,7 @@ import {
   signal,
 } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { DrawDto, MatchTypeDto } from '../tp-model/TpModel';
+import { DrawDto, MatchTypeDto, TournamentType } from '../tp-model/TpModel';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -24,7 +24,8 @@ import { LoadingService } from '../../Shared/loading.service';
 import { AdminTournamentService } from '../../Shared/admin-tournament.service';
 import { MatIconModule } from '@angular/material/icon';
 import { SnackbarService } from '../../Shared/snackbar.service';
-import { GroupSeedingDialogComponent } from '../group-seeding-dialog/group-seeding-dialog.component';
+import { trimAllSpace } from '../../Shared/Utility/stringUtility';
+import { SeedingDialogComponent } from '../seeding-dialog/seeding-dialog.component';
 
 @Component({
   selector: 'app-tournament-draw-list',
@@ -44,6 +45,7 @@ import { GroupSeedingDialogComponent } from '../group-seeding-dialog/group-seedi
 })
 export class TournamentDrawListComponent implements OnInit {
   @Input({ required: true }) public tournamentId?: string;
+  @Input() public tournamentType: string | null | undefined;
   @Input() public manage: boolean = false;
   @Input() public tournamentStatusChange = false;
   @Output() drawTabChangeEvent = new EventEmitter<DrawTabViewType>();
@@ -110,26 +112,36 @@ export class TournamentDrawListComponent implements OnInit {
   }
 
   public async initiateDraw() {
-      // check tournament start date
+    // check tournament start date
 
-      // show the seeding dialog
-     await this.seedingDilaog();
+    // show the seeding dialog
+    await this.seedingDilaog();
   }
 
 
-  public async makeDraw(selectedPlayersId: string[])
-  {
-      try {
-        this._loadingService.show();
-        var response = await this._adminService.makeDraws(this.tournamentId!.toString(), selectedPlayersId);
-        await this.checkIfICanMakeDraw();
-        this.draws.set(response);
-        this._loadingService.hide();
-      } catch (error: any) {
-        this._snackBarService.showError(error?.error?.Error ?? "An unknown error occurred.");
-        this._loadingService.hide();
-        console.log(error);
-      }
+  public async makeDraw(selectedPlayersId: string[]) {
+    try {
+      this._loadingService.show();
+      var response = await this._adminService.makeDraws(this.tournamentId!.toString(), selectedPlayersId);
+      await this.checkIfICanMakeDraw();
+      this.draws.set(response);
+      this._loadingService.hide();
+    } catch (error: any) {
+      this._snackBarService.showError(error?.error?.Error ?? "An unknown error occurred.");
+      this._loadingService.hide();
+      console.log(error);
+    }
+  }
+
+  public getSeedingDialogText(): string | undefined {
+    if (this.tournamentType == null || this.tournamentType == undefined) return undefined;
+    if (this.tournamentType == trimAllSpace(TournamentType.GroupStage)) {
+      return "Seeded player will be placed in different group."
+    }
+    else if (this.tournamentType == trimAllSpace(TournamentType.Knockout)) {
+      return "Seeded player will get prioritize in the Bye matches."
+    }
+    return undefined;
   }
 
 
@@ -137,15 +149,15 @@ export class TournamentDrawListComponent implements OnInit {
 
     //only show the dialog if it is the first draw of the tournament
     if (this.draws() && this.draws()?.length != 0) {
-      // await this.makeDraw([]);
+      await this.makeDraw([]);
       return;
     }
 
     var dialogRef = this.dialog.open(SeedingDialogComponent,
-      { height: '400px', width: '600px', data: this.tournamentId, autoFocus: false });
+      { height: '400px', width: '600px', data: { tournamentId: this.tournamentId, seedingDialog: this.getSeedingDialogText() }, autoFocus: false });
 
     dialogRef.afterClosed().subscribe(async (selectedPlayersId: string[] | undefined) => {
-      if(selectedPlayersId){
+      if (selectedPlayersId) {
         await this.makeDraw(selectedPlayersId)
       }
       console.log('The Dialog was closed')
