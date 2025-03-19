@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
-import { TournamentDto, TournamentStatus, TournamentStatusColor } from '../tp-model/TpModel';
+import { TournamentDto, TournamentStatus, TournamentStatusColor, TournamentType } from '../tp-model/TpModel';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { transformTournamentIsoDate } from '../../Shared/Utility/dateTimeUtility';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -118,4 +118,10 @@ export class ManageTournamentDetailsComponent implements OnInit {
   getStatusColor(status: string): string {
     return this.tournamentColorService.getTournamentStatusColor(status);
   }
+
+  public isGroup(): boolean {
+    if (this.tournamentDetails() != undefined) return this.tournamentDetails()?.tournamentType == trimAllSpace(TournamentType.GroupStage);
+    return false
+  }
+
 }

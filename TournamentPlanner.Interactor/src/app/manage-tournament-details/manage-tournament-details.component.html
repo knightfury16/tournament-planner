@@ -21,12 +21,19 @@
             Basic Information
           </h3>
           <div class="info-item">
-            <span class="label">Tournament Name:</span>
-            <span class="value">{{tournament.name}}</span>
-          </div>
-          <div class="info-item">
             <span class="label">Tournament Type:</span>
             <span class="value">{{tournament.tournamentType}}</span>
+          </div>
+          @if(this.isGroup())
+          {
+            <div class="info-item">
+              <span class="label">Knockout Start:</span>
+              <span class="value">{{tournament.knockOutStartNumber}}</span>
+            </div>
+          }
+          <div class="info-item">
+            <span class="label">Game Type:</span>
+            <span class="value">{{tournament.gameTypeDto?.name}}</span>
           </div>
           <div class="info-item">
             <span class="label">Created At:</span>
