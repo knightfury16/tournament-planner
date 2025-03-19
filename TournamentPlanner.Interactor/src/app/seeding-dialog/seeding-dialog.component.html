@@ -1,6 +1,6 @@
 <mat-dialog-content class="dialog-content">
   <mat-card-title>Select Players to Seed</mat-card-title>
-  <p>Seeded player will be placed in different groups</p>
+  <p>{{this.getSeedingDialog()}}</p>
   <mat-form-field class="full-width">
     <mat-label>Choose Players</mat-label>
     <mat-select [multiple]="false" disableOptionCentering panelClass="custom-dropdown">

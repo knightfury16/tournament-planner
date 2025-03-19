@@ -18,7 +18,7 @@ import { PlayerDto } from '../tp-model/TpModel';
 })
 export class SeedingDialogComponent implements OnInit {
 
-  public tournamentId = inject<string>(MAT_DIALOG_DATA);
+  public data = inject<{ tournamentId: string, seedingDialog: string | undefined }>(MAT_DIALOG_DATA);
   public availablePlayers = signal<PlayerDto[]>([]);
   selectedPlayers: PlayerDto[] = [];
 
@@ -28,14 +28,19 @@ export class SeedingDialogComponent implements OnInit {
 
   async ngOnInit() {
     try {
-      if (this.tournamentId) {
-        console.log(this.tournamentId);
-        var tournamentPlayers = await this._tpService.getTournamentPlayers(this.tournamentId);
+      if (this.data.tournamentId) {
+        console.log(this.data.tournamentId);
+        var tournamentPlayers = await this._tpService.getTournamentPlayers(this.data.tournamentId);
         this.availablePlayers.set(tournamentPlayers);
       }
     } catch (error) {
       console.error(error)
     }
+  }
+
+  public getSeedingDialog() {
+    if (this.data.seedingDialog) return this.data.seedingDialog;
+    return 'Seed Players'
   }
 
   selectPlayer(player: PlayerDto) {
