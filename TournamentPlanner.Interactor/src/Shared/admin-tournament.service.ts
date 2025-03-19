@@ -54,7 +54,12 @@ export class AdminTournamentService {
     return firstValueFrom(this.httpClient.get<CanIScheduleDto>(`${this.baseUrl}/tournament/${tournamentId}/can-make-schedule`, { withCredentials: true }));
   }
 
-  public makeDraws(tournamentId: string): Promise<DrawDto[]> {
-    return firstValueFrom(this.httpClient.post<DrawDto[]>(`${this.baseUrl}/tournament/${tournamentId}/make-draw`, {}, { withCredentials: true, headers: { 'Content-Type': 'application/json' } }));
+  public makeDraws(tournamentId: string, seededPlayersId: string[] = [], matchTypePrefix: string = "" ): Promise<DrawDto[]> {
+    var payload =
+    {
+      SeedersId: seededPlayersId.length ? seededPlayersId : undefined, // Send undefinef if empty
+      matchTypePrefix: matchTypePrefix || undefined  // Avoid Sending empty string
+    }
+    return firstValueFrom(this.httpClient.post<DrawDto[]>(`${this.baseUrl}/tournament/${tournamentId}/make-draw`, payload, { withCredentials: true, headers: { 'Content-Type': 'application/json' } }));
   }
 }
