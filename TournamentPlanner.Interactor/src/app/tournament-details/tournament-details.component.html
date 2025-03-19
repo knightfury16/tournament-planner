@@ -18,6 +18,9 @@
         <mat-card-subtitle>
           <mat-icon class="info-icon">emoji_events</mat-icon>
           {{tournament.gameTypeDto?.name || 'Game type not specified'}} | {{tournament.tournamentType}}
+          @if (tournament.tournamentType && tournament.tournamentType == this.groupTournamentType) {
+             | Knockout Start : {{tournament.knockOutStartNumber}}
+          }
         </mat-card-subtitle>
       </mat-card-title-group>
     </mat-card-header>

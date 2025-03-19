@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, output, signal } from '@angular/core';
 import { TournamentPlannerService } from '../tournament-planner.service';
-import { DomainRole, GameTypeColor, PlayerDto, TournamentDto, TournamentStatus, TournamentStatusColor } from '../tp-model/TpModel';
+import { DomainRole, GameTypeColor, PlayerDto, TournamentDto, TournamentStatus, TournamentStatusColor, TournamentType } from '../tp-model/TpModel';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../Shared/auth.service';
 import { LoadingService } from '../../Shared/loading.service';
@@ -33,6 +33,7 @@ export class TournamentDetailsComponent implements OnInit {
   public authService = inject(AuthService);
   public loadingService = inject(LoadingService);
   public tournamentColorService = inject(TournamentColorService);
+  public groupTournamentType = trimAllSpace(TournamentType.GroupStage);
 
   public tournamentDetails = signal<TournamentDto | null>(null);
   public canRegister = false;
