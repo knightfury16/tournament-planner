@@ -10,19 +10,19 @@ import { TournamentPlannerService } from '../tournament-planner.service';
 import { PlayerDto } from '../tp-model/TpModel';
 
 @Component({
-  selector: 'app-group-seeding-dialog',
+  selector: 'app-seeding-dialog',
   standalone: true,
   imports: [MatCardModule, MatDialogModule, MatButtonModule, MatChipsModule, MatIconModule, CommonModule, MatSelectModule],
-  templateUrl: './group-seeding-dialog.component.html',
-  styleUrl: './group-seeding-dialog.component.scss'
+  templateUrl: './seeding-dialog.component.html',
+  styleUrl: './seeding-dialog.component.scss'
 })
-export class GroupSeedingDialogComponent implements OnInit {
+export class SeedingDialogComponent implements OnInit {
 
   public tournamentId = inject<string>(MAT_DIALOG_DATA);
   public availablePlayers = signal<PlayerDto[]>([]);
   selectedPlayers: PlayerDto[] = [];
 
-  private dialogRef = inject(MatDialogRef<GroupSeedingDialogComponent>);
+  private dialogRef = inject(MatDialogRef<SeedingDialogComponent>);
   private _tpService = inject(TournamentPlannerService);
 
 

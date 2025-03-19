@@ -141,7 +141,7 @@ export class TournamentDrawListComponent implements OnInit {
       return;
     }
 
-    var dialogRef = this.dialog.open(GroupSeedingDialogComponent,
+    var dialogRef = this.dialog.open(SeedingDialogComponent,
       { height: '400px', width: '600px', data: this.tournamentId, autoFocus: false });
 
     dialogRef.afterClosed().subscribe(async (selectedPlayersId: string[] | undefined) => {
