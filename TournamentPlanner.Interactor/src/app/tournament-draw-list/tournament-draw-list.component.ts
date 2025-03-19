@@ -109,30 +109,39 @@ export class TournamentDrawListComponent implements OnInit {
     this.matchTypeId.emit(matchTypeId);
   }
 
-  public async makeDraw() {
-    try {
+  public async initiateDraw() {
       // check tournament start date
+
       // show the seeding dialog
-      this.seedingDilaog();
-
-
-      // make the draw
-    } catch (error: any) {
-      this._snackBarService.showError(error?.error?.Error ?? "An unknown error occurred.");
-      this._loadingService.hide();
-      console.log(error);
-    }
+     await this.seedingDilaog();
   }
 
 
-  public seedingDilaog() {
+  public async makeDraw(selectedPlayersId: string[])
+  {
+      try {
+        this._loadingService.show();
+        var response = await this._adminService.makeDraws(this.tournamentId!.toString(), selectedPlayersId);
+        await this.checkIfICanMakeDraw();
+        this.draws.set(response);
+        this._loadingService.hide();
+      } catch (error: any) {
+        this._snackBarService.showError(error?.error?.Error ?? "An unknown error occurred.");
+        this._loadingService.hide();
+        console.log(error);
+      }
+  }
+
+
+  public async seedingDilaog() {
     var dialogRef = this.dialog.open(GroupSeedingDialogComponent,
-      { height: '400px', width: '600px', data: this.tournamentId });
+      { height: '400px', width: '600px', data: this.tournamentId, autoFocus: false });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(async (selectedPlayersId: string[] | undefined) => {
+      if(selectedPlayersId){
+        await this.makeDraw(selectedPlayersId)
+      }
       console.log('The Dialog was closed')
-
     })
   }
-
 }

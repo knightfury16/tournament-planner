@@ -1,7 +1,7 @@
 <mat-card appearance="raised" class="page-container">
     @if (manage) {
     <mat-card-actions>
-        <button mat-raised-button color="primary" [disabled]="!canIMakeDraw()" (click)="makeDraw()">
+        <button mat-raised-button color="primary" [disabled]="!canIMakeDraw()" (click)="this.initiateDraw()">
             <mat-icon>casino</mat-icon>
             Make Draw
         </button>
