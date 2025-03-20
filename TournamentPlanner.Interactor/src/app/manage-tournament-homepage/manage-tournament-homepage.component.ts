@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
@@ -16,6 +16,7 @@ import { TournamentDrawDetailsComponent } from '../tournament-draw-details/tourn
 import { MatButtonModule } from '@angular/material/button';
 import { MakeMatchScheduleComponent } from "../make-match-schedule/make-match-schedule.component";
 import { ManageTournamentViewTabIndex } from '../tp-model/ManageTournamentVIewTabIndex';
+import { TabStateService } from '../../Shared/tab-state.service';
 
 @Component({
   selector: 'app-manage-tournament-homepage',
@@ -26,7 +27,7 @@ import { ManageTournamentViewTabIndex } from '../tp-model/ManageTournamentVIewTa
   templateUrl: './manage-tournament-homepage.component.html',
   styleUrl: './manage-tournament-homepage.component.scss'
 })
-export class ManageTournamentHomepageComponent {
+export class ManageTournamentHomepageComponent implements OnInit {
 
   @Input() public tournamentId?: string;
 
@@ -46,6 +47,20 @@ export class ManageTournamentHomepageComponent {
   public matchTabView = signal<MatchTabViewType>(MatchTabViewType.MatchView);
 
   public matchId = signal<number | undefined>(undefined);
+
+  private _tabStateService = inject(TabStateService);
+  
+  private readonly ManagementTabPrefix = "Management";
+
+
+
+  public async ngOnInit() {
+    const savedTabIndex = await this._tabStateService.getTabState<number>(this.getManagementTabName());
+    if(savedTabIndex != null){
+      console.log("SAVED TAB INDEX FOUND:::", savedTabIndex)
+      this.tabSelectedIndex.set(savedTabIndex);
+    }
+  }
 
   public togglePlayerTabView(view: PlayerTabViewType) {
     this.playerTabView.set(view);
@@ -85,5 +100,15 @@ export class ManageTournamentHomepageComponent {
 
   public changeSelectedTab(index: number) {
     this.tabSelectedIndex.set(index);
+  }
+
+  public async onTabChange(index: number): Promise<void>
+  {
+    await this._tabStateService.saveTabState(this.getManagementTabName(), index, 2);
+    console.log("SEETING TAB INDEX TO::: ", index);
+  }
+
+  private getManagementTabName(): string{
+    return `${this.ManagementTabPrefix}-${this.tournamentId}`
   }
 }
