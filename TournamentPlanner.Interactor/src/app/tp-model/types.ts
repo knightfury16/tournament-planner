@@ -5,9 +5,9 @@ export enum MatchTabViewType {
 }
 
 //Persistance stored item type
-export type StoredItem<T>  = {
+export type StoredItem<T> = {
   value: T;
-  expiry: Date | undefined | null;
+  expiry: Date | string | undefined | null;
 }
 
 

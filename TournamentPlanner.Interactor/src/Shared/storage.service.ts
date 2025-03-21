@@ -65,11 +65,12 @@ export class StorageService {
 
   }
 
-  private getExpiryDate(expiryMinutes: number | null | undefined) {
+  //return the epoc time
+  private getExpiryDate(expiryMinutes: number | null | undefined): string {
     var now = new Date();
     if (expiryMinutes == null || expiryMinutes == undefined)
-      return new Date(now.getTime() + DefaultExpiryMintures * 60000);
-    return new Date(now.getTime() + expiryMinutes * 60000);
+      return new Date(now.getTime() + DefaultExpiryMintures * 60000).getTime().toString();
+    return new Date(now.getTime() + expiryMinutes * 60000).getTime().toString();
   }
 
   public async remove(key: string): Promise<void> {
