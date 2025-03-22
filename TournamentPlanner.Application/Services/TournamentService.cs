@@ -1,4 +1,5 @@
-﻿using TournamentPlanner.Application.Common.Interfaces;
+﻿using TournamentPlanner.Application.Common;
+using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
@@ -16,11 +17,14 @@ public interface ITournamentService
     );
     public Task<bool> CanISchedule(Tournament tournament);
     public bool AmITheCreator(Tournament tournament);
-    public Task<bool> ChangeTournamentStatus(
+    public Task<ChangeTournamentStatusResult> ChangeTournamentStatus(
         Tournament tournament,
         TournamentStatus requestedStatus
     );
-    public Task<bool> ChangeTournamentStatus(string tournamentId, TournamentStatus requestedStatus);
+    public Task<ChangeTournamentStatusResult> ChangeTournamentStatus(
+        string tournamentId,
+        TournamentStatus requestedStatus
+    );
 }
 
 public class TournamentService : ITournamentService
@@ -194,7 +198,7 @@ public class TournamentService : ITournamentService
         return false;
     }
 
-    public async Task<bool> ChangeTournamentStatus(
+    public async Task<ChangeTournamentStatusResult> ChangeTournamentStatus(
         Tournament tournament,
         TournamentStatus requestedStatus
     )
@@ -204,7 +208,10 @@ public class TournamentService : ITournamentService
         return await ChangeStatus(tournament, requestedStatus);
     }
 
-    private async Task<bool> ChangeStatus(Tournament tournament, TournamentStatus requestedStatus)
+    private async Task<ChangeTournamentStatusResult> ChangeStatus(
+        Tournament tournament,
+        TournamentStatus requestedStatus
+    )
     {
         var currentStatus =
             tournament.Status
@@ -214,25 +221,31 @@ public class TournamentService : ITournamentService
 
         //check if the requestedStatus the same as currentStatus. if so then no need to change, return true
         if (currentStatus == requestedStatus)
-            return true;
+            return ChangeTournamentStatusResult.Succeeded(
+                "Tournament status already at the requested level"
+            );
 
         if (currentStatus == TournamentStatus.Completed)
-            return false;
+            return ChangeTournamentStatusResult.Failed(
+                "Can not change status of completed tournament"
+            );
 
         if (
             currentStatus >= TournamentStatus.Ongoing
             && requestedStatus <= TournamentStatus.Ongoing
         )
         {
-            return (false);
+            return ChangeTournamentStatusResult.Failed(
+                $"Can not change from {currentStatus} to {requestedStatus} once tournament is ongoing."
+            );
         }
 
         tournament.Status = requestedStatus;
         await _tournamentRepository.SaveAsync();
-        return true;
+        return ChangeTournamentStatusResult.Succeeded();
     }
 
-    public async Task<bool> ChangeTournamentStatus(
+    public async Task<ChangeTournamentStatusResult> ChangeTournamentStatus(
         string tournamentId,
         TournamentStatus requestedStatus
     )
