@@ -1,5 +1,6 @@
 using Moq;
 using TournamentPlanner.Application;
+using TournamentPlanner.Application.Common;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
@@ -68,13 +69,13 @@ public class ChangeTournamentStatusRequestHandlerTest
         _mockTournamentService.Setup(s => s.AmITheCreator(tournament)).Returns(true);
         _mockTournamentService
             .Setup(s => s.ChangeTournamentStatus(tournament, It.IsAny<TournamentStatus>()))
-            .ReturnsAsync(true);
+            .ReturnsAsync(ChangeTournamentStatusResult.Succeeded());
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result);
+        Assert.True(result.Success);
         _mockTournamentService.Verify(r => r.AmITheCreator(tournament), Times.Once);
         _mockTournamentService.Verify(
             r => r.ChangeTournamentStatus(tournament, It.IsAny<TournamentStatus>()),
@@ -98,13 +99,13 @@ public class ChangeTournamentStatusRequestHandlerTest
         _mockTournamentService.Setup(s => s.AmITheCreator(tournament)).Returns(true);
         _mockTournamentService
             .Setup(s => s.ChangeTournamentStatus(tournament, It.IsAny<TournamentStatus>()))
-            .ReturnsAsync(true);
+            .ReturnsAsync(ChangeTournamentStatusResult.Succeeded());
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result);
+        Assert.True(result.Success);
         _mockTournamentService.Verify(r => r.AmITheCreator(tournament), Times.Once);
         _mockTournamentService.Verify(
             r => r.ChangeTournamentStatus(tournament, It.IsAny<TournamentStatus>()),
@@ -128,11 +129,15 @@ public class ChangeTournamentStatusRequestHandlerTest
             .ReturnsAsync(tournament);
         _mockTournamentService.Setup(s => s.AmITheCreator(tournament)).Returns(true);
 
+        _mockTournamentService
+            .Setup(s => s.ChangeTournamentStatus(tournament, It.IsAny<TournamentStatus>()))
+            .ReturnsAsync(ChangeTournamentStatusResult.Failed());
+
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result);
+        Assert.False(result.Success);
         _mockTournamentRepository.Verify(r => r.SaveAsync(), Times.Never);
         _mockTournamentService.Verify(r => r.AmITheCreator(tournament), Times.Once);
 
@@ -143,7 +148,7 @@ public class ChangeTournamentStatusRequestHandlerTest
         );
         //Act and Assert
         result = await _handler.Handle(request, CancellationToken.None);
-        Assert.False(result);
+        Assert.False(result.Success);
         _mockTournamentRepository.Verify(r => r.SaveAsync(), Times.Never);
         _mockTournamentService.Verify(r => r.AmITheCreator(tournament), Times.AtLeastOnce);
 
@@ -154,7 +159,7 @@ public class ChangeTournamentStatusRequestHandlerTest
         );
         //Act and Assert
         result = await _handler.Handle(request, CancellationToken.None);
-        Assert.False(result);
+        Assert.False(result.Success);
         _mockTournamentRepository.Verify(r => r.SaveAsync(), Times.Never);
         _mockTournamentService.Verify(r => r.AmITheCreator(tournament), Times.AtLeastOnce);
 
@@ -165,7 +170,7 @@ public class ChangeTournamentStatusRequestHandlerTest
         );
         //Act and Assert
         result = await _handler.Handle(request, CancellationToken.None);
-        Assert.False(result);
+        Assert.False(result.Success);
         _mockTournamentRepository.Verify(r => r.SaveAsync(), Times.Never);
         _mockTournamentService.Verify(r => r.AmITheCreator(tournament), Times.AtLeastOnce);
     }
@@ -187,13 +192,13 @@ public class ChangeTournamentStatusRequestHandlerTest
         _mockTournamentService.Setup(s => s.AmITheCreator(tournament)).Returns(true);
         _mockTournamentService
             .Setup(s => s.ChangeTournamentStatus(tournament, It.IsAny<TournamentStatus>()))
-            .ReturnsAsync(true);
+            .ReturnsAsync(ChangeTournamentStatusResult.Succeeded());
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result);
+        Assert.True(result.Success);
         _mockTournamentService.Verify(r => r.AmITheCreator(tournament), Times.Once);
         _mockTournamentService.Verify(
             r => r.ChangeTournamentStatus(tournament, It.IsAny<TournamentStatus>()),
@@ -216,12 +221,15 @@ public class ChangeTournamentStatusRequestHandlerTest
             .Setup(r => r.GetByIdAsync(tournament.Id))
             .ReturnsAsync(tournament);
         _mockTournamentService.Setup(s => s.AmITheCreator(tournament)).Returns(true);
+        _mockTournamentService
+            .Setup(s => s.ChangeTournamentStatus(tournament, It.IsAny<TournamentStatus>()))
+            .ReturnsAsync(ChangeTournamentStatusResult.Failed());
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result);
+        Assert.False(result.Success);
         _mockTournamentRepository.Verify(r => r.SaveAsync(), Times.Never);
         _mockTournamentService.Verify(r => r.AmITheCreator(tournament), Times.Once);
 
@@ -232,7 +240,7 @@ public class ChangeTournamentStatusRequestHandlerTest
         );
         //Act and Assert
         result = await _handler.Handle(request, CancellationToken.None);
-        Assert.False(result);
+        Assert.False(result.Success);
         _mockTournamentRepository.Verify(r => r.SaveAsync(), Times.Never);
         _mockTournamentService.Verify(r => r.AmITheCreator(tournament), Times.AtLeastOnce);
 
@@ -243,7 +251,7 @@ public class ChangeTournamentStatusRequestHandlerTest
         );
         //Act and Assert
         result = await _handler.Handle(request, CancellationToken.None);
-        Assert.False(result);
+        Assert.False(result.Success);
         _mockTournamentRepository.Verify(r => r.SaveAsync(), Times.Never);
         _mockTournamentService.Verify(r => r.AmITheCreator(tournament), Times.AtLeastOnce);
 
@@ -254,7 +262,7 @@ public class ChangeTournamentStatusRequestHandlerTest
         );
         //Act and Assert
         result = await _handler.Handle(request, CancellationToken.None);
-        Assert.False(result);
+        Assert.False(result.Success);
         _mockTournamentRepository.Verify(r => r.SaveAsync(), Times.Never);
         _mockTournamentService.Verify(r => r.AmITheCreator(tournament), Times.AtLeastOnce);
 
@@ -265,7 +273,7 @@ public class ChangeTournamentStatusRequestHandlerTest
         );
         //Act and Assert
         result = await _handler.Handle(request, CancellationToken.None);
-        Assert.False(result);
+        Assert.False(result.Success);
         _mockTournamentRepository.Verify(r => r.SaveAsync(), Times.Never);
         _mockTournamentService.Verify(r => r.AmITheCreator(tournament), Times.AtLeastOnce);
     }
