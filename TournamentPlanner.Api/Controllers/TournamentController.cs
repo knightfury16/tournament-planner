@@ -148,14 +148,14 @@ namespace TournamentPlanner.Api.Controllers
 
             var request = new ChangeTournamentStatusRequest(id, changeStatusDto.TournamentStatus);
 
-            var success = await _mediator.Send(request);
+            var changeTournamentStatusResult = await _mediator.Send(request);
 
-            if (!success)
+            if (!changeTournamentStatusResult.Success)
             {
-                return BadRequest("Could not change tournament status");
+                return BadRequest(changeTournamentStatusResult.Message);
             }
 
-            return Ok(new { message = "Tournament status changed successfully" });
+            return Ok(new { message = changeTournamentStatusResult.Message });
         }
 
         //- Check if an admin can make draw request // authorized
