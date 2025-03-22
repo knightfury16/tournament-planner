@@ -375,13 +375,13 @@ public class TournamentServiceTest
         tournament.Status = TournamentStatus.Draft;
 
         // Act
-        var result = await _sut.ChangeTournamentStatus(
+        var changeTournamentStatusResult = await _sut.ChangeTournamentStatus(
             tournament,
             TournamentStatus.RegistrationOpen
         );
 
         // Assert
-        Assert.True(result);
+        Assert.True(changeTournamentStatusResult.Success);
         Assert.Equal(TournamentStatus.RegistrationOpen, tournament.Status);
         _tournamentRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
     }
@@ -394,10 +394,13 @@ public class TournamentServiceTest
         tournament.Status = TournamentStatus.RegistrationOpen;
 
         // Act
-        var result = await _sut.ChangeTournamentStatus(tournament, TournamentStatus.Draft);
+        var changeTournamentStatusResult = await _sut.ChangeTournamentStatus(
+            tournament,
+            TournamentStatus.Draft
+        );
 
         // Assert
-        Assert.True(result);
+        Assert.True(changeTournamentStatusResult.Success);
         Assert.Equal(TournamentStatus.Draft, tournament.Status);
         _tournamentRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
     }
@@ -410,13 +413,13 @@ public class TournamentServiceTest
         tournament.Status = TournamentStatus.Ongoing;
 
         // Act
-        var result = await _sut.ChangeTournamentStatus(
+        var changeTournamentStatusResult = await _sut.ChangeTournamentStatus(
             tournament,
             TournamentStatus.RegistrationClosed
         );
 
         // Assert
-        Assert.False(result);
+        Assert.False(changeTournamentStatusResult.Success);
         Assert.Equal(TournamentStatus.Ongoing, tournament.Status);
         _tournamentRepositoryMock.Verify(r => r.SaveAsync(), Times.Never);
     }
@@ -429,10 +432,13 @@ public class TournamentServiceTest
         tournament.Status = TournamentStatus.Ongoing;
 
         // Act
-        var result = await _sut.ChangeTournamentStatus(tournament, TournamentStatus.Completed);
+        var changeTournamentStatusResult = await _sut.ChangeTournamentStatus(
+            tournament,
+            TournamentStatus.Completed
+        );
 
         // Assert
-        Assert.True(result);
+        Assert.True(changeTournamentStatusResult.Success);
         Assert.Equal(TournamentStatus.Completed, tournament.Status);
         _tournamentRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
     }
@@ -445,10 +451,13 @@ public class TournamentServiceTest
         tournament.Status = TournamentStatus.Completed;
 
         // Act
-        var result = await _sut.ChangeTournamentStatus(tournament, TournamentStatus.Ongoing);
+        var changeTournamentStatusResult = await _sut.ChangeTournamentStatus(
+            tournament,
+            TournamentStatus.Ongoing
+        );
 
         // Assert
-        Assert.False(result);
+        Assert.False(changeTournamentStatusResult.Success);
         Assert.Equal(TournamentStatus.Completed, tournament.Status);
         _tournamentRepositoryMock.Verify(r => r.SaveAsync(), Times.Never);
     }
@@ -464,13 +473,13 @@ public class TournamentServiceTest
             .ReturnsAsync(tournament);
 
         // Act
-        var result = await _sut.ChangeTournamentStatus(
+        var changeTournamentStatusResult = await _sut.ChangeTournamentStatus(
             tournament.Id.ToString(),
             TournamentStatus.Ongoing
         );
 
         // Assert
-        Assert.True(result);
+        Assert.True(changeTournamentStatusResult.Success);
         Assert.Equal(TournamentStatus.Ongoing, tournament.Status);
         _tournamentRepositoryMock.Verify(r => r.SaveAsync(), Times.Once);
     }
@@ -531,13 +540,13 @@ public class TournamentServiceTest
         tournament.Status = TournamentStatus.RegistrationOpen;
 
         // Act
-        var result = await _sut.ChangeTournamentStatus(
+        var changeTournamentStatusResult = await _sut.ChangeTournamentStatus(
             tournament,
             TournamentStatus.RegistrationOpen
         );
 
         // Assert
-        Assert.True(result);
+        Assert.True(changeTournamentStatusResult.Success);
         Assert.Equal(TournamentStatus.RegistrationOpen, tournament.Status);
         _tournamentRepositoryMock.Verify(r => r.SaveAsync(), Times.Never);
     }
