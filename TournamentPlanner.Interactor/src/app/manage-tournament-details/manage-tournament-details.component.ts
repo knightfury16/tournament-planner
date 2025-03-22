@@ -99,6 +99,7 @@ export class ManageTournamentDetailsComponent implements OnInit {
       this.statusFormControl.reset();
       this._snackBarService.showMessage(statusChangeResponse.message);
     } catch (error: any) {
+      this.statusFormControl.reset();
       console.log(error!.error);
       this._snackBarService.showError((error as any).error ?? (error as any).error?.Error ?? "An unknown error occurred.");
     }
