@@ -1,4 +1,5 @@
-﻿using TournamentPlanner.Application.Common.Interfaces;
+﻿using TournamentPlanner.Application.Common;
+using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Exceptions;
 using TournamentPlanner.Mediator;
@@ -6,7 +7,7 @@ using TournamentPlanner.Mediator;
 namespace TournamentPlanner.Application;
 
 public class ChangeTournamentStatusRequestHandler
-    : IRequestHandler<ChangeTournamentStatusRequest, bool>
+    : IRequestHandler<ChangeTournamentStatusRequest, ChangeTournamentStatusResult>
 {
     private readonly IRepository<Tournament> _tournamentRepository;
     private readonly ITournamentService _tournamentService;
@@ -20,7 +21,7 @@ public class ChangeTournamentStatusRequestHandler
         _tournamentService = tournamentService;
     }
 
-    public async Task<bool> Handle(
+    public async Task<ChangeTournamentStatusResult> Handle(
         ChangeTournamentStatusRequest request,
         CancellationToken cancellationToken = default
     )

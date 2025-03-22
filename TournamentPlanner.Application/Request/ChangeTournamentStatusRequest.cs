@@ -1,9 +1,10 @@
-﻿using TournamentPlanner.Domain.Enum;
+﻿using TournamentPlanner.Application.Common;
+using TournamentPlanner.Domain.Enum;
 using TournamentPlanner.Mediator;
 
 namespace TournamentPlanner.Application;
 
-public class ChangeTournamentStatusRequest : IRequest<bool>
+public class ChangeTournamentStatusRequest : IRequest<ChangeTournamentStatusResult>
 {
     public TournamentStatus TournamentStatus { get; set; }
     public int TournamentId { get; set; }
