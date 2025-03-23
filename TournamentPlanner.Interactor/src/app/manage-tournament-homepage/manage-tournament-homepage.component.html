@@ -6,8 +6,21 @@
         <mat-tab label="Details">
             <div class="tab-container">
                 <app-manage-tournament-details [tournamentId]="tournamentId"
-                     (tournamentEE)="tournamentEC($event)" (statusChangeEE)="this.tournamentStatusChangeEC()">
+                     (tournamentEE)="tournamentEC($event)" (participantsEE)="this.tournamentParticipantsEC($event)" (statusChangeEE)="this.tournamentStatusChangeEC()">
                 </app-manage-tournament-details>
+            </div>
+        </mat-tab>
+        <mat-tab label="Players" icon="people">
+            <div class="tab-container">
+                <ng-container *ngIf="playerTabView() === playerTabViewType.ListView">
+                    <app-tournament-player-list (playerTabChangeEvent)="togglePlayerTabView($event)"
+                        [tournamentId]="tournamentId"
+                        [players]="tournamentParticipants()"></app-tournament-player-list>
+                </ng-container>
+                <ng-container *ngIf="playerTabView() === playerTabViewType.DetailView">
+                    <app-tournament-player-details (playerTabChangeEvent)="togglePlayerTabView($event)"
+                        [tournamentId]="tournamentId"></app-tournament-player-details>
+                </ng-container>
             </div>
         </mat-tab>
         <mat-tab label="Make Draws">

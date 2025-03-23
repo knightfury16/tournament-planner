@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
-import { TournamentDto, TournamentStatus, TournamentStatusColor, TournamentType } from '../tp-model/TpModel';
+import { PlayerDto, TournamentDto, TournamentStatus, TournamentStatusColor, TournamentType } from '../tp-model/TpModel';
 import { TournamentPlannerService } from '../tournament-planner.service';
 import { transformTournamentIsoDate } from '../../Shared/Utility/dateTimeUtility';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -39,6 +39,7 @@ export class ManageTournamentDetailsComponent implements OnInit {
 
   @Input({ required: true }) public tournamentId?: string;
   @Output() public tournamentEE = new EventEmitter<TournamentDto>();
+  @Output() public participantsEE = new EventEmitter<PlayerDto[]>();
   @Output() public statusChangeEE = new EventEmitter();
 
   public tournamentStatus = TournamentStatus;
@@ -61,8 +62,16 @@ export class ManageTournamentDetailsComponent implements OnInit {
   async fetchTournament(tournamentId: string) {
     var tourDetail = await this._tpService.getTournamentById(tournamentId)
     var transformDateTournament = transformTournamentIsoDate(tourDetail);
+    this.emitTournamentParticipants(tourDetail.participants);
     this.tournamentDetails.set(transformDateTournament);
     return tourDetail;
+  }
+
+
+  private emitTournamentParticipants(participants: PlayerDto[] | undefined) {
+    if (participants && participants.length > 0) {
+      this.participantsEE.emit(participants);
+    }
   }
 
   setSelectedStatus() {
