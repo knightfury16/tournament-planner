@@ -36,6 +36,69 @@ public class TournamentService : ITournamentService
     private readonly IRepository<MatchType> _matchTypeRepository;
     private readonly ICurrentUser _currentUser;
 
+    //  Define a dictionary to store custom error messages for invalid transitions
+    //I can change between Draft, RegistrationOpen, RegistrationClosed back and forth as much as i want
+    //but once status is ongoing i cant go back
+    private static readonly Dictionary<
+        (TournamentStatus current, TournamentStatus requested),
+        string
+    > TransitionErrorMessages = new()
+    {
+        // From Draft state
+        {
+            (TournamentStatus.Draft, TournamentStatus.Ongoing),
+            "Cannot start tournament from draft state. Open registration first, then close it."
+        },
+        {
+            (TournamentStatus.Draft, TournamentStatus.Completed),
+            "Cannot complete a draft tournament. Follow the proper workflow: Draft → Registration → Ongoing → Completed."
+        },
+        // From RegistrationOpen state
+        {
+            (TournamentStatus.RegistrationOpen, TournamentStatus.Ongoing),
+            "Cannot start tournament while registration is open. Close registration first."
+        },
+        {
+            (TournamentStatus.RegistrationOpen, TournamentStatus.Completed),
+            "Cannot complete a tournament in registration phase. Follow the proper workflow: Registration → Ongoing → Completed."
+        },
+        // From RegistrationClosed state
+        {
+            (TournamentStatus.RegistrationClosed, TournamentStatus.Completed),
+            "Cannot complete a tournament that hasn't started yet. Start the tournament first."
+        },
+        // From Ongoing state
+        {
+            (TournamentStatus.Ongoing, TournamentStatus.Draft),
+            "Cannot revert ongoing tournament to draft state."
+        },
+        {
+            (TournamentStatus.Ongoing, TournamentStatus.RegistrationOpen),
+            "Cannot reopen registration for an ongoing tournament."
+        },
+        {
+            (TournamentStatus.Ongoing, TournamentStatus.RegistrationClosed),
+            "Cannot change ongoing tournament back to registration closed state."
+        },
+        // From Completed state
+        {
+            (TournamentStatus.Completed, TournamentStatus.Draft),
+            "Cannot revert completed tournament to draft state."
+        },
+        {
+            (TournamentStatus.Completed, TournamentStatus.RegistrationOpen),
+            "Cannot reopen registration for a completed tournament."
+        },
+        {
+            (TournamentStatus.Completed, TournamentStatus.RegistrationClosed),
+            "Cannot change completed tournament back to registration closed state."
+        },
+        {
+            (TournamentStatus.Completed, TournamentStatus.Ongoing),
+            "Cannot revert completed tournament to ongoing state."
+        },
+    };
+
     public TournamentService(
         IDrawService drawService,
         IMatchTypeService matchTypeService,
