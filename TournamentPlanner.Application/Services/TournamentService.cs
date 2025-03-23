@@ -208,7 +208,6 @@ public class TournamentService : ITournamentService
     {
         ArgumentNullException.ThrowIfNull(tournament);
 
-
         var areSeedersValid = ValidateSeeders(tournament, seedersPlayers);
         if (!areSeedersValid)
             throw new Exception("Seeders are not valid");
@@ -218,7 +217,6 @@ public class TournamentService : ITournamentService
             seedersPlayers
         );
         var draws = matchTypes.Select(mt => GetDraw(mt, tournament));
-
 
         //before procedding further need to change the tournament to ongoing if it is not already changed
         //After making a draw there is no point in keeeping the tournament status to open.
