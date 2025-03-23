@@ -97,7 +97,7 @@ export class ManageTournamentDetailsComponent implements OnInit {
       console.log(statusChangeResponse);
       await this.fetchTournament(this.tournamentId!);
       this.statusFormControl.reset();
-      this._snackBarService.showMessage(statusChangeResponse.message);
+      this._snackBarService.showMessage(statusChangeResponse.message, 4);
     } catch (error: any) {
       this.statusFormControl.reset();
       console.log(error!.error);
