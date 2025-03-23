@@ -279,8 +279,6 @@ public class TournamentService : ITournamentService
         var currentStatus =
             tournament.Status
             ?? throw new InvalidOperationException("Tournament status is unexpectedly null.");
-        //I can change between Draft, RegistrationOpen, RegistrationClosed back and forth as much as i want
-        //but once status is ongoing i cant go back
 
         //check if the requestedStatus the same as currentStatus. if so then no need to change, return true
         if (currentStatus == requestedStatus)
@@ -288,19 +286,11 @@ public class TournamentService : ITournamentService
                 "Tournament status already at the requested level"
             );
 
-        if (currentStatus == TournamentStatus.Completed)
-            return ChangeTournamentStatusResult.Failed(
-                "Can not change status of completed tournament"
-            );
-
-        if (
-            currentStatus >= TournamentStatus.Ongoing
-            && requestedStatus <= TournamentStatus.Ongoing
-        )
+        // Check for custom error message for other transition
+        var transitionKey = (currentStatus, requestedStatus);
+        if (TransitionErrorMessages.TryGetValue(transitionKey, out string? errorMessage))
         {
-            return ChangeTournamentStatusResult.Failed(
-                $"Can not change from {currentStatus} to {requestedStatus} once tournament is ongoing."
-            );
+            return ChangeTournamentStatusResult.Failed(errorMessage);
         }
 
         tournament.Status = requestedStatus;
