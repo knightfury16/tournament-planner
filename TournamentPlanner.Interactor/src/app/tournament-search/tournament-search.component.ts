@@ -54,6 +54,7 @@ export class TournamentSearchComponent {
   searchForm: FormGroup;
 
   constructor(private fb: FormBuilder) {
+    this.statusOptions = this.getStatus(); 
     this.searchForm = this.fb.group({
       name: [''],
       searchCategory: [this.initialSearchCategory],
@@ -89,6 +90,9 @@ export class TournamentSearchComponent {
     this.searchForm.reset();
     this.searchForm.get('searchCategory')?.setValue(this.initialSearchCategory);
     this.clear.emit();
+  }
+  public getStatus(): string[] {
+    return Object.values(this.tournamentStatus);
   }
 
 }
