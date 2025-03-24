@@ -39,21 +39,13 @@ export class TournamentListComponent {
   public readonly tournamentStatus = TournamentStatus;
   public readonly gameTypeSupported = GameTypeSupported;
   public loadingService = inject(LoadingService);
-  searchForm: FormGroup;
   tournaments$ = new BehaviorSubject<TournamentDto[]>([]);
+  public isAdvanceSearchActive = false;
 
   constructor(
     private fb: FormBuilder,
     private tp: TournamentPlannerService
   ) {
-    this.searchForm = this.fb.group({
-      name: [''],
-      searchCategory: [this.tournamentSearchCategory.All],
-      status: [''],
-      gameType: [''],
-      startDate: [null],
-      endDate: [null]
-    });
   }
 
   ngOnInit() {
@@ -97,18 +89,19 @@ export class TournamentListComponent {
       .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
   }
 
-  getIsAdvanceSearchActive() {
-    const isAdvancedSearchActive = this.searchForm.get('searchCategory')!.dirty ||
-      this.searchForm.get('status')!.dirty ||
-      this.searchForm.get('gameType')!.dirty ||
-      this.searchForm.get('startDate')!.dirty ||
-      this.searchForm.get('endDate')!.dirty;
-    return isAdvancedSearchActive;
+  getIsAdvanceSearchActive(): boolean {
+    return this.isAdvanceSearchActive;
   }
+
+  setIsAdvanceSearchActive(value: boolean): void{
+    this.isAdvanceSearchActive = value;
+  }
+  
 
 
   onSearch(criteria: TournamentSearchCriteria) {
     this.loadingService.show();
+    this.setIsAdvanceSearchActive(true);
 
     this.tp.getTournament(
       criteria.name,
