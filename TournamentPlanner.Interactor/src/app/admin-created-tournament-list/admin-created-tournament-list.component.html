@@ -7,7 +7,6 @@
     <mat-card-content>
         <app-tournament-search
           [initialSearchCategory]="tournamentSearchCategory.All"
-          [statusOptions]="this.getStatus()"
           (search)="onSearch($event)"
           (clear)="onClear()">
         </app-tournament-search>
