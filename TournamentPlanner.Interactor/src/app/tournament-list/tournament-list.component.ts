@@ -54,6 +54,8 @@ export class TournamentListComponent {
 
   loadInitialTournaments() {
     this.loadingService.show();
+    this.setIsAdvanceSearchActive(false);
+
     this.tp.getTournament().subscribe({
       next: (tournaments) => {
         this.tournaments$.next(this.processTournaments(tournaments));
