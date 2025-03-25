@@ -43,7 +43,7 @@
                     </ng-container>
                     <ng-container *ngIf="playerTabView() === playerTabViewType.DetailView">
                         <app-tournament-player-details (playerTabChangeEvent)="togglePlayerTabView($event)"
-                            [tournamentId]="tournamentId"></app-tournament-player-details>
+                            ></app-tournament-player-details>
                     </ng-container>
                 </div>
             </mat-tab>
