@@ -40,9 +40,6 @@ export class AdminCreatedTournamentListComponent implements OnInit {
     }
   }
 
-  public getStatus(): string[] {
-    return Object.values(this.tournamentStatus);
-  }
 
   async onSearch(criteria: TournamentSearchCriteria) {
     this.loadingService.show();

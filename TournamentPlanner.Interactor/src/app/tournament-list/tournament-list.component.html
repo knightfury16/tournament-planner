@@ -1,9 +1,9 @@
 <div class="tournament-container">
   <app-tournament-search
     [initialSearchCategory]="tournamentSearchCategory.All"
-    [statusOptions]="curatedTournamentStatus()"
-    (search)="onSearch($event)"
-    (clear)="onClear()">
+    [statusOptions]="this.curatedTournamentStatus()"
+    (search)="this.onSearch($event)"
+    (clear)="this.onClear()">
   </app-tournament-search>
 
   <!-- Results Section -->
