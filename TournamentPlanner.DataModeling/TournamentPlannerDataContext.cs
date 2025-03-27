@@ -20,6 +20,7 @@ public class TournamentPlannerDataContext : IdentityDbContext<ApplicationUser>
     public DbSet<Round> Rounds { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<KnockOut> KnockOuts { get; set; }
+    public DbSet<GameStatistic> GameStatistics { get; set; }
 
     //TODO: Configure its relations manully to be exact
     public DbSet<Draw> Draws { get; set; }
@@ -177,6 +178,16 @@ public class TournamentPlannerDataContext : IdentityDbContext<ApplicationUser>
             entity
                 .Property(p => p.Name) //converting enum value to string
                 .HasConversion<string>();
+        });
+
+        //game statistic configuration
+        modelBuilder.Entity<GameStatistic>(entity =>
+        {
+            //relation config
+            entity
+                .HasOne(t => t.Player)
+                .WithMany(g => g.GameStatistics)
+                .HasForeignKey(t => t.PlayerId);
         });
 
         SeedDefaultGameType(modelBuilder);
