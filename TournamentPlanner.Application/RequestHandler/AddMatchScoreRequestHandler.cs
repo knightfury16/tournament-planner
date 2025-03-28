@@ -3,6 +3,7 @@ using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.DTOs;
 using TournamentPlanner.Application.Helpers;
 using TournamentPlanner.Application.Request;
+using TournamentPlanner.Application.Services;
 using TournamentPlanner.Domain.Entities;
 using TournamentPlanner.Domain.Enum;
 using TournamentPlanner.Domain.Exceptions;
@@ -18,13 +19,15 @@ public class AddMatchScoreRequestHandler : IRequestHandler<AddMatchScoreRequest,
     private readonly IGameFormatFactory _gameFormatFactory;
     private readonly IRoundService _roundService;
     private readonly ITournamentService _tournamentService;
+    private readonly IPlayerService _playerService;
 
     public AddMatchScoreRequestHandler(
         IRepository<Match> matchRepository,
         IMapper mapper,
         IGameFormatFactory gameFormatFactory,
         IRoundService roundService,
-        ITournamentService tournamentService
+        ITournamentService tournamentService,
+        IPlayerService playerService
     )
     {
         _matchRepository = matchRepository;
@@ -32,6 +35,7 @@ public class AddMatchScoreRequestHandler : IRequestHandler<AddMatchScoreRequest,
         _gameFormatFactory = gameFormatFactory;
         _roundService = roundService;
         _tournamentService = tournamentService;
+        _playerService = playerService;
     }
 
     //-- I can not be on this handler if im not an admin
@@ -65,7 +69,8 @@ public class AddMatchScoreRequestHandler : IRequestHandler<AddMatchScoreRequest,
             throw new AdminOwnershipException();
 
         //get the game type handler
-        var gameTypeHandler = _gameFormatFactory.GetGameFormat(match.Tournament.GameType.Name);
+        var gameType = match.Tournament.GameType.Name;
+        var gameTypeHandler = _gameFormatFactory.GetGameFormat(gameType);
         if (gameTypeHandler == null)
             throw new NotFoundException($"Game type handler could not be resolved");
 
@@ -86,11 +91,12 @@ public class AddMatchScoreRequestHandler : IRequestHandler<AddMatchScoreRequest,
         ); //specify the first player and second player in thhe param, according to gameScore player1 and player2
 
         //update the match and player stats here
-        UpdateMatchAndPlayerStat(
+        await UpdateMatchAndPlayerStat(
             winner,
             gameTypeHandler.SerializeScore(gameScore),
             request.AddMatchScoreDto.GamePlayed,
-            ref match
+            match,
+            gameType
         );
         await _matchRepository.SaveAsync();
 
@@ -103,11 +109,12 @@ public class AddMatchScoreRequestHandler : IRequestHandler<AddMatchScoreRequest,
         return _mapper.Map<MatchDto>(match);
     }
 
-    private void UpdateMatchAndPlayerStat(
+    private async Task UpdateMatchAndPlayerStat(
         Player winner,
         string serializedScore,
         DateTime? gamePlayed,
-        ref Match match
+        Match match,
+        GameTypeSupported gameType
     )
     {
         //update match
@@ -115,14 +122,23 @@ public class AddMatchScoreRequestHandler : IRequestHandler<AddMatchScoreRequest,
         match.GamePlayed = gamePlayed ?? match.GameScheduled; // if game played is not provided then fall back to tournament scheduled date
         match.ScoreJson = serializedScore;
 
-        //update the game played stat
-        match.FirstPlayer.GamePlayed += 1;
-        match.SecondPlayer.GamePlayed += 1;
+        var winnerPlayer =
+            match.FirstPlayer.Id == winner.Id ? match.FirstPlayer : match.SecondPlayer;
+        var loserPlayer =
+            match.FirstPlayer.Id == winner.Id ? match.SecondPlayer : match.FirstPlayer;
 
-        //update the game won
-        if (match.FirstPlayer.Id == winner.Id)
-            match.FirstPlayer.GameWon += 1;
-        else
-            match.SecondPlayer.GameWon += 1;
+        var winnerResult = await _playerService.UpdateGameStatistic(
+            winnerPlayer.Id,
+            gameType,
+            true
+        );
+        var loserResult = await _playerService.UpdateGameStatistic(loserPlayer.Id, gameType, false);
+
+        if (!winnerResult.Success || !loserResult.Success)
+        {
+            throw new ValidationException(
+                $"Failed to update game stats. Winner: {winnerResult.Message}, Loser: {loserResult.Message}"
+            );
+        }
     }
 }
