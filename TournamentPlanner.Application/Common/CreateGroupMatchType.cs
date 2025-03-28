@@ -9,19 +9,33 @@ public class CreateGroupMatchType : ICreateMatchType
 {
     private int _maxGroupSize = 5;
 
-
-    public Task<IEnumerable<MatchType>?> CreateMatchType(Tournament tournament, List<Player> players, string? prefix, List<int>? seederPlayerIds)
+    public Task<IEnumerable<MatchType>?> CreateMatchType(
+        Tournament tournament,
+        List<Player> players,
+        string? prefix,
+        List<int>? seederPlayerIds
+    )
     {
         prefix ??= "Group";
-        if(tournament.KnockOutStartNumber > players.Count)throw new ValidationException("Knockout start number is greater than registered player");
-        var numberOfGroup = DetermineNumberOfGroupDynamically(tournament.KnockOutStartNumber, tournament.WinnerPerGroup);
+        if (tournament.KnockOutStartNumber > players.Count)
+            throw new ValidationException(
+                "Knockout start number is greater than registered player"
+            );
+        var numberOfGroup = DetermineNumberOfGroupDynamically(
+            tournament.KnockOutStartNumber,
+            tournament.WinnerPerGroup
+        );
         List<MatchType> groups = GenerateGroups(tournament, numberOfGroup, prefix);
         var sortedPlayers = GetSortedPlayers(players, seederPlayerIds);
         DistributePlayersAmongGroups(sortedPlayers, groups, seederPlayerIds);
         return Task.FromResult((IEnumerable<MatchType>?)groups);
     }
 
-    private void DistributePlayersAmongGroups(List<Player> distributedPlayers, List<MatchType> groups, List<int>? seederPlayerIds)
+    private void DistributePlayersAmongGroups(
+        List<Player> distributedPlayers,
+        List<MatchType> groups,
+        List<int>? seederPlayerIds
+    )
     {
         var distributedPlayersQueue = new Queue<Player>(distributedPlayers);
 
@@ -35,20 +49,23 @@ public class CreateGroupMatchType : ICreateMatchType
                     group.Players.Add(player);
                     if (seederPlayerIds != null && seederPlayerIds.Contains(player.Id))
                     {
-                        group.SeededPlayers.Add(new SeededPlayer{Player = player, MatchType = group});
+                        group.SeededPlayers.Add(
+                            new SeededPlayer { Player = player, MatchType = group }
+                        );
                     }
                 }
                 else
                 {
                     break;
                 }
-
             }
         }
-
     }
 
-    private List<Player> GetSortedPlayers(List<Player> participants, List<int>? seederPlayerIds = null)
+    private List<Player> GetSortedPlayers(
+        List<Player> participants,
+        List<int>? seederPlayerIds = null
+    )
     {
         //getting a list of player by seeder, power, then by randomly to distribute similar level player evenly among groups
         Random random = new Random();
@@ -56,37 +73,40 @@ public class CreateGroupMatchType : ICreateMatchType
         //*custom sorting for learning purpose
         if (seederPlayerIds != null)
         {
-            participants.Sort((leftPlayer, rightPlayer) =>
-           {
-               //First level of sorting: Seeder Player
-               bool isLeftPlayerSeeder = seederPlayerIds.Contains(leftPlayer.Id);
-               bool isRightPlayerSeeder = seederPlayerIds.Contains(rightPlayer.Id);
+            participants.Sort(
+                (leftPlayer, rightPlayer) =>
+                {
+                    //First level of sorting: Seeder Player
+                    bool isLeftPlayerSeeder = seederPlayerIds.Contains(leftPlayer.Id);
+                    bool isRightPlayerSeeder = seederPlayerIds.Contains(rightPlayer.Id);
 
-               if (isLeftPlayerSeeder && !isRightPlayerSeeder) return -1;
-               if (!isLeftPlayerSeeder && isRightPlayerSeeder) return 1;
+                    if (isLeftPlayerSeeder && !isRightPlayerSeeder)
+                        return -1;
+                    if (!isLeftPlayerSeeder && isRightPlayerSeeder)
+                        return 1;
 
-               //Second level of sorting: Win Ratio
-               int winRatioComparison = leftPlayer.WinRatio.CompareTo(rightPlayer.WinRatio);
-               if (winRatioComparison != 0) return winRatioComparison * -1; //coz i need it in descending order
+                    //Second level of sorting: Win Ratio
+                    // int winRatioComparison = leftPlayer.WinRatio.CompareTo(rightPlayer.WinRatio);
+                    // if (winRatioComparison != 0) return winRatioComparison * -1; //coz i need it in descending order
 
-               //Third level of sorting: Random
-               return random.Next().CompareTo(random.Next());
-
-           });
-
+                    //Third level of sorting: Random
+                    return random.Next().CompareTo(random.Next());
+                }
+            );
         }
         else
         {
+            participants.Sort(
+                (leftPlayer, rightPlayer) =>
+                {
+                    //First level of sorting: Win Ratio
+                    // int winRatioComparison = leftPlayer.WinRatio.CompareTo(rightPlayer.WinRatio);
+                    // if (winRatioComparison != 0) return winRatioComparison * -1; //coz i need it in descending order
 
-            participants.Sort((leftPlayer, rightPlayer) =>
-            {
-                //First level of sorting: Win Ratio
-                int winRatioComparison = leftPlayer.WinRatio.CompareTo(rightPlayer.WinRatio);
-                if (winRatioComparison != 0) return winRatioComparison * -1; //coz i need it in descending order
-
-                //Second level of sorting: Random
-                return random.Next().CompareTo(random.Next());
-            });
+                    //Second level of sorting: Random
+                    return random.Next().CompareTo(random.Next());
+                }
+            );
         }
         return participants;
         //*Previous implementation
@@ -101,19 +121,21 @@ public class CreateGroupMatchType : ICreateMatchType
         for (int i = 0; i < numberOfGroup; i++)
         {
             var matchTypeName = $"{prefix}-" + initialChar;
-            var matchType = new Group
-            {
-                Name = matchTypeName,
-            };
+            var matchType = new Group { Name = matchTypeName };
             matchTypes.Add(matchType);
             initialChar = (char)(initialChar + 1);
         }
         return matchTypes;
     }
-    private int DetermineNumberOfGroupDynamically(int playersInKnockoutStage, int playerAdvancingPerGroup)
+
+    private int DetermineNumberOfGroupDynamically(
+        int playersInKnockoutStage,
+        int playerAdvancingPerGroup
+    )
     {
         return (int)Math.Ceiling((double)playersInKnockoutStage / playerAdvancingPerGroup);
     }
+
     private int DetermineNumberOfGroup(int totalParticipant)
     {
         //TODO: I need to adjust the calculation so that player procedding to knockout is a pwoer of two
