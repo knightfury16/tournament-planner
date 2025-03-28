@@ -1,10 +1,9 @@
-using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using TournamentPlanner.Application.Common;
 using TournamentPlanner.Application.Common.Interfaces;
 using TournamentPlanner.Application.Services;
 using TournamentPlanner.Mediator;
-
 
 namespace TournamentPlanner.Application
 {
@@ -27,10 +26,8 @@ namespace TournamentPlanner.Application
             services.AddScoped<IRoundService, RoundService>();
             services.AddScoped<IRoundRobin, CreateRoundRobinMatches>();
             services.AddScoped<IKnockout, CreateKnockOutMatches>();
-
-
-
+            services.AddScoped<IPlayerService, PlayerService>();
         }
-
     }
 }
+
