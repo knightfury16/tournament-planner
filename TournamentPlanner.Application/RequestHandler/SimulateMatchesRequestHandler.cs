@@ -10,14 +10,19 @@ namespace TournamentPlanner.Application;
 
 public class SimulateMatchesRequestHandler : IRequestHandler<SimulateMatchesRequest, bool>
 {
-
     private readonly IRepository<Match> _matchRepository;
     private readonly IMapper _mapper;
     private readonly IGameFormatFactory _gameFormatFactory;
     private readonly IRoundService _roundService;
     private readonly IRepository<Tournament> _tournamentRepository;
 
-    public SimulateMatchesRequestHandler(IRepository<Match> matchRepository, IMapper mapper, IGameFormatFactory gameFormatFactory, IRoundService roundService, IRepository<Tournament> tournamentRepository)
+    public SimulateMatchesRequestHandler(
+        IRepository<Match> matchRepository,
+        IMapper mapper,
+        IGameFormatFactory gameFormatFactory,
+        IRoundService roundService,
+        IRepository<Tournament> tournamentRepository
+    )
     {
         _matchRepository = matchRepository;
         _mapper = mapper;
@@ -28,25 +33,35 @@ public class SimulateMatchesRequestHandler : IRequestHandler<SimulateMatchesRequ
 
     //- Simulate all the matches that is made but not played
     //- Development handler
-    public async Task<bool> Handle(SimulateMatchesRequest request, CancellationToken cancellationToken = default)
+    public async Task<bool> Handle(
+        SimulateMatchesRequest request,
+        CancellationToken cancellationToken = default
+    )
     {
         if (request == null)
         {
             throw new ArgumentNullException(nameof(request));
         }
 
+        var matches = (
+            await _tournamentRepository.GetAllAsync(
+                t => t.Id == request.TournamentId,
+                [nameof(Tournament.Matches), nameof(Tournament.GameType)]
+            )
+        ).SelectMany(t => t.Matches);
 
-        var matches = (await _tournamentRepository.GetAllAsync(t => t.Id == request.TournamentId, [nameof(Tournament.Matches),
-                    nameof(Tournament.GameType)]))
-                    .SelectMany(t => t.Matches);
+        if (matches == null || matches.Count() == 0)
+            throw new NotFoundException("No Matches Found to simulate");
 
-        if (matches == null || matches.Count() == 0) throw new NotFoundException("No Matches Found to simulate");
-
-        if(matches.First().Tournament.GameType.Name != Domain.Enum.GameTypeSupported.TableTennis)throw new BadRequestException("can not simulate other than table tennis tournament");
+        if (matches.First().Tournament.GameType.Name != Domain.Enum.GameTypeSupported.TableTennis)
+            throw new BadRequestException("can not simulate other than table tennis tournament");
 
         //get the game type handler
-        var gameTypeHandler = _gameFormatFactory.GetGameFormat(matches.First().Tournament.GameType.Name);
-        if (gameTypeHandler == null) throw new NotFoundException($"Game type handler could not be resolved");
+        var gameTypeHandler = _gameFormatFactory.GetGameFormat(
+            matches.First().Tournament.GameType.Name
+        );
+        if (gameTypeHandler == null)
+            throw new NotFoundException($"Game type handler could not be resolved");
 
         foreach (var match in matches)
         {
@@ -62,12 +77,12 @@ public class SimulateMatchesRequestHandler : IRequestHandler<SimulateMatchesRequ
                 continue;
             }
             //if any player is bye then winner is the other player
-            if(match.FirstPlayer.Name.ToLower().Contains("bye"))
+            if (match.FirstPlayer.Name.ToLower().Contains("bye"))
             {
                 match.Winner = match.SecondPlayer;
                 continue;
             }
-            if(match.SecondPlayer.Name.ToLower().Contains("bye"))
+            if (match.SecondPlayer.Name.ToLower().Contains("bye"))
             {
                 match.Winner = match.FirstPlayer;
                 continue;
@@ -83,10 +98,18 @@ public class SimulateMatchesRequestHandler : IRequestHandler<SimulateMatchesRequ
             //}
 
             //determine the winner
-            var winner = gameTypeHandler.DetermineWinner(match.FirstPlayer, match.SecondPlayer, randomlyGeneratedMatchScore);//specify the first player and second player in thhe param, according to gameScore player1 and player2
+            var winner = gameTypeHandler.DetermineWinner(
+                match.FirstPlayer,
+                match.SecondPlayer,
+                randomlyGeneratedMatchScore
+            ); //specify the first player and second player in thhe param, according to gameScore player1 and player2
 
             //update the match and player stats here
-            UpdateMatchAndPlayerStat(winner, gameTypeHandler.SerializeScore(randomlyGeneratedMatchScore), match);
+            UpdateMatchAndPlayerStat(
+                winner,
+                gameTypeHandler.SerializeScore(randomlyGeneratedMatchScore),
+                match
+            );
 
             //if i could send and event and let it complete that would be ideal here.
             //but this is a small app, will not have problem
@@ -96,24 +119,24 @@ public class SimulateMatchesRequestHandler : IRequestHandler<SimulateMatchesRequ
         }
 
         await _matchRepository.SaveAsync();
-        
+
         return true;
     }
+
     private void UpdateMatchAndPlayerStat(Player winner, string serializedScore, Match match)
     {
-        //update match 
+        //update match
         match.Winner = winner;
         match.GamePlayed = match.GameScheduled; // if game played is not provided then fall back to tournament scheduled date
         match.ScoreJson = serializedScore;
 
         //update the game played stat
-        match.FirstPlayer.GamePlayed += 1;
-        match.SecondPlayer.GamePlayed += 1;
-
-        //update the game won
-        if (match.FirstPlayer.Id == winner.Id) match.FirstPlayer.GameWon += 1;
-        else match.SecondPlayer.GameWon += 1;
-
+        // match.FirstPlayer.GamePlayed += 1;
+        // match.SecondPlayer.GamePlayed += 1;
+        //
+        // //update the game won
+        // if (match.FirstPlayer.Id == winner.Id) match.FirstPlayer.GameWon += 1;
+        // else match.SecondPlayer.GameWon += 1;
     }
 
     //making it only for table tennis game format
@@ -126,19 +149,15 @@ public class SimulateMatchesRequestHandler : IRequestHandler<SimulateMatchesRequ
 
         for (int i = 0; i < 5; i++)
         {
-            int player1Points, player2Points;
+            int player1Points,
+                player2Points;
             do
             {
                 player1Points = random.Next(7, 15);
                 player2Points = random.Next(7, 15);
-            }
-            while (Math.Abs(player1Points - player2Points) < 2);
+            } while (Math.Abs(player1Points - player2Points) < 2);
 
-            sets.Add(new SetScore
-            {
-                Player1Points = player1Points,
-                Player2Points = player2Points
-            });
+            sets.Add(new SetScore { Player1Points = player1Points, Player2Points = player2Points });
 
             if (player1Points > player2Points)
             {
@@ -153,7 +172,7 @@ public class SimulateMatchesRequestHandler : IRequestHandler<SimulateMatchesRequ
         {
             Player1Sets = player1Sets,
             Player2Sets = player2Sets,
-            SetScores = sets
+            SetScores = sets,
         };
     }
 }
