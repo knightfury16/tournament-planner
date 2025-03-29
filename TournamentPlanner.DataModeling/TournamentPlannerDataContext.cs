@@ -282,46 +282,51 @@ public class TournamentPlannerDataContext : IdentityDbContext<ApplicationUser>
 
     private void SeedDefaultRoleWithClaim(ModelBuilder modelBuilder)
     {
+        //NOTE:
+        //Ef Core without a stable ID deleted the previous roles and creates new one.
+        //side effect of that is that all the previous users role's were getting deleted.
+        //this is a major issue on data seeding which is evidently said to be fixed in
+        //Ef core version 9
+        //TODO: Seed data differently on migrating to ef core 9
+
+        // Create roles with stable IDs
+        var adminRoleId = "1ee445a5-b34c-4e99-b605-72bac92b95ec"; // Use fixed GUIDs
+        var moderatorRoleId = "7c8b1c8b-d610-438b-a45d-9034a dbab321";
+        var playerRoleId = "2e3a7d1e-1b9c-4a9c-b02e-2e910a34c26f";
+
         var defaultRoles = new List<IdentityRole>
         {
             new IdentityRole
             {
+                Id = adminRoleId,
                 Name = Role.Admin.ToString(),
                 NormalizedName = Role.Admin.ToString().ToUpper(),
+                ConcurrencyStamp = Guid.NewGuid().ToString(),
             },
             new IdentityRole
             {
+                Id = moderatorRoleId,
                 Name = Role.Moderator.ToString(),
                 NormalizedName = Role.Moderator.ToString().ToUpper(),
+                ConcurrencyStamp = Guid.NewGuid().ToString(),
             },
             new IdentityRole
             {
+                Id = playerRoleId,
                 Name = Role.Player.ToString(),
                 NormalizedName = Role.Player.ToString().ToUpper(),
+                ConcurrencyStamp = Guid.NewGuid().ToString(),
             },
         };
 
-        // Check if roles already exist
-        foreach (var role in defaultRoles)
-        {
-            var existingRole = modelBuilder
-                .Entity<IdentityRole>()
-                .Metadata.FindPrimaryKey()
-                ?.Properties.FirstOrDefault(r => r.Name == role.Name);
-            if (existingRole == null)
-            {
-                Console.WriteLine($"Creating role: {role.Name}");
-                modelBuilder.Entity<IdentityRole>().HasData(role);
-            }
-        }
+        modelBuilder.Entity<IdentityRole>().HasData(defaultRoles);
 
-        var identityRoleClaim = new List<IdentityRoleClaim<string>>();
-        // Log the created roles for debugging
         foreach (var role in defaultRoles)
         {
             Console.WriteLine($"Creating role: {role.Name} with ID: {role.Id}");
         }
 
+        var identityRoleClaim = new List<IdentityRoleClaim<string>>();
         foreach (var role in defaultRoles)
         {
             if (role.Name == Role.Admin.ToString())
@@ -443,4 +448,3 @@ public class TournamentPlannerDataContext : IdentityDbContext<ApplicationUser>
         );
     }
 }
-
