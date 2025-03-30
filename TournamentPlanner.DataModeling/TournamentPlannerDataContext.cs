@@ -346,40 +346,6 @@ public class TournamentPlannerDataContext : IdentityDbContext<ApplicationUser>
         modelBuilder.Entity<IdentityRoleClaim<string>>().HasData(identityRoleClaim);
     }
 
-    private void AddModeratorPermission(
-        List<IdentityRoleClaim<string>> identityRoleClaim,
-        IdentityRole role
-    )
-    {
-        identityRoleClaim.Add(
-            new IdentityRoleClaim<string>
-            {
-                Id = 1,
-                RoleId = role.Id,
-                ClaimType = DomainClaim.PermissionClaimType,
-                ClaimValue = Policy.Read,
-            }
-        );
-        identityRoleClaim.Add(
-            new IdentityRoleClaim<string>
-            {
-                Id = 2,
-                RoleId = role.Id,
-                ClaimType = DomainClaim.PermissionClaimType,
-                ClaimValue = Policy.Edit,
-            }
-        );
-        identityRoleClaim.Add(
-            new IdentityRoleClaim<string>
-            {
-                Id = 3,
-                RoleId = role.Id,
-                ClaimType = DomainClaim.PermissionClaimType,
-                ClaimValue = Policy.AddScore,
-            }
-        );
-    }
-
     private void AddAdminPermission(
         List<IdentityRoleClaim<string>> identityRoleClaim,
         IdentityRole role
@@ -388,7 +354,7 @@ public class TournamentPlannerDataContext : IdentityDbContext<ApplicationUser>
         identityRoleClaim.Add(
             new IdentityRoleClaim<string>
             {
-                Id = 4,
+                Id = 10,
                 RoleId = role.Id,
                 ClaimType = DomainClaim.PermissionClaimType,
                 ClaimValue = Policy.Read,
@@ -397,7 +363,7 @@ public class TournamentPlannerDataContext : IdentityDbContext<ApplicationUser>
         identityRoleClaim.Add(
             new IdentityRoleClaim<string>
             {
-                Id = 5,
+                Id = 11,
                 RoleId = role.Id,
                 ClaimType = DomainClaim.PermissionClaimType,
                 ClaimValue = Policy.Edit,
@@ -406,7 +372,7 @@ public class TournamentPlannerDataContext : IdentityDbContext<ApplicationUser>
         identityRoleClaim.Add(
             new IdentityRoleClaim<string>
             {
-                Id = 6,
+                Id = 12,
                 RoleId = role.Id,
                 ClaimType = DomainClaim.PermissionClaimType,
                 ClaimValue = Policy.Create,
@@ -415,7 +381,7 @@ public class TournamentPlannerDataContext : IdentityDbContext<ApplicationUser>
         identityRoleClaim.Add(
             new IdentityRoleClaim<string>
             {
-                Id = 7,
+                Id = 13,
                 RoleId = role.Id,
                 ClaimType = DomainClaim.PermissionClaimType,
                 ClaimValue = Policy.Delete,
@@ -424,7 +390,41 @@ public class TournamentPlannerDataContext : IdentityDbContext<ApplicationUser>
         identityRoleClaim.Add(
             new IdentityRoleClaim<string>
             {
-                Id = 8,
+                Id = 14,
+                RoleId = role.Id,
+                ClaimType = DomainClaim.PermissionClaimType,
+                ClaimValue = Policy.AddScore,
+            }
+        );
+    }
+
+    private void AddModeratorPermission(
+        List<IdentityRoleClaim<string>> identityRoleClaim,
+        IdentityRole role
+    )
+    {
+        identityRoleClaim.Add(
+            new IdentityRoleClaim<string>
+            {
+                Id = 15,
+                RoleId = role.Id,
+                ClaimType = DomainClaim.PermissionClaimType,
+                ClaimValue = Policy.Read,
+            }
+        );
+        identityRoleClaim.Add(
+            new IdentityRoleClaim<string>
+            {
+                Id = 16,
+                RoleId = role.Id,
+                ClaimType = DomainClaim.PermissionClaimType,
+                ClaimValue = Policy.Edit,
+            }
+        );
+        identityRoleClaim.Add(
+            new IdentityRoleClaim<string>
+            {
+                Id = 17,
                 RoleId = role.Id,
                 ClaimType = DomainClaim.PermissionClaimType,
                 ClaimValue = Policy.AddScore,
@@ -440,7 +440,7 @@ public class TournamentPlannerDataContext : IdentityDbContext<ApplicationUser>
         identityRoleClaim.Add(
             new IdentityRoleClaim<string>
             {
-                Id = 9,
+                Id = 18,
                 RoleId = role.Id,
                 ClaimType = DomainClaim.PermissionClaimType,
                 ClaimValue = Policy.Read,
