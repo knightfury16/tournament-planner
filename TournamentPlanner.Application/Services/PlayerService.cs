@@ -8,6 +8,7 @@ namespace TournamentPlanner.Application.Services;
 
 public interface IPlayerService
 {
+    public Task<List<GameStatistic>> GetAllGameStatistics(int playerId);
     public Task<GameStatistic> GetGameStatistic(int playerId, GameTypeSupported gameType);
     public Task<GameStatistic> GetGameStatistic(int playerId, string gameType);
     public Task<UpdateGameStatisticResult> UpdateGameStatistic(
@@ -159,5 +160,18 @@ public class PlayerService : IPlayerService
             throw new NotFoundException(nameof(GameStatistic));
 
         return (gameStat.Sum(gt => gt.GamePlayed), gameStat.Sum(gt => gt.GameWon));
+    }
+
+    public async Task<List<GameStatistic>> GetAllGameStatistics(int playerId)
+    {
+        var gameStatistics = await _gameStatRepository.GetAllAsync(
+            gs => gs.PlayerId == playerId,
+            [nameof(GameStatistic.GameType)]
+        );
+
+        if (gameStatistics == null)
+            throw new NotFoundException(nameof(GameStatistic));
+
+        return gameStatistics.ToList();
     }
 }
