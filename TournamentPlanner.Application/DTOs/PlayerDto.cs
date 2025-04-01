@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TournamentPlanner.Domain.Entities;
 
 namespace TournamentPlanner.Application.DTOs
 {
@@ -14,8 +13,5 @@ namespace TournamentPlanner.Application.DTOs
 
         public string Email { get; set; } = string.Empty;
         public int? Age { get; set; }
-        public int? GamePlayed { get; set; }
-        public int? GameWon { get; set; }
-        public double? WinRatio { get; set; }
     }
 }
