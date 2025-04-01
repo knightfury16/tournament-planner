@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 
-
 namespace TournamentPlanner.Application.DTOs
 {
     public class FullPlayerDto
@@ -15,11 +14,9 @@ namespace TournamentPlanner.Application.DTOs
         public int? Age { get; set; }
 
         public int Weight { get; set; }
-        public int GamePlayed { get; set; }
-        public int GameWon { get; set; }
-
-        public double WinRatio { get; set; }
 
         public List<TournamentDto>? Tournaments { get; set; }
+        public List<GameStatisticDto>? GameStatistics { get; set; }
     }
 }
+
