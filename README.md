@@ -44,6 +44,7 @@ Core services—mediator, data seeder, email client, and template engine—are c
 - **Application**: Core services and business logic
 - **Interactor**: Angular frontend for management
 - **Infrastructure**: Custom-built data seeder, email client, and template engine
+![Project Structure](Resource/systemlayout.png)
 
 ## Contributing
 
